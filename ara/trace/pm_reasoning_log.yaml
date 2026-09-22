@@ -2842,3 +2842,10 @@ entries:
     effectiveness. Timeout and interrupted output were not counted as responses.
   - No inferred topic abandonment from skipped engineering turns. New observations are current; existing maturity/stale
     flags are retained.
+- turn: 2026-09-23_001#2
+  notes:
+  - O382 stages the functional walkthrough under N544/N532. No new direct decision or experiment occurred.
+  - 'Do not crystallize O379-O381: generic permission to continue the discussion is not endorsement of specific
+    mechanisms or empirical effectiveness.'
+  - This explains the already reviewed abstract operations; no new consequential architecture selection requires
+    another Claude round. Existing statuses, evidence and maturity flags remain unchanged.

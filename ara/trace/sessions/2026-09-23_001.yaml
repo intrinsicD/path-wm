@@ -2,11 +2,13 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T00:26+02:00
-  turn_count: 1
+  last_turn: 2026-09-23T00:40+02:00
+  turn_count: 2
   summary: Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full modal
     decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
-    Six overclaims reconciled; no architecture adoption or capability promotion.
+    Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
+    of five latent functions; compare-to-generalize transition, provisional hypotheses and memory ownership remain
+    unselected implementation choices.
 events_logged:
 - turn: 1
   type: question
@@ -40,6 +42,13 @@ events_logged:
   summary: Use family-specific generalization, causal use, retention and correction checks. Prototypes can themselves
     learn new categories; beating them measures additional benefit, not the existence of concept learning. Distinguish
     wrong earlier evidence from genuine temporal change; exposure counts are not calibrated independent evidence.
+- turn: 2
+  type: observation
+  id: O382
+  routing: staged
+  provenance: ai-suggested
+  summary: Five functional abilities may share a core; scoped generalization/application and correction should distinguish
+    ambiguous concepts from perception/binding failures.
 ai_actions:
 - turn: 1
   action: Verified selected public primary sources; completed actual Opus 5.5 max research and bounded reconciliation.
@@ -53,11 +62,24 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 2
+  action: Extended the existing reviewed concept note with an abstract functional walkthrough and observable checks;
+    linked current state and regenerated atlas annotations without changing discussion status or validation evidence.
+    No new external review, model implementation or experiment.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-concept-learning-review.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: User prefers initially general and abstract latent-token methods, asks whether functioning encoder/decoder
     prerequisites are needed, and authorizes continuation after memory pressure logged the system out.
+- turn: 2
+  excerpt: 'User: ok, dann lass uns weiter machen. Interpreted as continuation of the proposed discussion, not blanket
+    adoption of preceding methods.'
 open_threads:
 - 'N544: choose concept family and relevant operations, then compare example/prototype use, learned code inference
   and optional code search with family-specific generalization/revision and resource controls.'
@@ -68,3 +90,5 @@ ai_suggestions_pending:
   tasks. No concrete training route adopted.
 - Fast-parameter adaptation may help farther task shifts; compare empirically against fixed-weight state/code methods
   rather than treating it as necessary.
+- Discuss the compare-to-generalize transition and required latent operations before choosing separate modules,
+  code representation or a training path.

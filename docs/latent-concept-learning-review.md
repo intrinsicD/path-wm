@@ -197,6 +197,62 @@ Diese Prüfungen sind Diskussionsvorschläge. Domäne, Daten, Erfolgsschwellen u
 Trainingsbudget sind weiterhin ungewählt. Der nächste gemeinsame Schritt wäre,
 die erste zu lernende Konzeptfähigkeit und ihre nötigen Operationen festzulegen.
 
+## Nächste Besprechung: fünf latente Operationen
+
+23. September 2026. Alex möchte die vorgeschlagene Besprechung fortsetzen.
+Die folgende Funktionsbeschreibung erläutert die bereits geprüften Methoden;
+sie legt weder fünf getrennte Netze noch eine neue Tokenaufteilung fest.
+Die konkrete Umsetzung und Lernreihenfolge bleiben Vorschläge.
+
+Der gemeinsame Ablauf wäre: relevante Evidenz lesen, Gemeinsamkeiten und
+Unterschiede erschließen, Beteiligte und Rollen zuordnen, eine vorläufige
+Verallgemeinerung bilden, sie auf weitere Fälle anwenden und anhand neuer
+Evidenz korrigieren. Mehrere dieser Schritte können durch denselben trainierten
+Kern und wiederholte Verarbeitung erfolgen. Eine vorgeschriebene sprachliche
+Zwischenbeschreibung ist dafür nicht Teil des Entwurfs.
+
+| Operation | Gewünschte Wirkung im latenten Raum | Woran wir ihre Nützlichkeit erkennen würden |
+| --- | --- | --- |
+| Vergleichen | Unterschiede, Gemeinsamkeiten und Beziehungen zwischen ausgewählten Repräsentationen abhängig von Aufgabe und Kontext erschließen. Ein Ähnlichkeitswert kann genügen; bei komplexeren Fällen kann ein gelernter Leser differenziertere Vergleichsinformation liefern. | Relevante Unterschiede beeinflussen die Entscheidung; irrelevante Variationen innerhalb des untersuchten Umfangs nicht. |
+| Binden | Eigenschaften, Beobachtungen und Rollen den richtigen Beteiligten, Quellen und Zeitpunkten zuordnen. | Das Vertauschen von Beteiligten oder Rollen verändert das Ergebnis passend. Gleiche Eigenschaften führen nicht automatisch zur Verschmelzung verschiedener Instanzen. |
+| Verallgemeinern | Aus Beispielen und gegebenenfalls Gegenbeispielen eine auf weitere Fälle anwendbare Kategorie, Relation oder Regel erschließen. Der Zustand kann Beispiele, Prototypen oder einen Funktionscode tragen. | Die Hypothese hilft bei zurückgehaltenen Fällen und passenden neuen Kombinationen. Bloßes Wiedergeben der Lernbeispiele genügt dafür nicht. |
+| Anwenden | Die erschlossene Repräsentation für Zuordnung, Vorhersage, Kontextwahl oder Handlung tatsächlich verwenden. | Passende Änderungen am Konzeptinhalt verändern die nachfolgende Wirkung; gute Auslesbarkeit allein reicht nicht als Nachweis der Nutzung. |
+| Korrigieren | Neue Evidenz zur Prüfung und Revision der betroffenen Zuordnung beziehungsweise Hypothese nutzen; abhängige Ableitungen bei Bedarf erneuern. | Ein Gegenbeleg verändert die betroffene Vorhersage sinnvoll, während weiterhin gültiges Wissen im erklärten Speicher-/Zeithorizont erhalten bleibt. |
+
+**Der offene Kern ist der Schritt vom Vergleich zur Verallgemeinerung.**
+Aus wenigen Beispielen können mehrere Regeln zugleich folgen. Der Agent sollte
+deshalb Unsicherheit beziehungsweise alternative Erklärungen tragen können,
+statt jede Gemeinsamkeit sofort zum dauerhaften Konzept zu erklären. Welche
+Erklärung nützlich ist, hängt von weiteren Beispielen, der Aufgabe und den
+überprüfbaren Folgen ab. Diese Forderung ist ein Entwurf für Verhalten, noch
+keine Entscheidung für eine bestimmte Verteilung oder Zahl von Hypothesen.
+
+Ein möglicher Lernweg innerhalb des bereits besprochenen Meta-Learning-Ansatzes
+übt diese Operationen auf wechselnden Aufgaben: Aus einem Teil der Beispiele
+einen latenten Zustand bilden und mit ihm weitere Fälle bearbeiten. Das
+Grundtraining verändert die Gewichte der dafür verwendeten Funktionen. Bei der
+späteren Aufnahme neuer Inhalte könnten diese Funktionen fest bleiben, während
+Beispiele, Bindungen und erschlossene Codes wechseln. Geprüft wird insbesondere
+die Wirkung eines Codes; es gibt nicht automatisch einen eindeutig richtigen
+Zielvektor, den wir ihm vorgeben müssten.
+
+Das Speichern ist eine zusätzliche Verantwortung: Eine gerade gebildete
+Hypothese lebt zunächst im Arbeitszustand. Ob sie länger behalten wird, was ihre
+Belege sind und wann sie erneut geprüft werden muss, gehört zur Kontext- und
+Gedächtnissteuerung. Eine falsche Ausgabe allein lokalisiert den Fehler nicht:
+Auch Wahrnehmung, Zuordnung oder Anwendung können falsch sein. Eine tatsächliche
+Änderung der Welt darf zudem historisch richtige Evidenz nicht rückwirkend
+falsch machen. Deshalb bleiben Hypothesen, tatsächliche Beobachtungen und
+ausgeführte Aktionen unterscheidbar.
+
+Die stehenden Prinzipien bleiben wirksam: Evidenz einmal vorbereiten und für
+verschiedene Vergleiche wiederverwenden; nur begrenzten Kontext lesen, bei Bedarf
+auf erhaltene Details zurückgreifen; Quellen und Lebensdauern explizit führen;
+Hypothesenbildung und Prüfung trennen. Der erwartete Nutzen ist wiederverwendbares
+Lernen über Zustand. Offen sind dafür nötige Merkmale, Lernsignale, Abrufqualität
+und Gesamtkosten. Der kleinste sinnvolle Vergleich bleibt auf eine erklärte
+Konzeptfamilie mit neuen Fällen, Gegenbelegen und einfachen Referenzen begrenzt.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen

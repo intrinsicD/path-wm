@@ -20,6 +20,9 @@ read the particular record when needed, not the whole history at startup.
   not a universal prerequisite; joint learning, staged learning and pretrained
   features remain alternatives. Concept-code search is distinct from weight
   retraining. No mechanism, experiment budget or new capability is adopted.
+  The [next discussion](latent-concept-learning-review.md#nächste-besprechung-fünf-latente-operationen)
+  describes comparing, binding, generalizing, applying and correcting as functional
+  requirements; separate modules and a concrete learning path remain unselected.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented

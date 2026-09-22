@@ -6721,3 +6721,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O382
+  timestamp: 2026-09-23T00:40+02:00
+  provenance: ai-suggested
+  content: Describe comparing, binding, generalizing, applying and correcting as functional abilities that may share
+    one latent core. Keep provisional hypotheses distinct from observed evidence and retention decisions. Judge
+    concept codes through scoped effects on new cases; several rules may fit the same examples and errors can originate
+    in perception, binding or application.
+  context: User asks to continue the abstract discussion following the reviewed method map. This is an explanation
+    and proposal, not adoption of five separate modules, a token layout, training chronology or a concrete inference
+    algorithm. See docs/latent-concept-learning-review.md#nächste-besprechung-fünf-latente-operationen.
+  potential_type: architecture
+  bound_to:
+  - N544
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
