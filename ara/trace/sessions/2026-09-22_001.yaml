@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T13:16+02:00
-  turn_count: 7
+  last_turn: 2026-09-22T13:22+02:00
+  turn_count: 8
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open.
 events_logged:
 - turn: 1
   type: question
@@ -152,6 +152,30 @@ events_logged:
     Coefficients are compact, but estimator residency, multiscale activations and training may dominate.
     Sequential execution alone does not release resident weights; offload has transfer costs. No complete-system
     fit or realtime guarantee.
+- turn: 8
+  type: question
+  id: N523
+  routing: direct
+  provenance: user
+  summary: Inference Neural Engine with on-demand models and a rendering-buffer analogy
+- turn: 8
+  type: observation
+  id: O363
+  routing: staged
+  provenance: user
+  summary: Propose a central inference Neural Engine that uses already trained models when needed, analogous
+    to a buffer during rendering. Training strategy remains undecided.
+- turn: 8
+  type: observation
+  id: O364
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Interpret inference engine as explicit task scheduling plus bounded GPU residency: retain
+    frequent base/readers, stage optional modules from RAM/SSD, reuse only compatible versioned source
+    features and preserve recurrent/evidence state on eviction. Count all live weights, activations, features,
+    workspaces and prefetch overlap under the process cap. Start with simple sequential rules; compare
+    cold loads and bounded reuse before predictive prefetch. No model-fit, latency or training solution
+    implied.'
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -234,6 +258,17 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 8
+  action: Checked primary offload/CUDA documentation, wrote bounded inference-engine discussion, updated
+    project state and regenerated atlas. No implementation or benchmark.
+  provenance: ai-executed
+  files_changed:
+  - docs/neural-engine-inference.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -252,6 +287,9 @@ key_context:
     and separate eyes/mouth.
 - turn: 7
   excerpt: Passt das alles ins Budget? Also auf die gpu?
+- turn: 8
+  excerpt: Bei der Inferenz ... wenn wir ... trainiert haben ... wenn es benötigt wird ... ein Buffer
+    beim Rendern. Training remains open.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -292,6 +330,8 @@ open_threads:
   and bounded update rules remain open.'
 - 'N522: select concrete models, geometry/person limits and quality/latency gates, then profile complete
   inference/training peaks under proposed process budget.'
+- 'N523: define module boundaries and a bounded inference workload; compare residency/cache behavior,
+  state preservation and cold/warm latency before choosing scheduler or prefetch.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -325,3 +365,5 @@ ai_suggestions_pending:
   no concrete implementation adopted.'
 - 'O362: storage placement and bounded GPU pipeline remain proposals; hardware snapshot and arithmetic
   are not empirical pipeline validation.'
+- 'O363/O364: user inference-buffer direction and proposed execution details are staged; no training strategy,
+  implementation or measured performance adopted.'

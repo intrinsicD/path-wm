@@ -8749,3 +8749,20 @@ tree:
   - N520
   - N521
   status: open
+- id: N523
+  type: question
+  title: Inference Neural Engine with on-demand models and a rendering-buffer analogy
+  provenance: user
+  timestamp: 2026-09-22T13:22+02:00
+  description: Alex clarifies that his on-demand Neural Engine idea concerns inference with already trained
+    models; training remains open. Discuss bounded GPU residency, reusable features and explicit durable
+    state. Ambiguous voice GP-Punkte does not establish a graph/checkpoint storage format.
+  evidence:
+  - docs/neural-engine-inference.md
+  - https://huggingface.co/docs/accelerate/usage_guides/big_modeling
+  - https://docs.pytorch.org/docs/2.14/notes/cuda.html
+  also_depends_on:
+  - N522
+  - N521
+  - N500
+  status: open

@@ -1,5 +1,13 @@
 # Current work
 
+**Demand-driven inference engine, 22 September:**
+[buffer analogy and execution boundaries](neural-engine-inference.md). Alex proposes
+a central Neural Engine that uses trained models on demand, like a rendering buffer,
+explicitly for inference; training remains open. Interpret as bounded GPU residency
+with a RAM/SSD model source, reusable features and explicit state lifetimes. Concrete
+loading/routing/prefetch policy remains proposed; ambiguous voice terminology does
+not establish graph storage. No implementation, benchmark or validation promotion.
+
 **Human pose/shape discussion, 22 September:**
 [proposal and source distinctions](human-perception-discussion.md). Alex asks about
 automatic skeleton estimation plus segmentation for agent reactions. Propose

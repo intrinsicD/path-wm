@@ -2717,3 +2717,12 @@ entries:
     request or implementation approval inferred.
   - O362 remains staged; no closure of recognition-quality, architecture or memory efficacy questions,
     and no validation color changes.
+- turn: 2026-09-22_001#8
+  notes:
+  - User explicitly scopes the buffer idea to inference; record his architecture proposal separately from
+    assistant scheduling/cache details. The unclear voice token is not evidence for a particular storage
+    representation.
+  - Source-backed offload and allocator semantics do not establish full-pipeline fit or timing. Keep weight/feature/workspace/state
+    ownership distinct.
+  - No closure of full prior O362, no new training decision or validation promotion. Transcript tail is
+    archival and does not add an event.

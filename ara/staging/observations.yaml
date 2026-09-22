@@ -6363,3 +6363,39 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O363
+  timestamp: 2026-09-22T13:22+02:00
+  provenance: user
+  content: Propose a central inference Neural Engine that uses already trained models when needed, analogous
+    to a buffer during rendering. Training strategy remains undecided.
+  context: Follow-up after ambiguous voice wording; precise resource origin not clarified. Later transcript
+    tail repeats the handled exchange and is not a second request.
+  potential_type: architecture
+  bound_to:
+  - N523
+  - N522
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O364
+  timestamp: 2026-09-22T13:22+02:00
+  provenance: ai-suggested
+  content: 'Interpret inference engine as explicit task scheduling plus bounded GPU residency: retain
+    frequent base/readers, stage optional modules from RAM/SSD, reuse only compatible versioned source
+    features and preserve recurrent/evidence state on eviction. Count all live weights, activations, features,
+    workspaces and prefetch overlap under the process cap. Start with simple sequential rules; compare
+    cold loads and bounded reuse before predictive prefetch. No model-fit, latency or training solution
+    implied.'
+  context: Accelerate documents offload; PyTorch documents live-tensor versus allocator-cache ownership
+    and asynchronous lifetime/synchronization. These mechanisms are not a validated PATH-WM scheduler.
+    Existing shared multiscale and joint-learning directions retained.
+  potential_type: architecture
+  bound_to:
+  - N523
+  - N522
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
