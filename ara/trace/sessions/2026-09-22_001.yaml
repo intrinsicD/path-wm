@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T15:59+02:00
-  turn_count: 15
+  last_turn: 2026-09-22T18:57+02:00
+  turn_count: 16
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated. Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work; no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions. Full-agent token-role question mapped to learned interfaces, signals, ownership and tests; reuse existing states, no new token taxonomy or module implementation adopted.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated. Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work; no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions. Full-agent token-role question mapped to learned interfaces, signals, ownership and tests; reuse existing states, no new token taxonomy or module implementation adopted. User establishes the integrated latent-agent demonstration objective with native-preferred compatibility, shared-depth loops, autonomous concept/instance memory and correction without runtime retraining. Diffusion remains tentative; frozen-weight protocol independently reviewed, not executed.
 events_logged:
 - turn: 1
   type: question
@@ -308,6 +308,35 @@ events_logged:
     individual tokens. Train compatible interfaces and grounded tasks, retaining exact identity/time/source/action
     metadata. Begin with the existing belief/task/workspace path plus bounded retrieval and action/output
     consumers, then add specialized slots only with evidence.
+- turn: 16
+  type: decision
+  id: N532
+  routing: direct
+  provenance: user
+  summary: Make integrated latent learning and revisable knowledge the research demonstration goal
+- turn: 16
+  type: question
+  id: N533
+  routing: direct
+  provenance: user
+  summary: Can latent diffusion simplify a difficult latent reasoning or planning path?
+- turn: 16
+  type: observation
+  id: O373
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose initial training followed by an all-weights-frozen acquisition/use/correction demonstration.
+    New concepts need held-out instances, counterexamples and uses beyond nearest-example lookup. Agent
+    proposes graph writes/reads; test after nonpersistent-state reset, causal memory interventions, false
+    corrections, dependency invalidation and preservation controls. Distinguish multi-domain capability
+    from held-out-domain transfer. Compare flat memory/long context and fixed loop budgets, with full
+    compute and independent outcome checks.
+- turn: 16
+  type: observation
+  id: O374
+  routing: staged
+  provenance: user
+  summary: A complicated path in latent space might be simplified through latent diffusion.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -486,6 +515,24 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 16
+  action: Documented user research objective and proposed demonstration; reviewed current world-state
+    evidence and primary recurrence/diffusion sources. Obtained two actual isolated Claude public-only
+    reviews, reconciled overstatements and saved receipts. Linked goal from CLAUDE/state/latent-core and
+    regenerated atlas without capability promotion. No training or implementation run.
+  provenance: ai-executed
+  files_changed:
+  - CLAUDE.md
+  - docs/integrated-latent-agent-goal.md
+  - docs/latent-core.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
+  evidence:
+  - runs/reviews/latent_agent_demonstration_v1/receipt.json
+  - runs/reviews/latent_agent_demonstration_v1/reconciliation-receipt.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -527,6 +574,10 @@ key_context:
 - turn: 15
   excerpt: Machen wir die Architektur für bestimmte latente Tokens, die entsprechend trainiert werden
     müssen? Gilt das für alle Bereiche? Welche brauchen wir gezielt?
+- turn: 16
+  excerpt: Alles soll zusammen latent funktionieren; nativ bevorzugt, Tiefe durch Loops, Konzepte/Instanzen
+    im Graph, Wissen selbst erweitern und Fehler korrigieren ohne explizit nachzutrainieren. Latente Diffusion
+    könnte schwierige Pfade vereinfachen.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -583,6 +634,10 @@ open_threads:
   exact execution contracts and independently checked success.'
 - 'N531: select one complete task and justify concrete latent interfaces with grounded learning signals,
   ownership and whole-system budgets before adding slots or codebooks.'
+- 'N532: operationalize the adopted integrated objective with domains, provenance/splits, gates and budgets
+  before executing the frozen-weight knowledge demonstration.'
+- 'N533: compare latent denoising with a recurrent candidate path on verified outcomes and full cost;
+  mechanism optional.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -631,3 +686,5 @@ ai_suggestions_pending:
   requirement or new implementation validated.'
 - 'O372: functional role map is proposed; existing token layouts do not validate entity semantics, reasoning,
   calibrated success or general generation.'
+- 'O373: exact protocol, domains and controls remain proposed, not selected experimental configuration.'
+- 'O374: user latent-diffusion simplification hypothesis remains untested.'
