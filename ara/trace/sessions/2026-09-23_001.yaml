@@ -2,8 +2,8 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T20:54+02:00
-  turn_count: 13
+  last_turn: 2026-09-23T20:56+02:00
+  turn_count: 14
   summary: 'Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full
     modal decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
@@ -22,7 +22,7 @@ session:
     primary sources; empirical effects and cognitive theories distinguished, no architecture adoption or new experiment.
     Turn12: user selects structural-prior pretraining direction; public-only Opus5.5 high review reconciled. Curriculum
     proposed, no run. Turn13: initial nonlinguistic property tasks preferred; lamp failures do not isolate training-design
-    cause.'
+    cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment.'
 events_logged:
 - turn: 7
   type: question
@@ -287,6 +287,18 @@ events_logged:
   routing: staged
   provenance: user
   summary: Training-design explanation possible, not established.
+- turn: 14
+  type: question
+  id: N564
+  routing: direct
+  provenance: user
+  summary: Core-input information question.
+- turn: 14
+  type: observation
+  id: O395
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped diagnostic proposal.
 
 ai_actions:
 - turn: 7
@@ -413,6 +425,9 @@ ai_actions:
 - turn: 13
   action: Clarified scoped negative evidence and that varied property supervision need not require a separate
     invariance loss; updated plan and atlas.
+  provenance: ai-executed
+- turn: 14
+  action: Explained probe limits and controlled utilization checks; recorded proposal without training.
   provenance: ai-executed
 
 claims_touched: []

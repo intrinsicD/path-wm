@@ -9420,3 +9420,14 @@ tree:
   also_depends_on:
   - N562
   status: open
+
+- id: N564
+  type: question
+  title: Test whether task information reaches the latent core
+  provenance: user
+  timestamp: 2026-09-23T20:56+02:00
+  description: User asks how to establish needed information reaches core; scoped probe and utilization diagnostics
+    explained.
+  evidence:
+  - docs/integrated-architecture-plan.md
+  status: open

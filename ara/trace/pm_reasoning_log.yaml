@@ -2945,3 +2945,7 @@ entries:
   notes:
   - N563 refines initial modality scope; O394 stages user hypothesis without promoting a causal explanation. No
     new empirical result or unrelated closure.
+
+- turn: 2026-09-23_001#14
+  notes:
+  - Method explanation staged; no empirical evidence or prior-claim closure.

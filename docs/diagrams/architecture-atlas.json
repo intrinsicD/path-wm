@@ -3229,7 +3229,8 @@
         "Point1 discussion: cross-example latent transition prediction and augmentation proposed by Alex. Existing query-transfer outcome supervision distinguished from omitted full latent next-state loss in recent diagnostics. Pair ambiguity and valid augmentation remain discussion items; no new run, adoption or full walkthrough/color promotion.",
         "Human-learning comparison (plan section21): prior structure, cross-case comparison, informative interventions and complementary memory are candidate functional inspirations. No human baseline on this task, biological blueprint, new mechanism adoption or validation/discussion-color promotion.",
         "§22: Alex wählt Vortraining für Entität/Eigenschaften, aspektbezogenen Vergleich und Zeitordnung als Richtung. Gemeinsame latente Operationen, beobachtbarkeitsbewusste modale Bindung und Erhaltung beim Weiterlernen; konkretes Curriculum mit Opus 5.5 high abstrakt geprüft. Transfervergleich noch nicht ausgeführt; keine neue Validierung oder abgeschlossene Architekturbesprechung.",
-        "§22 Gesprächspräzisierung: anfangs nichtsprachliche Eigenschaftsabfragen; variierte Farbziele können Invarianz ohne separaten Invarianz-Loss fördern. Lampenfehlschläge gelten für geprüfte Bedingungen, nicht als allgemeine Widerlegung; Trainingsgestaltung als Ursache unisoliert."
+        "§22 Gesprächspräzisierung: anfangs nichtsprachliche Eigenschaftsabfragen; variierte Farbziele können Invarianz ohne separaten Invarianz-Loss fördern. Lampenfehlschläge gelten für geprüfte Bedingungen, nicht als allgemeine Widerlegung; Trainingsgestaltung als Ursache unisoliert.",
+        "§22: Informationsdiagnose am tatsächlichen Kerneingang und Nutzung durch kontrollierte Gegenfälle getrennt vorgeschlagen; Probe-Misserfolg beweist keine Abwesenheit. Keine neuen Tests ausgeführt."
       ],
       "sources": [
         "docs/integrated-architecture-plan.md",

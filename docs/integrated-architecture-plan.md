@@ -1463,3 +1463,26 @@ Bedingungen. Sie widerlegen weder das volle Architekturziel noch latentes Lernen
 im Allgemeinen. Ein ungeeigneter Lernaufbau bleibt eine mögliche Erklärung neben
 Repräsentation, Optimierung und Kapazität; keine davon wurde als alleinige Ursache
 isoliert. Der neue Lehrplan ist eine prüfbare Hypothese, keine Erfolgsgarantie.
+
+
+### Diagnose: Erreicht relevante Information den Kern?
+
+Am tatsächlichen Kerneingang nach Auswahl/Kompression eingefrorene Tokens prüfen,
+nicht nur frühere Encodermerkmale. Kleine Auslesemodelle sagen Farbe, Instanzbindung
+oder die jeweils erforderliche Beziehung auf getrennten neuen Fällen voraus.
+Erfolg zeigt Auslesbarkeit in diesem Prüfbereich; ein erfolgloser einfacher Probe
+beweist keinen Informationsverlust. Objektzuordnung und Kontext gehören zur
+Aufgabe: globale Farberkennung genügt nicht. Mit früheren Encoderausgaben vergleichen.
+
+Kontrollierte Gegenfälle variieren die relevante Eigenschaft bei sonst gleichen
+Bedingungen sowie irrelevante Faktoren bei gleichem Ziel. Endausgaben müssen der
+relevanten Variation folgen und irrelevante Variation tolerieren. Reine Änderungen
+von Tokenabständen beweisen weder Bedeutung noch tatsächliche Nutzung.
+
+Ein separat trainierter diagnostischer Referenzpfad mit sauberen passenden
+Merkmalen kann Wahrnehmung gegenüber Kern/Trainingsaufgabe eingrenzen; Oraclewerte
+sind nur Diagnose, keine Runtime-Lösung. Gemeinsames Encoder/Kern-Training gegen
+eingefrorene Encoder bei vergleichbarem Budget prüfen und Eigenschaftserhaltung
+messen. Keiner dieser Tests isoliert allein die Ursache oder beweist, dass jede
+benötigte Information enthalten ist. Decoder nur mittrainieren, wenn der aktive
+Lernpfad ihn verwendet; ein starker Decoder kann schwache Repräsentationen verdecken.

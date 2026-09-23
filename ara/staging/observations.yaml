@@ -6961,3 +6961,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O395
+  timestamp: 2026-09-23T20:56+02:00
+  provenance: ai-suggested
+  content: Combine held-out readouts at actual core input, controlled relevant/nuisance variations, diagnostic
+    feature references and matched freeze/unfreeze comparison; distinguish information availability from use.
+    Probe failure alone does not prove absence.
+  context: Method proposal, no new diagnostic execution.
+  potential_type: heuristic
+  bound_to:
+  - N564
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
