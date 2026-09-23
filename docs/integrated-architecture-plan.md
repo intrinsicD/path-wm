@@ -44,7 +44,7 @@ nicht dessen Arm A.
   Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen
-  wird als begrenzter nächster Schritt vorbereitet. Berichte:
+  läuft als begrenzter nächster Schritt. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -558,6 +558,8 @@ verifiziert; R2 leitet sie erneut ab (§18).
    kein heimlich abgesenkter Fünffamilien-Screen. Erst bei Erfolg folgt gemischte
    Induktion I2. Ein Fehlschlag isoliert keine eindeutige Ursache. Details und feste
    Stopregeln stehen vor Ausführung in `…/induction_relation_20260923/protocol.md`.
+   I1 ist nach dem abgeschlossenen E1b-S und unabhängiger CPU-Vertragsprüfung gestartet;
+   Ergebnis offen: `…/induction_relation_20260923/I1_C192/`.
 
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
