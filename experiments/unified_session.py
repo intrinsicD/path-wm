@@ -46,8 +46,35 @@ from pathwm.world_state.unified import (
 )
 
 WIDTH, KEY, VALUE, STATE = 64, 32, 16, 16
-SCOPE = ("SOFTWARE check: random core/belief/encoders (a supplied perception checkpoint is named in "
-         "run.json); contracts only, no capability claim.")
+
+
+def describe(perception_run=None, identity_run=None, learned_keys=False):
+    """Scope, binding and limitations of THIS run's actual composition (no overclaim)."""
+    if identity_run is not None:
+        loaded = "perception and exported identity key from one S1 --identity run (named in run.json/models.json)"
+        binding = "exported S1 identity key (uncalibrated binder thresholds)"
+        keys = ("Session identity uses the exported S1 key (= core.key_head) on slot tokens with untrained, "
+                "uncalibrated binder thresholds: identity decisions are a software exercise, not learned tracking.")
+    elif learned_keys:
+        loaded = ("an R1 perception checkpoint (named in run.json)" if perception_run is not None
+                  else "no checkpoint")
+        binding, keys = "learned slot keys (untrained)", "Session identity uses an untrained candidate key projection."
+    else:
+        loaded = ("an R1 perception checkpoint (named in run.json)" if perception_run is not None
+                  else "no checkpoint")
+        binding = "pixel-histogram fixture"
+        keys = "Session identity uses the non-learned pixel-histogram SOFTWARE fixture."
+    scope = (f"SOFTWARE check: loaded {loaded}; core, belief, action encoder and candidate values are random "
+             "(seeded). Contracts only, no capability claim.")
+    limitations = [
+        f"Loaded weights: {loaded}. No loaded perception is a qualified formal configuration here.",
+        "Core, belief, action encoder and candidate values are random: concept, prediction and plan quality "
+        "are meaningless; no rule-application or learned-core claim.",
+        keys,
+        "Verifier grounding uses the pixel the agent reported for each entity.",
+        "No natural data, no cross-modal binding, no learned R2 claim.",
+    ]
+    return dict(scope=scope, binding=binding, limitations=limitations)
 
 
 KEY_ARCHITECTURE = f"pathwm.models.latent_core.key_head({WIDTH}, {KEY})"
@@ -343,11 +370,10 @@ def main():
                           checkpoint_sha256=file_hash(args.identity_run / "last.pt"),
                           key="exported S1 identity key = core.key_head = session candidate key; "
                               "full provenance in models.json")
-    binding = ("exported S1 identity key (uncalibrated binder thresholds)" if args.identity_run
-               else "learned slot keys (untrained)" if args.learned_keys else "pixel-histogram fixture")
+    run = describe(args.perception, args.identity_run, args.learned_keys)
     settings = dict(stage="unified-session-life", purpose="software", device="cpu", seed=args.seed,
-                    scenes=args.scenes, width=WIDTH, perception=perception, binding=binding,
-                    weights="random (seeded) except a supplied perception/key checkpoint", scope=SCOPE)
+                    scenes=args.scenes, width=WIDTH, perception=perception, binding=run["binding"],
+                    weights="random (seeded) except a supplied perception/key checkpoint", scope=run["scope"])
     atomic_json(out / "run.json", dict(schema="pathwm-run-v1", identity=dict(
         settings=settings, data=dict(kinds=list(rw.KIND_SPLIT["train"][:2]), rules="train split, seeded"),
         environment=environment("cpu")), source=source_record(__file__, nn.Module())))
@@ -362,7 +388,7 @@ def main():
         atomic_json(out / "life.json", dict(rows=rows, restart=restart, final=final))
         goals = [r for r in rows if r["kind"] == "goal"]
         atomic_json(out / "result.json", dict(
-            evaluation_scope=SCOPE, gate=None,
+            evaluation_scope=run["scope"], gate=None,
             metrics=dict(final=final, restart_equal=bool(restart and restart["equal"]),
                          free_text_asked=all(r["option"] == "ask" and r["actuator_presses"] == 0
                                              for r in rows if r["kind"] == "free_text"),
@@ -376,11 +402,7 @@ def main():
                                                                 for g in goals),
                                         goals_planned=sum(g["option"] not in ("ask", "no_identified_machine",
                                                                               "unsupported") for g in goals))),
-            limitations=["Random core/belief/encoders (perception optionally R1-trained, C1 not passed): "
-                         "identity, concept and plan quality are meaningless.",
-                         "Binding keys are a pixel-histogram SOFTWARE fixture unless --learned-keys.",
-                         "Verifier grounding uses the pixel the agent reported for each entity.",
-                         "No natural data, no cross-modal binding, no learned R2 claim."],
+            limitations=run["limitations"],
         ))
     except Exception as error:
         atomic_json(out / "status.json", dict(result="failed", report="incomplete", step=0,
