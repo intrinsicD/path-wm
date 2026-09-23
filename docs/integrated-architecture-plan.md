@@ -495,8 +495,9 @@ verifiziert; R2 leitet sie erneut ab (§18).
    frischen Szenen noch nicht robust. Ursprüngliche Gates werden nicht geändert.
 2. **Kernanwendung:** R44-Vortraining und anschließender gemischter Lauf haben den
    Anwendungsscreen bestanden. Beide nutzen vorgegebene Regelcodes, keine Induktion.
-   Der erfolgreiche Weg wird nach Abschluss der Lernvalidierung in das bestehende
-   lesbare Rezept übernommen; datierte Diagnoseimporte gehören nicht in die Bibliothek.
+   Der erfolgreiche Anwendungsweg ist im bestehenden lesbaren Rezept übernommen
+   (Details am Ende dieses Abschnitts); datierte Diagnoseimporte bleiben außerhalb
+   der Bibliothek. Induktionsvalidierung bleibt separat offen.
 3. **Neue Regeln bei festen Gewichten:** E1a mit vier festen Starts ist abgeschlossen
    und verfehlt den Screen auf Trainings- und Validierungsregeln. Bei N=128/K=128
    besteht auf Validation nur Kategorie (ν=0,983); Relation 0,191, Toggle 0,119,
