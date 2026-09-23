@@ -360,7 +360,9 @@ def sample_life(generator, population, *, n_support, queries=64, goals=16, distr
     lamps = torch.randint(2, (2,), generator=g).tolist()
     attrs = scene.attrs[0].tolist()
     truth = rw.outcome(rules["A"], attrs[i], attrs[j], lamps[side])
-    claim = dict(scene=scene, order=order, lamps=lamps, side=side, i=i, j=j, truth=truth)
+    # `claimed` is the observable value the agent receives (R1 claims are all false);
+    # `truth` is an evaluator annotation that poisoning may flip.
+    claim = dict(scene=scene, order=order, lamps=lamps, side=side, i=i, j=j, truth=truth, claimed=1 - truth)
     return LifeSpec(
         population, f"life-{int(torch.randint(10**9, (1,), generator=g))}", kinds, rules,
         n_support, acquisition, corrupted, distraction, [s for s, _ in query_scenes],
@@ -406,6 +408,8 @@ def _true_label(session_labels, scene, xy):
 
 @torch.no_grad()
 def run_life(perception, core, spec, directory, *, settings, device="cpu", controls=True):
+    if "claimed" not in spec.claim:
+        raise ValueError("life spec claim lacks the observable 'claimed' value; refusing to derive it from truth")
     contract = rw.TaskContract()
     timings, hashes = {}, []
     outputs = dict(predictions=[], tasks=[], decisions=[])
@@ -606,13 +610,14 @@ def run_life(perception, core, spec, directory, *, settings, device="cpu", contr
     world = rw.RuleWorld(claim["scene"], tuple(spec.rules[l] for l in claim["order"]), torch.tensor(claim["lamps"]), contract)
     frame = world.frame()
     record = record_for(claim["scene"], claim["side"], claim["i"], claim["j"])
-    tested = agent.receive_claim(frame, record, 1 - claim["truth"], rw.Actuator(world))
+    tested = agent.receive_claim(frame, record, claim["claimed"], rw.Actuator(world))
     episodic = agent.episodic_answer(frame, record)
     view = agent.observe_scene(frame, persist=False)
     concept_p = agent.predict(view, record)["p"]
     final = episodic["outcome"] if episodic is not None else float(concept_p >= 0.5)
     environment_truth = int(world.lamps[claim["side"]])
     observed = tested["observed"]
+    outputs["claim"] = dict(transmitted=claim["claimed"], tested=tested["tested"], observed=observed, concept_p=concept_p, final=final)
     claim_result = dict(
         tested=tested["tested"], observed=observed, final=final,
         # Exact recall of the agent's own just-observed test: episodic, not learned.
