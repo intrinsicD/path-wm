@@ -45,7 +45,7 @@ nicht dessen Arm A.
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
   direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
-  Evidenz-Lesepfad ohne vorgeschaltete Kompression wird vorbereitet. Berichte:
+  Evidenz-Lesepfad ohne vorgeschaltete Kompression wird geprüft. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -599,7 +599,13 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Relationsendpunkt und festes 8000-Update-/6-GiB-Limit. Geänderter Rechen- und
    Gradientenpfad wird ausgewiesen. Erfolg isoliert keine Kompressionsursache,
    Fehlschlag isoliert keinen Evidenzencoder. Details vor Ausführung:
-   `runs/reviews/integrated_architecture_20260923/post-j44-root-contract.md`. Rohdaten und reparierter Bericht:
+   `runs/reviews/integrated_architecture_20260923/post-j44-root-contract.md`.
+   D1 ist nach J44-Abschluss und unabhängiger CPU-Vertragsprüfung gestartet:
+   `…/evidence_reader_20260923/D1/`. Alle Kontextmasken, leeren Supports,
+   Episodengrenzen, Kontrollen und exakter Resume sind geprüft. CPU-Update kostet
+   etwa 4,45× gegenüber J44; GPU-Passung und Lernqualität bleiben offen. Der
+   versionierte Inferenzvertrag steht auch im Checkpoint und verhindert striktes
+   Laden als gewöhnliches G/T-Modell trotz gleicher Parameterformen. Rohdaten und reparierter Bericht:
    `…/support_identifiability_20260923/attempt02/`; beide ursprünglichen
    Ausführungs-/Berichtsfehler und identische Rohdaten bleiben erhalten.
 

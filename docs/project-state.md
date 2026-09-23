@@ -19,7 +19,7 @@ Read the relevant record when needed.
   screen (100% versus54.6% cross-lamp); fresh scenes confirm the key gain but miss one
   relative attribute-preservation guard. J is provisional for development.
   Relation-first training now passes all five oracle application families (nu≥0.863);
-  code search and five induction paths fail; direct latent evidence reading is preparing. Rollout,
+  code search and five induction paths fail; direct latent evidence reading is running. Rollout,
   learned full R1/R2 and natural data remain unproven. Plan §0,10,11,16,18–19 owns the
   contracts; runs: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
