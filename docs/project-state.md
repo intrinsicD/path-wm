@@ -11,17 +11,16 @@ Read the relevant record when needed.
   computation and useful concept/instance memory that acquires, retrieves and
   corrects knowledge at runtime without weight retraining. Partial components do
   not establish the complete capability.
-- **Integrated architecture R1/R2:** the [adopted plan](integrated-architecture-plan.md)
-  connects session/store/clock, image features, concept memory, typed
-  execution and external verification. 816 CPU tests pass, including typed claims, causally checked own tests,
-  identity-key sharing and current-view correction.
-  Perception J passes the primary identity
-  screen (100% versus54.6% cross-lamp); fresh scenes confirm the key gain but miss one
-  relative attribute-preservation guard. J is provisional for development.
-  Relation-first training now passes all five oracle application families (nu≥0.863);
-  code search and seven induction paths fail; the support-use curriculum passes copied-example recall and is testing disjoint transfer. Rollout,
-  learned full R1/R2 and natural data remain unproven. Plan §0,10,11,16,18–19 owns the
-  contracts; runs: `runs/latent_agent_r1/`.
+- **Integrated architecture R1/R2:** the [plan](integrated-architecture-plan.md)
+  connects one session/store/clock, shared image features, concept memory, typed
+  execution and verification. 816 CPU tests pass, including causal claims,
+  identity-key sharing and correction. J passes the primary identity screen
+  (100% versus54.6% cross-lamp), but misses one fresh-scene attribute guard:
+  provisional development input. All five oracle application families pass
+  (nu≥0.863). Code search and seven induction paths failed; the support-use
+  curriculum now passes copied-example recall and tests disjoint transfer.
+  Rollout, learned full R1/R2 and natural data remain unproven.
+  Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
   compares concept induction, latent memory and prerequisites with current primary
   sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is

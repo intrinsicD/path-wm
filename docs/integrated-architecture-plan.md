@@ -15,10 +15,10 @@ nicht dessen Arm A.
   Sitzung, einem Speicher und einer Uhr; getrennte Instanzidentität und
   Konzeptzugehörigkeit, ein geteilter Bildencoder, ein Entscheidungs-Forecaster,
   aktuelle Aktionsabhängigkeiten, externe Verifikation und Wiederherstellung.
-  Vollständige CPU-Regression: **812 Tests bestanden**, einschließlich des kausal
+  Vollständige CPU-Regression: **816 Tests bestanden**, einschließlich des kausal
   geprüften Behauptungspfads und des übernommenen Oracle-Curriculums. Belege:
-  `runs/reviews/integrated_architecture_20260923/oracle-recipe-full-suite.log`
-  und `…/oracle-recipe-full-suite-exit.json` (Exit 0, Quellstand `7685c46`).
+  `runs/reviews/integrated_architecture_20260923/claim-input-full-suite.log`
+  und `…/claim-input-full-suite-exit.json` (Exit 0, Quellstand `02eb0c0`).
   Der erste Versuch brach nativ ab; Original und separater Testnachweis bleiben
   erhalten (`…/unified-testimony-native-crash-note.md`).
   Diskussion mit Alex bleibt separat offen.
@@ -719,7 +719,13 @@ der Sitzungsstart prüft jetzt die im Checkpoint gespeicherte Entscheidung, am
 Grenzschritt zusätzlich auf den geladenen Gewichten. Originalfehler bleibt in
 `root_boundary_01/`; unverändertes unabhängiges Repro besteht in `root_boundary_02/`.
 Supportkopien, unveränderte disjunkte Pools, Gradienten, Gates und exakter Resume
-sind auf CPU geprüft; Rohberichte bleiben erhalten. Noch kein Lernergebnis.
+sind auf CPU geprüft; Rohberichte bleiben erhalten.
+**Zwischenstand bei 2000:** Wiedererkennen eigener beobachteter Übergänge besteht,
+ν=0,9972 gegenüber Empty=0, Swap=−0,0157 und permutiert=−0,0141.
+Unabhängige Neuberechnung aus Rohdaten: `…/support-use-root-positive-control.json`.
+Erstmals ist damit in diesem trainierten Leser eine deutliche Nutzung der Belege
+nachgewiesen. **Noch kein Nachweis disjunkter Regelübertragung**; der festgelegte
+Abbau der Trainingsüberschneidung läuft weiter.
 
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 
@@ -1036,6 +1042,14 @@ R2 benötigt zusätzlich persistente Instanzen, gleich aussehende Zwillingsmasch
 und unterschiedliche Arten mit derselben Regel. Dadurch werden zeitliche Identität,
 Aussehen und Konzeptzugehörigkeit tatsächlich getrennt geprüft. Unklare Identität
 bleibt unbekannt; gleicher Schlüssel darf Zwillinge nicht still vereinigen.
+
+**Evaluator-Reparatur übernommen (`02eb0c0`).** R1 speichert den tatsächlich
+behaupteten Wert jetzt separat von der Prüfwahrheit. Veränderte Prüfanmerkungen
+lassen den Agenteneingang unverändert; der bisherige Populationstyp (falsche
+Behauptungen) und der Zufallsstrom bleiben gleich. Das bestehende Invarianzprotokoll
+erfasst nun auch den Behauptungspfad. Ein tatsächlicher Rot→Grün-Test und die
+unabhängige vollständige Regression (816 Tests, Exit 0) belegen die Reparatur.
+Details: `…/claim-input-invariance-red.log`, `…/claim-input-full-suite-exit.json`.
 
 **R2-Auswertungsvertrag jetzt vorab festgelegt (noch nicht implementiert):**
 Review mit Claude Opus 5.5 high, Version 3; vollständiger Vertrag und unabhängige
