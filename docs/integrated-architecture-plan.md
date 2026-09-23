@@ -690,6 +690,17 @@ Konstruktion mit D1 überein. Originalfehler und unabhängiger Gegencheck:
 `…/relation-reader-root-rng-red.json`, `…/relation-reader-root-rng-green.json`;
 Recipe-Hash `20f7e9ef…`. Noch kein Ergebnis.
 
+**Vorab festgelegter Folgeschritt nur bei endgültigem TRAIN-Fehlschlag von R-pair:**
+Ein einzelner Lernvertragsvergleich beginnt mit Wiedererkennen eigener beobachteter
+Übergänge (2000 Updates, positiver Support-Nutzungstest), reduziert die Überschneidung
+von Support und Trainingsquery über 4000 Updates auf null und trainiert zuletzt 2000
+Updates auf den ursprünglichen disjunkten Queries. Architektur, Ziel und primäre
+disjunkte Auswertung bleiben fest. Der positive Kontrolltest muss bestehen, sonst
+stoppt der Lauf. Dies prüft einen möglichen Lernweg, nicht eine schon belegte Ursache.
+Protokoll/Begründung: `…/support-use-root-decision.md`, `…/support-use-curriculum-brief.md`.
+Falls Wiedererkennen gelingt, aber der ursprüngliche Endpunkt weiter scheitert,
+folgt eine Umfangsentscheidung mit Alex statt weiterer automatischer Varianten.
+
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 
 **Anlass:** Der 15-min-Wahrnehmungslauf `runs/latent_agent_r1/dev_perception_20260923/`
