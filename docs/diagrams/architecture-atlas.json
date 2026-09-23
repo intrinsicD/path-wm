@@ -3037,6 +3037,10 @@
         [
           "code",
           "core"
+        ],
+        [
+          "observe",
+          "claim"
         ]
       ],
       "nodes": [
@@ -3099,6 +3103,11 @@
           "other",
           "Belief filter +typed action encoder\nSame source pyramid\nWired; no planning reader yet",
           "learned"
+        ],
+        [
+          "claim",
+          "Typed testimony + own test\nSeparate evidence; no claim-derived support\nCausally checked judgment",
+          "external"
         ]
       ],
       "edges": [
@@ -3191,6 +3200,21 @@
           "execute",
           "other",
           "executed action only; not a second planner"
+        ],
+        [
+          "claim",
+          "store",
+          "separate source; retractable judgment"
+        ],
+        [
+          "claim",
+          "execute",
+          "same action/view; authorized test"
+        ],
+        [
+          "observe",
+          "claim",
+          "own attributed outcome only"
         ]
       ],
       "notes": [

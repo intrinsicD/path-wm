@@ -1334,6 +1334,8 @@ flowchart TB
     class verify external;
     other["Belief filter +typed action encoder<br/>Same source pyramid<br/>Wired; no planning reader yet"]
     class other learned;
+    claim["Typed testimony + own test<br/>Separate evidence; no claim-derived support<br/>Causally checked judgment"]
+    class claim external;
     observe -->|"encode source once"| pyramid
     pyramid -->|"bounded consumer; source unchanged"| slots
     observe -->|"append exact source event"| store
@@ -1352,6 +1354,9 @@ flowchart TB
     slots -->|"session owns temporal identity"| store
     other -->|"observed belief shares the atomic event"| store
     execute -->|"executed action only; not a second planner"| other
+    claim -->|"separate source; retractable judgment"| store
+    claim -->|"same action/view; authorized test"| execute
+    observe -->|"own attributed outcome only"| claim
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
