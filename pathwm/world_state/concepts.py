@@ -503,9 +503,15 @@ class ConceptAgent:
     def _new_label(self):
         return f"{self.rng.getrandbits(64):016x}"
 
-    def _bind(self, instance, appearance_id, key, transitions_id, evidence_ids):
-        """Propose by appearance, verify by behaviour, bind or create. Returns decision."""
+    def _bind(self, instance, appearance_id, key, transitions_id, evidence_ids, *, prior=None):
+        """Propose by appearance, verify by behaviour, bind or create. Returns decision.
+
+        `prior`: a concept this instance belonged to before an invalidation; it is
+        always among the behavioural checks even when its key is no longer retrievable.
+        """
         scores = self._propose(key)
+        if prior is not None and prior not in scores:
+            scores = {**scores, prior: 0.0}
         decision = dict(instance=instance, proposals=scores)
         if len(evidence_ids) >= self.settings.min_check:
             z_new = self.induce(evidence_ids)
