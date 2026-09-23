@@ -15,7 +15,7 @@ import torch
 from pathwm.data import rule_world as rw
 from pathwm.io import state_hash
 from pathwm.models import latent_core as lc
-from pathwm.models.slots import pointer
+from pathwm.models.slots import ATTRIBUTES, VALUES, pointer
 from pathwm.world_state.concepts import AgentSettings, ConceptAgent, ConceptMemory  # noqa: F401 (AgentSettings re-exported)
 
 # Generator-side family schedule for the queried rules (A, B) of the declared four
@@ -117,6 +117,34 @@ def symbolic_perceiver(symbolic):
         return symbolic(scenes, lamps, entity)
 
     return perceive
+
+
+@torch.no_grad()
+def symbolic_episode_tokens(symbolic, batch, device):
+    """`encode_episodes(symbolic_perceiver(symbolic), ...)` without its discarded rendering.
+
+    Diagnostic supplied-symbol path only (scene attributes and true lamp states, as
+    `SymbolicSlots` already receives): machine tokens are lamp+role embeddings and
+    object tokens do not depend on lamps. Bit-identical to the rendered path (tested).
+    """
+    attrs = batch.scenes.attrs.to(device)
+    objects = symbolic.attribute(attrs + torch.arange(ATTRIBUTES, device=device) * VALUES).sum(2)
+    objects = objects + symbolic.role.weight[2]
+    machines = symbolic.lamp_embedding.weight + symbolic.role.weight[1]
+
+    def gather(t):
+        scene, m = t.scene.to(device), t.machine.to(device)
+        row = torch.arange(len(t), device=device)
+        return lc.TransitionTokens(
+            machines[t.pre.to(device)[row, m]], objects[scene, t.a.to(device)], objects[scene, t.b.to(device)],
+            machines[t.post.to(device)[row, m]], t.outcome.float().to(device),
+            t.episode.to(device), t.step.to(device),
+        )
+
+    episodes = len(batch.target_kind)
+    keys = machines[0].expand(episodes, 2, -1).clone()
+    return lc.EpisodeTokens(gather(batch.support), gather(batch.query), gather(batch.chain), keys,
+                            episodes, batch.target_kind.to(device))
 
 
 @torch.no_grad()

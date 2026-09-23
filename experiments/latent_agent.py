@@ -4,7 +4,9 @@ Stages (see docs/integrated-architecture-plan.md):
   audit       S0 generator/split/floor/strata checks (CPU, no model)
   perception  S1 multiscale encoder + slots + decoder + training-only label heads
   core        S2 shared latent G/T core on frozen perception (prepare-once frames)
-  symbolic    S2s structured-input diagnostic: same core on supplied render symbols
+  symbolic    S2s structured-input diagnostic: same core on supplied render symbols;
+              with --oracle-curriculum R: ORACLE application curriculum (R relation-only
+              updates, then all training rules; rule IDs supplied, diagnostic only)
   evaluate    S3 frozen-weight pixel lives with controls; point-estimate screen
   gates       formal one-sided t lower bounds over >=2 evaluations (3 seeds planned)
   check       tiny CPU run of every stage above, for software verification only
@@ -116,12 +118,12 @@ def parameters(module):
                 trainable=sum(p.numel() for p in module.parameters() if p.requires_grad))
 
 
-def finish(runner_or_path, result, *, complete, images=None):
+def finish(runner_or_path, result, *, complete, images=None, status=None):
     """Write the result first, then the report; report failure stays visible."""
     runner = runner_or_path if isinstance(runner_or_path, Run) else None
     path = runner.path if runner else Path(runner_or_path)
     atomic_json(path / "result.json", result)
-    status = "completed" if complete else "paused"
+    status = status or ("completed" if complete else "paused")
     mark = runner.status if runner else (lambda r, rep, error=None: write_status(path, r, rep, error))
     mark(status, "pending")
     try:
@@ -539,6 +541,409 @@ def train_core(args, s, *, symbolic=False):
     return runner.path
 
 
+# ---------------------------------------------------------------- S2s oracle application curriculum
+#
+# ORACLE DIAGNOSTIC (never runtime inference, induction, held-out, a capability or a
+# gate): the training-rule ID selects a learned code for the unchanged shared core, on
+# supplied symbols. Fixed two-stage schedule, promoted from the validated development
+# runs R44 (relation rules only) -> C192 (all 192 training rules):
+# runs/reviews/integrated_architecture_20260923/oracle-recipe-promotion-plan.md.
+
+# Checkpoint layout (standalone diagnostic; M2 decision): the recipe's RuleModel state
+# `perception.*`, `core.*`, `variance` (unused here), `oracle.codebook.weight`
+# [192, code_tokens*width] in `rw.split_rules()["train"]` order, `oracle.relation_codebook.weight`
+# [44, ...] and `oracle.stage`. It is NOT the historical `probe.build` layout: no historical
+# C192/E1a/E1b/I1 consumer loads it, and `--stage evaluate` refuses symbolic runs. The core
+# alone loads with the ordinary `load_component(core, run / "last.pt", "core")` (future use).
+
+ORACLE_SCOPE = ("ORACLE DIAGNOSTIC: training-rule IDs select learned codes in training and evaluation; supplied "
+                "symbols; training rules only; one seed. Not runtime inference, induction, a held-out result, a "
+                "capability or a formal gate.")
+ORACLE_P_EMPTY = 0.05  # support is unused by oracle codes; kept for the identical batch stream
+ORACLE_POOLS = dict(mixed=9101, all44=9144)  # generator seeds of the historical evaluation pools
+ORACLE_EVAL = dict(full=dict(episodes=8, support=128, queries=64),
+                   check=dict(episodes=1, support=16, queries=8))
+PAIRWISE = ("relation", "open", "close", "toggle")  # families whose event needs the match [d = 0]
+
+
+def boundary_gate(size):
+    """Full size: R44's precondition, the pre-transfer all44 screen must pass. Check size: exempt."""
+    return "all44 screen must pass" if size == "full" else "exempt: check size, workflow only"
+
+
+def retain_json(path, value):
+    """Write once; a deterministic replay may only reproduce identical content."""
+    value = json.loads(json.dumps(value, allow_nan=False))
+    if path.exists():
+        if json.loads(path.read_text()) != value:
+            raise ValueError(f"{path.name} exists with different content; refusing to overwrite evidence")
+        return
+    atomic_json(path, value)
+
+
+def retain_npz(path, arrays):
+    if path.exists():
+        with np.load(path) as old:
+            if sorted(old.files) != sorted(arrays) or not all(np.array_equal(old[k], arrays[k]) for k in arrays):
+                raise ValueError(f"{path.name} exists with different content; refusing to overwrite evidence")
+        return
+    temporary = path.with_name(path.name + ".partial.npz")
+    np.savez_compressed(temporary, **arrays)
+    temporary.replace(path)
+
+
+def atomic_copy(source, target):
+    temporary = target.with_name(target.name + ".partial")
+    temporary.write_bytes(source.read_bytes())
+    temporary.replace(target)
+
+
+def same_state(a, b):
+    """Exact equality of checkpoint structures (tensors bitwise)."""
+    if isinstance(a, torch.Tensor):
+        return isinstance(b, torch.Tensor) and torch.equal(a, b)
+    if isinstance(a, dict):
+        return isinstance(b, dict) and a.keys() == b.keys() and all(same_state(a[k], b[k]) for k in a)
+    if isinstance(a, (list, tuple)):
+        return isinstance(b, (list, tuple)) and len(a) == len(b) and all(same_state(x, y) for x, y in zip(a, b))
+    return a == b
+
+
+def verified_snapshot(path, relation_updates, *, require_record=True):
+    """This run's pre-transfer stage-0 snapshot and its gate record, or refuse.
+
+    Both the checkpoint and the record must name THIS run (its run.json identity digest),
+    the expected boundary step and stage 0, agree with each other and match the recorded
+    hash. A valid pair from another run is not this run's evidence. Reads only.
+    """
+    snapshot, record = path / "relation_stage.pt", path / "relation_stage.json"
+    if not snapshot.exists() or (require_record and not record.exists()):
+        raise ValueError("relation_stage.pt/.json missing: the stage boundary cannot be verified; start a new run")
+    saved = json.loads(record.read_text()) if record.exists() else None
+    if saved is not None and file_hash(snapshot) != saved.get("sha256"):
+        raise ValueError("relation_stage.pt does not match its recorded hash; refusing to continue")
+    own = (digest(json.loads((path / "run.json").read_text())["identity"]), relation_updates, 0)
+    kept = torch.load(snapshot, map_location="cpu", weights_only=True)
+    bound = (kept.get("identity_sha256"), kept.get("step"), int(kept["model"]["oracle.stage"])) == own
+    if saved is not None:
+        bound = bound and (saved.get("identity_sha256"), saved.get("step"), saved.get("stage")) == own
+    if not bound:
+        raise ValueError("relation_stage.pt/.json belong to another run or boundary; refusing to continue")
+    return saved
+
+
+class OracleCodes(nn.Module):
+    """Training-only codebook: one learned code per TRAINING rule, looked up by rule key.
+
+    Stage 0 trains a separate 44-row relation table (as R44, so the other rows get no
+    update or weight decay); `transfer()` writes it into the 192-row table (as C192).
+    Validation/test rules have no code; unknown keys raise.
+    """
+
+    def __init__(self, s, train_rules):
+        super().__init__()
+        self.shape = (s["code_tokens"], s["width"])
+        self.index = {r.key(): i for i, r in enumerate(train_rules)}
+        self.relation = [i for i, r in enumerate(train_rules) if r.family == "relation"]
+        self.codebook = nn.Embedding(len(train_rules), s["code_tokens"] * s["width"])
+        nn.init.normal_(self.codebook.weight, std=0.02)  # after the core: the historical RNG order
+        self.relation_codebook = nn.Embedding.from_pretrained(self.codebook.weight[self.relation].detach().clone(),
+                                                              freeze=False)
+        self.register_buffer("stage", torch.zeros((), dtype=torch.long))  # 0 relation, 1 mixed (checkpointed)
+
+    def forward(self, rules):
+        unknown = [r.key() for r in rules if r.key() not in self.index]
+        if unknown:
+            raise ValueError(f"oracle codes exist only for training rules: {unknown[:3]}")
+        rows = [self.index[r.key()] for r in rules]
+        device = self.codebook.weight.device
+        if int(self.stage) == 0:
+            where = {row: i for i, row in enumerate(self.relation)}
+            if all(row in where for row in rows):  # the exact R44 lookup
+                codes = self.relation_codebook(torch.tensor([where[row] for row in rows], device=device))
+                return codes.reshape(len(rows), *self.shape)
+            # Evaluation of other families before the boundary: the codebook the transfer would produce.
+            table = self.codebook.weight.index_put((torch.tensor(self.relation, device=device),),
+                                                   self.relation_codebook.weight)
+            return table[torch.tensor(rows, device=device)].reshape(len(rows), *self.shape)
+        return self.codebook(torch.tensor(rows, device=device)).reshape(len(rows), *self.shape)
+
+    @torch.no_grad()
+    def transfer(self):
+        rows = torch.tensor(self.relation, device=self.codebook.weight.device)
+        self.codebook.weight[rows] = self.relation_codebook.weight
+        if not torch.equal(self.codebook.weight[rows], self.relation_codebook.weight):
+            raise ValueError("relation rows were not transferred exactly")
+        self.stage.fill_(1)
+
+
+def oracle_stage_optimizer(model, lr):
+    """Fresh AdamW per stage over the trainable core plus that stage's table (historical order)."""
+    table = model.oracle.relation_codebook if int(model.oracle.stage) == 0 else model.oracle.codebook
+    params = [p for p in model.core.parameters() if p.requires_grad] + [table.weight]
+    return params, torch.optim.AdamW(params, lr=lr, weight_decay=0.01)
+
+
+def pairwise_d(batch):
+    """Evaluation only: d = (a_j + delta - b_k) mod 4; the truth must follow the match [d = 0]."""
+    q = batch.query
+    rules = [batch.rules[int(e)] for e in q.episode]
+    j, k, delta = (torch.tensor([getattr(r, n) for r in rules]) for n in ("j", "k", "delta"))
+    aj = batch.scenes.attrs[q.scene, q.a].gather(1, j[:, None]).squeeze(1)
+    bk = batch.scenes.attrs[q.scene, q.b].gather(1, k[:, None]).squeeze(1)
+    d = (aj + delta - bk) % 4
+    m, s = d == 0, q.pre.gather(1, q.machine[:, None]).squeeze(1).bool()
+    family = rules[0].family
+    truth = dict(relation=m, open=s | m, close=s & ~m, toggle=s ^ m)[family]
+    if any(r.family != family for r in rules) or not torch.equal(truth.long(), q.outcome.long()):
+        raise ValueError(f"{family}: truth does not follow [d = 0]; alignment error")
+    return d
+
+
+def within_auc(event, score, groups):
+    """Mean within-episode AUROC (ties 0.5); episodes with one class are left out."""
+    values = []
+    for g in np.unique(groups):
+        pos, neg = score[(groups == g) & (event == 1)], score[(groups == g) & (event == 0)]
+        if len(pos) and len(neg):
+            values.append(float(((pos[:, None] > neg) + 0.5 * (pos[:, None] == neg)).mean()))
+    return float(np.mean(values)) if values else None
+
+
+def oracle_pools(size, train):
+    """Historical pools: all44 (one episode per relation rule) and the five-family pool 9101."""
+    e = ORACLE_EVAL[size]
+    g = torch.Generator().manual_seed(ORACLE_POOLS["all44"])
+    all44 = [rw.sample_episodes(g, [rule], rw.KIND_SPLIT["train"], episodes=1, support=(e["support"],),
+                                queries=e["queries"], p_empty=0.0) for rule in train if rule.family == "relation"]
+    g = torch.Generator().manual_seed(ORACLE_POOLS["mixed"])
+    mixed = [rw.sample_episodes(g, [r for r in train if r.family == f], rw.KIND_SPLIT["train"], episodes=e["episodes"],
+                                support=(e["support"],), queries=e["queries"], p_empty=0.0) for f in rw.FAMILIES]
+    return dict(all44=all44, mixed=mixed)
+
+
+@torch.no_grad()
+def oracle_evaluate(model, pools, device, floors):
+    """nu with full / zero / swap codes per pool and family, the development screen
+    (nu_full >= 0.7, > zero, > swap, every episode defined) and pairwise second-bit AUROC."""
+    rows = []
+    for name, batches in pools.items():
+        keys = [r.key() for b in batches for r in b.rules]
+        offset = 0
+        for part, batch in enumerate(batches):
+            own = [r.key() for r in batch.rules]
+            if name == "all44":  # next episode (cyclic) with a different rule, across the pool
+                idx = [offset + i for i in range(len(own))]
+                swap = [next(keys[(i + t) % len(keys)] for t in range(1, len(keys)) if keys[(i + t) % len(keys)] != keys[i])
+                        for i in idx]
+            else:  # first other episode of this family with a different rule
+                swap = []
+                for i in range(len(own)):
+                    others = [o for o in range(len(own)) if o != i]
+                    swap.append(own[([o for o in others if own[o] != own[i]] or others or [i])[0]])
+            offset += len(own)
+            rules = {r.key(): r for b in batches for r in b.rules}
+            tokens = ev.symbolic_episode_tokens(model.perception, batch, device)
+            q = tokens.query
+            full = model.oracle(batch.rules)
+            s = batch.query.pre.gather(1, batch.query.machine[:, None]).squeeze(1)
+            d = pairwise_d(batch) if batch.rules[0].family in PAIRWISE else torch.full_like(s, -1)
+            for control, codes in dict(full=full, zero=torch.zeros_like(full),
+                                       swap=model.oracle([rules[k] for k in swap])).items():
+                p = torch.sigmoid(model.core.apply(q.m_pre, q.a, q.b, codes[q.episode])[0]).cpu()
+                for i in range(len(p)):
+                    e = int(batch.query.episode[i])
+                    rows.append(dict(pool=name, control=control, family=batch.rules[e].family, rule=own[e],
+                                     group=f"{name}/{part}/{e}", truth=int(batch.query.outcome[i]), s=int(s[i]),
+                                     d=int(d[i]), p=float(p[i])))
+    metrics = {}
+    for name in pools:
+        nu = {c: ev.nu_from_rows([r for r in rows if r["pool"] == name and r["control"] == c], floors)
+              for c in ("full", "zero", "swap")}
+        families = sorted({r["family"] for r in rows if r["pool"] == name}, key=rw.FAMILIES.index)
+        screen = {}
+        for f in families:
+            full, zero, swap = (nu[c].get(f) for c in ("full", "zero", "swap"))
+            screen[f] = ("incomplete" if None in (full, zero, swap)
+                         else "pass" if full >= 0.7 and full > zero and full > swap else "fail")
+        overall = ("fail" if "fail" in screen.values() else
+                   "incomplete" if "incomplete" in screen.values() or nu["full"]["groups_without_both_classes"] else "pass")
+        second = {}
+        for f in (f for f in families if f in PAIRWISE):
+            chosen = [r for r in rows if r["pool"] == name and r["control"] == "full" and r["family"] == f]
+            d, s, p = (np.array([r[k] for r in chosen]) for k in ("d", "s", "p"))
+            groups = np.array([r["group"] for r in chosen])
+            eligible = {"open": s == 0, "close": s == 1}.get(f, np.ones_like(s, dtype=bool))
+            score = np.where((f in ev.TRANSITION_FAMILIES) & (s == 1), 1 - p, p)  # scored event's probability
+            even = eligible & (d % 2 == 0)
+            second[f] = within_auc((d[even] == 0).astype(int), score[even], groups[even])
+        metrics[name] = dict(screen=overall, families=screen, second_bit_auc=second,
+                             **{f"nu_{c}": {f: nu[c].get(f) for f in families} for c in nu},
+                             groups_without_both_classes=nu["full"]["groups_without_both_classes"])
+    return rows, metrics
+
+
+def oracle_row(step, stage, metrics):
+    row = dict(step=step, split="evaluation", stage=stage)
+    for name, m in metrics.items():
+        row[f"screen_{name}"] = m["screen"]
+        for c in ("full", "zero", "swap"):
+            row.update({f"nu_{c}_{name}_{f}": v for f, v in m[f"nu_{c}"].items() if v is not None})
+        row.update({f"second_bit_{name}_{f}": v for f, v in m["second_bit_auc"].items() if v is not None})
+    return row
+
+
+def train_oracle(args, s):
+    """Symbolic stage, --oracle-curriculum R: R relation-only updates, then mixed to --updates."""
+    relation_updates = args.oracle_curriculum
+    seed_everything(args.seed)
+    train = rw.split_rules()["train"]
+    model = RuleModel(s, symbolic=True)
+    model.oracle = OracleCodes(s, train)
+    model = model.to(args.device)
+    for frozen in (model.perception, model.core.key_head, model.core.evidence_mlp):
+        frozen.requires_grad_(False)  # fixed symbols, unused key head, bypassed evidence MLP
+    gate = boundary_gate(args.size)
+    if args.resume:  # refuse final runs and unverifiable boundaries before anything is written
+        path = Path(args.resume)
+        status = json.loads((path / "status.json").read_text())["result"]
+        if status in ("completed", "stopped"):
+            raise ValueError(f"run is final ({status}); an oracle curriculum is not extended, start a new output")
+        state = torch.load(path / "last.pt", map_location="cpu", weights_only=True)
+        if int(state["model"]["oracle.stage"]) == 1:
+            if verified_snapshot(path, relation_updates)["decision"] not in ("pass", "exempt"):
+                raise ValueError("mixed stage without a passed or exempt relation gate")
+        elif (path / "relation_stage.pt").exists() or (path / "relation_stage.json").exists():
+            if state["step"] != relation_updates:  # a stage-0 snapshot exists only in the boundary crash window
+                raise ValueError("relation_stage artefacts do not belong to this checkpoint; refusing to continue")
+            verified_snapshot(path, relation_updates, require_record=False)
+        model.oracle.stage.fill_(int(state["model"]["oracle.stage"]))  # selects the checkpoint's optimizer
+    params, optimizer = oracle_stage_optimizer(model, args.lr)
+    relation = [r for r in train if r.family == "relation"]
+    e = ORACLE_EVAL[args.size]
+    workflow = ("WORKFLOW CHECK ONLY (tiny sizes; boundary gate exempt): software path, no learning claim. "
+                if args.size == "check" else "")
+    settings = dict(stage="symbolic", oracle_curriculum=relation_updates, seed=args.seed, updates=args.updates,
+                    lr=args.lr, device=args.device, size=args.size, sizes=s, purpose="development", precision="fp32",
+                    max_reserved_gib=args.max_reserved_gib, scope=workflow + ORACLE_SCOPE, boundary_gate=gate,
+                    stages=[dict(name="relation", updates=[1, relation_updates], rules=len(relation)),
+                            dict(name="mixed", updates=[relation_updates + 1, args.updates], rules=len(train))],
+                    boundary=("stage-0 state saved and copied atomically to relation_stage.pt; all44 gate on it; then "
+                              "44 trained rows -> 192-row codebook by rule key, fresh AdamW, sampler re-seeded (seed+1009)"),
+                    objective="unweighted outcome BCE of core.apply(m_pre, a, b, oracle code) on queries",
+                    batch=dict(episodes=s["episodes"], support=s["support"], queries=s["queries"], p_empty=ORACLE_P_EMPTY),
+                    frozen=["perception (supplied symbols)", "core.key_head (unused)", "core.evidence_mlp (bypassed)"],
+                    evaluation=dict(pools=ORACLE_POOLS, **e, every=s["validate_every"]),
+                    checkpoint_layout=("standalone RuleModel + oracle.* codes; not the historical probe.build layout; "
+                                       "no historical C192 consumer loads it"),
+                    provenance="promotes runs R44 (core_relation_probe) and C192 (core_curriculum); see plan artifact")
+    runner = Run(args.resume or args.output, settings=settings, data=rw.manifest(), recipe=__file__, model=model,
+                 optimizer=optimizer, device=args.device, resume=args.resume is not None)
+    floors = rw.floors()
+    pools = oracle_pools(args.size, train)
+    session = 1 + len(list(runner.path.glob("result_end_*.json")))
+    started = time.perf_counter()
+
+    def evaluation(name):
+        """Raw predictions and metrics, written once (a deterministic replay must match)."""
+        with evaluation_mode(model):
+            rows, metrics = oracle_evaluate(model, pools, args.device, floors)
+        retain_npz(runner.path / f"predictions_{name}.npz", {k: np.array([r[k] for r in rows]) for k in rows[0]})
+        retain_json(runner.path / f"metrics_{name}.json", metrics)
+        return metrics
+
+    def conclude(stop, status, extra=None):
+        """Per-session end evidence (never overwritten), then result.json and the report."""
+        name = f"end_step{runner.step:05d}_s{session:02d}"
+        metrics = evaluation(name)
+        result = dict(
+            evaluation_scope=workflow + ORACLE_SCOPE, gate=None, stop_reason=stop, boundary_gate=gate,
+            session=session, session_result=f"result_{name}.json",
+            metrics=dict(stage=int(model.oracle.stage), end=metrics, **(extra or {}),
+                         screens={n: m["screen"] for n, m in metrics.items()},
+                         resources=dict(**resources(args.device), updates=runner.step,
+                                        seconds_this_session=time.perf_counter() - started, **parameters(model))),
+            limitations=["Oracle conditioning: the rule ID is supplied; this measures code APPLICATION by the shared "
+                         "core, not induction from evidence, retrieval, perception or planning.",
+                         "Development screen on training rules only (fresh scenes); validation/test rules have no codes.",
+                         "One seed; d uses generator parameters for evaluation only.",
+                         "Standalone diagnostic checkpoint: not the historical probe.build layout; no historical "
+                         "C192/E1a/E1b/I1 consumer loads it."],
+        )
+        retain_json(runner.path / f"result_{name}.json", result)
+        finish(runner, result, complete=status != "paused", status=status)
+
+    def boundary():
+        """Pre-transfer snapshot (atomic), gate on it, then the transfer; replay-safe."""
+        if (runner.path / "relation_stage.pt").exists():  # bound to this run before anything is written
+            verified_snapshot(runner.path, relation_updates, require_record=False)
+        runner.save()  # the stage-0 state at step R
+        state = torch.load(runner.path / "last.pt", map_location="cpu", weights_only=True)
+        snapshot = runner.path / "relation_stage.pt"
+        if snapshot.exists():  # replay after a crash: it must be exactly this state (and its recorded hash)
+            kept = torch.load(snapshot, map_location="cpu", weights_only=True)
+            if not all(same_state(kept[k], state[k]) for k in ("step", "model", "optimizer", "sampler")):
+                raise ValueError("relation_stage.pt differs from the replayed stage-0 state; refusing to continue")
+        else:
+            atomic_copy(runner.path / "last.pt", snapshot)
+        metrics = evaluation("relation_stage")
+        screen = metrics["all44"]["screen"]
+        decision = "exempt" if gate.startswith("exempt") else screen
+        retain_json(runner.path / "relation_stage.json",
+                    dict(step=runner.step, stage=0, sha256=file_hash(snapshot), identity_sha256=state["identity_sha256"],
+                         gate=gate, all44_screen=screen, decision=decision))
+        if decision not in ("pass", "exempt"):  # R44 did not pass: never train the mixed stage
+            conclude("relation_stage_failed", "stopped", dict(relation_gate=dict(all44_screen=screen, gate=gate)))
+            return False
+        model.oracle.transfer()
+        new_params, new_optimizer = oracle_stage_optimizer(model, args.lr)
+        runner.optimizer = new_optimizer
+        runner.sampler.manual_seed(args.seed + 1009)  # C192 was a fresh run: same mixed stream
+        runner.log(oracle_row(runner.step, 1, evaluation("boundary")))
+        runner.save()
+        return new_params, new_optimizer
+
+    try:
+        if runner.step == 0 and not args.resume:
+            runner.log(oracle_row(0, 0, evaluation("start")))
+            runner.save()
+        while runner.step < args.updates and not stop(runner, args, started):
+            if runner.step == relation_updates and int(model.oracle.stage) == 0:
+                crossed = boundary()
+                if crossed is False:
+                    return runner.path
+                params, optimizer = crossed
+            stage = int(model.oracle.stage)
+            training_mode(model)
+            batch = rw.sample_episodes(runner.sampler, relation if stage == 0 else train, rw.KIND_SPLIT["train"],
+                                       episodes=s["episodes"], support=s["support"], queries=s["queries"],
+                                       p_empty=ORACLE_P_EMPTY)
+            q = ev.symbolic_episode_tokens(model.perception, batch, args.device).query
+            logits, _ = model.core.apply(q.m_pre, q.a, q.b, model.oracle(batch.rules)[q.episode])
+            loss = F.binary_cross_entropy_with_logits(logits, q.outcome)  # natural, unweighted
+            optimizer.zero_grad()
+            loss.backward()
+            if not all(p.grad is None or torch.isfinite(p.grad).all() for p in params):
+                raise ValueError("Nonfinite gradient")
+            torch.nn.utils.clip_grad_norm_(params, 1.0)
+            optimizer.step()
+            runner.step += 1
+            runner.log(dict(step=runner.step, split="train", stage=stage, loss=float(loss.detach()),
+                            query_accuracy=float(((logits > 0).float() == q.outcome).float().mean())))
+            enforce_ceiling(args, runner)
+            if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
+                runner.log(oracle_row(runner.step, stage, evaluation(f"step{runner.step:05d}")))
+                runner.save()
+                print(f"oracle curriculum: saved step {runner.step} (stage {stage})", flush=True)
+        runner.save()
+        complete = runner.step >= args.updates
+        conclude(stop_reason(runner, args, started), "completed" if complete else "paused")
+    except Exception as error:
+        runner.status("failed", "incomplete", str(error))
+        raise
+    return runner.path
+
+
 # ---------------------------------------------------------------- S3 evaluate / gates
 
 
@@ -665,6 +1070,7 @@ def check(args):
     perception = train_perception(sub(output=root / "perception", updates=3, stop_after=None, resume=None, size="check"), s)
     core = train_core(sub(output=root / "core", perception=perception, updates=3, stop_after=None, resume=None, size="check"), s)
     train_core(sub(output=root / "symbolic", updates=3, stop_after=None, resume=None, size="check"), s, symbolic=True)
+    train_oracle(sub(output=root / "oracle", updates=4, oracle_curriculum=2, stop_after=None, resume=None, size="check"), s)
     evaluation = evaluate(sub(output=root / "evaluate", core=core, population="validation"), s)
     gates(sub(output=root / "gates", evaluations=[evaluation]), s)
     print(json.dumps(dict(output=str(root), stages=sorted(p.name for p in root.iterdir())), indent=2))
@@ -696,6 +1102,9 @@ def main():
                         help="perception only: paired-view appearance-key InfoNCE (joint trains perception too)")
     parser.add_argument("--identity-weight", type=float,
                         help=f"perception only, with --identity: loss weight (default {IDENTITY_WEIGHT})")
+    parser.add_argument("--oracle-curriculum", type=int, metavar="R",
+                        help="symbolic only: ORACLE diagnostic, R relation-only updates then all training rules "
+                             "until --updates (historical: 8000 of 16000)")
     parser.add_argument("--init-key", action="store_true",
                         help="core only: initialize core.key_head from the --perception run's exported identity key")
     args = resume_arguments(parser, parser.parse_args())
@@ -720,6 +1129,8 @@ def main():
         args.identity_weight = IDENTITY_WEIGHT
     if args.init_key and args.stage != "core":
         parser.error("--init-key applies to the core stage only")
+    if args.oracle_curriculum is not None and (args.stage != "symbolic" or not 0 < args.oracle_curriculum < args.updates):
+        parser.error("--oracle-curriculum R applies to the symbolic stage with 0 < R < --updates")
     if args.stage == "audit":
         audit(args, s)
     elif args.stage == "perception":
@@ -727,7 +1138,10 @@ def main():
     elif args.stage in ("core", "symbolic"):
         if args.stage == "core" and args.perception is None and args.resume is None:
             parser.error("--perception RUN required")
-        train_core(args, s, symbolic=args.stage == "symbolic")
+        if args.oracle_curriculum is not None:
+            train_oracle(args, s)
+        else:
+            train_core(args, s, symbolic=args.stage == "symbolic")
     elif args.stage == "evaluate":
         if args.core is None:
             parser.error("--core RUN required")
