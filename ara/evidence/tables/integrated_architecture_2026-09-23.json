@@ -1,0 +1,1770 @@
+{
+  "timestamp": "2026-09-23T16:29+02:00",
+  "scope": "Integrated R1/R2 architecture, actual Claude Opus5.5 high collaboration, bounded symbolic learning experiments; complete learned agent NOT achieved",
+  "software": {
+    "commit": "02eb0c0",
+    "full_cpu_tests": 816,
+    "receipt": {
+      "path": "runs/reviews/integrated_architecture_20260923/claim-input-full-suite-exit.json",
+      "sha256": "58e4b652a10fc5d136a21455efb20acb1fc3a6c8eb38f22e1076d3947c2d9c32",
+      "bytes": 53
+    }
+  },
+  "runs": [
+    {
+      "run": "runs/latent_agent_r1/identity_joint_20260923",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/identity_joint_20260923/run.json",
+          "sha256": "023bee5a5549c727110635250a6e4d261f5d27daa94f9edc326d5ed20398b2af",
+          "bytes": 49323
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_joint_20260923/result.json",
+          "sha256": "7def9e461b1595f145f7aac2145f113b86c018e92c170cc8e50aa6926d4435a1",
+          "bytes": 1514
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_joint_20260923/status.json",
+          "sha256": "06b7f5c7d769a0c64f7e1447135aaa4284185d951065c1568089dc148518f64e",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_joint_20260923/report.html",
+          "sha256": "50a797cd1486f6624823d212abcc5bf89fdb9116bd9cc7dfd4054d512830b0ea",
+          "bytes": 2901476
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/identity_detached_20260923",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/identity_detached_20260923/run.json",
+          "sha256": "b96d10bc97cda0d39466712a45f280d6dc69c74a853744f462079a4588c0f831",
+          "bytes": 49333
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_detached_20260923/result.json",
+          "sha256": "ea098d3878b06567d76456c1398d241b87c081e7fd2df1cc153a474fb5672280",
+          "bytes": 1508
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_detached_20260923/status.json",
+          "sha256": "06b7f5c7d769a0c64f7e1447135aaa4284185d951065c1568089dc148518f64e",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/identity_detached_20260923/report.html",
+          "sha256": "9731066d778f8bb0474a4aab5ff43f63fb31541e28853a2d117581c364e9db21",
+          "bytes": 2897183
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_application_probe_20260923/O_scratch",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_application_probe_20260923/O_scratch/run.json",
+          "sha256": "f8a7b7cd267b5196d382155527cb479be464d6fe446d5098fa38ad42431fa8d0",
+          "bytes": 37981
+        },
+        {
+          "path": "runs/latent_agent_r1/core_application_probe_20260923/O_scratch/result.json",
+          "sha256": "0c03616c682361498dcee62239816baee49f17dc6d444096134ab3f7c205a009",
+          "bytes": 19529
+        },
+        {
+          "path": "runs/latent_agent_r1/core_application_probe_20260923/O_scratch/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_application_probe_20260923/O_scratch/report.html",
+          "sha256": "87330d89536b2c3c0db26fb484e54f9ffcb9fac5e97a88a0ab0e25d5f370ac24",
+          "bytes": 1632740
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_continuation_20260923/O_scratch_16000",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_continuation_20260923/O_scratch_16000/run.json",
+          "sha256": "238125bc509e94a6aa94094b1ca6b50db69345b5fef2caec182cbf20350164ad",
+          "bytes": 37497
+        },
+        {
+          "path": "runs/latent_agent_r1/core_continuation_20260923/O_scratch_16000/result.json",
+          "sha256": "0186b08d20991d0f42fdc09eefa46b9ae5d1ef7ec489822949c6c55450ebab6d",
+          "bytes": 19045
+        },
+        {
+          "path": "runs/latent_agent_r1/core_continuation_20260923/O_scratch_16000/status.json",
+          "sha256": "eb0ba12cbea42788a83af2b891cfd9283856a87b1980554604f60c797540db05",
+          "bytes": 97
+        },
+        {
+          "path": "runs/latent_agent_r1/core_continuation_20260923/O_scratch_16000/report.html",
+          "sha256": "3c6a71a2d98044442540bfa4ce7a2179cfe0a9c7cff7d63623e6fc0c16fcd459",
+          "bytes": 1651494
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 16000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_relation_probe_20260923/R44",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_relation_probe_20260923/R44/run.json",
+          "sha256": "cb86487a4cd3208146d73be0893ccec6f34263ea7cb50cb67599243c89edc9ad",
+          "bytes": 45720
+        },
+        {
+          "path": "runs/latent_agent_r1/core_relation_probe_20260923/R44/result.json",
+          "sha256": "35b07ed9ff4fe53e09ed3c0faba9c22a7a5ff545e554aaeffc6ee4e18b6d64a1",
+          "bytes": 13273
+        },
+        {
+          "path": "runs/latent_agent_r1/core_relation_probe_20260923/R44/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_relation_probe_20260923/R44/report.html",
+          "sha256": "203c76f7f46674f174651307a06c58d4c821e0ba0a0de21af5aa646950e4d356",
+          "bytes": 1556007
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_curriculum_20260923/C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_curriculum_20260923/C192/run.json",
+          "sha256": "4d3e41f3cc83de27b93df0b2185c16f83dc31cd8bb7e19797c4a589276e082d8",
+          "bytes": 45344
+        },
+        {
+          "path": "runs/latent_agent_r1/core_curriculum_20260923/C192/result.json",
+          "sha256": "bdd90a215150f86e0766bf8aa7883c737cea7812b7a76e336a43e34e37fcd3b5",
+          "bytes": 21875
+        },
+        {
+          "path": "runs/latent_agent_r1/core_curriculum_20260923/C192/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_curriculum_20260923/C192/report.html",
+          "sha256": "62e3c695a3fd68a52ed1e72051efafa7549dcfe6eb4233857b94e1f3c13badd1",
+          "bytes": 1611126
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/code_search_20260923/E1a_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/code_search_20260923/E1a_C192/run.json",
+          "sha256": "928174179fa1d75bcd80ceae882d1f35d80939842285488e48026efddd9eddb8",
+          "bytes": 41366
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_20260923/E1a_C192/result.json",
+          "sha256": "9baf599a2f1be44eed22a23d3def6693d7417dd66c8fd120906d87627d5a0bc7",
+          "bytes": 61172
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_20260923/E1a_C192/status.json",
+          "sha256": "eddf637c29d50192e6658b590961f287621df9fb69a906652d5415a83e3a9f38",
+          "bytes": 94
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_20260923/E1a_C192/report.html",
+          "sha256": "b91865400cf0ef201f5d77b319654e6672ef16bb3d0fc9dd3f80a25f548f8c4d",
+          "bytes": 207343
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 22
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/code_search_retrieval_20260923/E1aR_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/code_search_retrieval_20260923/E1aR_C192/run.json",
+          "sha256": "8d1af3a80e092dbb45f0d22a5c5a166c45d248fff973a704660b5f75f60bec36",
+          "bytes": 41880
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_retrieval_20260923/E1aR_C192/result.json",
+          "sha256": "e8537acdd5c28367fcbef8c9f3f76e368aa63ed251253a3f03681a2fef715285",
+          "bytes": 73058
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_retrieval_20260923/E1aR_C192/status.json",
+          "sha256": "eddf637c29d50192e6658b590961f287621df9fb69a906652d5415a83e3a9f38",
+          "bytes": 94
+        },
+        {
+          "path": "runs/latent_agent_r1/code_search_retrieval_20260923/E1aR_C192/report.html",
+          "sha256": "82efcba64b299f6dfb94dd05f11337d366bd6ff680de1f8d07d785289d6c17ae",
+          "bytes": 235299
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 22
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_amortize_20260923/E1b_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_amortize_20260923/E1b_C192/run.json",
+          "sha256": "15457385b6e94a3767689eb9d5d401ecd56b84b818a886085e1d0934d1d6a438",
+          "bytes": 46227
+        },
+        {
+          "path": "runs/latent_agent_r1/core_amortize_20260923/E1b_C192/result.json",
+          "sha256": "30febc31c4b34f81375c056fba54420e5c055c0a9889c2a329a26095201dda41",
+          "bytes": 19993
+        },
+        {
+          "path": "runs/latent_agent_r1/core_amortize_20260923/E1b_C192/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_amortize_20260923/E1b_C192/report.html",
+          "sha256": "35fed88134ef3117b1b7e3df20400a212d8238d9a023f5282a4188dd86b10114",
+          "bytes": 2406916
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_refine_20260923/E1c_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_refine_20260923/E1c_C192/run.json",
+          "sha256": "7c911b68d27e671e28cf7518eec3b832dd7c606020541efd798cf28c88722dac",
+          "bytes": 46770
+        },
+        {
+          "path": "runs/latent_agent_r1/core_refine_20260923/E1c_C192/result.json",
+          "sha256": "616ba20e9f9532a1f02b8304628240af3a3df575bf25471ed1a6a8d972204a07",
+          "bytes": 25285
+        },
+        {
+          "path": "runs/latent_agent_r1/core_refine_20260923/E1c_C192/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_refine_20260923/E1c_C192/report.html",
+          "sha256": "a60a5888ed697ad30a8bd6309c8eee68fe79a409b35a7935ee0d7b65047141be",
+          "bytes": 2438412
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/core_query_scale_20260923/E1bS_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/core_query_scale_20260923/E1bS_C192/run.json",
+          "sha256": "056a088a4d1d3dd43663805b7a600cceee15bfe274f677d55745b8b8c0af13dd",
+          "bytes": 47404
+        },
+        {
+          "path": "runs/latent_agent_r1/core_query_scale_20260923/E1bS_C192/result.json",
+          "sha256": "e49d603afc3dbe2731a232f3cca8498ede1f2d763e98c336d59832f012b27e7a",
+          "bytes": 22823
+        },
+        {
+          "path": "runs/latent_agent_r1/core_query_scale_20260923/E1bS_C192/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/core_query_scale_20260923/E1bS_C192/report.html",
+          "sha256": "7a203516f8e701d32ad2c8976df65707d38ad1e1a73d0e3a91f64c8b554a4977",
+          "bytes": 2423856
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/induction_relation_20260923/I1_C192",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/induction_relation_20260923/I1_C192/run.json",
+          "sha256": "a65ca9f85013daf1de3284edcb5948c567f932556d8b07efd4354f0f1ff185f6",
+          "bytes": 48109
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_relation_20260923/I1_C192/result.json",
+          "sha256": "435a29fc49e7f301119a9f1789cba7097f880025f87ee5dca1e5c55812d8ff3d",
+          "bytes": 27542
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_relation_20260923/I1_C192/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_relation_20260923/I1_C192/report.html",
+          "sha256": "9caa1d717a8b48fad4fca28aff559eda7076d32ba401df639b21bf84247f896c",
+          "bytes": 2779182
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/induction_direct_20260923/J44",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/induction_direct_20260923/J44/run.json",
+          "sha256": "362ab74c0ddcb9c8f544493303d8658e588fc6d8e8bac6407f831c310bc876d1",
+          "bytes": 44501
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_direct_20260923/J44/result.json",
+          "sha256": "bfc6a3c6763ca61adc32b09086ec132ea5f9984d7c182634c0bba506bfb77712",
+          "bytes": 14554
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_direct_20260923/J44/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/induction_direct_20260923/J44/report.html",
+          "sha256": "418409b61456823bcb399d820e98741bb13e165a69ca9783c5c1a473e4e9cd41",
+          "bytes": 1560831
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/evidence_reader_20260923/D1",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/evidence_reader_20260923/D1/run.json",
+          "sha256": "6e33a8e441fc65c522fc196e43fd3ca6265c161727cc3ac52644890d7b867e04",
+          "bytes": 44921
+        },
+        {
+          "path": "runs/latent_agent_r1/evidence_reader_20260923/D1/result.json",
+          "sha256": "1918ebedb2e1e3adba3a23fd260fa927b56ea5cfb3bc75c7e2d4331c2e3ae0a1",
+          "bytes": 13573
+        },
+        {
+          "path": "runs/latent_agent_r1/evidence_reader_20260923/D1/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/evidence_reader_20260923/D1/report.html",
+          "sha256": "1ab6e01511891c34cc6b2f62aa9962f36b5ca258c7ce51d9562d2fbc9ff7ea73",
+          "bytes": 1555402
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/relation_reader_20260923/RPAIR",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/relation_reader_20260923/RPAIR/run.json",
+          "sha256": "295dd7b696faa77420894a5320cffb4e3d404694b2ca0136857cf0aabe270197",
+          "bytes": 46249
+        },
+        {
+          "path": "runs/latent_agent_r1/relation_reader_20260923/RPAIR/result.json",
+          "sha256": "fc64e937fe97eb349ce9ef85b75e160d9b392e1b8fa0dbb0e6d4732403422486",
+          "bytes": 17918
+        },
+        {
+          "path": "runs/latent_agent_r1/relation_reader_20260923/RPAIR/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/relation_reader_20260923/RPAIR/report.html",
+          "sha256": "557edde875e22ca01b396d823cce76e0cf6ac7ad88fe42a8b0f76d6d899654d0",
+          "bytes": 1570122
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    },
+    {
+      "run": "runs/latent_agent_r1/support_use_curriculum_20260923/SUC",
+      "artifacts": [
+        {
+          "path": "runs/latent_agent_r1/support_use_curriculum_20260923/SUC/run.json",
+          "sha256": "b914f92684f601f92f97c10b041e5fecb6d9d98db0e82240aa37998d4d690a16",
+          "bytes": 47289
+        },
+        {
+          "path": "runs/latent_agent_r1/support_use_curriculum_20260923/SUC/result.json",
+          "sha256": "e1031a3e760ee20ef553242c54fc5ef5b60396830963d4ca4cfa80557722d46f",
+          "bytes": 23240
+        },
+        {
+          "path": "runs/latent_agent_r1/support_use_curriculum_20260923/SUC/status.json",
+          "sha256": "5de19156321eebd5ece54ad158a27fe8101df780a8671940fd8dd4b1b7af3002",
+          "bytes": 96
+        },
+        {
+          "path": "runs/latent_agent_r1/support_use_curriculum_20260923/SUC/report.html",
+          "sha256": "93c05314f96071bcfaafb6e7f9041a8a95d69e56833ab6b9bba3f3275d027d8f",
+          "bytes": 2508466
+        }
+      ],
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8000
+      }
+    }
+  ],
+  "root_results": {
+    "code-search-e1a-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/code-search-e1a-root-result.json",
+        "sha256": "df3556a7e112fabe7b57111cd2147f0efddfe29dd214c75f1c57e868f726e07d",
+        "bytes": 7235
+      },
+      "result": {
+        "gate": false,
+        "screen": {
+          "train": "fail",
+          "validation": "fail"
+        },
+        "nu_n128": {
+          "train/n128/full/k0/category": 0.08396871387958527,
+          "train/n128/full/k0/close": -1.0858108308266934,
+          "train/n128/full/k0/open": -1.3435670609420887,
+          "train/n128/full/k0/relation": -0.05995049327611923,
+          "train/n128/full/k0/toggle": -0.05224379152059555,
+          "train/n128/full/k128/category": 0.9921875,
+          "train/n128/full/k128/close": -0.9312150185334669,
+          "train/n128/full/k128/open": -1.1059207062188223,
+          "train/n128/full/k128/relation": 0.07513780146837234,
+          "train/n128/full/k128/toggle": 0.17736197263002396,
+          "train/n128/full/k32/category": 0.6721993237733841,
+          "train/n128/full/k32/close": -0.8045269480723581,
+          "train/n128/full/k32/open": -0.9003808254694282,
+          "train/n128/full/k32/relation": 0.15040327608585358,
+          "train/n128/full/k32/toggle": 0.08064960688352585,
+          "train/n128/full/k8/category": 0.40682467073202133,
+          "train/n128/full/k8/close": -0.988940557723001,
+          "train/n128/full/k8/open": -1.216173502510905,
+          "train/n128/full/k8/relation": 0.02360197901725769,
+          "train/n128/full/k8/toggle": 0.09665895998477936,
+          "train/n128/permuted/k0/category": 0.080671027302742,
+          "train/n128/permuted/k0/close": -1.072008519609092,
+          "train/n128/permuted/k0/open": -1.3969248888353596,
+          "train/n128/permuted/k0/relation": -0.05995049327611923,
+          "train/n128/permuted/k0/toggle": -0.03311670571565628,
+          "train/n128/permuted/k128/category": -0.015810526907444,
+          "train/n128/permuted/k128/close": -1.1144147945908869,
+          "train/n128/permuted/k128/open": -0.8318751463790618,
+          "train/n128/permuted/k128/relation": 0.03473663330078125,
+          "train/n128/permuted/k128/toggle": 0.03547549992799759,
+          "train/n128/permuted/k32/category": 0.07235784083604813,
+          "train/n128/permuted/k32/close": -0.5317841792675511,
+          "train/n128/permuted/k32/open": -0.657687522356707,
+          "train/n128/permuted/k32/relation": 0.01936977356672287,
+          "train/n128/permuted/k32/toggle": 0.03080834448337555,
+          "train/n128/permuted/k8/category": 0.02176017314195633,
+          "train/n128/permuted/k8/close": -0.36068103327901896,
+          "train/n128/permuted/k8/open": -0.2720902867444129,
+          "train/n128/permuted/k8/relation": -0.009484834969043732,
+          "train/n128/permuted/k8/toggle": 0.020253218710422516,
+          "train/n128/swap/k0/category": 0.08445890247821808,
+          "train/n128/swap/k0/close": -1.3546016778865118,
+          "train/n128/swap/k0/open": -1.3435670609420887,
+          "train/n128/swap/k0/relation": -0.04639577865600586,
+          "train/n128/swap/k0/toggle": -0.02093508094549179,
+          "train/n128/swap/k128/category": 0.03874965012073517,
+          "train/n128/swap/k128/close": -0.6664743340830537,
+          "train/n128/swap/k128/open": -0.7392924933201079,
+          "train/n128/swap/k128/relation": -0.027188777923583984,
+          "train/n128/swap/k128/toggle": -0.006330244243144989,
+          "train/n128/swap/k32/category": 0.0022288262844085693,
+          "train/n128/swap/k32/close": -1.2656811959996863,
+          "train/n128/swap/k32/open": -1.0332131483584126,
+          "train/n128/swap/k32/relation": -0.04025130718946457,
+          "train/n128/swap/k32/toggle": -0.002402260899543762,
+          "train/n128/swap/k8/category": -0.06420416384935379,
+          "train/n128/swap/k8/close": -1.2884064062709486,
+          "train/n128/swap/k8/open": -1.257907146580446,
+          "train/n128/swap/k8/relation": 0.011844836175441742,
+          "train/n128/swap/k8/toggle": 0.016866371035575867,
+          "validation/n128/full/k0/category": 0.0121832937002182,
+          "validation/n128/full/k0/close": -1.3390133508830586,
+          "validation/n128/full/k0/open": -1.325294225391211,
+          "validation/n128/full/k0/relation": 0.02614252269268036,
+          "validation/n128/full/k0/toggle": 0.009492605924606323,
+          "validation/n128/full/k128/category": 0.9832234531641006,
+          "validation/n128/full/k128/close": -0.7008451634967197,
+          "validation/n128/full/k128/open": -0.5463765375712285,
+          "validation/n128/full/k128/relation": 0.1912126988172531,
+          "validation/n128/full/k128/toggle": 0.11869516968727112,
+          "validation/n128/full/k32/category": 0.9424630701541901,
+          "validation/n128/full/k32/close": -0.9218472975017789,
+          "validation/n128/full/k32/open": -1.007173112954846,
+          "validation/n128/full/k32/relation": -0.02993553876876831,
+          "validation/n128/full/k32/toggle": 0.07430323958396912,
+          "validation/n128/full/k8/category": 0.2788814678788185,
+          "validation/n128/full/k8/close": -1.179986651342181,
+          "validation/n128/full/k8/open": -1.2054151803918538,
+          "validation/n128/full/k8/relation": -0.007336407899856567,
+          "validation/n128/full/k8/toggle": 0.003278493881225586,
+          "validation/n128/permuted/k0/category": -0.007356233894824982,
+          "validation/n128/permuted/k0/close": -1.5304636384674994,
+          "validation/n128/permuted/k0/open": -1.409446070337608,
+          "validation/n128/permuted/k0/relation": -0.022729650139808655,
+          "validation/n128/permuted/k0/toggle": 0.06951534748077393,
+          "validation/n128/permuted/k128/category": 0.02627578377723694,
+          "validation/n128/permuted/k128/close": -0.7092766322273705,
+          "validation/n128/permuted/k128/open": -1.2215511945644066,
+          "validation/n128/permuted/k128/relation": -0.06578511744737625,
+          "validation/n128/permuted/k128/toggle": 0.09066639840602875,
+          "validation/n128/permuted/k32/category": -0.03652162104845047,
+          "validation/n128/permuted/k32/close": -0.31259940563842414,
+          "validation/n128/permuted/k32/open": -1.02538348532649,
+          "validation/n128/permuted/k32/relation": 0.06007671356201172,
+          "validation/n128/permuted/k32/toggle": 0.0789908617734909,
+          "validation/n128/permuted/k8/category": 0.008349999785423279,
+          "validation/n128/permuted/k8/close": -0.3529427441602751,
+          "validation/n128/permuted/k8/open": -0.512253353019289,
+          "validation/n128/permuted/k8/relation": 0.002162434160709381,
+          "validation/n128/permuted/k8/toggle": 0.0337529182434082,
+          "validation/n128/swap/k0/category": -0.02260390669107437,
+          "validation/n128/swap/k0/close": -1.064211418095317,
+          "validation/n128/swap/k0/open": -1.325294225391211,
+          "validation/n128/swap/k0/relation": 0.02614252269268036,
+          "validation/n128/swap/k0/toggle": 0.003174610435962677,
+          "validation/n128/swap/k128/category": -0.4616018747910857,
+          "validation/n128/swap/k128/close": -0.9361338939361656,
+          "validation/n128/swap/k128/open": -0.9209382000813324,
+          "validation/n128/swap/k128/relation": -0.052221737802028656,
+          "validation/n128/swap/k128/toggle": -0.06307723373174667,
+          "validation/n128/swap/k32/category": -0.4585560930427164,
+          "validation/n128/swap/k32/close": -1.0497996866862227,
+          "validation/n128/swap/k32/open": -0.9318923085417502,
+          "validation/n128/swap/k32/relation": 0.028886206448078156,
+          "validation/n128/swap/k32/toggle": 0.10580475628376007,
+          "validation/n128/swap/k8/category": -0.1658264398574829,
+          "validation/n128/swap/k8/close": -1.0259985903105266,
+          "validation/n128/swap/k8/open": -1.1935794597006273,
+          "validation/n128/swap/k8/relation": 0.0280197411775589,
+          "validation/n128/swap/k8/toggle": 0.0034453123807907104
+        },
+        "checks": {
+          "all_cell_arrays_finite_and_hash_match": true
+        }
+      }
+    },
+    "code-search-retrieval-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/code-search-retrieval-root-result.json",
+        "sha256": "c296b150baefad0218c5a5a448bc04cac75e1685cb38937aed825e8992712841",
+        "bytes": 2692
+      },
+      "result": {
+        "gate": false,
+        "screen": {
+          "train": "fail",
+          "validation": "fail"
+        },
+        "arrays": "22 cells finite and matching recorded hashes",
+        "nu_n128": {
+          "train/n128/full/k0/category": 1.0,
+          "train/n128/full/k0/close": 0.680470171632753,
+          "train/n128/full/k0/open": 0.9270833391282289,
+          "train/n128/full/k0/relation": 1.0,
+          "train/n128/full/k0/toggle": 0.9485294222831726,
+          "train/n128/full/k128/category": 0.9249422997236252,
+          "train/n128/full/k128/close": -0.015688462798717606,
+          "train/n128/full/k128/open": -0.6227560194129929,
+          "train/n128/full/k128/relation": 0.8512770235538483,
+          "train/n128/full/k128/toggle": 0.8190328627824783,
+          "train/n128/full/k32/category": 0.9138239026069641,
+          "train/n128/full/k32/close": -0.3131001541534937,
+          "train/n128/full/k32/open": -0.10275429415668694,
+          "train/n128/full/k32/relation": 0.8777855485677719,
+          "train/n128/full/k32/toggle": 0.7673635631799698,
+          "train/n128/full/k8/category": 0.7484831809997559,
+          "train/n128/full/k8/close": -0.3488900781559882,
+          "train/n128/full/k8/open": 0.016317962303323552,
+          "train/n128/full/k8/relation": 0.8734783232212067,
+          "train/n128/full/k8/toggle": 0.7333611398935318,
+          "validation/n128/full/k0/category": 0.01997249573469162,
+          "validation/n128/full/k0/close": -1.3356919717238767,
+          "validation/n128/full/k0/open": -1.429805224752011,
+          "validation/n128/full/k0/relation": -0.01848917454481125,
+          "validation/n128/full/k0/toggle": -0.022228382527828217,
+          "validation/n128/full/k128/category": 0.966415211558342,
+          "validation/n128/full/k128/close": -0.7842817328944418,
+          "validation/n128/full/k128/open": -0.9700328160299607,
+          "validation/n128/full/k128/relation": 0.1482285037636757,
+          "validation/n128/full/k128/toggle": 0.2506859749555588,
+          "validation/n128/full/k32/category": 0.8873552829027176,
+          "validation/n128/full/k32/close": -0.95633992403031,
+          "validation/n128/full/k32/open": -1.0387942760154187,
+          "validation/n128/full/k32/relation": 0.27086883783340454,
+          "validation/n128/full/k32/toggle": 0.2577570974826813,
+          "validation/n128/full/k8/category": 0.3353005349636078,
+          "validation/n128/full/k8/close": -1.1520326836281867,
+          "validation/n128/full/k8/open": -1.1986048510786014,
+          "validation/n128/full/k8/relation": 0.12183871865272522,
+          "validation/n128/full/k8/toggle": 0.09428006410598755
+        },
+        "interpretation": "Support-retrieved starts did not solve held-out induction. Known-rule retrieval nearly restores oracle behavior but close remains below gate. No impossibility or unique-cause inference. Anchored joint G/T adaptation next; protocol fixed before execution."
+      }
+    },
+    "core-amortize-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/core-amortize-root-result.json",
+        "sha256": "8e9e32b638178f74e75bd85a3699a1ecb437d3a215ec0aa0f95568410f388db0",
+        "bytes": 736
+      },
+      "result": {
+        "stop": "updates_complete",
+        "updates": 8000,
+        "result": "induction failed train and validation; retained oracle application passes",
+        "finite_prediction_files": 54,
+        "frozen_hashes_unchanged": true,
+        "all_retention_checks_pass": true,
+        "nu": {
+          "train": {
+            "category": 0.0,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          },
+          "validation": {
+            "category": 0.006853237748146057,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          }
+        },
+        "next": "E1c predeclared conditional shared latent refinement, same C192 parent; neither G alone nor impossible code space inferred"
+      }
+    },
+    "core-refine-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/core-refine-root-result.json",
+        "sha256": "4b8babfd22b702d8202302d763c697ed6e2d325f6a36ff5cf84f458329e6b630",
+        "bytes": 802
+      },
+      "result": {
+        "updates": 8000,
+        "stop": "updates_complete",
+        "screens": {
+          "train": "fail",
+          "validation": "fail"
+        },
+        "nu": {
+          "train": {
+            "category": -0.0006147697567939758,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          },
+          "validation": {
+            "category": -0.03163771331310272,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          }
+        },
+        "all_retention_passed": true,
+        "all_prediction_files_finite": true,
+        "frozen_unchanged": true,
+        "resources": {
+          "seconds_this_session": 985.6021585030248,
+          "target_updates": 8000,
+          "torch_max_allocated_gib": 0.33899736404418945,
+          "torch_max_reserved_gib": 0.666015625,
+          "updates": 8000
+        }
+      }
+    },
+    "evidence-reader-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/evidence-reader-root-result.json",
+        "sha256": "0f97673e3926715894aeb76d34677c95d0dd7320be73097fc6d3b2e59c519eae",
+        "bytes": 1193
+      },
+      "result": {
+        "step": 8000,
+        "exit_code": 0,
+        "result": "completed",
+        "report": "structural_verified",
+        "train": "fail",
+        "validation": "fail",
+        "frozen_unchanged": true,
+        "finite_prediction_files": 36,
+        "train_relation": {
+          "auc": 0.5645782505745962,
+          "nll": 0.574847915942001,
+          "nu": 0.0
+        },
+        "validation_relation": {
+          "auc": 0.5118639793212316,
+          "nll": 0.5592316222853247,
+          "nu": 0.0
+        },
+        "all44": {
+          "nll": 0.574163323778957,
+          "nu": 0.0,
+          "second_bit_auc": 0.5527659356264361
+        },
+        "mechanism": {
+          "mean_p_d0": 0.24271888887440718,
+          "mean_p_d1": 0.2345215196194856,
+          "mean_p_d2": 0.24172403663396835,
+          "mean_p_d3": 0.23825444815059502,
+          "nll_empty_minus_full": -0.0004750992570148327,
+          "nll_permuted_minus_full": -1.9324652669183706e-06,
+          "nll_swap_minus_full": 1.035563332862921e-07,
+          "parity_auc": 0.5801302442055352,
+          "parity_undefined": 0,
+          "second_bit_auc": 0.5109207607714905,
+          "second_bit_undefined": 0
+        },
+        "resources": {
+          "seconds_this_session": 636.4399605829967,
+          "target_updates": 8000,
+          "torch_max_allocated_gib": 0.2906022071838379,
+          "torch_max_reserved_gib": 0.66796875,
+          "updates": 8000
+        }
+      }
+    },
+    "induction-direct-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/induction-direct-root-result.json",
+        "sha256": "6dcb7a4dd39a5da7cfc3df201c042600f91250ef74dfbc47912848d71cdfc584",
+        "bytes": 1113
+      },
+      "result": {
+        "step": 8000,
+        "exit_code": 0,
+        "result": "completed",
+        "report": "structural_verified",
+        "train": "fail",
+        "validation": "fail",
+        "frozen_unchanged": true,
+        "codebook_absent": true,
+        "finite_prediction_files": 36,
+        "train_relation": {
+          "auc": 0.5868910827911307,
+          "nll": 0.5733728599320673,
+          "nu": 0.0
+        },
+        "validation_relation": {
+          "auc": 0.46738277670834655,
+          "nll": 0.5620044594240722,
+          "nu": 0.0
+        },
+        "all44": {
+          "nll": 0.5751037352267138,
+          "nu": 0.0,
+          "second_bit_auc": 0.5406696211240436
+        },
+        "mechanism": {
+          "mean_p_d0": 0.2439154151413176,
+          "mean_p_d1": 0.23327351640100064,
+          "mean_p_d2": 0.24228042553008441,
+          "mean_p_d3": 0.23882390856742858,
+          "nll_swap_minus_full": -1.667839307217811e-06,
+          "parity_auc": 0.6072964014132642,
+          "parity_undefined": 0,
+          "second_bit_auc": 0.5245755430898896,
+          "second_bit_undefined": 0
+        },
+        "resources": {
+          "seconds_this_session": 440.831331082969,
+          "target_updates": 8000,
+          "torch_max_allocated_gib": 0.2906017303466797,
+          "torch_max_reserved_gib": 0.671875,
+          "updates": 8000
+        }
+      }
+    },
+    "induction-relation-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/induction-relation-root-result.json",
+        "sha256": "45d419c91b913f8a3fa1849c22e49309b721e8da94ec62f424fd5223b4de409d",
+        "bytes": 328
+      },
+      "result": {
+        "step": 8000,
+        "result": "completed",
+        "exit_code": 0,
+        "report": "structural_verified",
+        "train": "fail",
+        "validation": "fail",
+        "retention_all_checks": true,
+        "frozen_unchanged": true,
+        "finite_prediction_files": 54,
+        "relation_train": 0.0,
+        "relation_validation": 0.0,
+        "second_bit_auc": 0.4653417526530917
+      }
+    },
+    "query-scale-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/query-scale-root-result.json",
+        "sha256": "976c1183bb41f8e7d0867d9bfd5687d69df1db1c0c513de3db0c4fc878e37cfc",
+        "bytes": 1767
+      },
+      "result": {
+        "stop": "updates_complete",
+        "updates": 8000,
+        "screens": {
+          "train": "fail",
+          "validation": "fail"
+        },
+        "nu": {
+          "train": {
+            "category": 0.03179450333118439,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          },
+          "validation": {
+            "category": 0.011240541934967041,
+            "close": -1.3333331478966755,
+            "open": -1.3333331478966755,
+            "relation": 0.0,
+            "toggle": 0.0
+          }
+        },
+        "geometry": {
+          "effective_rank": 3.3443572521209717,
+          "oracle_effective_rank": 3.8949668407440186,
+          "oracle_token_cosine": -0.11502194404602051,
+          "token_cosine": 0.4872944951057434,
+          "within_family_distance": {
+            "category": {
+              "induced": 4.092123031616211,
+              "oracle": 21.18234634399414,
+              "ratio": 0.19318553805351257
+            },
+            "close": {
+              "induced": 1.937408447265625,
+              "oracle": 22.583965301513672,
+              "ratio": 0.08578690141439438
+            },
+            "open": {
+              "induced": 2.114137887954712,
+              "oracle": 23.65207862854004,
+              "ratio": 0.08938486874103546
+            },
+            "relation": {
+              "induced": 5.668119430541992,
+              "oracle": 23.037378311157227,
+              "ratio": 0.24604012072086334
+            },
+            "toggle": {
+              "induced": 4.189389228820801,
+              "oracle": 22.95924186706543,
+              "ratio": 0.18247070908546448
+            }
+          }
+        },
+        "all_retention_passed": true,
+        "finite_predictions": true,
+        "frozen_unchanged": true,
+        "interpretation": "Initial and learned token diversity alone did not produce rule induction in this schedule. Near-symmetry is not a sufficient explanation of the failures; it remains a measured initialization issue, not a proven necessary barrier."
+      }
+    },
+    "relation-reader-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/relation-reader-root-result.json",
+        "sha256": "264d1a06adc8daa970a680c275bbb79ae9fbe457e09fb2d213e5c854203e6153",
+        "bytes": 1876
+      },
+      "result": {
+        "step": 8000,
+        "exit_code": 0,
+        "result": "completed",
+        "report": "structural_verified",
+        "stop_reason": "updates_complete",
+        "train": "fail",
+        "validation": "fail",
+        "frozen_unchanged": true,
+        "finite_prediction_files": 54,
+        "train_relation": {
+          "auc": 0.5353407231273157,
+          "nll": 0.5741395920964942,
+          "nu": 0.0
+        },
+        "validation_relation": {
+          "auc": 0.43447664569966005,
+          "nll": 0.566813653967273,
+          "nu": 0.0
+        },
+        "all44": {
+          "nll": 0.5737409328520479,
+          "nu": 0.0,
+          "second_bit_auc": 0.5685409394740114
+        },
+        "mechanism": {
+          "mean_p_d0": 0.24765290728321782,
+          "mean_p_d1": 0.23214485152907993,
+          "mean_p_d2": 0.24837130035313082,
+          "mean_p_d3": 0.24498056781788666,
+          "nll_empty_minus_full": -0.0008106107411802732,
+          "nll_permuted_minus_full": 3.4723863644448016e-06,
+          "nll_swap_minus_full": 4.527647150620595e-05,
+          "parity_auc": 0.579979989800852,
+          "parity_undefined": 0,
+          "second_bit_auc": 0.47600732754149383,
+          "second_bit_undefined": 0
+        },
+        "ablation": {
+          "train": {
+            "auc_full": 0.5353407231273157,
+            "auc_zero_r": 0.49674065964165237,
+            "nll_full": 0.5741395920964942,
+            "nll_zero_r": 0.5777185293786988,
+            "nll_zero_r_minus_full": 0.0035789372822045973,
+            "nu_full": 0.0,
+            "nu_zero_r": 0.0,
+            "screen_zero_r": "fail"
+          },
+          "validation": {
+            "auc_full": 0.43447664569966005,
+            "auc_zero_r": 0.4844435723675596,
+            "nll_full": 0.566813653967273,
+            "nll_zero_r": 0.5581919827832118,
+            "nll_zero_r_minus_full": -0.008621671184061208,
+            "nu_full": 0.0,
+            "nu_zero_r": 0.0,
+            "screen_zero_r": "fail"
+          }
+        },
+        "resources": {
+          "seconds_this_session": 654.8523566490039,
+          "target_updates": 8000,
+          "torch_max_allocated_gib": 0.29073667526245117,
+          "torch_max_reserved_gib": 0.673828125,
+          "updates": 8000
+        }
+      }
+    },
+    "support-use-root-result.json": {
+      "source": {
+        "path": "runs/reviews/integrated_architecture_20260923/support-use-root-result.json",
+        "sha256": "b0ed417c44412728bc9603fa740b3c817f21480b7cefc528a0a3eeba1f9f5a25",
+        "bytes": 2361
+      },
+      "result": {
+        "step": 8000,
+        "exit_code": 0,
+        "result": "completed",
+        "report": "structural_verified",
+        "stop_reason": "updates_complete",
+        "train": "fail",
+        "validation": "fail",
+        "frozen_unchanged": true,
+        "finite_prediction_files": 72,
+        "train_relation": {
+          "auc": 0.5362158945306781,
+          "nll": 0.578210644425369,
+          "nu": 0.0
+        },
+        "validation_relation": {
+          "auc": 0.4687792006190348,
+          "nll": 0.5690004719481812,
+          "nu": 0.0
+        },
+        "all44": {
+          "nll": 0.5646928167100861,
+          "nu": 0.0009160245006734675,
+          "second_bit_auc": 0.6007676464610019
+        },
+        "mechanism": {
+          "mean_p_d0": 0.24579456879032982,
+          "mean_p_d1": 0.23990959654683652,
+          "mean_p_d2": 0.24014949494264495,
+          "mean_p_d3": 0.23529460057616233,
+          "nll_empty_minus_full": -0.0026911600926695645,
+          "nll_permuted_minus_full": 0.006191429337440435,
+          "nll_swap_minus_full": 0.004348946793675035,
+          "parity_auc": 0.5265094279121638,
+          "parity_undefined": 0,
+          "second_bit_auc": 0.530191926942535,
+          "second_bit_undefined": 0
+        },
+        "positive_control": {
+          "at_decision": {
+            "nu_full": 0.9972222149372101,
+            "screen": "pass"
+          },
+          "at_end": {
+            "nll_empty_minus_full": 0.16683651800434246,
+            "nll_permuted_minus_full": 0.16939979881777262,
+            "nll_swap_minus_full": 0.15973173520880452,
+            "nu_empty": 0.0,
+            "nu_full": 0.04429040849208832,
+            "nu_permuted": 0.0,
+            "nu_swap": 0.0,
+            "screen": "fail",
+            "undefined": 0
+          },
+          "decision_update": 2000
+        },
+        "ablation": {
+          "train": {
+            "auc_full": 0.5362158945306781,
+            "auc_zero_r": 0.4587447289224904,
+            "nll_full": 0.578210644425369,
+            "nll_zero_r": 0.595396750991664,
+            "nll_zero_r_minus_full": 0.017186106566295045,
+            "nu_full": 0.0,
+            "nu_zero_r": 0.0,
+            "screen_zero_r": "fail"
+          },
+          "validation": {
+            "auc_full": 0.4687792006190348,
+            "auc_zero_r": 0.4796220611141333,
+            "nll_full": 0.5690004719481812,
+            "nll_zero_r": 0.5704093828063102,
+            "nll_zero_r_minus_full": 0.0014089108581289977,
+            "nu_full": 0.0,
+            "nu_zero_r": 0.0,
+            "screen_zero_r": "fail"
+          }
+        },
+        "resources": {
+          "seconds_this_session": 655.6033869560342,
+          "target_updates": 8000,
+          "torch_max_allocated_gib": 0.29073667526245117,
+          "torch_max_reserved_gib": 0.67578125,
+          "updates": 8000
+        }
+      }
+    }
+  },
+  "review_receipts": [
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/identity-adoption-decision.md",
+      "sha256": "4fac0e1a6c1b8aa3dd926e200c18024269d1bd567c8ca6c65b5ae85b8718bd67",
+      "bytes": 2477
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-curriculum-root-transfer.log",
+      "sha256": "1d2cb1cd8d4149327044d11798bab708a7de54d550a928b1065b8589950a0ca1",
+      "bytes": 170
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-removed-attempts-note.md",
+      "sha256": "4af131cb10c054c88948723ba74d4f7f3d90a3ed1100e671277543a2050047ad",
+      "bytes": 1628
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-testimony-native-crash-note.md",
+      "sha256": "c813da0d2986cf669aa2d9496d63b2dd9905f6aa78bc1acd555e7bd2f1f2d6f9",
+      "bytes": 722
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/r2-life-root-adoption.md",
+      "sha256": "536d2252760b92c1967549b3bb8916d8c88e4dc562f215fd96bddf99db2f0c0b",
+      "bytes": 1480
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/r2-learned-life-protocol.md",
+      "sha256": "0797e4b84443451d0ee22702ff5bfeb8a7b7fbf71c95e7da166faa68e755660a",
+      "bytes": 14445
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/support-use-root-decision.md",
+      "sha256": "fd65de1b3bf2601ee57a96ece81e25402495779ded388f9c497d22e5833a9407",
+      "bytes": 2075
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/support-use-root-positive-control.json",
+      "sha256": "f85d53ee00469038b645ed5b0a276e78c329855ee99abed1785a73a37b14e262",
+      "bytes": 492
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/support-use-root-nu-recomputed.json",
+      "sha256": "a31d438d4bef8d534ba568789e65d41840f511c78648a6fd263bf14bfdc0b22b",
+      "bytes": 1208
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/relation-reader-root-nu-recomputed.json",
+      "sha256": "91626fe0e99fcd1bcc580c06333b3521e8c2e6794602458fbef4f0c4575ec128",
+      "bytes": 782
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/relational-primary-sources.md",
+      "sha256": "6aad3bb1d1029529b78ced6cba05aab7f602f5faa2cccbf63ec44037ef2b9d56",
+      "bytes": 2253
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/retained-context-review-corrections.md",
+      "sha256": "54eaeef9082e22ee6ce4d79cf1b1443398c3dcbaf8cc5056130126694eb592da",
+      "bytes": 2365
+    }
+  ],
+  "limitations": [
+    "Single training seed for the learning diagnostics; no formal three-seed C1-C5 qualification; sealed test unused.",
+    "Report validation is structural, using the existing renderer.",
+    "Three early CPU attempts were overwritten by the author; see preserved disclosure. Do not claim every original attempt survives.",
+    "Copied-query recall passed at2000 but fell at8000; the final checkpoint does not retain the earlier positive result."
+  ],
+  "claude_receipts": [
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/amortize-independent-review-response.json",
+      "sha256": "62de3e2daa2c2d3df86caf039d91a13390dcfb3e64781cd7ef42275308e45b68",
+      "bytes": 4233,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/amortize-prepare-response.json",
+      "sha256": "66ca057ed0d4a2c2f3c14b0ca6db8ebfe5e6c6b1e9ba11d69229a85af08b2791",
+      "bytes": 6171,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/amortize-review-fix-response.json",
+      "sha256": "1b8311e3f27b9bf166d23a8821b145173caa4a0c7dabd42e5d9a9006f2ba2d10",
+      "bytes": 6012,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/appearance-readout-response.json",
+      "sha256": "808e73a8682b386824831184773bafc73a9079aa15a4ec26b384b00032276455",
+      "bytes": 7969,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/architecture-response.json",
+      "sha256": "61b79624ec96704d9c91d9d630cbdd63ed0b1c66cd2743bf0b0d47c7b59535d6",
+      "bytes": 28322,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/claim-input-invariance-response.json",
+      "sha256": "4258b01e8393915e2b82382b651b5c2c3f3e3c4599b00059fc4d5d137f3d3e32",
+      "bytes": 7639,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/code-search-curriculum-response.json",
+      "sha256": "50919270b3377deaf47c5d21f3427896bc39de4cceb3a76bfc5ed847b2514d61",
+      "bytes": 7074,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/code-search-response.json",
+      "sha256": "499a0ba2cb3a0dfc73cf041b650d5eef6dfa46a387e70c225a7a780755a8f73f",
+      "bytes": 8746,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/code-search-retrieval-response.json",
+      "sha256": "1cccfa0f8d25f03026fa5902351f325d65fdf8e08ac15e17a2b6961d1acc6bb2",
+      "bytes": 7414,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/consolidated-review-response.json",
+      "sha256": "9fc2667a28d79d916ee48b15a460ddabcdd1150b8e3f9636eb95a9d101378219",
+      "bytes": 6467,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-continuation-response.json",
+      "sha256": "375a27fe491551d94b36c5e86b45a5068a9fcec31916de6a17e1cc3161a7f334",
+      "bytes": 7005,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-curriculum-response.json",
+      "sha256": "8616cc11a5b153bd3f821efb91664238ea34f7e84888e9bb4ff23ed592f85610",
+      "bytes": 7794,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-ladder-response.json",
+      "sha256": "df785113f0776b4cdb790950883887a3820f3cc5dc33755620375bcbe2111e3a",
+      "bytes": 6510,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-next-decision-response.json",
+      "sha256": "8c66ee543f9358c22b5e6ebe5518f44da5387f751a00390be6fa7b3bde104cf5",
+      "bytes": 8009,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-refine-prepare-response.json",
+      "sha256": "2026f42be6fb2dc53d120af0d3d03b047039b6ef9764c6024470dbe5f37f1477",
+      "bytes": 6481,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-repair-options-response.json",
+      "sha256": "3acae557df39f0c04ccf80f044b8c031ea4b08c986afc20afad6f06d6941bf6e",
+      "bytes": 13906,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/core-scratch-response.json",
+      "sha256": "8573679b504070b0cbda31f08d5320e82a2cfd980922270e8417940fa4e0a3dd",
+      "bytes": 7172,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/direct-induction-prepare-response.json",
+      "sha256": "d5a96da53e859e04e7d61d28d2973c2077c42ef995cc773678a54d6a21a2f62a",
+      "bytes": 6547,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/evidence-reader-prepare-response.json",
+      "sha256": "ac03f4bd6b44d77ca25c8d7b377b6c811ecf0eccaaa1051b8edc6b0a2f1cb36c",
+      "bytes": 6844,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/final-protocol-response.json",
+      "sha256": "416ae3d4e8250be2b2888267c794dac9f7d7184be5ca81f11119dfbcf6e22b41",
+      "bytes": 7508,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/implementation-response.json",
+      "sha256": "0b579c368ac754440d0048ec344b4448915625fe3e1dd7c696cc7d10f9217ecb",
+      "bytes": 10252,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-bounded-next-response.json",
+      "sha256": "d60436761fc7715b29258c8122fbb492506608658bc9c03c194499a55117ed0f",
+      "bytes": 5953,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-collapse-audit-response.json",
+      "sha256": "ae3276c157374d3062e3522adce2aaf64e25f1fb7bad1ddceb87cf920bf8bdbf",
+      "bytes": 6016,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-curriculum-prepare-response.json",
+      "sha256": "720edc07f49b4ec096f38d0285536af7bf8397b9df5031d82fbdffac55cff9c5",
+      "bytes": 6880,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-next-method-review-response.json",
+      "sha256": "48b30c5b1dc14d99772120572e8e030058830e6a4cb66edbc7cfdff481a28b61",
+      "bytes": 4828,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-query-scale-response.json",
+      "sha256": "db199602c8d3b26b5397eddca0267b47e31cb8629ebf424fd67060c03c7e1cd2",
+      "bytes": 6086,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-relation-final-review-response.json",
+      "sha256": "e603a29c6ccfe52d1dc8d66561b3dff759a748a52f7da00cd8d8b904769af502",
+      "bytes": 4476,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/induction-train-review-response.json",
+      "sha256": "7e438c6ea1a70ead22707fd5a6511ca7e0783944d0282ad78d2ff48a64e0deb3",
+      "bytes": 5281,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/integration-blocker-review-response.json",
+      "sha256": "2c6a9b1675032ad2362e63f1536d3922dfa7b349e0ed84b2be2e26fcdb3c1d0b",
+      "bytes": 5474,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/learning-integration-response.json",
+      "sha256": "bc091e023bb1e64584feb4f0a4a79cd8c0b898920b4539b9fa9bf1da6b7ace18",
+      "bytes": 7022,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/oracle-recipe-independent-review-response.json",
+      "sha256": "df63d2c25146ea2b295324a360dd9abc197eba1d1b0cff42ee2e1571e9c14719",
+      "bytes": 5381,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/oracle-recipe-owner-fix-response.json",
+      "sha256": "38a343d4a7608854544970769a48a6d48d37cfea80336601b092a1857bc05a77",
+      "bytes": 4567,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/oracle-recipe-promotion-response.json",
+      "sha256": "10ac3b6864d79e9759d843c23449e0b2acda8d78637d3a2a83b6d92ec59e6ece",
+      "bytes": 7134,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/oracle-recipe-repair-response.json",
+      "sha256": "a3b3f833e1dd4820b80f2d314a437275229af3838ac2a46c3dab221c8d795d0d",
+      "bytes": 7829,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/perception-diagnosis-response.json",
+      "sha256": "01b8d3a1d44c09bd3e9a1a8ac3338ffa4362df544c506d92d64564da4c1f77ee",
+      "bytes": 7916,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/perception-identity-response.json",
+      "sha256": "e9ba612873b92facae1ebfdf2ec3075d4d973bad60d369ad94ca5b2ddd76a9ac",
+      "bytes": 10554,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/perception-repair-response.json",
+      "sha256": "27b50d7b3dbfe14555d711874fae5bb43d360a0348b1b80cab799876f5de1310",
+      "bytes": 6915,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/plan-consolidation-response.json",
+      "sha256": "7f6c0e279af6ee3a8ec7dfe567d2321fe00de659b75f6ffad894a25c6e172557",
+      "bytes": 6930,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/post-j44-architecture-review-response.json",
+      "sha256": "a8dc76120ee7b6f4ecb00930fbcb70310a8b5424f602c637c6adcdd57e57082b",
+      "bytes": 5517,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/r2-life-protocol-response.json",
+      "sha256": "9b9af5ebfd712092360814c6eaa4c042b7a44fe94ced5762f2e5b63ec5f6dc4f",
+      "bytes": 5920,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/r2-life-protocol-revised-response.json",
+      "sha256": "31d35ba0b5f78f28e4a613b9e6e15d7bbf63717c13d2293f4d029ca0622dd502",
+      "bytes": 5533,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/reconciliation-response.json",
+      "sha256": "b2df112078f46c7c383c20d86087939f27e7e3f3bb7a6e33a4fc00f241fdda2f",
+      "bytes": 8550,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/relation-reader-prepare-response.json",
+      "sha256": "053ab90a96c532fefbdc3a0d8902ec4829bc8ce9f2efad576ed9ddeee4d37e74",
+      "bytes": 6970,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/relation-reader-rng-fix-response.json",
+      "sha256": "30a9a6eae696323208bf78610f04463b9d2d9a912d6ce7ea8e9be70d5eb69e20",
+      "bytes": 4507,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/relational-architecture-review-response.json",
+      "sha256": "2c1851c4e45856fd70bc05beb81a8ca05c924766ca71ef16d0e077db0396f055",
+      "bytes": 5647,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/repair-response.json",
+      "sha256": "7f32317b399184cbe2ff6536e1e1bf01316b4a3b2ec35b6f1533fe91685e3229",
+      "bytes": 9672,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/retained-context-runtime-review-response.json",
+      "sha256": "b2a1660ae287c163da2c45c0bc044e0d7fc3323a61dd73fe656561490e8d8e37",
+      "bytes": 5650,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/retrieval-review-followup-response.json",
+      "sha256": "62dbe6d76f7ba51fe451125f7dba3037bd4e0e1e0174147c00a4349cf544ee3b",
+      "bytes": 5355,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/support-use-boundary-fix-response.json",
+      "sha256": "8afad2a0644f60f86f0b205be84ba00f5df3e4340865ce19443b0e3841642db3",
+      "bytes": 4975,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/support-use-curriculum-response.json",
+      "sha256": "1f2ba625bc3c53ad288a1f42f9bc61d4e0e8be983f2dba2ad95aa35b90c9d0d2",
+      "bytes": 6952,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/texture-review-response.json",
+      "sha256": "ece03d27928358a856b2237648633a24a464be78ab1d8a08d33e35a013b117e5",
+      "bytes": 8055,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-current-view-response.json",
+      "sha256": "5ae431c44235fe45186507655ac829a5725bfd9ee12bdd3b88e130df22d99e67",
+      "bytes": 2326,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-final-repair-response.json",
+      "sha256": "4d81e5e81a3f6390608c083ddf30503e947bd671d5c3eff85f64d994da9fd117",
+      "bytes": 8300,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-final-report-response.json",
+      "sha256": "c67a431107de3f5e412b890c0db394fd7e09f8bdd192b5b89efae6b1e873f5cb",
+      "bytes": 4718,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-repair-response.json",
+      "sha256": "347cc73e3f35bc0a318a7606af681c514f6bd3c3a9cbec1017c84e59400ffeab",
+      "bytes": 7649,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-session-response.json",
+      "sha256": "a8d41903f23b8f9ee3c215c299375d2266ad144982e816303064b0e1fae1408a",
+      "bytes": 7717,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-testimony-provenance-fix-response.json",
+      "sha256": "3f5ada69715047c8ff27b771df368fa723530b2881bb67e1fc6a0e953b72ada9",
+      "bytes": 4846,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/unified-testimony-response.json",
+      "sha256": "47f10bba2b4f58a70235c6d3b8a158661bb6f3f4e9c1492ac131c1e25ac3c79f",
+      "bytes": 7585,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/integrated_architecture_20260923/whole-architecture-closure-response.json",
+      "sha256": "453ede2b6ac63b70156bfea303d8274afd443fbb89adec66b29cf8af32740594",
+      "bytes": 6991,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    }
+  ],
+  "model_receipt_scope": "Primary collaboration was explicitly invoked as claude-opus-5-5 --effort high. CLI modelUsage is cumulative within resumed conversations; some receipts also contain Haiku usage and are not exclusive single-model ledgers. Retained response files identify the actual models; no claim about the auxiliary usage purpose is inferred."
+}

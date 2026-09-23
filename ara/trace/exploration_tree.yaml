@@ -9243,3 +9243,110 @@ tree:
   also_depends_on:
   - N550
   status: resolved
+
+- id: N552
+  type: decision
+  title: Delegated integrated latent architecture and actual Opus5.5 high implementation
+  provenance: user
+  timestamp: 2026-09-23T16:29+02:00
+  choice: User asks to close plan gaps with actual Claude Opus5.5 high, retain high-level latent processing, implement
+    with Claude and independently review/test/fix; ask when the collaborators cannot resolve a problem.
+  alternatives: []
+  evidence:
+  - docs/integrated-architecture-plan.md
+  status: resolved
+- id: N553
+  type: decision
+  title: Adopted R1/R2 ownership and runtime contracts
+  provenance: ai-suggested
+  timestamp: 2026-09-23T16:29+02:00
+  choice: One session/store/clock, shared image encoder, separate instance identity and concept membership, one
+    action forecaster, causal evidence and typed goals/claims, exact restart and invalidation. Runtime weights fixed;
+    evidence and inferred state mutable. R1 is a separate reference integration, not adoption of shared-abstraction-spec
+    armA.
+  alternatives:
+  - Independent stores and forecasters
+  - Treat shared width as proven semantic alignment
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md
+  status: resolved
+- id: N554
+  type: experiment
+  title: 'Perception and identity comparison: provisional J'
+  provenance: ai-executed
+  timestamp: 2026-09-23T16:29+02:00
+  result: 'J/D paired3000: cross-lamp key retrieval1.0 versus0.5459. Fresh scenes J1.0 versusD0.5293; absolute C1
+    passes but one relative attribute guard fails. J remains provisional, no formal identity/natural-world qualification.'
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md#19-latente-identitäts-zustandstrennung-in-s1-gepaarte-ansichten-vorab-erklärt
+  status: resolved
+- id: N555
+  type: experiment
+  title: Known-rule oracle application succeeds after relation-first curriculum
+  provenance: ai-executed
+  timestamp: 2026-09-23T16:29+02:00
+  result: 'R44 then C192 passes five application screens: nu category1,relation1,open0.927083,close0.862574,toggle0.948529.
+    Training-code oracle only; order/exposure/fresh optimizer confounded. Main recipe promoted with exact boundary/parity
+    checks; no induced-rule, pixel or planning claim.'
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md
+  status: resolved
+- id: N556
+  type: experiment
+  title: Code search and seven induction diagnostics fail their declared endpoints
+  provenance: ai-executed
+  timestamp: 2026-09-23T16:29+02:00
+  result: E1a/E1a-R fail all-family screens. E1b,E1c,E1b-S,I1,J44,D1,Rpair fail induction screens. Training-only
+    finite grammar audit identifies each of8 predicates atN128; this is information sufficiency for that grammar,
+    not model learnability. Rpair8000 train/validationnu0,54 finite hash-checked prediction files,frozen parameters
+    unchanged. Failure does not locate a unique bottleneck or prove impossibility.
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md
+  status: resolved
+- id: N557
+  type: experiment
+  title: Support-use curriculum learns copied evidence but fails disjoint transfer
+  provenance: ai-executed
+  timestamp: 2026-09-23T16:29+02:00
+  result: Same Rpair architecture;2000 copied-query updates,4000 linear overlap fade,2000 disjoint. At2000 copy
+    TRAINnu0.997222 versus empty0,swap-0.015740,permuted-0.014053. At8000 original disjoint TRAIN/VALnu0 and copy
+    recallnu0.044290. All72 prediction files finite/hash-checked; frozen weights unchanged;0.6758GiB reserved;exit0;structural
+    report. Negative transfer and loss of copied recall are scoped observations, not a causal diagnosis.
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md
+  - runs/latent_agent_r1/support_use_curriculum_20260923/SUC/report.html
+  status: resolved
+- id: N558
+  type: decision
+  title: Predeclare distinct R2 learned-life qualification
+  provenance: ai-suggested
+  timestamp: 2026-09-23T16:29+02:00
+  choice: 'Adopt reviewedv3 gates before learned execution: three training seeds,evaluation3301,identity coverage
+    and precision,trackable twins and unsupported reappearance,behavioral shared/split concepts,N128,attribution
+    coverage,external claim correctness,unchanged-input poisoning. Preserve qualified P/key pair; explicit inference-contract
+    versions. No R2 learned evaluator execution or capability claim.'
+  alternatives:
+  - Count software lives as learned R2
+  - Allow missing/ambiguous strata to pass
+  - Overwrite qualified identity key during core load
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag
+  status: resolved
+- id: N559
+  type: question
+  title: Scope decision after bounded transfer failure
+  provenance: ai-suggested
+  timestamp: 2026-09-23T16:29+02:00
+  description: Asked user whether to keep full rule-induction goal with a fundamental learning redesign or first
+    finish a narrower exemplar/prototype agent. No answer, relaxed target or next automatic variant assumed. Learned
+    rollout,pixel transfer,full C1-C5 and natural modalities remain unproven.
+  evidence:
+  - ara/evidence/tables/integrated_architecture_2026-09-23.json
+  - docs/integrated-architecture-plan.md
+  status: open

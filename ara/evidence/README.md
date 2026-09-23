@@ -208,3 +208,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Physically local encoder attention,22 September](tables/encoder_token_budget_2026-09-22.json): image256 encoder pairs99.317% lower, forward+backward194.77→64.50 ms, inference50.21→30.90 ms;114 unique checks and8 final cache checks pass. All detail positions retained; window quality remains unvalidated and defaults unchanged.
 
 - [Current attention kernel survey, 22 September](tables/attention_kernel_survey_2026-09-22.json): pinned FA4/Sage sources, hardware and native SDPA eligibility predicates. No new backend execution, speed measurement or integration.
+
+- [Integrated latent architecture,23 September](tables/integrated_architecture_2026-09-23.json): actual Opus5.5 high design/implementation and independent review;816 CPU tests;known-rule application passes, eight induction paths fail. Copied recall0.997→0.044 during failed transfer curriculum; full learned R1/R2 not qualified. Scoped reports structurally verified.

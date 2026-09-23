@@ -6859,3 +6859,35 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O389
+  timestamp: 2026-09-23T16:29+02:00
+  provenance: ai-suggested
+  content: The support-use curriculum opened a learnable copied-evidence path but did not preserve it or establish
+    disjoint rule transfer under the declared training schedule. It narrows the blocker to something beyond mere
+    ability to consume evidence; no unique mechanism or general impossibility is established.
+  context: ara/evidence/tables/integrated_architecture_2026-09-23.json
+  potential_type: claim
+  bound_to:
+  - N556
+  - N557
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O390
+  timestamp: 2026-09-23T16:29+02:00
+  provenance: ai-suggested
+  content: A retained-latent-context runtime would need explicit tokens/masks and inference-contract versions, preserve
+    the P/key pair, and score behavioral binding without self-included evidence on both candidate and new-context
+    paths. This is a conditional design proposal, not adopted after the failed disjoint screen.
+  context: runs/reviews/integrated_architecture_20260923/retained-context-runtime-review.md; runs/reviews/integrated_architecture_20260923/retained-context-review-corrections.md
+  potential_type: architecture
+  bound_to:
+  - N553
+  - N557
+  - N559
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
