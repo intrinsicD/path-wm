@@ -584,7 +584,19 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Relation unter allen 64 Grammatikprädikaten. Der wahre Kandidat ist jeweils
    enthalten; ohne Evidenz bleiben alle 64. Dies prüft Identifizierbarkeit innerhalb
    dieser bekannten Grammatik, nicht die Lernbarkeit durch G oder natürliche
-   Konzepte. Kein Grammatiksolver wird Runtime. Rohdaten und reparierter Bericht:
+   Konzepte. Kein Grammatiksolver wird Runtime.
+   **Architekturprüfung nach dieser Grenze:** Das Gesamtziel erlaubt erhaltene
+   latente Beispiele, Graph und gezieltes Kontextlesen; ein Vier-Token-Code ist
+   keine Nutzervorgabe. Falls J44 den Trainingsscreen verfehlt, wird daher eine
+   neue Inferenzhypothese D1 vorbereitet: Der bestehende geteilte Block liest pro
+   Frage höchstens 128 latente Supporttokens direkt, ohne vorherige G-Kompression.
+   Kompakte Konzepte bleiben ein später zu lernender und zu prüfender abgeleiteter
+   Cache. Das hebt weder Konzeptgebrauch noch Korrektur-/Transfergates auf.
+   Keine neuen Parameter, Grammatik oder Query-Labels im Vorwärtspfad; gleicher
+   Relationsendpunkt und festes 8000-Update-/6-GiB-Limit. Geänderter Rechen- und
+   Gradientenpfad wird ausgewiesen. Erfolg isoliert keine Kompressionsursache,
+   Fehlschlag isoliert keinen Evidenzencoder. Details vor Ausführung:
+   `runs/reviews/integrated_architecture_20260923/post-j44-root-contract.md`. Rohdaten und reparierter Bericht:
    `…/support_identifiability_20260923/attempt02/`; beide ursprünglichen
    Ausführungs-/Berichtsfehler und identische Rohdaten bleiben erhalten.
 
