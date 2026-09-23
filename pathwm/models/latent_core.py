@@ -38,6 +38,11 @@ class Block(nn.Module):
         return x + self.ff(self.ff_norm(x))
 
 
+def key_head(width, key_width):
+    """Appearance-key readout; S2's key head and the optional S1 identity objective share it."""
+    return nn.Sequential(nn.Linear(width, width), nn.GELU(), nn.Linear(width, key_width))
+
+
 class LatentCore(nn.Module):
     def __init__(self, width=64, heads=4, loops=2, code_tokens=4, key_width=32):
         super().__init__()
@@ -55,9 +60,7 @@ class LatentCore(nn.Module):
         self.next = nn.Linear(width, width)
         nn.init.zeros_(self.next.weight)  # m_hat starts as a copy of m_pre
         nn.init.zeros_(self.next.bias)
-        self.key_head = nn.Sequential(
-            nn.Linear(width, width), nn.GELU(), nn.Linear(width, key_width)
-        )
+        self.key_head = key_head(width, key_width)
 
     def evidence(self, m_pre, a, b, m_post):
         return self.evidence_mlp(torch.cat((m_pre, a, b, m_post), -1))

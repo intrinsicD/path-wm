@@ -544,3 +544,142 @@ Einzelbeispiele (`per_example.npz`, gehasht) mit Checkpoint-, Eltern- und Quelli
 und hinterlässt bei jedem Fehler einen sichtbaren Status.
 Log: `runs/reviews/integrated_architecture_20260923/texture-repair-worktree-tests.log`.
 Kein Training, kein GPU-Lauf in diesem Schritt.
+
+## 19. Latente Identitäts-/Zustandstrennung in S1 (gepaarte Ansichten, vorab erklärt)
+
+**Anlass.** Die Texturrandomisierung besteht Lampe/C1-Screen, verfehlt aber die
+vorab erklärte Übernahmeregel (§17, bleibt `FAIL`). Die Rohkosinus-Proxys liegen in
+allen drei Armen nahe Zufall (lampenübergreifend 0,116–0,179 bei Zufall 0,125):
+Rohkosinus wird vom Lampenzustand dominiert. Die Readout-Probe
+(`runs/latent_agent_r1/appearance_readout_20260923/full/`: eingefrorene Slots,
+Schlüsselkopf auf Trainingsarten) erreicht auf Validationsarten lampenübergreifend
+nur 0,263 (Kontrolle), 0,360 (randomisiert) und 0,397 (scratch), auf Trainingsarten
+0,05–0,08 (Zufall 0,021). Identität ist nur teilweise auslesbar. Das belegt keine
+Abwesenheit der Information, aber ein nachgeschalteter Leser allein genügt nicht.
+
+**Mechanismus (optional, Standard unverändert).** `--identity joint|detached` fügt
+S1 einen gepaarten Ansichtsverlust hinzu, mit derselben Architektur wie
+`LatentCore.key_head` (`latent_core.key_head(width, key_width)`: 64→64 GELU→32,
+L2-normiert) und derselben InfoNCE wie S2 (τ = 0,1, Gewicht `--identity-weight`,
+Vorgabe 0,2). Kein neuer Encoder, keine Körper-/Lampenausschnitte, keine
+zusätzliche Hierarchie.
+
+- **Ansicht A** ist der unveränderte Batch (`runner.sampler` und Texturstrom wie
+  bisher, also bitgleich zum Standardbatch).
+- **Ansicht B** (`rw.paired_view`, eigener Strom
+  `Generator(seed·1 000 003 + 104 729 + Update)`) wird so gebaut:
+  - neue, unabhängige Szenenlayouts und Objekte;
+  - die 2B Maschinentexturen von A werden **exakt** per zufälliger Permutation auf
+    die 2B Maschinenplätze von B verteilt;
+  - die Lampe jeder Maschine ist gegenüber ihrem A-Gegenstück invertiert.
+
+  Dadurch sind Seite und Partnermaschine keine Abkürzung. Keine B-Szene enthält beide
+  Maschinen derselben A-Szene (deterministische Neuziehung, höchstens 64 Versuche).
+  Positiv ist dieselbe tatsächlich gezogene Textur, nie das Art-Label. Negative mit
+  exakt gleicher Textur (möglich bei Randomisierung < 1) werden maskiert.
+- Beide Ansichten laufen in **einem** Wahrnehmungsaufruf mit dem Basisloss
+  `perception_loss(A∪B)`. Maschinentokens sind `pointer(alpha, machine_xy)` wie zur
+  Laufzeit. Paarungsindizes, Texturen und Lampen sind reines Loss-/Generatorwissen.
+  Die Vorwärtsrechnung sieht nur Pixel.
+- `joint`: Identitätsgradient erreicht Wahrnehmung und Schlüssel. `detached`: der
+  Schlüssel liest `sg(Slot)`, die Wahrnehmung erhält keinen Identitätsgradienten.
+- **Export:** Checkpoint-Komponente `key`, dazu `result.json → key_export`
+  (Architektur, Breiten, Zustandshash). S2 übernimmt sie nur mit explizitem
+  `--init-key`. Ohne Flag bleiben S2-Einstellungen, Initialisierung und alte Resumes
+  unverändert; die Wahrnehmungsrun muss den Identitätsmodus deklarieren, sonst Fehler.
+
+**Kritik am vorgeschlagenen Gewicht-0-Arm.** Mit Gewicht 0 bliebe der Schlüssel
+untrainiert, und trainierter und untrainierter Leser wären nicht vergleichbar.
+Kontrollarm ist deshalb **D = `detached`** mit Gewicht 0,2:
+- gleiche Paare, gleiches Budget, gleicher Optimizer und gleiche Schlüsselinitialisierung;
+- der Schlüssel folgt online den sich entwickelnden Slots;
+- einziger kausaler Unterschied ist, ob der Identitätsgradient die Wahrnehmung
+  erreicht (einschließlich seines Anteils an der gemeinsamen Gradientennorm vor dem
+  Clipping; deklariert).
+
+Das ersetzt sowohl den Gewicht-0-Arm als auch einen gesonderten Shuffle-Arm: Kriterium 4
+misst den Gewinn gegen einen Leser, der auf denselben Paaren trainiert ist. Frühere
+Arme werden nicht neu gerechnet; ihre Probe-Werte sind nur Referenz.
+
+**Gepaarter Vergleich (Entwicklung, ein Seed, noch nicht ausgeführt).**
+- Beide Arme starten von `runs/latent_agent_r1/texture_randomized_20260923/last.pt`
+  (`--init-perception`, frischer AdamW) mit `--texture-randomization 1.0`, Seed 1101.
+- Identische Basis-, Textur- und Paarungsströme sowie identische Schlüsselinitialisierung.
+- Je 3000 Updates, höchstens 15 min pro Sitzung, ≤ 6 GiB reserviert.
+- Eine Zeitkappe pausiert sichtbar (`paused`). Fortgesetzt wird mit `--resume`, bis
+  beide Arme `completed` bei genau 3000 Updates sind. Vorher gibt es keinen Vergleich.
+
+```bash
+P=runs/latent_agent_r1/texture_randomized_20260923
+for arm in joint detached; do
+  .venv/bin/python -m experiments.latent_agent --stage perception --device cuda --updates 3000 \
+    --max-minutes 15 --init-perception $P --texture-randomization 1.0 --identity $arm \
+    --output runs/latent_agent_r1/identity_${arm}_20260923
+done
+# nur bei paused, bis completed:
+.venv/bin/python -m experiments.latent_agent --stage perception --resume runs/latent_agent_r1/identity_<arm>_20260923
+.venv/bin/python -m experiments.perception_diagnosis --run runs/latent_agent_r1/identity_detached_20260923 \
+  --output runs/latent_agent_r1/identity_detached_20260923/diagnosis
+.venv/bin/python -m experiments.perception_diagnosis --run runs/latent_agent_r1/identity_joint_20260923 \
+  --control runs/latent_agent_r1/identity_detached_20260923/diagnosis \
+  --output runs/latent_agent_r1/identity_joint_20260923/diagnosis
+```
+
+Die Diagnose wertet dieselben festen Validationszellen wie §17 aus (Strom seed+29,
+8 Validationsarten, 1024 Tokens, Zufall lampenübergreifend 0,125). Sie berichtet
+Rohslot- **und** Schlüssel-1-NN (gesamt und lampenübergreifend).
+
+**Identitätsscreen J gegen D (alle erforderlich; Resultat-Gate, wenn beide Schlüssel haben):**
+
+1. Wahrnehmungsschutz für J: Lampe ≥ 0,99; jede Validationstextur ≥ 0,97; jedes
+   Attribut ≥ 0,95 und ≥ D − 0,005; Maschinenzeiger ≥ 0,99, Objektzeiger ≥ 0,97,
+   beide ≥ D − 0,005.
+2. J-Schlüssel lampenübergreifend ≥ 0,80.
+3. J-Schlüssel gesamt ≥ D-Schlüssel gesamt − 0,02.
+4. J-Schlüssel lampenübergreifend − D-Schlüssel lampenübergreifend ≥ 0,10.
+
+Die Rohkosinus-Übernahmeregel aus §17 wird für J gegen D weiter berechnet und berichtet
+(Rohslot-Proxys), ist aber nicht Teil dieses Screens. Die Entscheidung aus §17 bleibt
+unverändert. **Nur berichtet:**
+- eine Post-hoc-Probe mit eingefrorenen Slots auf beiden Checkpoints: Kopie von
+  `appearance_readout_20260923/probe.py` mit ersetzten Armen, eigener neuer Lauf, Kriterien unverändert;
+- Referenzwerte der früheren Probe.
+
+**Auslegung (jetzt festgelegt).**
+- Screen bestanden: gelernte Identität im Wahrnehmungstraining macht Identität
+  lampeninvariant auslesbar, ohne C1-Verlust (Entwicklung, ein Seed). Formal folgen
+  drei Seeds und ein frischer Lauf; danach S2 mit `--init-key`.
+- 4 verfehlt: Identitätsgradient in die Wahrnehmung bringt gegenüber dem gleich
+  trainierten Leser nichts Wesentliches. Nächste Option wäre die Slot-Verfeinerung
+  (§17-Rückfall), keine weitere Lossgewichtung ohne neuen Vorschlag.
+- 1 verfehlt bei erfülltem 2–4: Zielkonflikt Identität gegen Zustand. Kein
+  Gewichtssuchlauf ohne vorab erklärten Vergleich.
+- Kein C3-, Natürlichbild- oder autonomer-Entdeckungsanspruch; Paarung und Labels sind
+  offengelegte Trainingsinformation. Zur Laufzeit gelten eingefrorene Gewichte und nur Pixel.
+
+**Softwareprüfung (Worktree `codex/perception-identity`, nur CPU, kein Training über
+Smoke-Größe).** Tests vor der Implementierung rot (`runs/reviews/perception_identity_20260923/red-tests.log`),
+danach grün:
+- **Paarung** (`tests/test_rule_world.py`): exakte Textur je Platz, Lampe invertiert,
+  Permutation und Seitentausch, keine B-Szene mit beiden Maschinen einer A-Szene;
+  Körperausschnitte pixelgleich außer der Lampe; keine neuen oder Held-out-Texturen.
+- **Rezept, Verlust und Export** (`tests/test_latent_agent.py`):
+  - Ansicht A bitgleich zum Standardbatch; die Key-Head-Fabrik entspricht dem
+    S2-Schlüsselkopf;
+  - Identitätsgradient erreicht Encoder und Slots nur bei `joint`, bei `detached`
+    nur den Schlüssel;
+  - Maske für exakt gleiche Texturen; Metadaten und `key_export`-Hash;
+  - exaktes Pause/Resume; `--init-key` nur explizit;
+  - Identitätsscreen in der Diagnose, die Rohregel bleibt berichtet.
+
+Standard-S1/S2 ohne neue Flags ist gegenüber 18fea0f bitgleich (Modelltensoren, Zeilen,
+Einstellungen, Initialhash; `…/legacy-equivalence.log`). **Smoke-Befund**
+(`runs/latent_agent_r1/identity_smoke_20260923/`, volle Größe, 2 CPU-Updates vom
+echten Elternteil, Pause/Resume):
+- Update 1 ist in beiden Armen identisch (InfoNCE 11,20 > ln 64, weil der zufällige
+  Schlüssel gleichlampige Negative bevorzugt).
+- Der Basisloss steigt nach einem Update in D stärker als in J (0,277 gegen 0,133). Das
+  ist der Übergang eines frischen AdamW, nicht der Identitätsterm.
+- Der anfangs 60-fache Skalenanteil des Identitätsterms bleibt ein beobachtetes Risiko
+  für C1 und wird über die C1-Schutzbedingungen geprüft. Keine Aufwärmphase ohne
+  neuen, vorab erklärten Vergleich.

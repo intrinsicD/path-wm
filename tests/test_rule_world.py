@@ -254,3 +254,64 @@ def test_texture_sampler_is_deterministic_excludes_heldout_and_is_capped():
     # therefore rejects everything and the finite cap must fail explicitly.
     with pytest.raises(ValueError, match="cap"):
         rw.TextureSampler(exclusion=10.0, cap=5).sample(torch.Generator().manual_seed(1), 1)
+
+
+# ---------------------------------------------------------------- S1 paired identity views
+
+
+def paired(seed=41, count=6, randomize=True):
+    g = torch.Generator().manual_seed(seed)
+    scenes = rw.sample_scenes(g, torch.tensor(rw.KIND_SPLIT["train"])[torch.randint(48, (count, 2), generator=g)])
+    lamps = torch.randint(2, (count, 2), generator=g)
+    textures = rw.TextureSampler().sample(g, count)[0] if randomize else rw.kind_textures(scenes.kind)
+    return (scenes, lamps, textures), rw.paired_view(torch.Generator().manual_seed(seed + 1), scenes, lamps, textures)
+
+
+def test_paired_view_shares_exact_textures_flips_lamps_and_permutes_sides():
+    (scenes, lamps, textures), (scenes_b, lamps_b, textures_b, source) = paired()
+    n = len(scenes)
+    assert sorted(source.flatten().tolist()) == list(range(2 * n))  # a permutation of A machines
+    flat = lambda t: (t.colors.reshape(2 * n, 2, 3), t.pattern.flatten(), t.period.flatten())
+    a, b = flat(textures), flat(textures_b)
+    for j, i in enumerate(source.flatten().tolist()):  # B machine j shows exactly A machine i's texture
+        assert torch.equal(b[0][j], a[0][i]) and b[1][j] == a[1][i] and b[2][j] == a[2][i]
+        assert lamps_b.flatten()[j] == 1 - lamps.flatten()[i]  # every positive crosses lamp states
+    assert ((source[:, 0] // 2) != (source[:, 1] // 2)).all()  # no B scene reuses both machines of one A scene
+    assert not torch.equal(scenes_b.machine_xy, scenes.machine_xy) and not torch.equal(scenes_b.attrs, scenes.attrs)
+    sides = torch.cat([(paired(seed)[1][3] % 2 != torch.arange(2)).flatten() for seed in range(40, 60)])
+    assert 0.35 < sides.float().mean() < 0.65  # side is not a matching shortcut
+    again = rw.paired_view(torch.Generator().manual_seed(42), scenes, lamps, textures)
+    assert torch.equal(again[3], source) and torch.equal(again[0].machine_xy, scenes_b.machine_xy)
+
+
+def test_paired_view_bodies_render_identically_except_the_lamp():
+    (scenes, lamps, textures), (scenes_b, lamps_b, textures_b, source) = paired(count=4)
+    rgb, entity = rw.render(scenes, lamps, textures)
+    rgb_b, entity_b = rw.render(scenes_b, lamps_b, textures_b)
+
+    def crop(image, ents, xy, m):
+        cx, cy = xy.long().tolist()
+        return image[:, cy - 8 : cy + 9, cx - 11 : cx + 12], ents[cy - 8 : cy + 9, cx - 11 : cx + 12] == 1 + m
+
+    dy, dx = torch.meshgrid(torch.arange(-8, 9), torch.arange(-11, 12), indexing="ij")
+    lamp = dx.square() + (dy + 4.5).square() <= 3.2**2
+    for j, i in enumerate(source.flatten().tolist()):
+        x_b, body_b = crop(rgb_b[j // 2], entity_b[j // 2], scenes_b.machine_xy[j // 2, j % 2], j % 2)
+        x_a, body_a = crop(rgb[i // 2], entity[i // 2], scenes.machine_xy[i // 2, i % 2], i % 2)
+        assert body_a.all() and body_b.all()
+        assert torch.equal(x_a[:, ~lamp], x_b[:, ~lamp])  # same physical appearance
+        assert not torch.equal(x_a[:, lamp], x_b[:, lamp])  # opposite lamp state
+
+
+def test_paired_view_introduces_no_new_or_heldout_textures():
+    sampler = rw.TextureSampler()
+    for randomize in (True, False):
+        (scenes, _, textures), (scenes_b, _, textures_b, source) = paired(randomize=randomize)
+        assert torch.equal(scenes_b.kind.flatten(), scenes.kind.flatten()[source.flatten()])
+        assert set(scenes_b.kind.flatten().tolist()) <= set(rw.KIND_SPLIT["train"])
+        for j in range(2 * len(scenes)):
+            c, p, q = textures_b.colors.reshape(-1, 2, 3)[j], int(textures_b.pattern.flatten()[j]), int(textures_b.period.flatten()[j])
+            assert not sampler.heldout_like(c, p, q)
+    with pytest.raises(ValueError, match="two scenes"):
+        rw.paired_view(torch.Generator().manual_seed(0), scenes.select(slice(0, 1)), torch.zeros(1, 2, dtype=torch.long),
+                       rw.kind_textures(scenes.kind[:1]))
