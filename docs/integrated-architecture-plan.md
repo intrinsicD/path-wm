@@ -560,6 +560,17 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Stopregeln stehen vor Ausführung in `…/induction_relation_20260923/protocol.md`.
    I1 ist nach dem abgeschlossenen E1b-S und unabhängiger CPU-Vertragsprüfung gestartet;
    Ergebnis offen: `…/induction_relation_20260923/I1_C192/`.
+   **Vor I1-Endergebnis festgelegte Grenze:** Falls I1 den Trainingsrelationsscreen
+   bei intakter Retention verfehlt, folgt einmal J44: frischer geteilter Kern,
+   skalierte Queries, ausschließlich Relationsbeispiele, direkte Query-BCE über
+   G(S)→T ohne Oracle-Codebank oder Anker. Das ersetzt den zuvor erwogenen
+   Kontrastivversuch. Mehrere Trainingsbedingungen ändern sich gemeinsam; kein
+   isolierter Kausaltest. Maximal 8000 Updates, gleicher Relationsendpunkt und
+   Kontrollen. Bei Trainingsfit ohne Transfer wird Kompositionalität neu bewertet;
+   bei erneut fehlendem Trainingsfit endet diese Folge von G-Varianten und der
+   Evidenz-/Inferenzvertrag wird grundsätzlich geprüft. Keine automatische weitere
+   Verlustvariante oder Budgeterhöhung. Entscheidung und Korrekturen des Reviews:
+   `runs/reviews/integrated_architecture_20260923/induction-bounded-review-corrections.md`.
 
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
