@@ -1486,3 +1486,46 @@ eingefrorene Encoder bei vergleichbarem Budget prüfen und Eigenschaftserhaltung
 messen. Keiner dieser Tests isoliert allein die Ursache oder beweist, dass jede
 benötigte Information enthalten ist. Decoder nur mittrainieren, wenn der aktive
 Lernpfad ihn verwendet; ein starker Decoder kann schwache Repräsentationen verdecken.
+
+### Ausführungsprotokoll CI1: nichtsprachliche Farbinformation (2026-09-23)
+
+Autorisiert: Alex bittet um Umsetzung der drei Diagnosen mit Claude. Ein begrenzter
+Entwicklungsversuch, kein vollständiges Vortrainingscurriculum. Bestehende visuelle
+J-Wahrnehmung und C192-Kerngewichte als Start; deren unterschiedliche Trainingsräume
+sind eine explizite Grenze, keine angenommene semantische Ausrichtung. Neue Farbquery
+liest den per beobachtbarer Zeigeposition gewählten Slot über denselben geteilten
+Kernblock. Das ist eine neue trainierte Aufgabenabfrage, nicht die bisherige
+Lampenausgabe. Keine Textlabels oder verborgenen IDs im Forward.
+
+Seed1101; 400 Updates je Kernarm, Batch16, AdamW lr3e-4, FP32, ≤6GiB reserviert und
+≤30Minuten je Arm. Derselbe Initialzustand, gleiche frisch pro Step gesäte Szenen,
+identische Updatezahl; Laufzeit separat berichten. Frozen: Wahrnehmung vollständig
+fix. Adaptiv: nur Bildencoder trainierbar, Slotattention/Decoder/alte Köpfe bleiben
+fix; Gradienten dürfen durch fixe Gewichte fließen. Beide Arme Farb-CE plus0.2×
+bestehenden Wahrnehmungsverlust (im Frozen-Arm ohne Wahrnehmungsgradienten).
+Kernblock, Query und neuer Vierklassenkopf lernen in beiden Armen. Decoder ist für
+Slotzuordnung aktiv, erhält aber keine Parameterupdates; bisheriger Bilddecoder
+wird nicht als zusätzlicher neuer Trainingspfad eingeführt.
+
+Farb/Form-Kombinationen mit (Farbe+Form)%4==0 nur in Evaluationsbasisszenen, übrige
+im Training. Maschinenarten zusätzlich train/validation-getrennt. Instanzen werden
+frisch erzeugt. Trainprobe512, Evaluation256 Szenen; je eine extern gezeigte Entität.
+Trainprobe-Seed4101, Evaluationsseed4201, Trainingsstepseed5101+step. Gegenfälle
+ändern nur Zielfarbe um1mod4 oder Ziel-y um3Pixel; die Farbintervention kann den
+Kombinationssplit verlassen und wird separat als Intervention bewertet. Keine
+zeitliche Identitätsverfolgung oder echte Videoqualifikation behaupten.
+
+Linearprobe300 CPU-Updates lr0.03 auf eingefrorenen tatsächlichen Eingangsslots;
+zusätzlich lokaler RGB-Mittelwert als einfacher Eingangsvergleich. Probeerfolg:
+Basisaccuracy≥.95, beide Farbgegenfälle korrekt≥.90, beide Bewegungspaare korrekt≥.90.
+Kernnutzung: dieselben Schwellen sowie Accuracyverlust≥.30 bei Null- und permutierten
+Objekttokens. Konstante Antworten können Invarianz nicht bestehen. Retention: jede
+alte Attributaccuracy und Lampenaccuracy höchstens.02 unter Initialwert auf genau
+derselben Evaluation. Adaptionsvorteil nur deskriptiv ab+.02 Basisaccuracy und
+bestandener Retention; ein Seed beweist keine allgemeine Verbesserung.
+
+Raw-Logits/Targets/Tokenproben, Parameter-Freeze-Prüfung, Gradientenprüfung, Checkpoints,
+Ressourcen und Standalonebericht je Arm. Frische Ausgabeverzeichnisse; diese kurze
+Diagnose startet bei Unterbrechung neu, kein ungetestetes Resume. Fehlende/gescheiterte
+Gates bleiben sichtbar. Claude implementiert abstrakte Diagnosehilfen ohne private
+Repositorydaten; lokale Integration und unabhängige Prüfung durch Codex.
