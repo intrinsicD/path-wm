@@ -13,8 +13,8 @@ Read the relevant record when needed.
   not establish the complete capability.
 - **Integrated architecture R1/R2:** the [adopted plan](integrated-architecture-plan.md)
   connects session/store/clock, image features, concept memory, typed
-  execution and external verification. 780 combined CPU tests pass; included repairs
-  cover inherited writes, identity-key sharing and immediate view refresh after correction.
+  execution and external verification. 795 CPU tests pass, including typed claims, causally checked own tests,
+  identity-key sharing and current-view correction.
   Perception J passes the primary identity
   screen (100% versus54.6% cross-lamp); fresh scenes confirm the key gain but miss one
   relative attribute-preservation guard. J is provisional for development.

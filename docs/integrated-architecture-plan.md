@@ -15,12 +15,12 @@ nicht dessen Arm A.
   Sitzung, einem Speicher und einer Uhr; getrennte Instanzidentität und
   Konzeptzugehörigkeit, ein geteilter Bildencoder, ein Entscheidungs-Forecaster,
   aktuelle Aktionsabhängigkeiten, externe Verifikation und Wiederherstellung.
-  Vollständige CPU-Regression: **780 Tests bestanden**, einschließlich der
-  8 unabhängigen Grenzfalltests (jetzt dauerhaft im Testverzeichnis). Belege:
-  `runs/reviews/integrated_architecture_20260923/unified-repair-green.log` und
-  `…/unified-final-durable-full-suite.log` (780 bestanden),
-  `…/unified-final-durable-full-suite-exit.json` (Exit 0) und
-  `…/unified-current-view-root-collection.log` (780 gesammelt).
+  Vollständige CPU-Regression: **795 Tests bestanden**, einschließlich des neuen
+  kausal geprüften Behauptungspfads. Belege:
+  `runs/reviews/integrated_architecture_20260923/unified-testimony-full-suite-retry.log`
+  und `…/unified-testimony-full-suite-retry-exit.json` (Exit 0).
+  Der erste Versuch brach nativ ab; Original und separater Testnachweis bleiben
+  erhalten (`…/unified-testimony-native-crash-note.md`).
   Diskussion mit Alex bleibt separat offen.
 - **Wahrnehmung und Identität (§19):** beide Arme sind bei 3000 Updates abgeschlossen.
   J erreicht auf acht Validationsarten 100% Schlüssel-Wiedererkennung über
@@ -843,8 +843,25 @@ speichert und startet identisch neu: 37 Matches, 43 ungelöste Zuordnungen, 14
 attributierte Übergänge und 6 eigene ausgeführte Drücke. Alle vier geplanten Ziele
 scheitern; Kern und Belief sind hier zufällig initialisiert. Dies prüft Integration,
 nicht gelernte Zielerreichung. Die Berichtstexte nennen jetzt die tatsächlich geladenen Module; die Korrektur
-bewahrt Rohdaten und Originalbericht und ist in `amendment.json` dokumentiert. Eine R2-Claim-/Testimony-Schnittstelle und zeitliche Auflösung
-einzeln wiederkehrender gleich aussehender Instanzen bleiben offen.
+bewahrt Rohdaten und Originalbericht und ist in `amendment.json` dokumentiert. Die zeitliche Auflösung einzeln wiederkehrender gleich aussehender Instanzen bleibt offen.
+
+**Behauptung und eigener Test (implementiert, Softwareumfang).** `Claim` benennt
+Quelle, aktuelle typisierte Aktion und behaupteten Lampenausgang. `receive_testimony`
+veröffentlicht einen getrennten Beleg durch dieselbe Sitzung; die Behauptung wird
+niemals Übergang, Support oder Konzeptcode. `test_claim` prüft unter Ziel, Budget,
+Frist und aktuellen Abhängigkeiten genau diese Aktion. Nur ein eigener erfolgreicher,
+der richtigen Instanz zugeordneter Übergang aus derselben Kameraansicht erzeugt
+`consistent` oder `contradicted`, anhand der selbst wahrgenommenen Lampe.
+Aktionsreferenzen und Ansichtsereignis werden vor Store-/Aktuatorwirkung und erneut
+bei Wiederherstellung geprüft. Ein bloßes Claim-Tag genügt nicht. Rücknahme der
+Behauptung entfernt das Urteil, erhält aber den unabhängigen eigenen Test; Rücknahme
+oder Identitätskorrektur des Tests invalidiert das Urteil. Recovery leitet ein
+ausstehendes Urteil ohne erneuten Druck ab. Zwei unabhängige Gegenbeispiele fanden
+zunächst falsch akzeptierte Aktions-/Ansichtsreferenzen; beide sind repariert und
+als dauerhafte Tests gesichert. Die gemeinsame vollständige Suite besteht mit
+795 Tests (Exit 0). API und Grenzen: `…/unified-testimony-api.md`; Repros:
+`…/unified-testimony-root-provenance-{red,green}.log`.
+Keine natürliche Sprache, Quellenzuverlässigkeit oder gelernte C5-Qualifikation.
 
 **Quellkompatible Migration.** Alle Erweiterungen sind optional mit altem Verhalten als
 Standard: `observe(evidence=(), packet_features=None)` (Payload-Fingerprint nur mit
