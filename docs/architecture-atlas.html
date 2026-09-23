@@ -2927,7 +2927,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>22 September inference-engine discussion: user proposes on-demand trained model execution with a rendering-buffer analogy. Bounded GPU residency, RAM/SSD model source and shared features can implement this direction; active weights plus activations/workspaces/prefetch must fit, and eviction must preserve session/evidence state. No implementation or throughput validation. See docs/neural-engine-inference.md. Per-frame follow-up traces current source packet, once-per-event prior, shared R/B/P/C features, candidate matching, conditional details, evidence correction/commit and optional response. Actual BeliefAgent/WorldSession interfaces audited; supplied candidates do not implement natural-image detection. Inference state updates are separate from weight training.</p>
 <p>22 September image/video-understanding explanation: retain shared multiscale sources and core/entity memory; propose learning relational/event binding and actual evidence-based readout, not just geometry or cache execution. Existing 0/25 baseline and 1/25 controlled-order continuation are dated scoped evidence, not new full-system evaluation. Small real interaction/history task and source controls remain proposed. See docs/video-understanding-test-map.md. Follow-up asks whether every pixel must be segmented in every frame: distinguish shared visual features from dense mask outputs; conditional detail readers, temporal association and new-object/recovery coverage remain proposals. No fixed cadence or source-discarding rule adopted.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · ContextEncoder:346</a></li><li><a href="../pathwm/world_state/inspection.py">pathwm/world_state/inspection.py · WorldTrace:37</a></li><li><a href="../docs/world-state.md">docs/world-state.md</a></li><li><a href="../docs/world-state-foundation-plan.md">docs/world-state-foundation-plan.md</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · CandidateEncoder:30</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · ContextEncoder:359</a></li><li><a href="../pathwm/world_state/inspection.py">pathwm/world_state/inspection.py · WorldTrace:37</a></li><li><a href="../docs/world-state.md">docs/world-state.md</a></li><li><a href="../docs/world-state-foundation-plan.md">docs/world-state-foundation-plan.md</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · CandidateEncoder:30</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
 </div></details>
 <details id="14-latent-core">
 <summary><span>14 · Inside the latent core</span><small>Current categorical agent plus opt-in WorldSession · named roles are not guaranteed learned semantics</small></summary>
@@ -3582,7 +3582,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
  viewBox="0.00 0.00 1071.00 1076.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="17-integrated-latent-agent-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 1061.36)">
 <title>G</title>
-<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1061.36 1057.1,-1061.36 1057.1,14.4 -14.4,14.4"/>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1061.36 1056.99,-1061.36 1056.99,14.4 -14.4,14.4"/>
 <!-- observe&#45;&gt;pyramid -->
 <g id="17-integrated-latent-agent-edge1" class="edge">
 <title>observe&#45;&gt;pyramid</title>
@@ -3608,10 +3608,10 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- pyramid&#45;&gt;other -->
 <g id="17-integrated-latent-agent-edge15" class="edge">
 <title>pyramid&#45;&gt;other</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M413.32,-904.99C448.3,-894.79 480.4,-885.44 480.4,-885.44 480.4,-885.44 521.54,-863.94 561.15,-843.24"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="561.97,-845.58 567.04,-840.16 559.7,-841.23 561.97,-845.58"/>
-<text xml:space="preserve" text-anchor="middle" x="627.25" y="-875.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">same encoded frame; capture time</text>
-<text xml:space="preserve" text-anchor="middle" x="627.25" y="-862.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">is metadata</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M413.32,-904.99C448.3,-894.79 480.4,-885.44 480.4,-885.44 480.4,-885.44 518.26,-864.12 554.88,-843.5"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="555.83,-845.78 560.73,-840.21 553.43,-841.51 555.83,-845.78"/>
+<text xml:space="preserve" text-anchor="middle" x="623.69" y="-875.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">same encoded frame; capture time</text>
+<text xml:space="preserve" text-anchor="middle" x="623.69" y="-862.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">is metadata</text>
 </g>
 <!-- slots&#45;&gt;store -->
 <g id="17-integrated-latent-agent-edge16" class="edge">
@@ -3689,9 +3689,9 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- execute&#45;&gt;observe -->
 <g id="17-integrated-latent-agent-edge13" class="edge">
 <title>execute&#45;&gt;observe</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M682.91,-175.15C714.07,-185.72 740.4,-194.64 740.4,-194.64 740.4,-194.64 835.4,-316.96 835.4,-316.96 835.4,-316.96 864.4,-363.36 864.4,-363.36 864.4,-363.36 864.4,-432.48 864.4,-432.48 864.4,-432.48 725.5,-588 725.5,-588 725.5,-588 725.5,-614.4 725.5,-614.4 725.5,-614.4 788.4,-769.92 788.4,-769.92 788.4,-769.92 788.4,-839.04 788.4,-839.04 788.4,-839.04 729.4,-885.44 729.4,-885.44 729.4,-885.44 350.4,-990.96 350.4,-990.96 350.4,-990.96 300.88,-999.85 250.4,-1008.92"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M682.91,-175.15C714.07,-185.72 740.4,-194.64 740.4,-194.64 740.4,-194.64 835.4,-316.96 835.4,-316.96 835.4,-316.96 864.4,-363.36 864.4,-363.36 864.4,-363.36 864.4,-432.48 864.4,-432.48 864.4,-432.48 724.5,-588 724.5,-588 724.5,-588 724.5,-614.4 724.5,-614.4 724.5,-614.4 766.4,-769.92 766.4,-769.92 766.4,-769.92 766.4,-839.04 766.4,-839.04 766.4,-839.04 726.4,-885.44 726.4,-885.44 726.4,-885.44 350.4,-990.96 350.4,-990.96 350.4,-990.96 300.88,-999.85 250.4,-1008.92"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="250.07,-1006.49 243.61,-1010.14 250.93,-1011.31 250.07,-1006.49"/>
-<text xml:space="preserve" text-anchor="middle" x="769.45" y="-597.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">actual feedback</text>
+<text xml:space="preserve" text-anchor="middle" x="768.45" y="-597.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">actual feedback</text>
 </g>
 <!-- execute&#45;&gt;verify -->
 <g id="17-integrated-latent-agent-edge14" class="edge">
@@ -3703,18 +3703,18 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- execute&#45;&gt;other -->
 <g id="17-integrated-latent-agent-edge18" class="edge">
 <title>execute&#45;&gt;other</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M724.26,-175.15C768.24,-185.72 805.4,-194.64 805.4,-194.64 805.4,-194.64 905.4,-316.96 905.4,-316.96 905.4,-316.96 905.4,-343.36 905.4,-343.36 905.4,-343.36 901.4,-432.48 901.4,-432.48 901.4,-432.48 818.4,-614.4 818.4,-614.4 818.4,-614.4 726.51,-708.32 672.25,-763.77"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="670.78,-761.77 667.64,-768.49 674.29,-765.2 670.78,-761.77"/>
-<text xml:space="preserve" text-anchor="middle" x="967.35" y="-468.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">executed action only; not a</text>
-<text xml:space="preserve" text-anchor="middle" x="967.35" y="-455.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">second planner</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M724.26,-175.15C768.24,-185.72 805.4,-194.64 805.4,-194.64 805.4,-194.64 905.4,-316.96 905.4,-316.96 905.4,-316.96 905.4,-343.36 905.4,-343.36 905.4,-343.36 901.4,-432.48 901.4,-432.48 901.4,-432.48 817.4,-614.4 817.4,-614.4 817.4,-614.4 720.54,-708.32 663.35,-763.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="661.78,-761.89 658.46,-768.52 665.19,-765.4 661.78,-761.89"/>
+<text xml:space="preserve" text-anchor="middle" x="967.23" y="-468.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">executed action only; not a</text>
+<text xml:space="preserve" text-anchor="middle" x="967.23" y="-455.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">second planner</text>
 </g>
 <!-- other&#45;&gt;store -->
 <g id="17-integrated-latent-agent-edge17" class="edge">
 <title>other&#45;&gt;store</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M513.33,-769.44C445.23,-750.14 360.02,-725.98 290.61,-706.31"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="291.67,-704.06 284.26,-704.51 290.33,-708.77 291.67,-704.06"/>
-<text xml:space="preserve" text-anchor="middle" x="513.34" y="-740.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observed belief shares the</text>
-<text xml:space="preserve" text-anchor="middle" x="513.34" y="-726.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">atomic event</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M505.13,-769.44C438.76,-750.18 355.74,-726.08 288.03,-706.43"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="288.86,-704.11 281.45,-704.52 287.49,-708.82 288.86,-704.11"/>
+<text xml:space="preserve" text-anchor="middle" x="506.85" y="-740.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observed belief shares the</text>
+<text xml:space="preserve" text-anchor="middle" x="506.85" y="-726.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">atomic event</text>
 </g>
 <!-- observe -->
 <g id="17-integrated-latent-agent-node1" class="node">
@@ -3800,10 +3800,10 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- other -->
 <g id="17-integrated-latent-agent-node12" class="node">
 <title>other</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M766.74,-839.04C766.74,-839.04 500.07,-839.04 500.07,-839.04 494.07,-839.04 488.07,-833.04 488.07,-827.04 488.07,-827.04 488.07,-781.92 488.07,-781.92 488.07,-775.92 494.07,-769.92 500.07,-769.92 500.07,-769.92 766.74,-769.92 766.74,-769.92 772.74,-769.92 778.74,-775.92 778.74,-781.92 778.74,-781.92 778.74,-827.04 778.74,-827.04 778.74,-833.04 772.74,-839.04 766.74,-839.04"/>
-<text xml:space="preserve" text-anchor="middle" x="633.4" y="-817.08" font-family="DejaVu Sans" font-size="14.00">Belief filter +typed action encoder</text>
-<text xml:space="preserve" text-anchor="middle" x="633.4" y="-800.28" font-family="DejaVu Sans" font-size="14.00">Same source pyramid</text>
-<text xml:space="preserve" text-anchor="middle" x="633.4" y="-783.48" font-family="DejaVu Sans" font-size="14.00">R2 wiring; learned alignment pending</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M744.31,-839.04C744.31,-839.04 500.49,-839.04 500.49,-839.04 494.49,-839.04 488.49,-833.04 488.49,-827.04 488.49,-827.04 488.49,-781.92 488.49,-781.92 488.49,-775.92 494.49,-769.92 500.49,-769.92 500.49,-769.92 744.31,-769.92 744.31,-769.92 750.31,-769.92 756.31,-775.92 756.31,-781.92 756.31,-781.92 756.31,-827.04 756.31,-827.04 756.31,-833.04 750.31,-839.04 744.31,-839.04"/>
+<text xml:space="preserve" text-anchor="middle" x="622.4" y="-817.08" font-family="DejaVu Sans" font-size="14.00">Belief filter +typed action encoder</text>
+<text xml:space="preserve" text-anchor="middle" x="622.4" y="-800.28" font-family="DejaVu Sans" font-size="14.00">Same source pyramid</text>
+<text xml:space="preserve" text-anchor="middle" x="622.4" y="-783.48" font-family="DejaVu Sans" font-size="14.00">Wired; no planning reader yet</text>
 </g>
 </g>
 </svg>
@@ -3816,9 +3816,9 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Likelihood and expected-utility planning use the unweighted outcome objective. Unknown does not mean impossible. Software, controlled learning and natural-data gates are separate; no new green scope follows from this diagram.</p>
 <p>Natural data, partial observability and broader modality/action capabilities have explicit connection contracts in the owning plan and require their own learned evidence. Existing discussion statuses are unchanged.</p>
 <p>R2 now composes the existing session, belief and concept memory: one source encoding, one publication owner, explicit goals, revision-dependent actions, external verification and restart recovery. Independent adversarial tests verify software contracts only; trained identity, action/belief alignment and full-agent learning remain unestablished.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../docs/integrated-architecture-plan.md">docs/integrated-architecture-plan.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeaturePyramid:35</a></li><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/models/slots.py">pathwm/models/slots.py · SlotPerception:112</a></li><li><a href="../pathwm/models/latent_core.py">pathwm/models/latent_core.py · LatentCore:41</a></li><li><a href="../pathwm/world_state/concepts.py">pathwm/world_state/concepts.py · ConceptAgent:278</a></li><li><a href="../pathwm/data/rule_world.py">pathwm/data/rule_world.py · TaskContract:457</a></li><li><a href="../pathwm/evaluation/rule_world.py">pathwm/evaluation/rule_world.py · run_life:380</a></li><li><a href="../experiments/latent_agent.py">experiments/latent_agent.py</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/unified.py">pathwm/world_state/unified.py · UnifiedAgent:152</a></li><li><a href="../experiments/unified_session.py">experiments/unified_session.py</a></li><li><a href="../tests/test_unified_session.py">tests/test_unified_session.py</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../docs/integrated-architecture-plan.md">docs/integrated-architecture-plan.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeaturePyramid:35</a></li><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/models/slots.py">pathwm/models/slots.py · SlotPerception:112</a></li><li><a href="../pathwm/models/latent_core.py">pathwm/models/latent_core.py · LatentCore:46</a></li><li><a href="../pathwm/world_state/concepts.py">pathwm/world_state/concepts.py · ConceptAgent:278</a></li><li><a href="../pathwm/data/rule_world.py">pathwm/data/rule_world.py · TaskContract:486</a></li><li><a href="../pathwm/evaluation/rule_world.py">pathwm/evaluation/rule_world.py · run_life:380</a></li><li><a href="../experiments/latent_agent.py">experiments/latent_agent.py</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/unified.py">pathwm/world_state/unified.py · UnifiedAgent:163</a></li><li><a href="../experiments/unified_session.py">experiments/unified_session.py</a></li><li><a href="../tests/test_unified_session.py">tests/test_unified_session.py</a></li></ul></details>
 </div></details>
-<footer>Grounded in repository snapshot 60d0eaa. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
+<footer>Grounded in repository snapshot 952ebd7. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>
 const panels = [...document.querySelectorAll('main > details')];
 document.getElementById('expand').addEventListener('click', () => panels.forEach(p => p.open = true));

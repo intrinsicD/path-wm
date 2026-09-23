@@ -1,9 +1,8 @@
 # Current work
 
-Read the plan for the requested task. This is a current-work index, not a session
-log. Earlier decisions, negative results and run/report receipts remain in the
-[complete historical record](project-history.md) and the linked owning documents;
-read the particular record when needed, not the whole history at startup.
+Read the task plan. This index links current work; earlier decisions and run/report
+receipts remain in the [historical record](project-history.md) and owning documents.
+Read the relevant record when needed.
 
 ## Current priorities
 
@@ -13,15 +12,17 @@ read the particular record when needed, not the whole history at startup.
   corrects knowledge at runtime without weight retraining. Partial components do
   not establish the complete capability.
 - **Integrated architecture R1/R2:** the [adopted plan](integrated-architecture-plan.md)
-  implements the pixel reference and a unified session (one store/clock, separate
-  instance identity and concept membership, shared source encoding, bounded actions,
-  external verification, restart recovery). All 752 CPU tests pass, including independent
-  action/correction/restart boundary tests. Learning remains open: texture
-  variation fixes lamp recognition but identity transfer is weak; a fresh symbolic
-  core now learns relational information with supplied rule codes, below the gates.
-  Paired latent-identity training and exact core continuation are the next trials.
-  No integrated learned capability is established.
-- **Latent concept learning:** the [abstract research review](latent-concept-learning-review.md)
+  connects session/store/clock, image features, concept memory, typed
+  execution and external verification. 780 combined CPU tests pass; included repairs
+  cover inherited writes, identity-key sharing and immediate view refresh after correction.
+  Perception J passes the primary identity
+  screen (100% versus54.6% cross-lamp); fresh scenes confirm the key gain but miss one
+  relative attribute-preservation guard. J is provisional for development.
+  Relation-first training now passes all five oracle application families (nu≥0.863);
+  both frozen-code searches fail; anchored joint G/T training is running. Induction, rollout,
+  learned full R1/R2 and natural data remain unproven. Plan §0,10,11,16,18–19 owns the
+  contracts; runs: `runs/latent_agent_r1/`.
+- **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
   compares concept induction, latent memory and prerequisites with current primary
   sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is
   not a universal prerequisite; joint learning, staged learning and pretrained

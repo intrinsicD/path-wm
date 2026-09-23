@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-23, repository snapshot `60d0eaa`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-23, repository snapshot `952ebd7`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -1020,7 +1020,7 @@ The foundation now connects audio/video/text/image packets with masked Candidate
 
 Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.
 
-Source: [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:346](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
+Source: [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:359](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
 
 <a id="14-latent-core"></a>
 
@@ -1332,7 +1332,7 @@ flowchart TB
     class execute external;
     verify["Independent observed outcome<br/>Success / failed / unknown"]
     class verify external;
-    other["Belief filter +typed action encoder<br/>Same source pyramid<br/>R2 wiring; learned alignment pending"]
+    other["Belief filter +typed action encoder<br/>Same source pyramid<br/>Wired; no planning reader yet"]
     class other learned;
     observe -->|"encode source once"| pyramid
     pyramid -->|"bounded consumer; source unchanged"| slots
@@ -1374,4 +1374,4 @@ Natural data, partial observability and broader modality/action capabilities hav
 
 R2 now composes the existing session, belief and concept memory: one source encoding, one publication owner, explicit goals, revision-dependent actions, external verification and restart recovery. Independent adversarial tests verify software contracts only; trained identity, action/belief alignment and full-agent learning remain unestablished.
 
-Source: [docs/integrated-architecture-plan.md](../docs/integrated-architecture-plan.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/shared-abstraction-spec.md](../docs/shared-abstraction-spec.md), [pathwm/models/multiscale.py · FeaturePyramid:35](../pathwm/models/multiscale.py), [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/models/slots.py · SlotPerception:112](../pathwm/models/slots.py), [pathwm/models/latent_core.py · LatentCore:41](../pathwm/models/latent_core.py), [pathwm/world_state/concepts.py · ConceptAgent:278](../pathwm/world_state/concepts.py), [pathwm/data/rule_world.py · TaskContract:457](../pathwm/data/rule_world.py), [pathwm/evaluation/rule_world.py · run_life:380](../pathwm/evaluation/rule_world.py), [experiments/latent_agent.py](../experiments/latent_agent.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/unified.py · UnifiedAgent:152](../pathwm/world_state/unified.py), [experiments/unified_session.py](../experiments/unified_session.py), [tests/test_unified_session.py](../tests/test_unified_session.py).
+Source: [docs/integrated-architecture-plan.md](../docs/integrated-architecture-plan.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/shared-abstraction-spec.md](../docs/shared-abstraction-spec.md), [pathwm/models/multiscale.py · FeaturePyramid:35](../pathwm/models/multiscale.py), [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/models/slots.py · SlotPerception:112](../pathwm/models/slots.py), [pathwm/models/latent_core.py · LatentCore:46](../pathwm/models/latent_core.py), [pathwm/world_state/concepts.py · ConceptAgent:278](../pathwm/world_state/concepts.py), [pathwm/data/rule_world.py · TaskContract:486](../pathwm/data/rule_world.py), [pathwm/evaluation/rule_world.py · run_life:380](../pathwm/evaluation/rule_world.py), [experiments/latent_agent.py](../experiments/latent_agent.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/unified.py · UnifiedAgent:163](../pathwm/world_state/unified.py), [experiments/unified_session.py](../experiments/unified_session.py), [tests/test_unified_session.py](../tests/test_unified_session.py).

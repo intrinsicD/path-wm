@@ -15,38 +15,46 @@ nicht dessen Arm A.
   Sitzung, einem Speicher und einer Uhr; getrennte Instanzidentität und
   Konzeptzugehörigkeit, ein geteilter Bildencoder, ein Entscheidungs-Forecaster,
   aktuelle Aktionsabhängigkeiten, externe Verifikation und Wiederherstellung.
-  Vollständige CPU-Regression: **752 Tests bestanden**, einschließlich der
+  Vollständige CPU-Regression: **780 Tests bestanden**, einschließlich der
   8 unabhängigen Grenzfalltests (jetzt dauerhaft im Testverzeichnis). Belege:
   `runs/reviews/integrated_architecture_20260923/unified-repair-green.log` und
-  `…/unified-full-regression.log` und `…/unified-full-collection.log`.
+  `…/unified-final-durable-full-suite.log` (780 bestanden),
+  `…/unified-final-durable-full-suite-exit.json` (Exit 0) und
+  `…/unified-current-view-root-collection.log` (780 gesammelt).
   Diskussion mit Alex bleibt separat offen.
-- **Wahrnehmung:** erster 15-Minuten-Lauf verfehlte C1 (Lampe 91,6%). Der
-  Texturvergleich (§17) erreicht nach Warmstart 99,8% Lampenerkennung und besteht
-  den einfachen C1-Screen, verfehlt jedoch die vorab erklärte Übernahmeregel für
-  zustandsübergreifende Wiedererkennung. Neustart mit Texturvariation: 98,6% Lampe,
-  ebenfalls nicht übernommen. Ein trainierter latenter Schlüsselausleser gewinnt auf
-  frischen Validation-Texturen 36,0% Wiedererkennung über Lampenzustände (Kontrolle
-  26,3%), verfehlt aber den neuen 80%-Diagnosewert. Das ist teilweise nutzbare
-  Information, kein C3-Nachweis. Rohdaten/Berichte:
-  `runs/latent_agent_r1/{texture_control,texture_randomized,texture_scratch}_20260923/`
-  und `…/appearance_readout_20260923/full/`. Als nächster Schritt wird ein gepaartes
-  Identitäts-Lernziel für Slots und Schlüssel vorbereitet; ursprüngliche Gates bleiben.
-- **Kernlernen:** voller Loss und reiner Ergebnis-Loss scheiterten in der
-  diagnostischen Leiter. Mit vorgegebenem Regelcode lernt T Kategorien; Gewichtung
-  seltener Änderungen allein löst die relationalen Regeln nicht. Frischer Kern nach
-  8000 Updates: ν Kategorie 1,0, Relation 0,474, Toggle 0,332, Open −0,480,
-  Close −1,227; mittlerer relationaler AUROC-Vorteil gegenüber vertauschtem Code
-  0,291. Screen weiterhin **verfehlt**, aber deutlich wachsender Regelinformations-
-  gehalt. Nächster Schritt: 8000 zusätzliche Updates mit gleichem Optimierungszustand.
-  Das ist **Oracle-Diagnostik auf Trainingsregeln**, keine Ableitung aus Belegen und
-  keine Pixelkompetenz. Belege: `…/core_ladder_20260923/threshold_free_all/`,
-  `…/core_application_probe_20260923/O_scratch/`,
-  `runs/reviews/integrated_architecture_20260923/core-scratch-decision.md`.
+- **Wahrnehmung und Identität (§19):** beide Arme sind bei 3000 Updates abgeschlossen.
+  J erreicht auf acht Validationsarten 100% Schlüssel-Wiedererkennung über
+  Lampenzustände (D: 54,6%); Lampe und Zeiger 100%, schwächstes Attribut 99,51%.
+  Der primäre Screen besteht. Frische Szenen (Seed 2101) bestätigen 100% gegenüber
+  52,9%; das Attribut fällt dort aber auf 99,32% gegenüber D=100% und verfehlt den
+  relativen 0,5-Prozentpunkte-Schutz. Absolutes C1 besteht weiterhin. **J ist ein
+  vorläufiger Entwicklungsinput**, keine formal qualifizierte Konfiguration.
+  Berichte: `runs/latent_agent_r1/identity_{joint,detached}_20260923/`
+  einschließlich `diagnosis/` und `fresh_validation_2101/`.
+- **Kernanwendung:** konstantes gemischtes Training bis 16.000 Updates blieb bei einer
+  groben Paritäts-Abkürzung hängen. Derselbe Kern lernt die feinere Relation isoliert
+  (R44, 8000 Updates, ν=0,993 im Pool aller 44 Trainingsregeln). Danach bestehen
+  weitere 8000 gemischte Updates **alle fünf Familien**: ν Kategorie/Relation 1,0,
+  Open 0,927, Close 0,863, Toggle 0,949; relationale Retention besteht.
+  Die Architektur ist unverändert. Reihenfolge, Relationsexposition und neuer
+  Optimierer sind Teil dieser gestuften Strategie; kein isolierter Kausalnachweis.
+  Das ist weiterhin **Oracle-Anwendung mit vorgegebenen Trainingsregelcodes**,
+  kein Erschließen neuer Regeln. E1a mit festen Startcodes verfehlt Trainings- und
+  Validierungsscreen. E1a-R mit Support-Abruf verfehlt beide ebenfalls (§16).
+  Gemeinsames G/T-Lernen mit Oracle-Anker läuft nun als Entwicklungsversuch. Berichte:
+  `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
+  E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
+  `…/code_search_retrieval_20260923/E1aR_C192/`; aktiv:
+  `…/core_amortize_20260923/E1b_C192/`.
 - **Kein vollständiger gelernter R1/R2-Nachweis.** Pixel-Kerntraining und vollständige
-  Agentenleben warten auf die Lernreparaturen. Softwaretests und vorgegebene
+  Agentenleben warten auf Induktion und trainierte latente Zustandsfolgen: Der
+  Next-State-Kopf wurde in der bisherigen Oracle-Diagnostik nicht trainiert.
+  Softwaretests und vorgegebene
   Identitätsschlüssel belegen keine gelernte Gesamtfähigkeit. Natürliche Daten,
   Verdeckung und Modalitäts-/Aufgabenalignment benötigen eigene Nachweise (§11–12,18).
-  Alle negativen Läufe, Quellstände, Checkpoints und Berichte bleiben erhalten.
+  Negative wissenschaftliche Vergleichsläufe bleiben erhalten. Drei ältere
+  CPU-Prüfversuche wurden von Claude vor erneuter Ausführung überschrieben; dies ist
+  offengelegt in `…/core-removed-attempts-note.md`. Neuversuche nutzen eigene Verzeichnisse.
 - **Reviewgeschichte:** R1–R18 in `…/codex-review-findings.md`; ursprüngliche
   konsolidierte Planfassung in Git `18fea0f`; aktuelle Briefs/Antworten und rote/grüne
   Reproduktionen unter `runs/reviews/integrated_architecture_20260923/`.
@@ -210,6 +218,10 @@ Schlüssel. Queries im Batch kommunizieren nicht.
 
 ## 6. Gedächtnis, Bindung, Rückkopplung und Revision
 
+Dieser Abschnitt beschreibt die **R1-Standalone-Laufzeit**, auf der die formalen
+R1-Leben unverändert beruhen. R2-Besitz, Zuordnung und erneute Verifikation nach
+Korrektur stehen in §18.
+
 `ConceptMemory` (`pathwm/world_state/concepts.py`) besitzt genau einen `WorldStore`
 mit lebensdeckenden `Limits` (Überlauf atomar abgelehnt), hashgeprüfte Frame-Blobs und
 begrenzte abgeleitete Caches (LRU, Verdrängungen gezählt). `ConceptAgent` ist der
@@ -361,65 +373,53 @@ Nicht umgesetzt; Entscheidung nach Wahrnehmungs- und erstem Kernergebnis.
 
 ## 10. Gesamtarchitektur: Besitz und Anschlüsse
 
-Unterschieden werden **implementierte Verbindungsadapter** (Code und Kontrakttest,
-keine trainierte gemeinsame Nutzung) und **trainierte Verbindungen** (in R1 nur die
-Kette Wahrnehmung→Kern→Planer→Gedächtnis in RuleWorld, noch ohne gelerntes Resultat).
+Die R2-Komposition (§18) macht die Anschlüsse ausführbar. **Softwareverbindung und
+trainierte gemeinsame Nutzung sind getrennte Nachweise.** Der Bildpfad ist verbunden;
+für die komplette latente Agentenfähigkeit fehlen weiterhin Lernbelege.
 
-| Fähigkeit | Besitzer heute | Anschluss an R1 | Stand |
-| --- | --- | --- | --- |
-| Multimodale Quelle | `MultiScale{Image,Audio,Text}Encoder` → `FeaturePyramid` | R1 liest die Bildpyramide; weitere Verbraucher lesen über eigene Projektionen | Bild in R1 trainierbar; Audio/Text/Video nicht an den Kern angeschlossen |
-| Instanzbindung im Graph | `WorldSession` + `CandidateEncoder`/`AssociationBinder` | `slot_candidates()` erzeugt `Candidate`-Records aus Slots | Adapter + Kontrakttest; untrainiert |
-| Teilbeobachtung | `BeliefAgent` (kategorialer Belief, Dynamik, Sitzungsgedächtnis) | `concept_context()` macht `Z` zu einem `ContextEncoder`-Token für den Thinker | Adapter + Kontrakttest; untrainiert |
-| Aufgabensteuerung | `TaskRequest`/`TaskPolicy`/`step_task` | R1 nutzt einen festen Ablauf; `TaskPolicy` später als gelernter Steuerer dagegen | nicht verbunden |
-| Ausgaben | native Text/Bild/Audio/Video-Decoder, `RecurrentOutputAdapter` | Leser auf dem Arbeitszustand, keine Rückkodierung in den Denkpfad | nicht verbunden |
-| Quellengedächtnis | `WorldStore` (Belege, Revision, Snapshots) | R1: eigener Store je `ConceptMemory`; R2-Scheibe: genau ein Store unter `WorldSession`, `ConceptMemory` als Client (§18) | Store implementiert und getestet; Zusammenführung als Software umgesetzt (§18), ungelernt |
-| Verifikation | Umgebungsverifier (R1), Entscheidungsentwurf | deklarierte vs. verifizierte Erfüllung getrennt | R1-Simulator; allgemein offen |
+| Fähigkeit | Besitzer und Verbindung | Nachweis / offener Schritt |
+| --- | --- | --- |
+| Multiskalige Quelle | gemeinsame `MultiScaleImageEncoder`-Instanz → eine Pyramide pro Frame → Slots und Belief | Software geprüft; Text/Audio/Video besitzen Encoder, aber noch kein gelerntes Alignment zum Kern |
+| Instanzidentität | `WorldSession` mit `CandidateEncoder`/`AssociationBinder`; Konzepte lesen diese Identitäten | ein Besitzer; Identitätswechsel invalidieren abhängige Zuordnungen; gelernte Bindung noch offen |
+| Konzeptgedächtnis | `ConceptMemory` als Client derselben Sitzung und desselben `WorldStore` | Erwerb, Revision und Wiederherstellung geprüft; nützliche gelernte Konzepte noch nicht nachgewiesen |
+| Dynamik und Teilbeobachtung | T ist alleiniger Aktions-Forecaster; Belief filtert ausgeführte Aktionen über `ActionEncoder` | keine konkurrierenden Vorhersagen; Belief/ActionEncoder verdrahtet, aber noch ohne Leser im Planungsweg; gemeinsames Training und Verdeckung offen |
+| Aufgabensteuerung | `GoalSpec` → begrenzte Suche → typisierte Ausführung mit Budget, Frist und aktuellen Abhängigkeiten | strukturierte Ziele verbunden; freie Sprache führt vorerst zu ASK; gelernte `TaskPolicy` offen |
+| Verifikation | externe `VerificationRecord`-Quelle, getrennt vom eigenen STOP | Quellen-, Ziel- und Zeitvertrag geprüft; konkrete Prüfer bleiben domänenspezifisch |
+| Ausgaben | native Decoder / `RecurrentOutputAdapter` als Leser des Arbeitszustands | vorhanden, aber noch nicht mit dem integrierten Kern trainiert |
 
-## 11. Review des Gesamtziels
+## 11. Gesamtziel: festgelegte Verträge und verbleibende Lernarbeit
 
-**Konsistent:** Quellen- und Revisionssemantik liegen in einem gemeinsamen
-`WorldStore`; beobachtete, inferierte, vorhergesagte und behauptete Inhalte sind
-getrennt; Denk- und Planungszweige schreiben keine Beobachtungen; Aktionen sind
-typisierte Records mit Receipts und unabhängiger Verifikation; die Multiskalenquelle
-bleibt unmutiert und von mehreren Verbrauchern lesbar; Gewichte bleiben zur Laufzeit
-eingefroren, Wissen ändert sich über Belege und abgeleitete Zustände.
+**Festgelegt und als Software umgesetzt:** eine Sitzung besitzt Store, Instanzidentität
+und Uhr; Konzeptgedächtnis ist ihr Client. Belege, Inferenz, hypothetische Vorhersage
+und deklarierter Erfolg bleiben unterscheidbar. Ein Bild wird einmal vorbereitet.
+Der Kern prognostiziert Aktionen, der Belief verarbeitet ausgeführte Ereignisse.
+Pläne pinnen aktuelle Quellen und Modellversionen. Gewichte bleiben zur Laufzeit
+fest; Wissen ändert sich über Belege, Bindungen und latente Codes. Quellenkorrektur
+und Identitätskorrektur entwerten abhängige Ableitungen. §18 beschreibt die atomaren
+Grenzen, Wiederherstellung und getesteten Fehlerfälle.
 
-**Wesentliche offene Architekturfragen** (für R2 zu entscheiden, keine Routinewahl):
+**Verbleibend, in Abhängigkeitsreihenfolge:**
 
-1. **Zwei Laufzeitbesitzer** (entschieden in §18: `WorldSession` besitzt Identität und
-   Store, `ConceptMemory` Konzepte über dieselbe Sitzung; der folgende Vorschlag ist
-   überholt). `ConceptAgent` und `WorldSession` besitzen je eigene
-   Bindungspolitik (Verhaltensprüfung gegenüber `AssociationBinder`-Schwellen) und
-   Laufzeitzustand. In einem vollständigen Agenten braucht jede Instanz genau einen
-   Identitätsbesitzer; sonst entstehen zwei konkurrierende Wahrheiten über dieselbe
-   Entität. Vorschlag: gemeinsamer Store, `ConceptMemory` als Konzept-/Instanz-
-   Besitzer, `WorldSession` liest dessen Bindungen statt eigene anzulegen – erst mit
-   einem R2-Test, der beide Pfade nutzt.
-2. **Aktionsraum zum `BeliefAgent`** (Schnittstelle in §18: `ActionEncoder`, Breite 64,
-   keine Gewichtsteilung; Training offen). `BeliefDynamics` erwartet einen kontinuierlichen
-   Vektor `[B, action_width]`; R1-Aktionen sind typisierte Slot-/Koordinatenrecords.
-   Für Teilbeobachtung (T liest Belief-Welttokens) fehlt ein gelerntes Aktions-
-   Encoding aus `ActionRecord` sowie ein gemeinsamer Tokenraum (R1 Breite 64 gegen
-   Belief-Standard 32). Beides ist Training, kein Adapterdetail.
-3. **Instruktion → Ziel.** R1-Ziele sind exakte Lampenvektoren. Die Übersetzung
-   natürlicher Aufträge (`TaskRequest`) in prüfbare Zielprädikate ist nicht gebaut; der
-   Nachweis für Textaufträge erfordert eigene Daten und Verifier.
-4. **Allgemeine Verifikation.** Außerhalb des Simulators gibt es nur domänenspezifische
-   Prüfer; unbekannte Zielerfüllung muss sichtbar bleiben.
-5. **Modellaktualisierung bei langlebigem Gedächtnis.** Weil autoritative Frames
-   gespeichert sind, ist eine belegbasierte Migration prinzipiell möglich; Kosten und
-   Bindungsstabilität nach Neukodierung sind ungeprüft.
-6. **Wissenschaftlich offen:** ob der geteilte G/T-Kern Regeln aus eigener Wahrnehmung
-   erschließt und auf ungesehene Regeln überträgt (C2), ob Rückkopplung mit
-   Aussehensbindung mehr nützt als schadet, und ob Teilbeobachtung/Verdeckung das
-   Format tragen.
+1. Zustandsunabhängige Wiedererkennung und verlässliche Zustandswahrnehmung gemeinsam
+   lernen (§17–19); die Softwareadapter allein lösen das nicht.
+2. Regelanwendung T, danach Ableitung beziehungsweise Suche von Codes aus Support,
+   Übertragung auf ungesehene Regeln und anschließend den Pixelpfad nachweisen (§16).
+3. Instanzbindung, Belief und Aktionsencoding mit diesen Repräsentationen trainieren;
+   Teilbeobachtung und Verdeckung gesondert prüfen. Gleiche Breite 64 ist kein Alignment.
+4. Sprachaufträge in prüfbare Zielprädikate übersetzen und weitere Modalitäten /
+   Ausgaben anbinden: dafür gepaarte Aufgaben und unabhängige Prüfer definieren und
+   trainieren. Strukturierte Lampenziele begründen keinen Sprachnachweis.
+5. Den gesamten eingefrorenen Agenten über neue Aufgaben, Neustart und Korrektur
+   prüfen (C1–C5), danach mit passenden natürlichen Episoden (N1).
 
-**Externe Eingaben, die wir nicht selbst beschaffen können:** reale Aufnahmen bzw.
-eine Freigabe zur Kameranutzung oder ein lizenzierter annotierter Episodensatz für das
-Naturdaten-Gate N1 (`data/memory_media_v1/episodes/0LDP7/annotations.json` ist
-`pending`); Entwürfe von Annotationen können wir vorbereiten, verbindliche Wahrheit
-für eigene Aufnahmen braucht Alex' Bestätigung. Alle übrigen Wahlen (Schwellen,
-Budgets, Reparaturen, Bankentscheidung) treffen wir selbst mit Validation und Protokoll.
+**Spätere Modellwechsel:** Migration langlebigen Gedächtnisses erfolgt prinzipiell
+über erhaltene Belege und erneute Ableitung; Kosten und Bindungsstabilität sind noch
+ungeprüft. Aktuell wird ein inkompatibler Gewichtswechsel abgelehnt.
+
+Öffentliche lizenzierte Daten dürfen wir selbst auswählen und prüfen. Nur nicht
+zugängliche private Aufnahmen, verbindliche Wahrheit für solche Aufnahmen oder eine
+Kameranutzung benötigen Alex' Mitwirkung. Der lokale N1-Annotationsstand ist noch
+`pending`; das erzeugt kein pauschales Freigabegate für öffentliche Datensätze.
 
 ## 12. Natürliche Daten
 
@@ -476,22 +476,73 @@ Keine Behauptung, den Forschungsstand zu übertreffen.
 **Bekannte Grenzen:** ein einziger natürlicher Kopf (schwaches Signal für seltene
 Ereignisse möglich); ν≥0,7 ist eine R1-Wahl; Rollouts pflanzen keine Unsicherheit
 fort; open und close haben je ein geplantes Leben pro Supportstufe, sodass ihre
-Seed-Schranken breit ausfallen; Bindungen werden nach Belegreparatur nicht neu
-verifiziert.
+Seed-Schranken breit ausfallen; im R1-Standalone-Pfad werden Bindungen nach Belegreparatur nicht neu
+verifiziert; R2 leitet sie erneut ab (§18).
 
-## 16. Nächste Lernrunde (kleinster Schritt)
+## 16. Lernfolge und nächster Nachweis
 
-1. Wahrnehmungslauf auswerten: C1-Entwicklungsscreen auf Validation (Attribute,
-   Lampe, Maschinen- und Klickzeiger). Verfehlt er deutlich, zuerst Wahrnehmung
-   reparieren; der Kern ist ohne verlässliche Zeiger nicht interpretierbar.
-2. Gleiche 15-min-Budgets für **Strukturdiagnose** und **Pixelkern** auf dieser
-   Wahrnehmung, verglichen über episodisches ν bei N=128 auf Validationsregeln:
-   niedrig in beiden → Kern/Ziel reparieren; hoch symbolisch, niedrig in Pixeln →
-   Wahrnehmung/Zeiger reparieren; nur wenn der Kern lernt, aber rechenbegrenzt ist,
-   die Trainingsbank (§9) umsetzen.
-3. Eine Entwicklungsevaluation (Validation, volles Lebensprotokoll mit Familienplan)
-   zur Kalibrierung von τ, λ und τ_feedback; danach formale Iterationszahlen und Seeds
-   in §8 eintragen, bevor die Testpopulation berührt wird.
+1. **Wahrnehmung und Identität:** gepaarter J/D-Vergleich abgeschlossen (§19).
+   J dient vorläufig als Entwicklungsinput; die relative Attributerhaltung ist auf
+   frischen Szenen noch nicht robust. Ursprüngliche Gates werden nicht geändert.
+2. **Kernanwendung:** R44-Vortraining und anschließender gemischter Lauf haben den
+   Anwendungsscreen bestanden. Beide nutzen vorgegebene Regelcodes, keine Induktion.
+   Der erfolgreiche Weg wird nach Abschluss der Lernvalidierung in das bestehende
+   lesbare Rezept übernommen; datierte Diagnoseimporte gehören nicht in die Bibliothek.
+3. **Neue Regeln bei festen Gewichten:** E1a mit vier festen Starts ist abgeschlossen
+   und verfehlt den Screen auf Trainings- und Validierungsregeln. Bei N=128/K=128
+   besteht auf Validation nur Kategorie (ν=0,983); Relation 0,191, Toggle 0,119,
+   Open −0,546, Close −0,701. Sehr kleiner Support-Loss bedeutet hier keine
+   Regelgeneralisation. Alle gespeicherten Arrays sind endlich und hashgeprüft.
+   E1a-R prüft als einzigen geänderten Faktor vier per Support-BCE abgerufene Starts
+   aus dem eingefrorenen Trainingscodebuch. Auswahl und Lernrate verwenden keine
+   Validierungslabels; K=0 ist der reine Abruf. Zusätzliche Bank-/Suchkosten werden
+   separat ausgewiesen. Beide Varianten behalten N=8/32/128, K=0/8/32/128 und
+   vertauschte/permutierte Kontrollen. Der erste Fehlschlag bleibt bestehen.
+   Auch E1a-R verfehlt beide Screens: reiner Abruf auf Trainingsregeln erreicht
+   Kategorie/Relation 1,0, Open 0,927, Toggle 0,949, Close jedoch nur 0,680.
+   Auf Validation erreicht K=128 Kategorie 0,966, Relation 0,148, Toggle 0,251,
+   Open −0,970 und Close −0,784. Gute Startpunkte allein lösen die Aufgabe hier nicht.
+   Beide vollständigen Ergebnisse/Berichte und Abbruch-/Resume-Belege sind erhalten.
+   Danach wird G/T mit Query-BCE plus Oracle-Anker gemeinsam trainiert, weil beide
+   den Block teilen. Bei erfolgreicher fester Codesuche ist dies Amortisierung;
+   andernfalls eine ausdrücklich gemeinsame Anpassung von Coderaum und Induktion.
+   Ein misslungener Suchlauf beweist keine Unmöglichkeit der Repräsentation.
+   E1b läuft mit eingefrorener Wahrnehmung, Codebank, Schlüssel und Next-State-Kopf;
+   Induktion und geteilter Block werden trainiert. 2000 Updates erster Entscheidungspunkt,
+   maximal 8000; Fortsetzung wird allein am Trainingsscreen entschieden. Jede Prüfung
+   verlangt Erhaltung der bekannten Anwendung; ein Verlust beendet den Lauf auch
+   bei einer Pause. Hauptendpunkt ist der unveränderte Validierungsscreen am Endzustand.
+   Tests prüfen tatsächliche Gradienten, Query-Label-Unabhängigkeit und exakten Resume
+   samt aufbewahrter Pausenevidenz. Ein früher Erhaltungsfehlschlag widerlegt nur diese
+   Trainingsfolge, nicht die prinzipielle Induktionsfähigkeit.
+   Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
+   nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
+4. **Pixelintegration:** nach funktionierender Induktion/Anwendung und Zustandsfolge
+   einen kleinen optionalen latenten Eingangsadapter im Kern prüfen. Gleiche Breite
+   allein macht SymbolicSlots und visuelle Slots nicht kompatibel. G-Evidenz und T
+   verwenden denselben Adapter; Identität liest weiterhin rohe visuelle Slots mit
+   dem exportierten S1-Schlüssel. Der untrainierte Schlüssel des symbolischen
+   Checkpoints darf diesen beim Zusammenbau nicht überschreiben.
+   T gibt `m_raw + next(h)` im visuellen Slotraum zurück, damit rekursive Rollouts
+   diesen Zustand genau einmal je Schritt adaptieren. Standard `None` erhält den
+   symbolischen Pfad bitgleich. Vorgesehen: MLP 64→128→64 mit Residuum/Normierung,
+   zunächst latente Zielanpassung an eingefrorene SymbolicSlots, dann Verhaltens-BCE
+   mit festem Kern. Attribute/Lampe/Masken liefern ausschließlich Trainingsziele;
+   zur Laufzeit bleibt der Weg latent→latent, ohne explizites Dekodieren/Rekodieren.
+   Vor Ausführung werden Budget und Pixel-Screens fixiert. Das ist eine geplante
+   Brücke, noch keine implementierte oder validierte Fähigkeit. Nur bei belegter
+   Rechenbegrenzung die Trainingsbank (§9) aktivieren; Validation und Agentenleben
+   bleiben live enkodiert.
+5. **Gesamtlauf:** Erwerb, Wiederabruf, Planung, Ausführung, Verifikation, Neustart und
+   Korrektur gemeinsam prüfen. Schwellenwahl auf Validation, feste Iterationszahlen
+   vor formalen drei Seeds; versiegelter Test bleibt unberührt. Die bisherigen R1-Gates
+   messen unverändert den Standalone-Agenten. Ein gelernter **R2**-Nachweis muss
+   ausdrücklich durch `UnifiedAgent` laufen und Identität/Zuordnung mitprüfen (§18).
+   Weitere Modalitäten und N1 haben eigene Nachweise.
+
+Quellen, genaue Protokolle, Kontrollen und Konfundierungen: die `protocol.md`-Dateien
+bei R44, C192 und E1a unter `runs/latent_agent_r1/`; unabhängige Übergabeprüfung:
+`runs/reviews/integrated_architecture_20260923/core-curriculum-root-transfer.log`.
 
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 
@@ -562,7 +613,7 @@ Kein Training, kein GPU-Lauf in diesem Schritt.
 
 ## 18. R2-Softwarescheibe: eine vereinheitlichte Sitzung (abgestimmter Vertrag)
 
-Stand 23. September 2026, im isolierten Worktree `codex/unified-latent-session`
+Stand 23. September 2026, implementiert und unabhängig im kombinierten Stand geprüft
 abgestimmt. **Kein gelernter R2-Nachweis**, solange R1 C1/C2 verfehlt; alles hier ist
 Software mit zufälligen oder vorgegebenen Gewichten/Schlüsseln und so beschriftet.
 Grundlage: `runs/reviews/integrated_architecture_20260923/whole-architecture-closure.md`
@@ -733,6 +784,24 @@ geplant, kein Druck, nur `ask`. Keines der Leben zeigt Identitäts- oder
 Regelkompetenz; `result.json` meldet nur gemessene Zählungen (`exercised`). Das erste
 Leben `…/unified-session-life-cpu/` ist durch v2 ersetzt.
 
+**Weiteres Review und Reparaturen.** R2 sperrt geerbte R1-Schreibpfade vor jeder
+Wirkung und verarbeitet Retraktion/Ersetzung mit eigenen Identitäts- und
+Receipt-Abhängigkeiten. Erhaltene Stützen bleiben beim erneuten Prüfen des bisherigen
+Konzepts verfügbar. Ein S1-Identitätscheckpoint liefert über `--identity-run`
+denselben trainierten Schlüssel an Kern und Instanzzuordnung. Nach Korrektur,
+Recovery oder Identitätsänderung werden aktuelle Ansichten vor Dispatch, Vorhersage
+und Planung neu aus den gültigen Köpfen abgeleitet, ohne neue Kameraereignisse zu
+erfinden. Zwei unabhängige Rot-Repros sind als sieben dauerhafte Tests abgesichert;
+die vollständige Abschlussregression besteht mit 780 Tests (Exit 0).
+
+Ein CPU-Leben mit dem tatsächlichen J-Schlüssel (`…/unified-identity-life-cpu/`)
+speichert und startet identisch neu: 37 Matches, 43 ungelöste Zuordnungen, 14
+attributierte Übergänge und 6 eigene ausgeführte Drücke. Alle vier geplanten Ziele
+scheitern; Kern und Belief sind hier zufällig initialisiert. Dies prüft Integration,
+nicht gelernte Zielerreichung. Die Berichtstexte nennen jetzt die tatsächlich geladenen Module; die Korrektur
+bewahrt Rohdaten und Originalbericht und ist in `amendment.json` dokumentiert. Eine R2-Claim-/Testimony-Schnittstelle und zeitliche Auflösung
+einzeln wiederkehrender gleich aussehender Instanzen bleiben offen.
+
 **Quellkompatible Migration.** Alle Erweiterungen sind optional mit altem Verhalten als
 Standard: `observe(evidence=(), packet_features=None)` (Payload-Fingerprint nur mit
 Items erweitert), `commit(advance_belief=True)`, `add_packet(features=None)`,
@@ -765,6 +834,25 @@ neue Beobachtung sind unerkennbar; ein Urteil gilt nur bis zur nächsten Beobach
 zählen Beobachtungen; direkte Sitzungsaufrufer müssen andere IDs wählen. (j) Die
 Integritätsprüfung hasht alle Gewichte je Einstiegspunkt (klein genug für R2, für
 große Modelle durch Versionszähler zu ersetzen).
+
+**Gelernter R2-Nachweis (noch nicht ausgeführt).** Die Softwareleben oben ersetzen
+keine Fähigkeitsprüfung. Vor einem solchen Lauf wird der vorhandene Lebens-Evaluator
+um eine explizite Runtime-Wahl erweitert; R1-Populationen und -Gates bleiben unverändert.
+R2 benötigt zusätzlich persistente Instanzen, gleich aussehende Zwillingsmaschinen
+und unterschiedliche Arten mit derselben Regel. Dadurch werden zeitliche Identität,
+Aussehen und Konzeptzugehörigkeit tatsächlich getrennt geprüft. Unklare Identität
+bleibt unbekannt; gleicher Schlüssel darf Zwillinge nicht still vereinigen.
+
+Für dieses R2-Protokoll werden vor dem ersten gelernten Lauf Split/Seeds, Ereignis-
+kontinuität, Schwellen und Budgets vollständig fixiert. Gemessen werden Identitäts-
+präzision/-abdeckung und korrekte Übergangszuordnung je Teilpopulation, zusätzlich
+C2–C5 durch denselben `UnifiedAgent` einschließlich Budget, Frist, Read-Sets,
+Neustart und Verifikation. Pixel-Fixture und vertauschte Schlüssel bleiben benannte
+Kontrollen. Ein fehlender Behauptungs-/Testimony-Pfad darf nicht als bestanden oder
+als still übersprungenes C5 erscheinen. Der Binder ist noch zu kalibrieren; ein
+bestandener §19-Schlüsseltest allein belegt keine zeitliche Instanzbindung.
+Belief und Aktionsencoding haben gegenwärtig keinen Leser im R2-Planungsweg; erst
+ein trainierter Leser und ein Verdeckungs-/Kontextvergleich begründen ihren Nutzen.
 
 ## 19. Latente Identitäts-/Zustandstrennung in S1 (gepaarte Ansichten, vorab erklärt)
 
@@ -822,7 +910,7 @@ Das ersetzt sowohl den Gewicht-0-Arm als auch einen gesonderten Shuffle-Arm: Kri
 misst den Gewinn gegen einen Leser, der auf denselben Paaren trainiert ist. Frühere
 Arme werden nicht neu gerechnet; ihre Probe-Werte sind nur Referenz.
 
-**Gepaarter Vergleich (Entwicklung, ein Seed, noch nicht ausgeführt).**
+**Gepaarter Vergleich (Entwicklung, ein Seed; vorab erklärt, inzwischen ausgeführt).**
 - Beide Arme starten von `runs/latent_agent_r1/texture_randomized_20260923/last.pt`
   (`--init-perception`, frischer AdamW) mit `--texture-randomization 1.0`, Seed 1101.
 - Identische Basis-, Textur- und Paarungsströme sowie identische Schlüsselinitialisierung.
@@ -869,7 +957,8 @@ unverändert. **Nur berichtet:**
 **Auslegung (jetzt festgelegt).**
 - Screen bestanden: gelernte Identität im Wahrnehmungstraining macht Identität
   lampeninvariant auslesbar, ohne C1-Verlust (Entwicklung, ein Seed). Formal folgen
-  drei Seeds und ein frischer Lauf; danach S2 mit `--init-key`.
+  drei Seeds und frische Läufe. S2-Entwicklung darf vorab mit dem ausdrücklich
+  vorläufigen Checkpoint beginnen; das ist keine formale Qualifikation.
 - 4 verfehlt: Identitätsgradient in die Wahrnehmung bringt gegenüber dem gleich
   trainierten Leser nichts Wesentliches. Nächste Option wäre die Slot-Verfeinerung
   (§17-Rückfall), keine weitere Lossgewichtung ohne neuen Vorschlag.
@@ -904,3 +993,22 @@ echten Elternteil, Pause/Resume):
 - Der anfangs 60-fache Skalenanteil des Identitätsterms bleibt ein beobachtetes Risiko
   für C1 und wird über die C1-Schutzbedingungen geprüft. Keine Aufwärmphase ohne
   neuen, vorab erklärten Vergleich.
+
+**Ergebnis des gepaarten Vergleichs.** Je 3000 Updates abgeschlossen, gleiche
+Initialgewichte/Quellen/Elterncheckpoint/erste Metrikzeile unabhängig geprüft.
+Primärscreen: J Schlüssel gesamt/lampenübergreifend 1,000/1,000 gegen D
+0,686/0,546; rohe Slots lampenübergreifend 0,949 gegen 0,131. Lampe und Zeiger
+beide 1,000; J Attribute [1, 0,995117, 1, 1], D jeweils 1. Alle primären Kriterien
+bestanden, maximal 3,418 GiB reserviert je Arm. Keine Laufzeitvergleiche wegen
+teilweise paralleler Ausführung mit der kleinen Kerndiagnostik.
+
+Sekundäre, vor ihrer Ausführung erklärte Prüfung auf frischen Szenen (Seed 2101):
+Schlüssel lampenübergreifend J 1,000 gegen D 0,529; Lampe beide 0,998047, Zeiger 1,000.
+Attribut 1 liegt bei J 0,993164 gegenüber D 1,000: relativer Erhaltungsschutz
+**verfehlt**, alle übrigen Kriterien erfüllt. Der Schlüsselgewinn repliziert, die
+volle Schutzregel nicht. J wird nur für die weitere Entwicklung verwendet; diesen
+Befund bei Integration/Formalqualifikation weiterführen und nicht durch den primären
+Erfolg ersetzen. Beide Diagnoseberichte und Roharrays liegen beim jeweiligen Lauf.
+Ein Seed, synthetische vollständig beobachtete Szenen, acht Validationsarten; kein
+C3-, Zwillingsidentitäts-, Naturdaten- oder Gesamtagentennachweis.
+Entscheidung: `runs/reviews/integrated_architecture_20260923/identity-adoption-decision.md`.
