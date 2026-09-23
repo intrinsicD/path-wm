@@ -1,3 +1,9 @@
+For the **integrated latent-agent reference integration (R1, RuleWorld-64)**, run
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage check --output runs/my_r1_check`,
+then the staged `audit/perception/core/symbolic/evaluate/gates` commands in the
+[adopted plan](integrated-architecture-plan.md#8-ressourcen-stufen-befehle-iteration).
+Smoke runs verify software only; no learned capability is established yet.
+
 # Running and editing experiments
 
 For the **remaining encoder scaling bottleneck**, run

@@ -10,10 +10,14 @@ read the particular record when needed, not the whole history at startup.
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
   computation and useful concept/instance memory that acquires, retrieves and
-  corrects knowledge at runtime without weight retraining. A frozen-weight
-  acquisition/use/correction demonstration with source controls is proposed;
-  domain, data, gates and training budget remain open. Partial components do not
-  establish the complete capability.
+  corrects knowledge at runtime without weight retraining. Partial components do
+  not establish the complete capability.
+- **Integrated architecture R1:** the [adopted plan](integrated-architecture-plan.md)
+  implements RuleWorld-64 as the first reference integration (pixels → slots →
+  concept memory → two-step plan → execution → correction). 712 CPU tests pass.
+  First 15-minute perception run: attributes/pointers ≈99–100%, lamp 91.6% (C1 fails);
+  diagnosis and symbolic-core development underway. No integrated learned result;
+  natural data gate N1 open. Runs: `runs/latent_agent_r1/`.
 - **Latent concept learning:** the [abstract research review](latent-concept-learning-review.md)
   compares concept induction, latent memory and prerequisites with current primary
   sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is
@@ -33,7 +37,8 @@ read the particular record when needed, not the whole history at startup.
   The [direction review](latent-concept-learning-review.md#richtungsprüfung-geteilte-struktur-über-instanzen)
   broadens the target to reusable structure; actions and analogies remain subcases,
   with examples/prototypes and inferred codes still open alternatives.
-  The [implementation-ready protocol](shared-abstraction-spec.md) defines equations, shapes, loss, reference arms and frozen-weight updates. Actual Opus 5.5 max review and finite-generator checks refine the proposal; information calibration suggests 128 support examples. No trained-model result or architecture adoption.
+  The unchanged [protocol](shared-abstraction-spec.md) defines equations, loss, arms
+  and frozen-weight updates; no trained-model result.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented

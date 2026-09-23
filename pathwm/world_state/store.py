@@ -165,6 +165,18 @@ class Transaction:
     def reassign(self, component_id, entity_id):
         self._append("reassign", dict(id=component_id, entity_id=entity_id))
 
+    def retract_evidence(self, evidence_id):
+        """Source-issued withdrawal. The correction payload names the issuing source."""
+        if self.event.kind != "correction":
+            raise ValueError("Evidence retraction requires a correction event")
+        self._append("retract_evidence", dict(id=evidence_id))
+
+    def supersede(self, old_id, new_id):
+        """Replace old evidence by evidence newly added in this observation event."""
+        if self.event.kind != "observation":
+            raise ValueError("Superseding evidence must arrive in an observation event")
+        self._append("supersede", dict(id=old_id, replacement=new_id))
+
     def preview(self):
         """Isolated tentative view for within-event binding; never publishes."""
         result = self._store.clone()
@@ -184,6 +196,8 @@ class WorldStore:
             {},
         )
         self._events = []
+        # Materialized view of withdrawn source evidence; rebuilt by replaying the log.
+        self._retracted = {}
 
     @property
     def revision(self):
@@ -277,6 +291,7 @@ class WorldStore:
                 for e in value["evidence"]
             ):
                 raise ValueError("Invalid entity evidence reference")
+            self._reject_retracted(value["evidence"])
             if (
                 value["changes"].get("existence_confidence") is not None
                 and not value["evidence"]
@@ -309,6 +324,7 @@ class WorldStore:
                 for p in record.parents
             ):
                 raise ValueError("Invalid or inactive parent component reference")
+            self._reject_retracted(record.evidence)
             if record.role not in {"observed", "inferred", "predicted"}:
                 raise ValueError("Invalid component role")
             if (
@@ -337,6 +353,7 @@ class WorldStore:
                 evidence=tuple(value["evidence"]),
             )
             record, table = Relation(**value), self._relations
+            self._reject_retracted(record.evidence)
             if (
                 record.revision != self.revision + 1
                 or record.available_at != event.available_at
@@ -362,19 +379,42 @@ class WorldStore:
             self._components[record.id] = replace(
                 record, entity_id=value["entity_id"], revision=self.revision + 1
             )
-            affected = {record.id}
-            while True:
-                more = {
-                    c.id for c in self._components.values() if set(c.parents) & affected
-                } - affected
-                if not more:
-                    break
-                affected.update(more)
-            for cid in affected - {record.id}:
-                c = self._components[cid]
-                self._components[cid] = replace(
-                    c, active=False, data={**c.data, "invalidated_by": event.id}
-                )
+            # The reattributed record itself stays valid; its derivations do not.
+            self._invalidate(self._descendants({record.id}) - {record.id}, event)
+            return
+        elif kind in ("retract_evidence", "supersede"):
+            old = self._evidence.get(value["id"])
+            if old is None or old.id in self._retracted:
+                raise ValueError("Correction requires active existing evidence")
+            if kind == "retract_evidence":
+                if event.kind != "correction" or event.payload.get("source") != old.source:
+                    raise ValueError(
+                        "Evidence retraction requires a correction from the same source"
+                    )
+                replacement = None
+            else:
+                new = self._evidence.get(value["replacement"])
+                if (
+                    event.kind != "observation"
+                    or new is None
+                    or new.event_id != event.id
+                    or new.id == old.id
+                ):
+                    raise ValueError("Supersede needs new evidence from this observation")
+                if (new.source, new.modality) != (old.source, old.modality):
+                    raise ValueError("Supersede requires the same source and modality")
+                if new.id in self._retracted:
+                    raise ValueError("Supersede cannot point to withdrawn evidence")
+                replacement = new.id
+            self._retracted[old.id] = dict(event=event.id, replacement=replacement)
+            direct = {c.id for c in self._components.values() if old.id in c.evidence}
+            self._invalidate(self._descendants(direct), event)
+            # Relations (including accepted identity links) citing it are withdrawn too.
+            for r in list(self._relations.values()):
+                if r.active and old.id in r.evidence:
+                    self._relations[r.id] = replace(
+                        r, active=False, data={**r.data, "invalidated_by": event.id}
+                    )
             return
         else:
             raise ValueError("Unknown world-state operation")
@@ -382,6 +422,40 @@ class WorldStore:
         if record.id in table:
             raise ValueError("Duplicate record identifier")
         table[record.id] = record
+
+    def _descendants(self, seeds):
+        """Seed components plus every transitive `parents` descendant."""
+        affected = set(seeds)
+        while True:
+            more = {
+                c.id for c in self._components.values() if set(c.parents) & affected
+            } - affected
+            if not more:
+                return affected
+            affected.update(more)
+
+    def _invalidate(self, component_ids, event):
+        """Deactivate components and every relation that uses one as an endpoint."""
+        for cid in sorted(component_ids):
+            c = self._components[cid]
+            if c.active:
+                self._components[cid] = replace(
+                    c, active=False, data={**c.data, "invalidated_by": event.id}
+                )
+        for r in list(self._relations.values()):
+            endpoints = [e.ref for e in (r.source, r.target) if e.kind == "component"]
+            if r.active and set(endpoints) & set(component_ids):
+                self._relations[r.id] = replace(
+                    r, active=False, data={**r.data, "invalidated_by": event.id}
+                )
+
+    def _reject_retracted(self, evidence_ids):
+        if any(e in self._retracted for e in evidence_ids):
+            raise ValueError("Retracted evidence cannot support new records")
+
+    def retractions(self):
+        """Withdrawn evidence id -> {correction event, replacement or None}."""
+        return copy.deepcopy(self._retracted)
 
     def _endpoint(self, endpoint):
         if endpoint.kind == "entity" and endpoint.ref in self._entities:

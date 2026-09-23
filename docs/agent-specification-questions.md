@@ -38,6 +38,32 @@ explicitly. The final check must cover every section, including deferrals.
 
 ## Recorded answers
 
+**Delegated closure — 23 September 2026.** Alex asks Codex and actual Claude
+Opus 5.5 at high effort to resolve the remaining architecture choices consistently,
+then have Claude implement and iterate through independent review, testing and
+repair. The [integrated architecture plan](integrated-architecture-plan.md) is the
+owning specification for the selected R1 reference integration and the connection
+contracts for the complete agent. Earlier answers below retain their historical
+scope; they are no longer the only source of implementation choices.
+
+| Question group | R1 decision owner and explicit boundary |
+| --- | --- |
+| S — scope | Plan §§1–2: two-machine pixel reference, acquisition/use/restart/correction; natural media and broader transfer remain separate evidence gates. |
+| G — goal | §3: typed two-lamp goal, shared planner/evaluator utility, independent verification, unknown distinct from impossible. |
+| B — belief/evidence | §§6,9: source versus inferred state, revisions and causal read sets; categorical partial-observation integration has its own contract. |
+| P — perception | §4: existing multiscale pyramid, learned slot consumer and disclosed train-only supervision. |
+| E/K — instances/concepts | §§4,6: appearance proposal, behavioral check, learned support-to-code inference, opaque runtime IDs outside neural inputs. |
+| M/F — memory/focus | §6: bounded evidence, derived codes, selected retrieval, restart and dependency invalidation; fixed costed control precedes learned scheduling. |
+| D/A — dynamics/actions | §§3–5: learned targeted effects, factorized two-machine rollouts, typed coordinate executor and observed feedback; general skill planning remains separately scoped. |
+| L — learning | §5: perception then latent core, explicit losses/gradient boundaries, frozen runtime; natural-data training is not silently implied. |
+| R — runtime | §§6,8: exact owners, model/source identities, bounded memory/compute, checkpoint/resume and stale-command rejection. |
+| I — inspection | §§6–8: provenance, read sets, raw answers/actions, latent/source distinction, existing reports and architecture atlas. |
+| T — readiness | §§7–8: separate software, controlled-learning and natural-data gates; budgets set from measured development cost before formal execution. |
+
+This closes design choices for a bounded reference path; it does not mark every
+long-term research capability implemented or validated. The component and learning
+contracts in the owning plan supersede the generic Pending template below for R1.
+
 **S01 — ordered capability milestones (user, 12 September 2026; sequence decided).**
 Proceed in this order: (1) remember observations, (2) predict action consequences,
 (3) use those predictions to plan toward a goal. The immediate capability target

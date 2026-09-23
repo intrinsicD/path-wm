@@ -1,0 +1,204 @@
+<svg width="808pt" height="923pt"
+ viewBox="0.00 0.00 808.00 923.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="17-integrated-latent-agent-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 909.04)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-909.04 793.58,-909.04 793.58,14.4 -14.4,14.4"/>
+<!-- observe&#45;&gt;pyramid -->
+<g id="17-integrated-latent-agent-edge1" class="edge">
+<title>observe&#45;&gt;pyramid</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M335.93,-858.15C317.39,-844.95 291.48,-826.51 269.53,-810.89"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="271.03,-808.96 263.91,-806.89 268.19,-812.95 271.03,-808.96"/>
+<text xml:space="preserve" text-anchor="middle" x="360.79" y="-828.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">encode source once</text>
+</g>
+<!-- observe&#45;&gt;store -->
+<g id="17-integrated-latent-agent-edge3" class="edge">
+<title>observe&#45;&gt;store</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M389.23,-858.22C405.05,-848.63 421.51,-838.64 421.51,-838.64 421.51,-838.64 438.82,-824.99 456.69,-810.9"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="457.98,-813 461.96,-806.74 454.95,-809.15 457.98,-813"/>
+<text xml:space="preserve" text-anchor="middle" x="512.69" y="-828.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">append exact source event</text>
+</g>
+<!-- pyramid&#45;&gt;slots -->
+<g id="17-integrated-latent-agent-edge2" class="edge">
+<title>pyramid&#45;&gt;slots</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M226.51,-752.67C226.51,-735.94 226.51,-713.91 226.51,-695.71"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="228.96,-695.78 226.51,-688.78 224.06,-695.78 228.96,-695.78"/>
+<text xml:space="preserve" text-anchor="middle" x="301.67" y="-723.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">bounded consumer; source</text>
+<text xml:space="preserve" text-anchor="middle" x="301.67" y="-710.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged</text>
+</g>
+<!-- slots&#45;&gt;memory -->
+<g id="17-integrated-latent-agent-edge4" class="edge">
+<title>slots&#45;&gt;memory</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M223.24,-633.94C221.13,-617.45 218.34,-595.62 215.9,-576.61"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="218.35,-576.39 215.03,-569.76 213.49,-577.01 218.35,-576.39"/>
+<text xml:space="preserve" text-anchor="middle" x="294.09" y="-604.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">appearance and perceived</text>
+<text xml:space="preserve" text-anchor="middle" x="294.09" y="-591.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">transitions</text>
+</g>
+<!-- slots&#45;&gt;core -->
+<g id="17-integrated-latent-agent-edge9" class="edge">
+<title>slots&#45;&gt;core</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M309.32,-633.95C342.28,-623.75 372.51,-614.4 372.51,-614.4 372.51,-614.4 378.51,-478.88 378.51,-478.88 378.51,-478.88 378.51,-465.68 378.51,-465.68 378.51,-465.68 369.81,-459.38 358.38,-451.11"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="359.83,-449.14 352.73,-447.02 356.96,-453.11 359.83,-449.14"/>
+<text xml:space="preserve" text-anchor="middle" x="464.29" y="-530.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">current scene +targeted action</text>
+</g>
+<!-- store&#45;&gt;memory -->
+<g id="17-integrated-latent-agent-edge5" class="edge">
+<title>store&#45;&gt;memory</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M476.19,-752.78C455.67,-725.68 426.16,-686.72 426.16,-686.72 426.16,-686.72 372.51,-588 372.51,-588 372.51,-588 349.96,-580.54 321.68,-571.19"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="322.56,-568.91 315.15,-569.03 321.03,-573.56 322.56,-568.91"/>
+<text xml:space="preserve" text-anchor="middle" x="494.84" y="-663.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">active evidence; revision</text>
+<text xml:space="preserve" text-anchor="middle" x="494.84" y="-650.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">invalidates derivatives</text>
+</g>
+<!-- memory&#45;&gt;core -->
+<g id="17-integrated-latent-agent-edge6" class="edge">
+<title>memory&#45;&gt;core</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M236.95,-498.6C248.06,-484.38 261.08,-467.71 272.72,-452.82"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="274.55,-454.46 276.93,-447.43 270.68,-451.44 274.55,-454.46"/>
+<text xml:space="preserve" text-anchor="middle" x="316.96" y="-468.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">support tokens for G</text>
+</g>
+<!-- code&#45;&gt;core -->
+<g id="17-integrated-latent-agent-edge8" class="edge">
+<title>code&#45;&gt;core</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M214.93,-302.28C247.27,-316.03 280.51,-330.16 280.51,-330.16 280.51,-330.16 286.09,-348.73 291.86,-367.97"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="289.5,-368.61 293.85,-374.62 294.19,-367.21 289.5,-368.61"/>
+<text xml:space="preserve" text-anchor="middle" x="354.05" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved Z conditions T</text>
+</g>
+<!-- code&#45;&gt;other -->
+<g id="17-integrated-latent-agent-edge15" class="edge">
+<title>code&#45;&gt;other</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M154.51,-249.17C154.51,-230.68 154.51,-205.23 154.51,-183.66"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="156.96,-183.66 154.51,-176.66 152.06,-183.66 156.96,-183.66"/>
+<text xml:space="preserve" text-anchor="middle" x="233.46" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">declared compatible context</text>
+<text xml:space="preserve" text-anchor="middle" x="233.46" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">adapter</text>
+</g>
+<!-- core&#45;&gt;code -->
+<g id="17-integrated-latent-agent-edge7" class="edge">
+<title>core&#45;&gt;code</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M191.77,-376.05C156.82,-365.48 127.28,-356.56 127.28,-356.56 127.28,-356.56 127.28,-330.16 127.28,-330.16 127.28,-330.16 132.06,-320.76 137.62,-309.83"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="139.79,-310.96 140.78,-303.61 135.43,-308.74 139.79,-310.96"/>
+<text xml:space="preserve" text-anchor="middle" x="203.4" y="-346.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">infer reusable Z with frozen</text>
+<text xml:space="preserve" text-anchor="middle" x="203.4" y="-333.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">weights</text>
+</g>
+<!-- core&#45;&gt;plan -->
+<g id="17-integrated-latent-agent-edge11" class="edge">
+<title>core&#45;&gt;plan</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M380.85,-376.05C404.52,-365.48 424.51,-356.56 424.51,-356.56 424.51,-356.56 436.06,-337.32 447.83,-317.71"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="449.8,-319.2 451.3,-311.94 445.6,-316.68 449.8,-319.2"/>
+<text xml:space="preserve" text-anchor="middle" x="512.83" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">predicted latent outcomes</text>
+</g>
+<!-- goal&#45;&gt;plan -->
+<g id="17-integrated-latent-agent-edge10" class="edge">
+<title>goal&#45;&gt;plan</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M637.68,-384.82C617.46,-361.39 590.51,-330.16 590.51,-330.16 590.51,-330.16 575.05,-323.14 555.32,-314.19"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="556.48,-312.02 549.09,-311.36 554.45,-316.48 556.48,-312.02"/>
+<text xml:space="preserve" text-anchor="middle" x="671.38" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">goal and action costs</text>
+</g>
+<!-- plan&#45;&gt;execute -->
+<g id="17-integrated-latent-agent-edge12" class="edge">
+<title>plan&#45;&gt;execute</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M472.51,-240.56C472.51,-220.51 472.51,-195.21 472.51,-175.15"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="474.96,-175.29 472.51,-168.29 470.06,-175.29 474.96,-175.29"/>
+<text xml:space="preserve" text-anchor="middle" x="548.86" y="-204.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">chosen action with read&#45;set</text>
+</g>
+<!-- execute&#45;&gt;observe -->
+<g id="17-integrated-latent-agent-edge13" class="edge">
+<title>execute&#45;&gt;observe</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M546.35,-166.76C585.88,-180.51 626.51,-194.64 626.51,-194.64 626.51,-194.64 626.51,-221.04 626.51,-221.04 626.51,-221.04 590.51,-356.56 590.51,-356.56 590.51,-356.56 529.51,-376.56 529.51,-376.56 529.51,-376.56 529.51,-445.68 529.51,-445.68 529.51,-445.68 555.51,-498.88 555.51,-498.88 555.51,-498.88 646.51,-753.12 646.51,-753.12 646.51,-753.12 646.51,-805.44 646.51,-805.44 646.51,-805.44 592.51,-838.64 592.51,-838.64 592.51,-838.64 536.05,-847.64 478.84,-856.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="478.57,-854.33 472.04,-857.85 479.34,-859.17 478.57,-854.33"/>
+<text xml:space="preserve" text-anchor="middle" x="623.87" y="-530.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">actual feedback</text>
+</g>
+<!-- execute&#45;&gt;verify -->
+<g id="17-integrated-latent-agent-edge14" class="edge">
+<title>execute&#45;&gt;verify</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M472.51,-113.4C472.51,-97.91 472.51,-77.97 472.51,-61.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="474.96,-61.38 472.51,-54.38 470.06,-61.38 474.96,-61.38"/>
+<text xml:space="preserve" text-anchor="middle" x="551.7" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">receipt and actual goal state</text>
+</g>
+<!-- observe -->
+<g id="17-integrated-latent-agent-node1" class="node">
+<title>observe</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M492.91,-894.64C492.91,-894.64 228.11,-894.64 228.11,-894.64 222.11,-894.64 216.11,-888.64 216.11,-882.64 216.11,-882.64 216.11,-870.64 216.11,-870.64 216.11,-864.64 222.11,-858.64 228.11,-858.64 228.11,-858.64 492.91,-858.64 492.91,-858.64 498.91,-858.64 504.91,-864.64 504.91,-870.64 504.91,-870.64 504.91,-882.64 504.91,-882.64 504.91,-888.64 498.91,-894.64 492.91,-894.64"/>
+<text xml:space="preserve" text-anchor="middle" x="360.51" y="-872.44" font-family="DejaVu Sans" font-size="14.00">Observed pixels + execution receipts</text>
+</g>
+<!-- pyramid -->
+<g id="17-integrated-latent-agent-node2" class="node">
+<title>pyramid</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M321.72,-805.44C321.72,-805.44 131.3,-805.44 131.3,-805.44 125.3,-805.44 119.3,-799.44 119.3,-793.44 119.3,-793.44 119.3,-765.12 119.3,-765.12 119.3,-759.12 125.3,-753.12 131.3,-753.12 131.3,-753.12 321.72,-753.12 321.72,-753.12 327.72,-753.12 333.72,-759.12 333.72,-765.12 333.72,-765.12 333.72,-793.44 333.72,-793.44 333.72,-799.44 327.72,-805.44 321.72,-805.44"/>
+<text xml:space="preserve" text-anchor="middle" x="226.51" y="-783.48" font-family="DejaVu Sans" font-size="14.00">Shared multiscale features</text>
+<text xml:space="preserve" text-anchor="middle" x="226.51" y="-766.68" font-family="DejaVu Sans" font-size="14.00">256 + 64 tokens, width64</text>
+</g>
+<!-- slots -->
+<g id="17-integrated-latent-agent-node3" class="node">
+<title>slots</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M357.51,-686.72C357.51,-686.72 95.51,-686.72 95.51,-686.72 89.51,-686.72 83.51,-680.72 83.51,-674.72 83.51,-674.72 83.51,-646.4 83.51,-646.4 83.51,-640.4 89.51,-634.4 95.51,-634.4 95.51,-634.4 357.51,-634.4 357.51,-634.4 363.51,-634.4 369.51,-640.4 369.51,-646.4 369.51,-646.4 369.51,-674.72 369.51,-674.72 369.51,-680.72 363.51,-686.72 357.51,-686.72"/>
+<text xml:space="preserve" text-anchor="middle" x="226.51" y="-664.76" font-family="DejaVu Sans" font-size="14.00">7 learned slots</text>
+<text xml:space="preserve" text-anchor="middle" x="226.51" y="-647.96" font-family="DejaVu Sans" font-size="14.00">2 machines +4 objects +background</text>
+</g>
+<!-- store -->
+<g id="17-integrated-latent-agent-node4" class="node">
+<title>store</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M624.97,-805.44C624.97,-805.44 366.06,-805.44 366.06,-805.44 360.06,-805.44 354.06,-799.44 354.06,-793.44 354.06,-793.44 354.06,-765.12 354.06,-765.12 354.06,-759.12 360.06,-753.12 366.06,-753.12 366.06,-753.12 624.97,-753.12 624.97,-753.12 630.97,-753.12 636.97,-759.12 636.97,-765.12 636.97,-765.12 636.97,-793.44 636.97,-793.44 636.97,-799.44 630.97,-805.44 624.97,-805.44"/>
+<text xml:space="preserve" text-anchor="middle" x="495.51" y="-783.48" font-family="DejaVu Sans" font-size="14.00">WorldStore + content&#45;hashed blobs</text>
+<text xml:space="preserve" text-anchor="middle" x="495.51" y="-766.68" font-family="DejaVu Sans" font-size="14.00">Authoritative evidence and revisions</text>
+</g>
+<!-- memory -->
+<g id="17-integrated-latent-agent-node5" class="node">
+<title>memory</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M347.47,-568C347.47,-568 73.55,-568 73.55,-568 67.55,-568 61.55,-562 61.55,-556 61.55,-556 61.55,-510.88 61.55,-510.88 61.55,-504.88 67.55,-498.88 73.55,-498.88 73.55,-498.88 347.47,-498.88 347.47,-498.88 353.47,-498.88 359.47,-504.88 359.47,-510.88 359.47,-510.88 359.47,-556 359.47,-556 359.47,-562 353.47,-568 347.47,-568"/>
+<text xml:space="preserve" text-anchor="middle" x="210.51" y="-546.04" font-family="DejaVu Sans" font-size="14.00">ConceptMemory</text>
+<text xml:space="preserve" text-anchor="middle" x="210.51" y="-529.24" font-family="DejaVu Sans" font-size="14.00">Appearance proposal +behavior check</text>
+<text xml:space="preserve" text-anchor="middle" x="210.51" y="-512.44" font-family="DejaVu Sans" font-size="14.00">Create / retrieve / recompute</text>
+</g>
+<!-- code -->
+<g id="17-integrated-latent-agent-node6" class="node">
+<title>code</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M288.18,-301.76C288.18,-301.76 20.85,-301.76 20.85,-301.76 14.85,-301.76 8.85,-295.76 8.85,-289.76 8.85,-289.76 8.85,-261.44 8.85,-261.44 8.85,-255.44 14.85,-249.44 20.85,-249.44 20.85,-249.44 288.18,-249.44 288.18,-249.44 294.18,-249.44 300.18,-255.44 300.18,-261.44 300.18,-261.44 300.18,-289.76 300.18,-289.76 300.18,-295.76 294.18,-301.76 288.18,-301.76"/>
+<text xml:space="preserve" text-anchor="middle" x="154.51" y="-279.8" font-family="DejaVu Sans" font-size="14.00">Persistent derived concept Z</text>
+<text xml:space="preserve" text-anchor="middle" x="154.51" y="-263" font-family="DejaVu Sans" font-size="14.00">4 tokens x64, evidence dependencies</text>
+</g>
+<!-- core -->
+<g id="17-integrated-latent-agent-node7" class="node">
+<title>core</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M423.64,-445.68C423.64,-445.68 185.38,-445.68 185.38,-445.68 179.38,-445.68 173.38,-439.68 173.38,-433.68 173.38,-433.68 173.38,-388.56 173.38,-388.56 173.38,-382.56 179.38,-376.56 185.38,-376.56 185.38,-376.56 423.64,-376.56 423.64,-376.56 429.64,-376.56 435.64,-382.56 435.64,-388.56 435.64,-388.56 435.64,-433.68 435.64,-433.68 435.64,-439.68 429.64,-445.68 423.64,-445.68"/>
+<text xml:space="preserve" text-anchor="middle" x="304.51" y="-423.72" font-family="DejaVu Sans" font-size="14.00">Shared recurrent G / T core</text>
+<text xml:space="preserve" text-anchor="middle" x="304.51" y="-406.92" font-family="DejaVu Sans" font-size="14.00">Infer concepts and predict effects</text>
+<text xml:space="preserve" text-anchor="middle" x="304.51" y="-390.12" font-family="DejaVu Sans" font-size="14.00">Two tied loops by default</text>
+</g>
+<!-- goal -->
+<g id="17-integrated-latent-agent-node8" class="node">
+<title>goal</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M767.18,-437.28C767.18,-437.28 551.85,-437.28 551.85,-437.28 545.85,-437.28 539.85,-431.28 539.85,-425.28 539.85,-425.28 539.85,-396.96 539.85,-396.96 539.85,-390.96 545.85,-384.96 551.85,-384.96 551.85,-384.96 767.18,-384.96 767.18,-384.96 773.18,-384.96 779.18,-390.96 779.18,-396.96 779.18,-396.96 779.18,-425.28 779.18,-425.28 779.18,-431.28 773.18,-437.28 767.18,-437.28"/>
+<text xml:space="preserve" text-anchor="middle" x="659.51" y="-415.32" font-family="DejaVu Sans" font-size="14.00">Typed two&#45;lamp goal +budget</text>
+<text xml:space="preserve" text-anchor="middle" x="659.51" y="-398.52" font-family="DejaVu Sans" font-size="14.00">One utility contract</text>
+</g>
+<!-- plan -->
+<g id="17-integrated-latent-agent-node9" class="node">
+<title>plan</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M548.05,-310.16C548.05,-310.16 396.97,-310.16 396.97,-310.16 390.97,-310.16 384.97,-304.16 384.97,-298.16 384.97,-298.16 384.97,-253.04 384.97,-253.04 384.97,-247.04 390.97,-241.04 396.97,-241.04 396.97,-241.04 548.05,-241.04 548.05,-241.04 554.05,-241.04 560.05,-247.04 560.05,-253.04 560.05,-253.04 560.05,-298.16 560.05,-298.16 560.05,-304.16 554.05,-310.16 548.05,-310.16"/>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-288.2" font-family="DejaVu Sans" font-size="14.00">Latent action rollouts</text>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-271.4" font-family="DejaVu Sans" font-size="14.00">At most two presses</text>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-254.6" font-family="DejaVu Sans" font-size="14.00">No simulator access</text>
+</g>
+<!-- execute -->
+<g id="17-integrated-latent-agent-node10" class="node">
+<title>execute</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M587.95,-166.24C587.95,-166.24 357.07,-166.24 357.07,-166.24 351.07,-166.24 345.07,-160.24 345.07,-154.24 345.07,-154.24 345.07,-125.92 345.07,-125.92 345.07,-119.92 351.07,-113.92 357.07,-113.92 357.07,-113.92 587.95,-113.92 587.95,-113.92 593.95,-113.92 599.95,-119.92 599.95,-125.92 599.95,-125.92 599.95,-154.24 599.95,-154.24 599.95,-160.24 593.95,-166.24 587.95,-166.24"/>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-144.28" font-family="DejaVu Sans" font-size="14.00">Ground slot pointers to clicks</text>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-127.48" font-family="DejaVu Sans" font-size="14.00">Check read&#45;set before execution</text>
+</g>
+<!-- verify -->
+<g id="17-integrated-latent-agent-node11" class="node">
+<title>verify</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M585.46,-52.32C585.46,-52.32 359.56,-52.32 359.56,-52.32 353.56,-52.32 347.56,-46.32 347.56,-40.32 347.56,-40.32 347.56,-12 347.56,-12 347.56,-6 353.56,0 359.56,0 359.56,0 585.46,0 585.46,0 591.46,0 597.46,-6 597.46,-12 597.46,-12 597.46,-40.32 597.46,-40.32 597.46,-46.32 591.46,-52.32 585.46,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Independent observed outcome</text>
+<text xml:space="preserve" text-anchor="middle" x="472.51" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Success / failed / unknown</text>
+</g>
+<!-- other -->
+<g id="17-integrated-latent-agent-node12" class="node">
+<title>other</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M297.02,-174.64C297.02,-174.64 12,-174.64 12,-174.64 6,-174.64 0,-168.64 0,-162.64 0,-162.64 0,-117.52 0,-117.52 0,-111.52 6,-105.52 12,-105.52 12,-105.52 297.02,-105.52 297.02,-105.52 303.02,-105.52 309.02,-111.52 309.02,-117.52 309.02,-117.52 309.02,-162.64 309.02,-162.64 309.02,-168.64 303.02,-174.64 297.02,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="154.51" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Existing BeliefAgent / WorldSession</text>
+<text xml:space="preserve" text-anchor="middle" x="154.51" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Multimodal readers and outputs</text>
+<text xml:space="preserve" text-anchor="middle" x="154.51" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Connection contracts; evidence pending</text>
+</g>
+</g>
+</svg>

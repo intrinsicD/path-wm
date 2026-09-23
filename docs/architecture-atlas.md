@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-22, repository snapshot `60d0eaa`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-23, repository snapshot `60d0eaa`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -24,6 +24,7 @@ Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green 
 - [14 · Inside the latent core](#14-latent-core)
 - [15 · Shared latent thought, modality-specific readout](#15-output-plan)
 - [16 · Shared image codec and causal video extension](#16-shared-video-codec)
+- [17 · Integrated latent agent: reference architecture](#17-integrated-latent-agent)
 
 <a id="01-overview"></a>
 
@@ -1019,7 +1020,7 @@ The foundation now connects audio/video/text/image packets with masked Candidate
 
 Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.
 
-Source: [pathwm/world_state/store.py · WorldStore:175](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:77](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:346](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
+Source: [pathwm/world_state/store.py · WorldStore:187](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:77](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:346](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
 
 <a id="14-latent-core"></a>
 
@@ -1300,3 +1301,74 @@ Source-diversity comparison changes data only:4x4 versus4x16 versus16x4 clips/fr
 17 September literature review: user requests scalable small visual codecs and both teacher-free and teacher-assisted training. docs/visual-codec-review.md proposes a local single-grid family, task/debugging requirements and staged comparisons, retaining the small v2 baseline. Proposal only; untrained counts and shape checks do not establish quality or user adoption. Existing discussion/validation status is unchanged.
 
 Source: [pathwm/models/video_vae.py · VideoVAE:149](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md), [docs/video-context-plan.md](../docs/video-context-plan.md), [pathwm/models/video_vae.py · local_correlation:71](../pathwm/models/video_vae.py), [pathwm/data/video_order.py · cyclic_pan_pairs:59](../pathwm/data/video_order.py), [experiments/video_order.py · OrderReadout:55](../experiments/video_order.py), [docs/video-order-plan.md](../docs/video-order-plan.md), [docs/video-stability-plan.md](../docs/video-stability-plan.md), [docs/video-diversity-plan.md](../docs/video-diversity-plan.md), [docs/video-displacement-plan.md](../docs/video-displacement-plan.md), [docs/video-pair-center-plan.md](../docs/video-pair-center-plan.md), [docs/video-matching-plan.md](../docs/video-matching-plan.md), [pathwm/models/video_vae.py · CorrespondenceDirectionHead:96](../pathwm/models/video_vae.py), [tests/test_video_evidence.py](../tests/test_video_evidence.py), [docs/video-evidence-plan.md](../docs/video-evidence-plan.md), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md).
+
+<a id="17-integrated-latent-agent"></a>
+
+## 17 · Integrated latent agent: reference architecture
+
+R1 two-machine pixel reference · executable integration and scoped tests · learned development underway
+
+```mermaid
+flowchart TB
+    observe["Observed pixels + execution receipts"]
+    class observe external;
+    pyramid["Shared multiscale features<br/>256 + 64 tokens, width64"]
+    class pyramid learned;
+    slots["7 learned slots<br/>2 machines +4 objects +background"]
+    class slots learned;
+    store["WorldStore + content-hashed blobs<br/>Authoritative evidence and revisions"]
+    class store store;
+    memory["ConceptMemory<br/>Appearance proposal +behavior check<br/>Create / retrieve / recompute"]
+    class memory learned;
+    code["Persistent derived concept Z<br/>4 tokens x64, evidence dependencies"]
+    class code store;
+    core["Shared recurrent G / T core<br/>Infer concepts and predict effects<br/>Two tied loops by default"]
+    class core learned;
+    goal["Typed two-lamp goal +budget<br/>One utility contract"]
+    class goal external;
+    plan["Latent action rollouts<br/>At most two presses<br/>No simulator access"]
+    class plan store;
+    execute["Ground slot pointers to clicks<br/>Check read-set before execution"]
+    class execute external;
+    verify["Independent observed outcome<br/>Success / failed / unknown"]
+    class verify external;
+    other["Existing BeliefAgent / WorldSession<br/>Multimodal readers and outputs<br/>Connection contracts; evidence pending"]
+    class other optional;
+    observe -->|"encode source once"| pyramid
+    pyramid -->|"bounded consumer; source unchanged"| slots
+    observe -->|"append exact source event"| store
+    slots -->|"appearance and perceived transitions"| memory
+    store -->|"active evidence; revision invalidates derivatives"| memory
+    memory -->|"support tokens for G"| core
+    core -->|"infer reusable Z with frozen weights"| code
+    code -->|"retrieved Z conditions T"| core
+    slots -->|"current scene +targeted action"| core
+    goal -->|"goal and action costs"| plan
+    core -->|"predicted latent outcomes"| plan
+    plan -->|"chosen action with read-set"| execute
+    execute -->|"actual feedback"| observe
+    execute -->|"receipt and actual goal state"| verify
+    code -->|"declared compatible context adapter"| other
+    classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
+    classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
+    classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
+    classDef optional fill:#efeafa,stroke:#9c87b5,color:#202a36;
+    classDef training fill:#fff0db,stroke:#bd934d,color:#202a36;
+    classDef proposal fill:#fafafa,stroke:#9b9b9b,color:#202a36,stroke-dasharray:5 4;
+```
+
+[Full-size SVG](diagrams/atlas/17-integrated-latent-agent.svg)
+
+Alex delegated architecture choices, Claude Opus5.5 high planning and implementation, and Codex review/test/fix. This is a reference integration of the full target, not a claim that the existing agent or all modalities are newly validated.
+
+Two independent machines make reachable two-press goals possible. With one binary lamp and static actions, every reachable goal is at most one press away. The new task explicitly adopts factorized dynamics and does not claim general long-horizon planning.
+
+The neural core never receives rule IDs, concept IDs, generator truth or oracle answers. Exact identity/source/version/action metadata remains outside latent inference. Train-only simulator supervision is declared separately.
+
+Likelihood and expected-utility planning use the unweighted outcome objective. Unknown does not mean impossible. Software, controlled learning and natural-data gates are separate; no new green scope follows from this diagram.
+
+Natural data, partial observability and broader modality/action capabilities have explicit connection contracts in the owning plan and require their own learned evidence. Existing discussion statuses are unchanged.
+
+The executable reference now includes frozen-weight action feedback, retained source corrections, restart, bounded derived caches and current-head read sets. CPU/GPU smoke reports and independent regressions establish software behavior only; full regression and learned gates are tracked in the owning plan.
+
+Source: [docs/integrated-architecture-plan.md](../docs/integrated-architecture-plan.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/shared-abstraction-spec.md](../docs/shared-abstraction-spec.md), [pathwm/models/multiscale.py · FeaturePyramid:35](../pathwm/models/multiscale.py), [pathwm/world_state/store.py · WorldStore:187](../pathwm/world_state/store.py), [pathwm/models/slots.py · SlotPerception:112](../pathwm/models/slots.py), [pathwm/models/latent_core.py · LatentCore:41](../pathwm/models/latent_core.py), [pathwm/world_state/concepts.py · ConceptAgent:236](../pathwm/world_state/concepts.py), [pathwm/data/rule_world.py · TaskContract:364](../pathwm/data/rule_world.py), [pathwm/evaluation/rule_world.py · run_life:354](../pathwm/evaluation/rule_world.py), [experiments/latent_agent.py](../experiments/latent_agent.py).

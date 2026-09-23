@@ -4,6 +4,14 @@
 die bisherigen Teilentwürfe; die unten vorgeschlagene Demonstration ist noch kein
 ausgewählter Datensatz, gestarteter Trainingslauf oder bestandener Fähigkeitsnachweis.
 
+**Fortsetzung, 23. September:** Alex beauftragt die gemeinsame Ausarbeitung mit
+Claude Opus 5.5 (`high`), danach Implementierung und Review-/Test-/Reparaturzyklen.
+Der [integrierte Architekturplan](integrated-architecture-plan.md) legt dafür R1
+als kontrollierte visuelle Referenzkette mit zwei Maschinen fest und konkretisiert
+die Anschlussverträge des vollständigen Agenten. Das ist eine gewählte erste
+Integration; der hier verlangte natürliche und domänenübergreifende Gesamtnachweis
+bleibt davon getrennt. Implementierungs- und Ergebnisstatus stehen im neuen Plan.
+
 ## Vom Nutzer festgelegtes Ziel
 
 Ein Agent soll Wahrnehmung, Denken, Handeln und Gedächtnis über kompatible latente
