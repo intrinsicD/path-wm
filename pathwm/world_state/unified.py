@@ -32,6 +32,7 @@ from .session import SourceItem
 
 OPS = ("press",)
 PREDICATES = ("lamp_state",)
+RECEIPTS = ("ok", "miss", "same_object", "budget_exceeded")
 STEP = 1.0  # session-clock units between consecutive observation events
 
 
@@ -144,6 +145,16 @@ class LiveView(SceneView):
     decisions: dict  # slot index -> session binding decision
 
 
+def _r1_only(name, instead):
+    def method(self, *args, **kwargs):
+        raise NotImplementedError(
+            f"{name} writes the R1 standalone record layout; the unified runtime uses {instead}"
+        )
+
+    method.__name__ = name
+    return method
+
+
 def model_versions(perception, core, candidate_encoder, action_encoder):
     modules = dict(perception=perception, core=core, candidates=candidate_encoder, actions=action_encoder)
     return {name: state_hash(module)[:16] for name, module in modules.items()}
@@ -167,6 +178,17 @@ class UnifiedAgent(ConceptAgent):
         self._pyramids = BoundedCache(self.settings.percept_cache)
         self.view = None
         self.check()
+
+    # Inherited R1 writers assume the standalone layout (new instance per scene,
+    # transitions parented on appearance). They fail before any blob/store/model effect;
+    # `repair`, `receive_retract` and `receive_supersede` are re-implemented below.
+    observe_scene = _r1_only("observe_scene", "observe()")
+    observe_session = _r1_only("observe_session", "observe(transitions=...)")
+    receive_claim = _r1_only("receive_claim", "no testimony/claim path yet (declared absent in R2)")
+    _act = _r1_only("_act", "execute()")
+    _attach = _r1_only("_attach", "attribution through observe()/execute()")
+    _instances = _r1_only("_instances", "WorldSession identity decisions")
+    _transitions_component = _r1_only("_transitions_component", "_rebind()")
 
     def check(self):
         """Integrated model identity: session modules plus perception (incl. decoder and
@@ -403,7 +425,21 @@ class UnifiedAgent(ConceptAgent):
                 parents=tuple(c.id for c in attributions),
             )
             self.memory.commit(tx)
-        return self._bind(instance, appearance.id, appearance.tensor(device=self.device), transitions_id, evidence)
+        # An invalidated membership is a hypothesis to re-check, not forgotten: its
+        # concept's key was invalidated with it and would not be proposed by appearance.
+        bindings = [c for c in view["components"].values() if c.entity_id == instance and c.name == "binding"]
+        previous = max(bindings, key=lambda c: (c.valid_from, c.revision, c.id), default=None)
+        prior = None
+        if previous is not None and not previous.active and previous.data["concept"] in view["entities"]:
+            prior = previous.data["concept"]
+        if prior is not None and previous.data["supports"] and 0 < len(evidence) < self.settings.min_check:
+            # Too little evidence for a behavioural check: keep the prior membership
+            # (unverified) instead of re-proposing by appearance among other concepts.
+            decision = dict(instance=instance, repaired_from=previous.id)
+            return self._commit_binding(instance, prior, appearance.id, transitions_id, evidence,
+                                        False, True, None, decision, "retained")
+        return self._bind(instance, appearance.id, appearance.tensor(device=self.device), transitions_id,
+                          evidence, prior=prior)
 
     # corrections and recovery ----------------------------------------------------------
     @torch.no_grad()
@@ -464,6 +500,65 @@ class UnifiedAgent(ConceptAgent):
                           if e.modality == "transition" and e.id not in seen),
                          key=lambda e: (e.available_at, e.id))
         return self._attribute([e.id for e in pending]) | self.repair_identity()
+
+    def repair(self):
+        """Legacy name, R2 meaning (R1 `repair` assumes the standalone record layout)."""
+        return self.repair_identity()
+
+    def _withdrawable(self, evidence_id):
+        view = self.memory.view()
+        old = view["evidence"].get(evidence_id)
+        if old is None:
+            raise ValueError(f"Unknown evidence {evidence_id!r}")
+        if evidence_id in view["retracted"]:
+            raise ValueError("Evidence already withdrawn")
+        if old.source != SOURCE or old.modality != "transition":
+            raise ValueError("Only camera transition items are corrected through this legacy API")
+        return old
+
+    @torch.no_grad()
+    def receive_retract(self, evidence_id):
+        """Same-source withdrawal of one transition, published as a session correction;
+        dependents are invalidated by the store and re-derived from source."""
+        self.check()
+        old = self._withdrawable(evidence_id)
+        t = self.session.time + STEP
+        tx = self.session.store.begin(
+            f"correction-{self.session.store.revision + 1:06d}", occurred_at=old.occurred_at,
+            available_at=t, kind="correction", payload=dict(source=old.source),
+        )
+        tx.retract_evidence(evidence_id)
+        return self.correct(tx)
+
+    @torch.no_grad()
+    def receive_supersede(self, old_id, transition):
+        """Replace one transition item by a corrected one in a frameless observation event.
+
+        The replacement keeps the original `perceived_in` observation, so it is
+        attributed through the identity decisions the action was chosen on, but from
+        its OWN receipt and action. No camera frame is published: the live view and
+        resume point stay the last real camera observation.
+        """
+        self.check()
+        old = self._withdrawable(old_id)
+        pre, record, status, post = transition
+        if status not in RECEIPTS or not hasattr(record, "as_dict"):
+            raise ValueError("A replacement needs an ActionRecord and a known receipt status")
+        action = record.as_dict()
+        ref, blob = self.memory.put_blob(np.stack((to_uint8(pre), to_uint8(post))))
+        data = dict(action=action, receipt=status, perceived_in=old.data.get("perceived_in", old.event_id))
+        count = sum(e.kind == "observation" for e in self.session.store.events())
+        t = self.session.time + STEP
+        result = self.session.observe(
+            f"obs-{count + 1:06d}", occurred_at=old.occurred_at, available_at=t,
+            evidence=(SourceItem(SOURCE, "transition", ref, blob, data, old_id),),
+        )
+        new = result["evidence"][0]
+        self.repair_identity()
+        self._attribute([new])
+        if self.view is not None:
+            self._memberships(self.view)
+        return new
 
     # goals, planning and execution -------------------------------------------------
     def remaining(self, goal, presses_done):

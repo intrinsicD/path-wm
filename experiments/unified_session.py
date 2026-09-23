@@ -24,7 +24,7 @@ from torch.nn import functional as F
 from experiments.multimodal import build_model
 from pathwm.data import rule_world as rw
 from pathwm.evaluation.report import write_report
-from pathwm.io import atomic_json, atomic_torch, environment, file_hash, load_component, source_record
+from pathwm.io import atomic_json, atomic_torch, environment, file_hash, load_component, source_record, state_hash
 from pathwm.models.latent_core import LatentCore
 from pathwm.models.slots import SlotPerception
 from pathwm.models.tasks import Actor, TaskRequest
@@ -50,20 +50,47 @@ SCOPE = ("SOFTWARE check: random core/belief/encoders (a supplied perception che
          "run.json); contracts only, no capability claim.")
 
 
-def build(seed, perception_run=None):
+KEY_ARCHITECTURE = f"pathwm.models.latent_core.key_head({WIDTH}, {KEY})"
+
+
+def build(seed, perception_run=None, identity_run=None, *, shared_key=False):
     """Fresh modules. The belief's image encoder IS the slot consumer's encoder.
 
     `perception_run`: an R1 perception run directory (read-only) whose `last.pt`
     initialises the slot perception; everything else stays randomly initialised.
+    `identity_run`: an S1 run trained with `--identity`; its perception AND exported
+    `key` load together; the key becomes `core.key_head` and the session's candidate
+    key (one module: candidate keys equal `core.key` on slot tokens). Values keep their
+    own projection. Binder thresholds stay uncalibrated; no learned-tracking claim.
+    `shared_key`: rebuild that composition for saved weights (see `load_models`).
     """
+    if perception_run is not None and identity_run is not None:
+        raise ValueError("Load perception from one run: use identity_run alone")
     torch.manual_seed(seed)
     perception = SlotPerception(WIDTH, 7, 3)
+    core = LatentCore(WIDTH)
+    source = dict(source="own_projection")
     if perception_run is not None:
         load_component(perception, Path(perception_run) / "last.pt", "perception")
-    core = LatentCore(WIDTH)
+    if identity_run is not None:
+        run = Path(identity_run)
+        settings = json.loads((run / "run.json").read_text())["identity"]["settings"]
+        if settings.get("identity") not in ("joint", "detached"):
+            raise ValueError("identity_run must be an S1 run trained with --identity joint|detached")
+        sizes = settings.get("sizes", {})
+        if (sizes.get("width"), sizes.get("key_width")) != (WIDTH, KEY):
+            raise ValueError(f"identity key architecture differs from {KEY_ARCHITECTURE}")
+        load_component(perception, run / "last.pt", "perception")
+        load_component(core.key_head, run / "last.pt", "key")
+        source = dict(source="identity_run", run=str(run), checkpoint=str(run / "last.pt"),
+                      checkpoint_sha256=file_hash(run / "last.pt"), identity_mode=settings["identity"],
+                      architecture=KEY_ARCHITECTURE, key_state_sha256=state_hash(core.key_head),
+                      perception_state_sha256=state_hash(perception))
+        shared_key = True
     agent = build_model(width=WIDTH, state_model="belief", memory_recent=2, memory_block=2, memory_blocks=1)
     agent.encoders["image"] = perception.encoder
-    candidates = CandidateEncoder(WIDTH, KEY, VALUE)
+    candidates = CandidateEncoder(WIDTH, KEY, VALUE, key=core.key_head if shared_key else None)
+    candidates.key_source = source
     actions = ActionEncoder(WIDTH, agent.action_width)
     updater = RecurrentUpdater(VALUE, STATE)
     context = ContextEncoder(WIDTH, {"state": nn.Linear(STATE, WIDTH)}, {"state": ("belief", "state-v1")})
@@ -75,15 +102,25 @@ def build(seed, perception_run=None):
 
 
 def save_models(modules, path):
+    """Weights plus `models.json` naming the candidate-key composition and its source."""
+    path = Path(path)
     atomic_torch(path, {name: m.state_dict() for name, m in modules.items()})
+    atomic_json(path.with_name("models.json"), dict(candidate_key=modules["candidates"].key_source))
 
 
 def load_models(path, seed=0):
-    """Fresh module objects with saved weights (the shared encoder loads twice, equally)."""
-    modules = build(seed)
+    """Fresh module objects with saved weights, rebuilt in the saved composition (the
+    shared image encoder and a shared key load twice, equally)."""
+    path = Path(path)
+    config = path.with_name("models.json")
+    source = json.loads(config.read_text())["candidate_key"] if config.exists() else dict(source="own_projection")
+    modules = build(seed, shared_key=source["source"] != "own_projection")
     saved = torch.load(path, weights_only=True)
     for name, module in modules.items():
         module.load_state_dict(saved[name])
+    if source["source"] != "own_projection" and state_hash(modules["core"].key_head) != source["key_state_sha256"]:
+        raise ValueError("Saved candidate key differs from its recorded source")
+    modules["candidates"].key_source = source
     return modules
 
 
@@ -214,14 +251,15 @@ def summary(agent):
 
 
 @torch.no_grad()
-def life(directory, *, seed=0, scenes=4, per_machine=4, restart_after=2, perception_run=None, fixture=True):
+def life(directory, *, seed=0, scenes=4, per_machine=4, restart_after=2, perception_run=None, fixture=True,
+         identity_run=None):
     """Persistent machines across `scenes` layouts; restart after `restart_after`.
 
     fixture=True binds with `pixel_candidates` (SOFTWARE); False uses the learned
     (here untrained) slot candidate encoder."""
     directory = Path(directory)
     g = torch.Generator().manual_seed(seed)
-    modules = build(seed, perception_run)
+    modules = build(seed, perception_run, identity_run)
     save_models(modules, directory / "models.pt")
     memory_dir = directory / "memory"
     agent = new_agent(modules, memory_dir)
@@ -289,6 +327,9 @@ def main():
     parser.add_argument("--perception", type=Path, help="R1 perception run to initialise slots (read-only)")
     parser.add_argument("--learned-keys", action="store_true",
                         help="bind with the (untrained) learned slot keys instead of the pixel fixture")
+    parser.add_argument("--identity-run", type=Path,
+                        help="S1 run trained with --identity: load its perception and exported key together; "
+                             "the session binds with that key (uncalibrated thresholds; no tracking claim)")
     args = parser.parse_args()
     torch.set_num_threads(2)
     out = args.output
@@ -297,17 +338,24 @@ def main():
     atomic_json(out / "status.json", dict(result="running", report="pending", step=0, error=None))
     perception = None if args.perception is None else dict(
         run=str(args.perception), checkpoint_sha256=file_hash(args.perception / "last.pt"))
+    if args.identity_run is not None:
+        perception = dict(identity_run=str(args.identity_run),
+                          checkpoint_sha256=file_hash(args.identity_run / "last.pt"),
+                          key="exported S1 identity key = core.key_head = session candidate key; "
+                              "full provenance in models.json")
+    binding = ("exported S1 identity key (uncalibrated binder thresholds)" if args.identity_run
+               else "learned slot keys (untrained)" if args.learned_keys else "pixel-histogram fixture")
     settings = dict(stage="unified-session-life", purpose="software", device="cpu", seed=args.seed,
-                    scenes=args.scenes, width=WIDTH, perception=perception,
-                    binding="learned slot keys (untrained)" if args.learned_keys else "pixel-histogram fixture",
-                    weights="random (seeded) except a supplied perception checkpoint", scope=SCOPE)
+                    scenes=args.scenes, width=WIDTH, perception=perception, binding=binding,
+                    weights="random (seeded) except a supplied perception/key checkpoint", scope=SCOPE)
     atomic_json(out / "run.json", dict(schema="pathwm-run-v1", identity=dict(
         settings=settings, data=dict(kinds=list(rw.KIND_SPLIT["train"][:2]), rules="train split, seeded"),
         environment=environment("cpu")), source=source_record(__file__, nn.Module())))
     (out / "recipe.py").write_text(Path(__file__).read_text())
     try:
         rows, restart, final = life(out, seed=args.seed, scenes=args.scenes, perception_run=args.perception,
-                                    fixture=not args.learned_keys)
+                                    fixture=not (args.learned_keys or args.identity_run),
+                                    identity_run=args.identity_run)
         with (out / "metrics.jsonl").open("a") as f:
             for row in rows:
                 f.write(json.dumps({k: v for k, v in row.items() if k != "steps"}, sort_keys=True) + "\n")

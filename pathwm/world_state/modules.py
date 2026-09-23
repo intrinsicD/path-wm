@@ -28,17 +28,30 @@ class Candidate:
 
 
 class CandidateEncoder(nn.Module):
-    """Learn keys and values from supplied region/mention features [N,input_width]."""
+    """Learn keys and values from supplied region/mention features [N,input_width].
 
-    def __init__(self, input_width, key_width, value_width, *, backbone=None):
+    `key`: optional existing key module (e.g. a frozen exported identity key shared
+    with the core) used instead of an own projection; values stay separate.
+    """
+
+    def __init__(self, input_width, key_width, value_width, *, backbone=None, key=None):
         super().__init__()
         self.backbone = backbone if backbone is not None else nn.Identity()
-        self.key = nn.Linear(input_width, key_width)
+        if key is not None:
+            with torch.no_grad():
+                probe = key(torch.zeros(1, input_width, device=next(key.parameters()).device))
+            if probe.shape != (1, key_width):
+                raise ValueError("Supplied key module must map the input width to the key width")
+        self.shared_key = key is not None
+        self.key = key if key is not None else nn.Linear(input_width, key_width)
         self.value = nn.Linear(input_width, value_width)
 
     def forward(self, features):
         hidden = self.backbone(features)
-        return F.normalize(self.key(hidden), dim=-1), self.value(hidden)
+        keys = F.normalize(self.key(hidden), dim=-1)
+        if self.shared_key and not torch.isfinite(keys).all():
+            raise ValueError("Candidate keys must be finite")
+        return keys, self.value(hidden)
 
     def pool(self, encoded, selection=None):
         """Masked supplied spans/regions [B,K,N] -> keys/values [B,K,D].
