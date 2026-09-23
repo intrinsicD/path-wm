@@ -11,35 +11,45 @@ nicht dessen Arm A.
 
 ## 0. Aktueller Status
 
-- **Implementiert:** die vollständige R1-Referenzkette (Dateien §13). **712 CPU-Tests
-  bestanden**, zusätzlich die 10 unabhängigen Reviewtests in ihrer abschließenden,
-  verstärkten Fassung. Logs und Quellhashes:
-  `runs/reviews/integrated_architecture_20260923/codex-validation.json`.
-  Regelmäßige Checkpoints an Validierungsschritten sind ergänzt; der Resume-Test
-  bleibt bitgleich (`…/periodic-checkpoint-tests.log`).
-- **Erster Lernlauf:** 15 Minuten Wahrnehmung, 9324 Updates auf unveränderlicher
-  Quellkopie (`runs/latent_agent_r1/source_dev_20260923/` → `…/dev_perception_20260923/`).
-  Frische Validation: Attribute 100/99,41/99,71/99,90%, Maschinenzeiger 100%,
-  Objektzeiger 99,90%, **Lampe 91,60% – C1 verfehlt**. 1,746 GiB reserviert;
-  Checkpoint, Rohmetriken und strukturell geprüfter Bericht erhalten. CPU-Diagnose:
-  texturspezifische Farbverwechslung; vorab erklärter Reparaturvergleich in §17.
-- **Strukturdiagnose verfehlt das Lernziel:** 6421 Updates/15 Minuten, 1,971 GiB
-  reserviert (`…/dev_symbolic_20260923/`): Validation ν Kategorie 0,095,
-  Relation/Toggle 0, Open/Close −1,333; ECE 0,0166 ist kein Kompetenznachweis.
-  Unabhängige Diagnose auf frischen Trainingsregeln bestätigt das Problem
-  (`…/core_diagnosis_20260923/`). Einzelregeln sind dagegen lernbar: Kategorie
-  nach 250 und Relation nach 1000 Updates BA=1,0, mit Ergebnis-Loss früher als mit
-  dem vollen Loss (`…/fixed_rule_probe_20260923/`, `…/fixed_relation_probe_1000_20260923/`).
-  Diese begrenzten Fits belegen keine Meta-Generalisierung. Pixel-Kerntraining
-  wartet auf Wahrnehmungs- und Kernreparatur; alle negativen Läufe bleiben erhalten.
-- **Kein vollständiger gelernter R1-Nachweis.** Smoke- und Checkläufe prüfen nur
-  Software. Kein Gesamtgate ist als Fähigkeit bestanden,
-  keine Aussage zu natürlichen Daten, und R1 ist nicht das vollständige Zielmodell.
-- **Historische Belege** (nicht Teil des aktuellen Vertrags): Reviewbefunde R1–R18
-  `runs/reviews/integrated_architecture_20260923/codex-review-findings.md`;
-  unkonsolidierte Fassung dieses Plans `…/plan-before-consolidation.md`; Briefs und
-  Antworten `…/{architecture,reconciliation,implementation,repair,final-protocol}-*`;
-  Testlogs `…/r1-*.log`; Softwareläufe `runs/latent_agent_r1/{smoke,repair_check,protocol_check_cpu}_2026-09-23/`.
+- **Software implementiert:** R1-Referenzkette und R2-Komposition (§18) mit einer
+  Sitzung, einem Speicher und einer Uhr; getrennte Instanzidentität und
+  Konzeptzugehörigkeit, ein geteilter Bildencoder, ein Entscheidungs-Forecaster,
+  aktuelle Aktionsabhängigkeiten, externe Verifikation und Wiederherstellung.
+  Vollständige CPU-Regression: **752 Tests bestanden**, einschließlich der
+  8 unabhängigen Grenzfalltests (jetzt dauerhaft im Testverzeichnis). Belege:
+  `runs/reviews/integrated_architecture_20260923/unified-repair-green.log` und
+  `…/unified-full-regression.log` und `…/unified-full-collection.log`.
+  Diskussion mit Alex bleibt separat offen.
+- **Wahrnehmung:** erster 15-Minuten-Lauf verfehlte C1 (Lampe 91,6%). Der
+  Texturvergleich (§17) erreicht nach Warmstart 99,8% Lampenerkennung und besteht
+  den einfachen C1-Screen, verfehlt jedoch die vorab erklärte Übernahmeregel für
+  zustandsübergreifende Wiedererkennung. Neustart mit Texturvariation: 98,6% Lampe,
+  ebenfalls nicht übernommen. Ein trainierter latenter Schlüsselausleser gewinnt auf
+  frischen Validation-Texturen 36,0% Wiedererkennung über Lampenzustände (Kontrolle
+  26,3%), verfehlt aber den neuen 80%-Diagnosewert. Das ist teilweise nutzbare
+  Information, kein C3-Nachweis. Rohdaten/Berichte:
+  `runs/latent_agent_r1/{texture_control,texture_randomized,texture_scratch}_20260923/`
+  und `…/appearance_readout_20260923/full/`. Als nächster Schritt wird ein gepaartes
+  Identitäts-Lernziel für Slots und Schlüssel vorbereitet; ursprüngliche Gates bleiben.
+- **Kernlernen:** voller Loss und reiner Ergebnis-Loss scheiterten in der
+  diagnostischen Leiter. Mit vorgegebenem Regelcode lernt T Kategorien; Gewichtung
+  seltener Änderungen allein löst die relationalen Regeln nicht. Frischer Kern nach
+  8000 Updates: ν Kategorie 1,0, Relation 0,474, Toggle 0,332, Open −0,480,
+  Close −1,227; mittlerer relationaler AUROC-Vorteil gegenüber vertauschtem Code
+  0,291. Screen weiterhin **verfehlt**, aber deutlich wachsender Regelinformations-
+  gehalt. Nächster Schritt: 8000 zusätzliche Updates mit gleichem Optimierungszustand.
+  Das ist **Oracle-Diagnostik auf Trainingsregeln**, keine Ableitung aus Belegen und
+  keine Pixelkompetenz. Belege: `…/core_ladder_20260923/threshold_free_all/`,
+  `…/core_application_probe_20260923/O_scratch/`,
+  `runs/reviews/integrated_architecture_20260923/core-scratch-decision.md`.
+- **Kein vollständiger gelernter R1/R2-Nachweis.** Pixel-Kerntraining und vollständige
+  Agentenleben warten auf die Lernreparaturen. Softwaretests und vorgegebene
+  Identitätsschlüssel belegen keine gelernte Gesamtfähigkeit. Natürliche Daten,
+  Verdeckung und Modalitäts-/Aufgabenalignment benötigen eigene Nachweise (§11–12,18).
+  Alle negativen Läufe, Quellstände, Checkpoints und Berichte bleiben erhalten.
+- **Reviewgeschichte:** R1–R18 in `…/codex-review-findings.md`; ursprüngliche
+  konsolidierte Planfassung in Git `18fea0f`; aktuelle Briefs/Antworten und rote/grüne
+  Reproduktionen unter `runs/reviews/integrated_architecture_20260923/`.
 
 ## 1. Zielbild, Referenzintegration und Grenzen
 
@@ -362,7 +372,7 @@ Kette Wahrnehmung→Kern→Planer→Gedächtnis in RuleWorld, noch ohne gelernte
 | Teilbeobachtung | `BeliefAgent` (kategorialer Belief, Dynamik, Sitzungsgedächtnis) | `concept_context()` macht `Z` zu einem `ContextEncoder`-Token für den Thinker | Adapter + Kontrakttest; untrainiert |
 | Aufgabensteuerung | `TaskRequest`/`TaskPolicy`/`step_task` | R1 nutzt einen festen Ablauf; `TaskPolicy` später als gelernter Steuerer dagegen | nicht verbunden |
 | Ausgaben | native Text/Bild/Audio/Video-Decoder, `RecurrentOutputAdapter` | Leser auf dem Arbeitszustand, keine Rückkodierung in den Denkpfad | nicht verbunden |
-| Quellengedächtnis | `WorldStore` (Belege, Revision, Snapshots) | dieselbe Implementierung mit Retraktion/Supersede unter `ConceptMemory` und `WorldSession`; noch keine gemeinsame Store-Instanz in einem Agenten | Store implementiert und getestet; Zusammenführung offen (§11.1) |
+| Quellengedächtnis | `WorldStore` (Belege, Revision, Snapshots) | R1: eigener Store je `ConceptMemory`; R2-Scheibe: genau ein Store unter `WorldSession`, `ConceptMemory` als Client (§18) | Store implementiert und getestet; Zusammenführung als Software umgesetzt (§18), ungelernt |
 | Verifikation | Umgebungsverifier (R1), Entscheidungsentwurf | deklarierte vs. verifizierte Erfüllung getrennt | R1-Simulator; allgemein offen |
 
 ## 11. Review des Gesamtziels
@@ -376,14 +386,17 @@ eingefroren, Wissen ändert sich über Belege und abgeleitete Zustände.
 
 **Wesentliche offene Architekturfragen** (für R2 zu entscheiden, keine Routinewahl):
 
-1. **Zwei Laufzeitbesitzer.** `ConceptAgent` und `WorldSession` besitzen je eigene
+1. **Zwei Laufzeitbesitzer** (entschieden in §18: `WorldSession` besitzt Identität und
+   Store, `ConceptMemory` Konzepte über dieselbe Sitzung; der folgende Vorschlag ist
+   überholt). `ConceptAgent` und `WorldSession` besitzen je eigene
    Bindungspolitik (Verhaltensprüfung gegenüber `AssociationBinder`-Schwellen) und
    Laufzeitzustand. In einem vollständigen Agenten braucht jede Instanz genau einen
    Identitätsbesitzer; sonst entstehen zwei konkurrierende Wahrheiten über dieselbe
    Entität. Vorschlag: gemeinsamer Store, `ConceptMemory` als Konzept-/Instanz-
    Besitzer, `WorldSession` liest dessen Bindungen statt eigene anzulegen – erst mit
    einem R2-Test, der beide Pfade nutzt.
-2. **Aktionsraum zum `BeliefAgent`.** `BeliefDynamics` erwartet einen kontinuierlichen
+2. **Aktionsraum zum `BeliefAgent`** (Schnittstelle in §18: `ActionEncoder`, Breite 64,
+   keine Gewichtsteilung; Training offen). `BeliefDynamics` erwartet einen kontinuierlichen
    Vektor `[B, action_width]`; R1-Aktionen sind typisierte Slot-/Koordinatenrecords.
    Für Teilbeobachtung (T liest Belief-Welttokens) fehlt ein gelerntes Aktions-
    Encoding aus `ActionRecord` sowie ein gemeinsamer Tokenraum (R1 Breite 64 gegen
@@ -423,7 +436,9 @@ Geändert: `pathwm/world_state/store.py`. Neu: `pathwm/data/rule_world.py`,
 `tests/test_concepts.py`, `tests/test_latent_agent.py` sowie die unabhängigen
 `tests/test_latent_revision_review.py`. Wiederverwendet: `models/multiscale.py`,
 `models/modalities.py`, `world_state/{records,retrieval,modules}.py`, `io.py`,
-`evaluation/report.py`.
+`evaluation/report.py`. R2-Softwarescheibe (Worktree, §18): geändert
+`models/{slots,belief,belief_state}.py`, `world_state/{store,session,concepts}.py`; neu
+`world_state/unified.py`, `experiments/unified_session.py`, `tests/test_unified_session.py`.
 
 ## 14. Primärquellen (von Codex am 23. September geprüft)
 
@@ -544,3 +559,209 @@ Einzelbeispiele (`per_example.npz`, gehasht) mit Checkpoint-, Eltern- und Quelli
 und hinterlässt bei jedem Fehler einen sichtbaren Status.
 Log: `runs/reviews/integrated_architecture_20260923/texture-repair-worktree-tests.log`.
 Kein Training, kein GPU-Lauf in diesem Schritt.
+
+## 18. R2-Softwarescheibe: eine vereinheitlichte Sitzung (abgestimmter Vertrag)
+
+Stand 23. September 2026, im isolierten Worktree `codex/unified-latent-session`
+abgestimmt. **Kein gelernter R2-Nachweis**, solange R1 C1/C2 verfehlt; alles hier ist
+Software mit zufälligen oder vorgegebenen Gewichten/Schlüsseln und so beschriftet.
+Grundlage: `runs/reviews/integrated_architecture_20260923/whole-architecture-closure.md`
+(D1–D5) mit den folgenden verbindlichen Korrekturen.
+
+**Besitz (angenommen).** Genau ein `WorldStore`, gehalten von `WorldSession`: einziger
+Schreiber, eine Uhr, ein Snapshot. `WorldSession` besitzt die zeitliche
+Instanzzuordnung (Instanzentitäten, `recognition`, `state`, `same_as`/Split,
+`reassign`). `ConceptMemory` besitzt über dieselbe Sitzung Konzeptmitgliedschaft und
+Codes (Konzeptentitäten, `appearance`, `attribution`, `transitions`, `binding`, `key`,
+`code`, Read-Sets) und hat im Client-Modus keinen eigenen Store: interne Records gehen
+über `WorldSession.commit(..., advance_belief=False)` (gleiche Uhrzeit, kein
+Belief-Filterschritt für Buchhaltung), Quellbelege nur über `WorldSession.observe`
+(`evidence=` typisierte `SourceItem`s). Die Sitzung merkt sich die veröffentlichte
+Revision; jede direkte Store-Änderung wird bei der nächsten Operation abgelehnt.
+
+**1. Identitätskorrekturen mit kausalem Test.** Jede Übergangszuordnung ist ein eigener
+`attribution`-Record: Übergangsbeleg → Instanz, Elternteil = das `recognition`, das die
+Sitzung im Ereignis des Vorher-Bildes für den angezielten Slot (Zeiger aus eigener
+Wahrnehmung, nie Szenen-IDs) veröffentlicht hat. Die Sitzung speichert in jedem
+`recognition` die tatsächlich genutzten Identitätsabhängigkeiten: alle aktiven
+`same_as`-Links der Aliasgruppe, über die der Binder entschied
+(`data.identity_links`). Der Store invalidiert beim Zurückziehen eines Links (Split
+oder Rückzug seines Belegs) jede Komponente, die ihn nennt, und alle Nachfahren:
+`recognition → state/appearance/attribution → transitions → binding → key/code`.
+Konservativ: der betroffene Übergang bleibt roher, aktiver Beleg ohne Zuordnung, bis
+eine neue Identitätsentscheidung vorliegt; nicht betroffene Konzepte bleiben
+bitgleich (gleiche Komponenten-ID). `reassign` verschiebt das `recognition` selbst und
+invalidiert seine Nachfahren; die Reparatur ordnet die abhängigen Übergänge der jetzt
+geltenden Entität neu zu und **prüft deren Bindung neu** (derselbe Erwerbspfad), statt
+die alte Entscheidung fortzuschreiben. Ein Merge invalidiert nichts rückwirkend und
+bündelt keine Konzeptbelege; Konzeptrecords binden Original-Entitäten.
+**Zuordnung nur aus dem eigenen Quellbeleg:** Jeder Übergangsbeleg trägt Receipt, Aktion
+und die Beobachtung, in der die Aktion gewählt wurde (`perceived_in`). Eine Zuordnung
+(auch jede Reparatur und Wiederherstellung) liest nur diese Angaben plus die jetzt
+geltende Identitätsentscheidung für den Slot am Maschinenpixel der Aktion. Nur
+`receipt="ok"` lehrt; ein ersetzter Beleg wird nie über die alte Zuordnung
+weitergereicht, sondern sein Ersatz aus dessen eigenem Receipt und Ziel zugeordnet
+(ein Fehlschlag bleibt roher Beleg, ein Erfolg an einer anderen Maschine geht an deren
+Instanz). Dieselbe Receipt-Regel gilt jetzt auch in der R1-Reparatur. Grenze:
+Eine Entität, deren letztes `recognition` invalidiert wurde, ist per Schlüssel nicht
+mehr abrufbar (bestehende Retrieval-Semantik); spätere Beobachtungen beginnen
+konservativ eine neue Entität.
+
+**2. Ein Entscheidungsprognostiker.** Der geteilte Kern (`LatentCore.apply`, Suche)
+liefert die aktionsbedingten Rollouts jeder Entscheidung. `BeliefDynamics` filtert
+nur zwischen beobachteten Ereignissen, bedingt auf die *ausgeführte* Aktion
+(`ActionEncoder`), wird von der nächsten Beobachtung korrigiert und ist weder Planer
+noch autoritativer Zustand verdeckter Objekte. `imagine` und `TransitionPredictor`
+bleiben unabhängige Baselines. R2 ist voll beobachtet. Später (R3, eigene Daten):
+Verdeckung über eine gelernte Projektion des Sitzungs-`state` auf den Kerntoken mit
+Ausrichtungsverlust beim Wiederauftauchen; ein Konsistenzverlust zwischen
+Belief-Prior und Kernvorhersage beobachteter Folgen. Widersprechen sich Prior und
+Kern, entscheidet der Kern die Planung, die Abweichung wird als Diagnose protokolliert
+und die nächste Beobachtung entscheidet; nie wird gemittelt. Gleiche Breite (64) ist
+nur ein Formvertrag: keine ungetestete Gewichtsteilung zwischen Belief und Kern.
+
+**3. Aufgaben und Ziele.** `GoalSpec(task_id, predicate, targets=((Entität, Wert),…),
+budget, deadline)` ist ein expliziter Record; exakte Prädikate, Kosten und Herkunft
+dürfen außerhalb der latenten Inferenz bleiben, gelernte Ziel- und Aktionsinhalte
+laufen im kompatiblen Tokenpfad (Kern-Rollen `[m, a, b]`, `ActionEncoder`).
+`TaskRequest` ohne `GoalSpec` (Freitext) → `ask` ohne Aktorzugriff; unbekanntes
+Prädikat oder unbekannte Entität → `unsupported`; nicht sichtbare, uneindeutige oder
+unvollständige Zielreferenzen → `ask`; unbekannte Operationen werden vor der
+Kodierung abgelehnt. Keine Aussage über Freitextverständnis.
+**Harte Aufgabengrenzen:** `budget` (nichtnegative ganze Zahl) und `deadline`
+(endliche, nichtnegative Zeit auf der Sitzungsuhr, Einheit wie `WorldSession.time`;
+jede Beobachtung liegt `STEP=1` später) werden beim Bau geprüft, ebenso Zieltupel
+(Entitäts-ID, ganze Zahl). Erlaubte weitere Drücke = min(Ziel-Budget,
+Vertragsbudget) − bisherige, zusätzlich ⌊(deadline − jetzt)/STEP⌋. Diese Zahl ist
+zugleich der Horizont der Suche (`plan(budget=)`) und die Ausführungsgrenze: `execute`
+verweigert (`refused`) vor jedem Aktoraufruf, jeder Aktoraufruf zählt. Ein
+abgelaufenes Ziel ergibt `expired` ohne Nebenwirkung. Der geteilte `TaskContract`
+wird nie verändert; der Planer kann eine strengere Grenze des Aufrufers nicht
+überschreiben. Aktionsindizes müssen echte ganze Zahlen im sichtbaren Bereich sein.
+
+**4. Daten.** Öffentliche lizenzierte Datensätze brauchen nicht automatisch Alex'
+Zustimmung; wir prüfen Lizenz und Eignung selbst. Gefragt wird nur nach nicht
+verfügbaren privaten Aufnahmen bzw. deren verbindlicher Wahrheit oder nach
+ausdrücklicher Kamerafreigabe. Es gibt kein Datensatz-Freigabegate. Natürliche und
+cross-modale Grenzen bleiben unverändert (§12; keine Text/Audio↔Slot-Bindung ohne
+gepaarte Daten und Training).
+
+**Einmal kodieren.** Ein Bild wird je Ereignis genau einmal vom gemeinsamen
+`MultiScaleImageEncoder` (dieselbe Instanz in `SlotPerception.encoder` und
+`BeliefAgent.encoders["image"]`) kodiert; Slot-Verbraucher (`from_pyramid`) und
+Belief (`add_packet(..., features=)`, in `PendingEvent.features` gehalten) lesen
+dieselbe Pyramide. **Zeitursprung:** Der Bildkodierer addiert eine absolute
+Zeitposition zu den Werten; die R1-Wahrnehmung ist bei t=0 trainiert. CPU-Messung an
+`dev_perception_20260923/last.pt` (16 Validationsszenen): Slottokens ändern sich bei
+t=1/7/100 relativ um 1,01/1,26/1,37, Lampengenauigkeit fällt von 1,0 auf
+0,56/0,81/0,63. Deshalb wird jedes Bild bildlokal (t=0) kodiert und nur die Metadaten
+tragen die absolute Aufnahmezeit (`SlotPerception.frame_pyramid`); der Belief sieht
+das Alter über seine Positionskodierung. Das Paket selbst bleibt unverändert
+fingerprintet; die Sitzung prüft, dass vorgegebene Merkmale zum Paketzeitraum passen.
+
+**Verifikation.** Ein aufruferseitiger Verifier liefert
+`VerificationRecord(task_id, goal_hash, status∈{success,failure,unknown}, verifier_id,
+observed_at)` als Quellbeleg (`modality="verification"`) im selben
+Beobachtungsereignis wie Receipt/Übergang und Nachher-Bild. Vor der Veröffentlichung
+geprüft: Typ, Zeit = Ereigniszeit, Quelle ≠ Kamera, Aufgabe und Zielhash des laufenden
+Ziels. Ein ungültiger Record oder ein Verifier, der eine Ausnahme wirft, wird nicht
+veröffentlicht, das Ereignis (Receipt, Übergang, Bild) aber schon; der Fehler wird
+danach gemeldet. Ein Urteil gilt nur, solange es im jüngsten Beobachtungsereignis
+steht: jede spätere Quellbeobachtung (eigene Aktion oder eine Welt, die sich selbst
+geändert haben kann) macht es `unknown`. Das eigene `stop` ist nur deklariert.
+
+**Aktionsbereitschaft.** Ein Plan pinnt neben den Konzeptköpfen (`ReadSet.components`)
+seine Live-Abhängigkeiten (`ReadSet.live`): jüngstes Beobachtungsereignis der Sitzung
+(jede Modalität), das Ereignis seiner Ansicht, je Maschine Slot, Instanz und
+`recognition` sowie die Objektslots. `execute` drückt nur, wenn alles noch gilt und
+jedes gepinnte `recognition` aktiv ist und noch derselben Instanz gehört; reine
+Buchhaltung (interne Records ohne Kopfänderung) macht nichts veraltet.
+
+**Atomaritätsgrenze und Wiederherstellung.** Atomar ist genau eine
+Sitzungsveröffentlichung: Quellbelege (Bild, Übergänge, Receipt, Verifier),
+Identitätsentscheidungen und Belief-Update eines Ereignisses. Blobs werden vorher
+inhaltsadressiert geschrieben. Konzeptrecords entstehen danach in eigenen internen
+Transaktionen und sind vollständig aus behaltenen Quellen ableitbar. `recover()` (beim
+Neustart automatisch) leitet Übergänge ohne je getroffene Zuordnungsentscheidung aus
+ihrem eigenen Beleg ab und leitet jede Instanz neu ab, deren Übergänge/Bindung nicht
+genau zu ihren aktiven Zuordnungen passen (idempotent). `resume_view` nimmt die
+jüngste Beobachtung mit behaltenem Kamerabild (Text-/Verifier-Ereignisse werden
+übersprungen) und ergänzt fehlende Mitgliedschaften.
+
+**Modellversionen.** Weiter abgelehnt, jetzt als eine integrierte Identität geprüft
+(`UnifiedAgent.check`): Sitzungsmodule (Belief inkl. geteiltem Bildkodierer, Scorer,
+Updater, Kontext) plus gesamte Wahrnehmung (inkl. Slot-Decoder und Köpfe), Kern,
+Kandidaten- und Aktionskodierer, dazu Eval-Modus. Geprüft vor jeder Beobachtung,
+Planung, Vorhersage, Korrektur/Reparatur, jedem Snapshot und unmittelbar vor dem
+Aktoraufruf; nie werden neue Gewichte mit alten Caches oder Codes gemischt.
+Migrationsvertrag unverändert aus dem Abschlussvorschlag (D5), nicht implementiert.
+
+**Implementierung (klein, kein Framework).** `session.py`: `SourceItem`,
+`observe(evidence=, packet_features=)`, `recognition`/`identity_links` in den
+Entscheidungen, `commit(advance_belief=)`, Revisionswächter. `store.py`:
+Identitätslink-Abhängigkeit. `belief_state.py`/`belief.py`: `PendingEvent.features`,
+`add_packet(features=)`. `slots.py`: `from_pyramid`, `frame_pyramid`.
+`concepts.py`: `ConceptMemory(session=…)`-Client, `attach`. Neu:
+`pathwm/world_state/unified.py` (`UnifiedAgent`, `GoalSpec`, `ActionEncoder`,
+`VerificationRecord`, `Dispatch`) und das Rezept `experiments/unified_session.py`
+(winziges CPU-Leben mit persistenten Maschinen, Rohdaten und Bericht). R1-Rezept,
+Voreinstellungen und Checkpoints bleiben kompatibel; Altpfade bleiben erhalten.
+
+**Ergebnis (Software, CPU, 23. September 2026, nach Codex-Review).** Codex hat mit den
+gelieferten Fixtures fünf echte Grenzfehler reproduziert (neue Beobachtung machte eine
+vorbereitete Aktion nicht veraltet; `budget=0` und abgelaufene `deadline` drückten
+trotzdem; ein als `miss` ersetzter Übergang wurde wieder Konzeptstütze; ein nach der
+Planung geänderter Kern wurde nicht abgelehnt) und drei weitere ergänzt (veraltetes
+Urteil nach neuer Kamerabeobachtung, Verifier-Ausnahme löschte das Receipt, Absturz
+zwischen Zuordnung und Bindung). Rot: `…/unified-repair-red.log` (5/5 scheitern);
+grün: `…/unified-repair-green.log` – unabhängige Datei 8/8, Worktree 227 bestanden
+(22 eigene Tests in `tests/test_unified_session.py` plus betroffene Alt-Tests). Die anschließende
+vollständige Codex-Regression besteht mit 752 Tests, einschließlich der 8 dauerhaften
+`tests/test_unified_revision_review.py`-Tests (`…/unified-full-regression.log`,
+Sammlungsnachweis `…/unified-full-collection.log`). 16
+gezielte Mutationen (je ein Schutz entfernt) werden alle von mindestens einem Test
+erkannt (`perceived_in` erst nach dem ergänzten Live-Druck-Test). Eigene Reparatur dabei: eine außerhalb des Agenten invalidierte Mitgliedschaft
+wurde bei der nächsten Beobachtung leer neu vorgeschlagen statt neu abgeleitet.
+Leben v2 (`…/unified-session-life-cpu-v2/`, R1-Wahrnehmung nur gelesen, sonst
+Zufallsgewichte, Pixel-Histogramm-Schlüssel als SOFTWARE-Fixture, 5 Szenen): 47
+Identitätsmatches, 1 Konzept, 4 eigene Drücke (alle `ok`), 8 aktive Zuordnungen,
+4 geplante Ziele, Ausgänge 1 Erfolg/3 Fehlschlag – der einzige Erfolg ist ein `stop`
+ohne Druck (Ziel war schon erfüllt); **kein verifizierter Erfolg nach einem Druck**.
+Rohes Zufallsleben mit gelernten (untrainierten) Schlüsseln
+(`…/unified-session-life-learned-keys-v2/`): keine identifizierte Maschine, kein Ziel
+geplant, kein Druck, nur `ask`. Keines der Leben zeigt Identitäts- oder
+Regelkompetenz; `result.json` meldet nur gemessene Zählungen (`exercised`). Das erste
+Leben `…/unified-session-life-cpu/` ist durch v2 ersetzt.
+
+**Quellkompatible Migration.** Alle Erweiterungen sind optional mit altem Verhalten als
+Standard: `observe(evidence=(), packet_features=None)` (Payload-Fingerprint nur mit
+Items erweitert), `commit(advance_belief=True)`, `add_packet(features=None)`,
+`PendingEvent.features=()`, `ConceptMemory(session=None)`; `SlotPerception.forward`
+rechnet unverändert (`from_pyramid(pyramid(rgb))`), R1-Checkpoints laden. Neu sichtbar:
+Sitzungsentscheidungen tragen `recognition`/`identity_links`, Ergebnisse `evidence`;
+`recognition` nach einem Merge nennt seine Links in `data`; der Store lehnt dort
+Nicht-`same_as`- oder inaktive Links ab. Bestehende Logs ohne diese Daten spielen
+unverändert ab. Neu abgelehnt: direkte Store-Schreibzugriffe neben der Sitzung (auch
+zur gleichen Uhrzeit). Nach dem Review zusätzlich: `ReadSet.live=()` (R1-Read-Sets
+unverändert), `ConceptAgent.plan(budget=None)` (Standard = Vertragsbudget),
+`WorldSession.check()`, Übergangsdaten mit `perceived_in` (ältere Belege ohne Feld
+gelten als im eigenen Ereignis gewählt), `GoalSpec`/`TypedAction`/`VerificationRecord`
+validieren beim Bau. Verhaltensänderung in R1: `ConceptAgent.repair` übernimmt einen
+Ersatzbeleg nur mit `receipt="ok"`.
+
+**Offen (keine Scheinkompatibilität).** (a) Eine nach Split invalidierte Entität ist
+per Schlüssel nicht mehr abrufbar; eine gezielte Wiederaufnahme per Replay fehlt.
+(b) Identitätsabhängigkeit ist konservativ: alle aktiven Links der Aliasgruppe, nicht
+nur die kausal nötigen. (c) Zufällige Wahrnehmung findet die echten Maschinen selten;
+die Tests nutzen daher gelieferte Übergänge auf die eigene wahrgenommene Anordnung,
+das Leben gelieferte Pixel-Schlüssel – beides SOFTWARE. (d) Identitätsscorer,
+Aktionskodierer und Belief sind untrainiert; R2-Lernen wartet auf R1 C1/C2. (e) Das
+Neustartleben prüft Gleichheit von Plan und Zustand bei derselben letzten Beobachtung,
+nicht über eine neue Beobachtung. (f) Mehr als zwei Maschinen, Teilziele und
+Verdeckung sind nicht unterstützt (`ask` bzw. R3). (g) Exogene Weltänderungen ohne
+neue Beobachtung sind unerkennbar; ein Urteil gilt nur bis zur nächsten Beobachtung.
+(h) `execute` ohne `goal` ist die Primitive für bereits autorisierte Aktionen; nur
+`run_task` bzw. `execute(goal=…)` erzwingt Budget und Frist. (i) Ereignis-IDs `obs-N`
+zählen Beobachtungen; direkte Sitzungsaufrufer müssen andere IDs wählen. (j) Die
+Integritätsprüfung hasht alle Gewichte je Einstiegspunkt (klein genug für R2, für
+große Modelle durch Versionszähler zu ersetzen).

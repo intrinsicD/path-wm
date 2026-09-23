@@ -7,7 +7,7 @@ an explicit observation adapter responsibility.
 """
 
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
 import copy
 import torch
 
@@ -66,12 +66,27 @@ def packet_record(packet):
 
 
 @dataclass(frozen=True)
+class SourceItem:
+    """Extra source evidence published in the same observation event (e.g. a frame
+    blob, an action receipt/transition, a verifier record). `supersedes` names older
+    evidence from the same source and modality that this item replaces."""
+
+    source: str
+    modality: str
+    content_ref: str = ""
+    content_hash: str = ""
+    data: dict = field(default_factory=dict)
+    supersedes: str | None = None
+
+
+@dataclass(frozen=True)
 class _Bundle:
     store: WorldStore
     state: object
     decisions: dict
     rng: torch.Tensor
     cuda_rng: tuple
+    revision: int = -1  # store revision this session published; detects bypasses
 
 
 class WorldSession:
@@ -112,6 +127,7 @@ class WorldSession:
             if torch.cuda.is_initialized()
             else (),
         )
+        self._bundle = replace(self._bundle, revision=self._bundle.store.revision)
         if len(self._bundle.state.tokens) != 1 or self._bundle.state.imagined:
             raise ValueError("WorldSession needs one non-imagined agent state")
         self._check_models()
@@ -159,7 +175,9 @@ class WorldSession:
                 "Runtime modules must be in eval mode; use functional forwards for training"
             )
         events = self._bundle.store.events()
-        if events and events[-1].available_at > float(self._bundle.state.time[0]):
+        if self._bundle.store.revision != self._bundle.revision or (
+            events and events[-1].available_at > float(self._bundle.state.time[0])
+        ):
             raise ValueError(
                 "Store is ahead of the agent; publish updates through WorldSession.commit"
             )
@@ -167,6 +185,19 @@ class WorldSession:
     @property
     def store(self):
         return self._bundle.store
+
+    def check(self):
+        """Reject changed session weights, training mode or a bypassed store."""
+        self._check_models()
+
+    def decision(self, event_id):
+        """Published identity decisions of one observation event (a copy)."""
+        return copy.deepcopy(self._bundle.decisions[event_id])
+
+    @property
+    def time(self):
+        """The shared clock: agent time of the last published event."""
+        return float(self._bundle.state.time[0])
 
     @property
     def state(self):
@@ -191,12 +222,21 @@ class WorldSession:
         candidates=(),
         packets=(),
         action=None,
+        evidence=(),
+        packet_features=None,
         trace=None,
         save_to=None,
     ):
+        """`evidence`: extra `SourceItem`s of this event. `packet_features`: source ->
+        FeaturePyramid already encoded from that packet (derived; not fingerprinted)."""
         self._check_models()
         if len({c.id for c in candidates}) != len(candidates):
             raise ValueError("Candidate IDs must be unique within an event")
+        packet_features = dict(packet_features or {})
+        if not set(packet_features) <= {p.source for p in packets}:
+            raise ValueError("Packet features must name packets of this event")
+        if any(not isinstance(item, SourceItem) for item in evidence):
+            raise ValueError("Extra evidence must be SourceItem records")
         # Fingerprint input content before inference so completed retries bypass a now-changed graph.
         payload = dict(
             candidates=[candidate_record(c) for c in candidates],
@@ -205,6 +245,8 @@ class WorldSession:
             occurred_at=occurred_at,
             available_at=available_at,
         )
+        if evidence:
+            payload["evidence"] = [asdict(item) for item in evidence]
         payload = primitive(payload)
         existing = self.store.receipt(event_id, payload)
         if existing is not None:
@@ -219,6 +261,19 @@ class WorldSession:
             payload=payload,
         )
         decisions, claimed = [], set()
+        sources = []
+        for item in evidence:
+            sources.append(
+                tx.add_evidence(
+                    item.source,
+                    item.modality,
+                    content_ref=item.content_ref,
+                    content_hash=item.content_hash,
+                    data=item.data,
+                )
+            )
+            if item.supersedes is not None:
+                tx.supersede(item.supersedes, sources[-1])
         with self._rng():
             for c in candidates:
                 evidence = tx.add_evidence(
@@ -242,6 +297,7 @@ class WorldSession:
                 )
                 decision = self.binder(c, context, trace=trace)
                 owner = decision.entity_id
+                recognition, links = None, []
                 collision = (
                     (c.exclusive_group, view.canonical(owner))
                     if owner is not None
@@ -305,6 +361,16 @@ class WorldSession:
                         if trace is not None:
                             trace["update." + c.id + ".before"] = old
                             trace["update." + c.id + ".after"] = updated
+                        if decision.status == "matched":
+                            # The alias group the binder compared depends on these links.
+                            group = view.canonical(owner)
+                            links = sorted(
+                                r.id
+                                for r in view.relations()
+                                if r.type == "same_as"
+                                and r.active
+                                and view.canonical(r.source.ref) == group
+                            )
                         recognition = tx.put_component(
                             owner,
                             "recognition",
@@ -312,6 +378,7 @@ class WorldSession:
                             space=c.space,
                             model_version=c.model_version,
                             evidence=(evidence,),
+                            data=dict(identity_links=links) if links else None,
                         )
                         tx.put_component(
                             owner,
@@ -350,6 +417,8 @@ class WorldSession:
                         reason=decision.reason,
                         scores=decision.scores,
                         evidence=evidence,
+                        recognition=recognition,
+                        identity_links=links,
                     )
                 )
             receipt = draft.commit(tx)
@@ -362,9 +431,16 @@ class WorldSession:
                 trace=trace,
             )
             for packet in packets:
-                pending = self.agent.add_packet(pending, packet, trace=trace)
+                features = packet_features.get(packet.source)
+                pending = (
+                    self.agent.add_packet(pending, packet, trace=trace)
+                    if features is None
+                    else self.agent.add_packet(
+                        pending, packet, trace=trace, features=features
+                    )
+                )
             next_state = self.agent.commit_event(pending)
-            result = dict(receipt=receipt, bindings=decisions)
+            result = dict(receipt=receipt, bindings=decisions, evidence=sources)
             stored_decisions = {**original.decisions, event_id: result}
             bundle = _Bundle(
                 draft,
@@ -372,6 +448,7 @@ class WorldSession:
                 stored_decisions,
                 torch.get_rng_state().clone(),
                 tuple(torch.cuda.get_rng_state_all()) if original.cuda_rng else (),
+                draft.revision,
             )
             if self._bundle is not original or original.store.revision != base_revision:
                 raise ValueError("stale session update")
@@ -383,16 +460,32 @@ class WorldSession:
         return copy.deepcopy(result)
 
     @torch.no_grad()
-    def commit(self, transaction, *, trace=None, save_to=None):
-        """Publish a correction/internal transaction and its agent clock together."""
+    def commit(self, transaction, *, trace=None, save_to=None, advance_belief=True):
+        """Publish a correction/internal transaction and its agent clock together.
+
+        `advance_belief=False` publishes derived bookkeeping at the current clock
+        without a belief filter step (no time passed, nothing observed).
+        """
         self._check_models()
         if transaction.event.kind == "observation":
             raise ValueError("Use observe for source observations and packets")
         original = self._bundle
         revision = original.store.revision
+        if not advance_belief and transaction.event.available_at != self.time:
+            raise ValueError("Only records at the current clock may skip the belief step")
         draft = original.store.clone()
         receipt = draft.commit(transaction)
         if receipt["revision"] <= revision:
+            return receipt
+        if not advance_belief:
+            if self._bundle is not original or original.store.revision != revision:
+                raise ValueError("stale session update")
+            bundle = replace(original, store=draft, revision=draft.revision)
+            if save_to is not None:
+                atomic_torch(save_to, self._snapshot(bundle))
+            self._bundle = bundle
+            if trace is not None:
+                trace.record("commit", snapshot_diff(original.store, draft))
             return receipt
         with self._rng():
             pending = self.agent.begin_event(
@@ -406,6 +499,7 @@ class WorldSession:
             bundle = replace(
                 original,
                 store=draft,
+                revision=draft.revision,
                 state=state,
                 rng=torch.get_rng_state().clone(),
                 cuda_rng=tuple(torch.cuda.get_rng_state_all())

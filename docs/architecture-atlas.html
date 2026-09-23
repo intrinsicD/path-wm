@@ -927,7 +927,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Categorical entropy is a diagnostic; it is not established calibrated confidence or model-parameter uncertainty. The Gaussian log_scale inherited for compatibility is zero here, not the belief uncertainty.</p>
 <p>Complete dictionary events correct their canonical source union once. Streaming add_packet still exposes each intermediate posterior from the same prior. Equality assumes the current pure deterministic components; arbitrary dropout/stateful custom modules need separate checks.</p>
 <p>An optional LatentResampler bounds correction/evidence source keys, not the existing state cardinality. DefaultNone keeps source access and old checkpoints unchanged. K=64 is implemented and tested but not adopted: no runtime gain and no passing fine-detail quality evidence. This adds no persistent detail-memory store.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · correct_packets:361</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/belief_state.py">pathwm/models/belief_state.py · BeliefState:91</a></li><li><a href="../pathwm/models/resampler.py">pathwm/models/resampler.py</a></li><li><a href="../docs/token-budget-plan.md">docs/token-budget-plan.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · correct_packets:381</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/belief_state.py">pathwm/models/belief_state.py · BeliefState:91</a></li><li><a href="../pathwm/models/resampler.py">pathwm/models/resampler.py</a></li><li><a href="../docs/token-budget-plan.md">docs/token-budget-plan.md</a></li></ul></details>
 </div></details>
 <details id="05-memory">
 <summary><span>5 · Short and long session memory</span><small>HybridMemory · bounded storage mechanics plus learned compression and reading</small></summary>
@@ -2520,7 +2520,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>The task dispatcher already distinguishes internal think/recall/imagine from external act/ask/emit. General learned task decomposition, automatic state equivalence/graph merging, a universal success verifier and broad software-tool skills remain open.</p>
 <p>Prediction quality, goal readout quality and search coverage all constrain planning. A low imagined cost is not proof of realized success.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/evaluation/agent.py">pathwm/evaluation/agent.py · plan:23</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · imagine:519</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../pathwm/models/key_box.py">pathwm/models/key_box.py · plan_key:59</a></li><li><a href="../docs/decision-design.md">docs/decision-design.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/evaluation/agent.py">pathwm/evaluation/agent.py · plan:23</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · imagine:539</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../pathwm/models/key_box.py">pathwm/models/key_box.py · plan_key:59</a></li><li><a href="../docs/decision-design.md">docs/decision-design.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
 </div></details>
 <details id="12-learning">
 <summary><span>12 · Training signals and gradient routes</span><small>Recipe-selected objectives; no single checkpoint currently proves all capabilities</small></summary>
@@ -2927,7 +2927,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>22 September inference-engine discussion: user proposes on-demand trained model execution with a rendering-buffer analogy. Bounded GPU residency, RAM/SSD model source and shared features can implement this direction; active weights plus activations/workspaces/prefetch must fit, and eviction must preserve session/evidence state. No implementation or throughput validation. See docs/neural-engine-inference.md. Per-frame follow-up traces current source packet, once-per-event prior, shared R/B/P/C features, candidate matching, conditional details, evidence correction/commit and optional response. Actual BeliefAgent/WorldSession interfaces audited; supplied candidates do not implement natural-image detection. Inference state updates are separate from weight training.</p>
 <p>22 September image/video-understanding explanation: retain shared multiscale sources and core/entity memory; propose learning relational/event binding and actual evidence-based readout, not just geometry or cache execution. Existing 0/25 baseline and 1/25 controlled-order continuation are dated scoped evidence, not new full-system evaluation. Small real interaction/history task and source controls remain proposed. See docs/video-understanding-test-map.md. Follow-up asks whether every pixel must be segmented in every frame: distinguish shared visual features from dense mask outputs; conditional detail readers, temporal association and new-object/recovery coverage remain proposals. No fixed cadence or source-discarding rule adopted.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:187</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:77</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · ContextEncoder:346</a></li><li><a href="../pathwm/world_state/inspection.py">pathwm/world_state/inspection.py · WorldTrace:37</a></li><li><a href="../docs/world-state.md">docs/world-state.md</a></li><li><a href="../docs/world-state-foundation-plan.md">docs/world-state-foundation-plan.md</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · CandidateEncoder:30</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · ContextEncoder:346</a></li><li><a href="../pathwm/world_state/inspection.py">pathwm/world_state/inspection.py · WorldTrace:37</a></li><li><a href="../docs/world-state.md">docs/world-state.md</a></li><li><a href="../docs/world-state-foundation-plan.md">docs/world-state-foundation-plan.md</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · CandidateEncoder:30</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
 </div></details>
 <details id="14-latent-core">
 <summary><span>14 · Inside the latent core</span><small>Current categorical agent plus opt-in WorldSession · named roles are not guaranteed learned semantics</small></summary>
@@ -3175,7 +3175,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
 <p>Alex asks how to test a common representation across abstraction types. Proposed controlled comparison of shared format/shared operations, shared format/specialized operations, specialists and evidence retrieval; per-family transfer, interference, correction and resource controls. See docs/latent-concept-learning-review.md#prüfvorschlag-gemeinsame-repräsentation-über-abstraktionsarten. Proposal only; gates and budgets open, no validation or discussion-status promotion.</p>
 <p>Shared-abstraction implementation proposal: docs/shared-abstraction-spec.md defines G(S)-&gt;Z, shared F(x,Z), family/routing controls, weighted query loss, native operator alternatives, versioned evidence recomputation and information-aware test sizes. Actual Opus 5.5 max review; finite-generator and random-weight equation checks only. No trained abstraction capability, architecture adoption or validation-color promotion.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode:779</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · think:425</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../pathwm/evaluation/modality_suite.py">pathwm/evaluation/modality_suite.py</a></li><li><a href="../docs/modality-suites-plan.md">docs/modality-suites-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode:779</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · think:519</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../pathwm/evaluation/modality_suite.py">pathwm/evaluation/modality_suite.py</a></li><li><a href="../docs/modality-suites-plan.md">docs/modality-suites-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li></ul></details>
 </div></details>
 <details id="15-output-plan">
 <summary><span>15 · Shared latent thought, modality-specific readout</span><small>Optional readout loops tested; bounded repairs improve known fitting but direction and new combinations remain open</small></summary>
@@ -3577,208 +3577,233 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · VideoVAE:149</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · CausalLatentMixer:19</a></li><li><a href="../experiments/video_vae.py">experiments/video_vae.py</a></li><li><a href="../tests/test_video_vae.py">tests/test_video_vae.py</a></li><li><a href="../docs/shared-video-vae-plan.md">docs/shared-video-vae-plan.md</a></li><li><a href="../docs/video-context-plan.md">docs/video-context-plan.md</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · local_correlation:71</a></li><li><a href="../pathwm/data/video_order.py">pathwm/data/video_order.py · cyclic_pan_pairs:59</a></li><li><a href="../experiments/video_order.py">experiments/video_order.py · OrderReadout:55</a></li><li><a href="../docs/video-order-plan.md">docs/video-order-plan.md</a></li><li><a href="../docs/video-stability-plan.md">docs/video-stability-plan.md</a></li><li><a href="../docs/video-diversity-plan.md">docs/video-diversity-plan.md</a></li><li><a href="../docs/video-displacement-plan.md">docs/video-displacement-plan.md</a></li><li><a href="../docs/video-pair-center-plan.md">docs/video-pair-center-plan.md</a></li><li><a href="../docs/video-matching-plan.md">docs/video-matching-plan.md</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · CorrespondenceDirectionHead:96</a></li><li><a href="../tests/test_video_evidence.py">tests/test_video_evidence.py</a></li><li><a href="../docs/video-evidence-plan.md">docs/video-evidence-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../docs/visual-codec-review.md">docs/visual-codec-review.md</a></li></ul></details>
 </div></details>
 <details id="17-integrated-latent-agent">
-<summary><span>17 · Integrated latent agent: reference architecture</span><small>R1 two-machine pixel reference · executable integration and scoped tests · learned development underway</small></summary>
-<div class="section-body"><div class="diagram" role="img" aria-label="17 · Integrated latent agent: reference architecture. R1 two-machine pixel reference · executable integration and scoped tests · learned development underway"><svg style="min-width:647px" width="808pt" height="923pt"
- viewBox="0.00 0.00 808.00 923.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="17-integrated-latent-agent-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 909.04)">
+<summary><span>17 · Integrated latent agent: reference architecture</span><small>R1 pixel reference + R2 shared session · software contracts verified · learned gates still open</small></summary>
+<div class="section-body"><div class="diagram" role="img" aria-label="17 · Integrated latent agent: reference architecture. R1 pixel reference + R2 shared session · software contracts verified · learned gates still open"><svg style="min-width:857px" width="1071pt" height="1076pt"
+ viewBox="0.00 0.00 1071.00 1076.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="17-integrated-latent-agent-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 1061.36)">
 <title>G</title>
-<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-909.04 793.58,-909.04 793.58,14.4 -14.4,14.4"/>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1061.36 1057.1,-1061.36 1057.1,14.4 -14.4,14.4"/>
 <!-- observe&#45;&gt;pyramid -->
 <g id="17-integrated-latent-agent-edge1" class="edge">
 <title>observe&#45;&gt;pyramid</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M335.93,-858.15C317.39,-844.95 291.48,-826.51 269.53,-810.89"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="271.03,-808.96 263.91,-806.89 268.19,-812.95 271.03,-808.96"/>
-<text xml:space="preserve" text-anchor="middle" x="360.79" y="-828.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">encode source once</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M177.6,-1010.47C203.19,-996.99 239.17,-978.03 269.22,-962.2"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="270.19,-964.46 275.25,-959.02 267.91,-960.12 270.19,-964.46"/>
+<text xml:space="preserve" text-anchor="middle" x="290.18" y="-981.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">encode source once</text>
 </g>
 <!-- observe&#45;&gt;store -->
 <g id="17-integrated-latent-agent-edge3" class="edge">
 <title>observe&#45;&gt;store</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M389.23,-858.22C405.05,-848.63 421.51,-838.64 421.51,-838.64 421.51,-838.64 438.82,-824.99 456.69,-810.9"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="457.98,-813 461.96,-806.74 454.95,-809.15 457.98,-813"/>
-<text xml:space="preserve" text-anchor="middle" x="512.69" y="-828.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">append exact source event</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M145.14,-1010.72C147.89,-946.32 157.4,-723.52 157.4,-723.52 157.4,-723.52 157.84,-718.87 158.45,-712.3"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="160.87,-712.74 159.08,-705.54 155.99,-712.28 160.87,-712.74"/>
+<text xml:space="preserve" text-anchor="middle" x="226.7" y="-868.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">append exact source event</text>
 </g>
 <!-- pyramid&#45;&gt;slots -->
 <g id="17-integrated-latent-agent-edge2" class="edge">
 <title>pyramid&#45;&gt;slots</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M226.51,-752.67C226.51,-735.94 226.51,-713.91 226.51,-695.71"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="228.96,-695.78 226.51,-688.78 224.06,-695.78 228.96,-695.78"/>
-<text xml:space="preserve" text-anchor="middle" x="301.67" y="-723.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">bounded consumer; source</text>
-<text xml:space="preserve" text-anchor="middle" x="301.67" y="-710.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M325.4,-904.98C325.4,-886.09 325.4,-860.19 325.4,-839.55"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="327.85,-839.73 325.4,-832.73 322.95,-839.73 327.85,-839.73"/>
+<text xml:space="preserve" text-anchor="middle" x="400.56" y="-875.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">bounded consumer; source</text>
+<text xml:space="preserve" text-anchor="middle" x="400.56" y="-862.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged</text>
+</g>
+<!-- pyramid&#45;&gt;other -->
+<g id="17-integrated-latent-agent-edge15" class="edge">
+<title>pyramid&#45;&gt;other</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M413.32,-904.99C448.3,-894.79 480.4,-885.44 480.4,-885.44 480.4,-885.44 521.54,-863.94 561.15,-843.24"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="561.97,-845.58 567.04,-840.16 559.7,-841.23 561.97,-845.58"/>
+<text xml:space="preserve" text-anchor="middle" x="627.25" y="-875.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">same encoded frame; capture time</text>
+<text xml:space="preserve" text-anchor="middle" x="627.25" y="-862.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">is metadata</text>
+</g>
+<!-- slots&#45;&gt;store -->
+<g id="17-integrated-latent-agent-edge16" class="edge">
+<title>slots&#45;&gt;store</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M247.03,-777.8C205.09,-764.05 161.97,-749.92 161.97,-749.92 161.97,-749.92 161.97,-723.52 161.97,-723.52 161.97,-723.52 162,-718.87 162.06,-712.3"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="164.51,-712.56 162.11,-705.55 159.61,-712.53 164.51,-712.56"/>
+<text xml:space="preserve" text-anchor="middle" x="247.68" y="-733.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">session owns temporal identity</text>
 </g>
 <!-- slots&#45;&gt;memory -->
 <g id="17-integrated-latent-agent-edge4" class="edge">
 <title>slots&#45;&gt;memory</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M223.24,-633.94C221.13,-617.45 218.34,-595.62 215.9,-576.61"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="218.35,-576.39 215.03,-569.76 213.49,-577.01 218.35,-576.39"/>
-<text xml:space="preserve" text-anchor="middle" x="294.09" y="-604.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">appearance and perceived</text>
-<text xml:space="preserve" text-anchor="middle" x="294.09" y="-591.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">transitions</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M329.69,-777.95C332.01,-764.16 334.4,-749.92 334.4,-749.92 334.4,-749.92 339.02,-639.36 341.64,-576.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="344.08,-576.87 341.93,-569.77 339.19,-576.66 344.08,-576.87"/>
+<text xml:space="preserve" text-anchor="middle" x="412.88" y="-672.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">appearance and perceived</text>
+<text xml:space="preserve" text-anchor="middle" x="412.88" y="-659.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">transitions</text>
 </g>
 <!-- slots&#45;&gt;core -->
 <g id="17-integrated-latent-agent-edge9" class="edge">
 <title>slots&#45;&gt;core</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M309.32,-633.95C342.28,-623.75 372.51,-614.4 372.51,-614.4 372.51,-614.4 378.51,-478.88 378.51,-478.88 378.51,-478.88 378.51,-465.68 378.51,-465.68 378.51,-465.68 369.81,-459.38 358.38,-451.11"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="359.83,-449.14 352.73,-447.02 356.96,-453.11 359.83,-449.14"/>
-<text xml:space="preserve" text-anchor="middle" x="464.29" y="-530.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">current scene +targeted action</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M367.72,-778C416.9,-748.38 491.4,-703.52 491.4,-703.52 491.4,-703.52 506.4,-568 506.4,-568 506.4,-568 512.4,-478.88 512.4,-478.88 512.4,-478.88 512.4,-452.48 512.4,-452.48 512.4,-452.48 503.18,-446.07 491.12,-437.68"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="492.68,-435.78 485.53,-433.79 489.88,-439.8 492.68,-435.78"/>
+<text xml:space="preserve" text-anchor="middle" x="590.8" y="-597.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">current scene +targeted action</text>
 </g>
 <!-- store&#45;&gt;memory -->
 <g id="17-integrated-latent-agent-edge5" class="edge">
 <title>store&#45;&gt;memory</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M476.19,-752.78C455.67,-725.68 426.16,-686.72 426.16,-686.72 426.16,-686.72 372.51,-588 372.51,-588 372.51,-588 349.96,-580.54 321.68,-571.19"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="322.56,-568.91 315.15,-569.03 321.03,-573.56 322.56,-568.91"/>
-<text xml:space="preserve" text-anchor="middle" x="494.84" y="-663.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">active evidence; revision</text>
-<text xml:space="preserve" text-anchor="middle" x="494.84" y="-650.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">invalidates derivatives</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M176.67,-634.05C185.84,-612.26 196.05,-588 196.05,-588 196.05,-588 216.22,-580.67 241.63,-571.43"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="242.36,-573.77 248.1,-569.08 240.68,-569.17 242.36,-573.77"/>
+<text xml:space="preserve" text-anchor="middle" x="264.73" y="-604.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">active evidence; revision</text>
+<text xml:space="preserve" text-anchor="middle" x="264.73" y="-591.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">invalidates derivatives</text>
 </g>
 <!-- memory&#45;&gt;core -->
 <g id="17-integrated-latent-agent-edge6" class="edge">
 <title>memory&#45;&gt;core</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M236.95,-498.6C248.06,-484.38 261.08,-467.71 272.72,-452.82"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="274.55,-454.46 276.93,-447.43 270.68,-451.44 274.55,-454.46"/>
-<text xml:space="preserve" text-anchor="middle" x="316.96" y="-468.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">support tokens for G</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M366.62,-498.53C381.54,-476.74 398.15,-452.48 398.15,-452.48 398.15,-452.48 401.82,-447.2 406.86,-439.95"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="408.87,-441.35 410.86,-434.21 404.85,-438.55 408.87,-441.35"/>
+<text xml:space="preserve" text-anchor="middle" x="454.77" y="-462.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">support tokens for G</text>
 </g>
 <!-- code&#45;&gt;core -->
 <g id="17-integrated-latent-agent-edge8" class="edge">
 <title>code&#45;&gt;core</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M214.93,-302.28C247.27,-316.03 280.51,-330.16 280.51,-330.16 280.51,-330.16 286.09,-348.73 291.86,-367.97"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="289.5,-368.61 293.85,-374.62 294.19,-367.21 289.5,-368.61"/>
-<text xml:space="preserve" text-anchor="middle" x="354.05" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved Z conditions T</text>
-</g>
-<!-- code&#45;&gt;other -->
-<g id="17-integrated-latent-agent-edge15" class="edge">
-<title>code&#45;&gt;other</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M154.51,-249.17C154.51,-230.68 154.51,-205.23 154.51,-183.66"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="156.96,-183.66 154.51,-176.66 152.06,-183.66 156.96,-183.66"/>
-<text xml:space="preserve" text-anchor="middle" x="233.46" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">declared compatible context</text>
-<text xml:space="preserve" text-anchor="middle" x="233.46" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">adapter</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M302.76,-289.08C342.03,-302.83 382.4,-316.96 382.4,-316.96 382.4,-316.96 395.15,-336.2 408.15,-355.81"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="406.1,-357.14 412,-361.62 410.18,-354.43 406.1,-357.14"/>
+<text xml:space="preserve" text-anchor="middle" x="465.32" y="-326.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved Z conditions T</text>
 </g>
 <!-- core&#45;&gt;code -->
 <g id="17-integrated-latent-agent-edge7" class="edge">
 <title>core&#45;&gt;code</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M191.77,-376.05C156.82,-365.48 127.28,-356.56 127.28,-356.56 127.28,-356.56 127.28,-330.16 127.28,-330.16 127.28,-330.16 132.06,-320.76 137.62,-309.83"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="139.79,-310.96 140.78,-303.61 135.43,-308.74 139.79,-310.96"/>
-<text xml:space="preserve" text-anchor="middle" x="203.4" y="-346.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">infer reusable Z with frozen</text>
-<text xml:space="preserve" text-anchor="middle" x="203.4" y="-333.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">weights</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M304.21,-362.85C263.54,-352.28 229.17,-343.36 229.17,-343.36 229.17,-343.36 229.17,-316.96 229.17,-316.96 229.17,-316.96 229.21,-308.09 229.26,-297.58"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="231.71,-297.6 229.29,-290.59 226.81,-297.58 231.71,-297.6"/>
+<text xml:space="preserve" text-anchor="middle" x="305.29" y="-333.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">infer reusable Z with frozen</text>
+<text xml:space="preserve" text-anchor="middle" x="305.29" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">weights</text>
 </g>
 <!-- core&#45;&gt;plan -->
 <g id="17-integrated-latent-agent-edge11" class="edge">
 <title>core&#45;&gt;plan</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M380.85,-376.05C404.52,-365.48 424.51,-356.56 424.51,-356.56 424.51,-356.56 436.06,-337.32 447.83,-317.71"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="449.8,-319.2 451.3,-311.94 445.6,-316.68 449.8,-319.2"/>
-<text xml:space="preserve" text-anchor="middle" x="512.83" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">predicted latent outcomes</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M501.56,-362.85C522.07,-352.28 539.4,-343.36 539.4,-343.36 539.4,-343.36 549.66,-324.29 560.15,-304.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="562.22,-306.1 563.38,-298.78 557.9,-303.78 562.22,-306.1"/>
+<text xml:space="preserve" text-anchor="middle" x="626.1" y="-326.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">predicted latent outcomes</text>
 </g>
 <!-- goal&#45;&gt;plan -->
 <g id="17-integrated-latent-agent-edge10" class="edge">
 <title>goal&#45;&gt;plan</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M637.68,-384.82C617.46,-361.39 590.51,-330.16 590.51,-330.16 590.51,-330.16 575.05,-323.14 555.32,-314.19"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="556.48,-312.02 549.09,-311.36 554.45,-316.48 556.48,-312.02"/>
-<text xml:space="preserve" text-anchor="middle" x="671.38" y="-340.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">goal and action costs</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M724.59,-371.62C715.51,-348.19 703.4,-316.96 703.4,-316.96 703.4,-316.96 687.41,-309.88 667.05,-300.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="668.29,-298.74 660.9,-298.15 666.31,-303.22 668.29,-298.74"/>
+<text xml:space="preserve" text-anchor="middle" x="771.98" y="-326.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">goal and action costs</text>
 </g>
 <!-- plan&#45;&gt;execute -->
 <g id="17-integrated-latent-agent-edge12" class="edge">
 <title>plan&#45;&gt;execute</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M472.51,-240.56C472.51,-220.51 472.51,-195.21 472.51,-175.15"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="474.96,-175.29 472.51,-168.29 470.06,-175.29 474.96,-175.29"/>
-<text xml:space="preserve" text-anchor="middle" x="548.86" y="-204.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">chosen action with read&#45;set</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M582.4,-227.56C582.4,-213.85 582.4,-197.87 582.4,-183.4"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="584.85,-183.74 582.4,-176.74 579.95,-183.74 584.85,-183.74"/>
+<text xml:space="preserve" text-anchor="middle" x="658.75" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">chosen action with read&#45;set</text>
 </g>
 <!-- execute&#45;&gt;observe -->
 <g id="17-integrated-latent-agent-edge13" class="edge">
 <title>execute&#45;&gt;observe</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M546.35,-166.76C585.88,-180.51 626.51,-194.64 626.51,-194.64 626.51,-194.64 626.51,-221.04 626.51,-221.04 626.51,-221.04 590.51,-356.56 590.51,-356.56 590.51,-356.56 529.51,-376.56 529.51,-376.56 529.51,-376.56 529.51,-445.68 529.51,-445.68 529.51,-445.68 555.51,-498.88 555.51,-498.88 555.51,-498.88 646.51,-753.12 646.51,-753.12 646.51,-753.12 646.51,-805.44 646.51,-805.44 646.51,-805.44 592.51,-838.64 592.51,-838.64 592.51,-838.64 536.05,-847.64 478.84,-856.77"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="478.57,-854.33 472.04,-857.85 479.34,-859.17 478.57,-854.33"/>
-<text xml:space="preserve" text-anchor="middle" x="623.87" y="-530.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">actual feedback</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M682.91,-175.15C714.07,-185.72 740.4,-194.64 740.4,-194.64 740.4,-194.64 835.4,-316.96 835.4,-316.96 835.4,-316.96 864.4,-363.36 864.4,-363.36 864.4,-363.36 864.4,-432.48 864.4,-432.48 864.4,-432.48 725.5,-588 725.5,-588 725.5,-588 725.5,-614.4 725.5,-614.4 725.5,-614.4 788.4,-769.92 788.4,-769.92 788.4,-769.92 788.4,-839.04 788.4,-839.04 788.4,-839.04 729.4,-885.44 729.4,-885.44 729.4,-885.44 350.4,-990.96 350.4,-990.96 350.4,-990.96 300.88,-999.85 250.4,-1008.92"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="250.07,-1006.49 243.61,-1010.14 250.93,-1011.31 250.07,-1006.49"/>
+<text xml:space="preserve" text-anchor="middle" x="769.45" y="-597.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">actual feedback</text>
 </g>
 <!-- execute&#45;&gt;verify -->
 <g id="17-integrated-latent-agent-edge14" class="edge">
 <title>execute&#45;&gt;verify</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M472.51,-113.4C472.51,-97.91 472.51,-77.97 472.51,-61.18"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="474.96,-61.38 472.51,-54.38 470.06,-61.38 474.96,-61.38"/>
-<text xml:space="preserve" text-anchor="middle" x="551.7" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">receipt and actual goal state</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M582.4,-105.2C582.4,-91.24 582.4,-75.1 582.4,-61.13"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="584.85,-61.41 582.4,-54.41 579.95,-61.42 584.85,-61.41"/>
+<text xml:space="preserve" text-anchor="middle" x="661.59" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">receipt and actual goal state</text>
+</g>
+<!-- execute&#45;&gt;other -->
+<g id="17-integrated-latent-agent-edge18" class="edge">
+<title>execute&#45;&gt;other</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M724.26,-175.15C768.24,-185.72 805.4,-194.64 805.4,-194.64 805.4,-194.64 905.4,-316.96 905.4,-316.96 905.4,-316.96 905.4,-343.36 905.4,-343.36 905.4,-343.36 901.4,-432.48 901.4,-432.48 901.4,-432.48 818.4,-614.4 818.4,-614.4 818.4,-614.4 726.51,-708.32 672.25,-763.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="670.78,-761.77 667.64,-768.49 674.29,-765.2 670.78,-761.77"/>
+<text xml:space="preserve" text-anchor="middle" x="967.35" y="-468.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">executed action only; not a</text>
+<text xml:space="preserve" text-anchor="middle" x="967.35" y="-455.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">second planner</text>
+</g>
+<!-- other&#45;&gt;store -->
+<g id="17-integrated-latent-agent-edge17" class="edge">
+<title>other&#45;&gt;store</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M513.33,-769.44C445.23,-750.14 360.02,-725.98 290.61,-706.31"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="291.67,-704.06 284.26,-704.51 290.33,-708.77 291.67,-704.06"/>
+<text xml:space="preserve" text-anchor="middle" x="513.34" y="-740.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observed belief shares the</text>
+<text xml:space="preserve" text-anchor="middle" x="513.34" y="-726.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">atomic event</text>
 </g>
 <!-- observe -->
 <g id="17-integrated-latent-agent-node1" class="node">
 <title>observe</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M492.91,-894.64C492.91,-894.64 228.11,-894.64 228.11,-894.64 222.11,-894.64 216.11,-888.64 216.11,-882.64 216.11,-882.64 216.11,-870.64 216.11,-870.64 216.11,-864.64 222.11,-858.64 228.11,-858.64 228.11,-858.64 492.91,-858.64 492.91,-858.64 498.91,-858.64 504.91,-864.64 504.91,-870.64 504.91,-870.64 504.91,-882.64 504.91,-882.64 504.91,-888.64 498.91,-894.64 492.91,-894.64"/>
-<text xml:space="preserve" text-anchor="middle" x="360.51" y="-872.44" font-family="DejaVu Sans" font-size="14.00">Observed pixels + execution receipts</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M276.8,-1046.96C276.8,-1046.96 12,-1046.96 12,-1046.96 6,-1046.96 0,-1040.96 0,-1034.96 0,-1034.96 0,-1022.96 0,-1022.96 0,-1016.96 6,-1010.96 12,-1010.96 12,-1010.96 276.8,-1010.96 276.8,-1010.96 282.8,-1010.96 288.8,-1016.96 288.8,-1022.96 288.8,-1022.96 288.8,-1034.96 288.8,-1034.96 288.8,-1040.96 282.8,-1046.96 276.8,-1046.96"/>
+<text xml:space="preserve" text-anchor="middle" x="144.4" y="-1024.76" font-family="DejaVu Sans" font-size="14.00">Observed pixels + execution receipts</text>
 </g>
 <!-- pyramid -->
 <g id="17-integrated-latent-agent-node2" class="node">
 <title>pyramid</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M321.72,-805.44C321.72,-805.44 131.3,-805.44 131.3,-805.44 125.3,-805.44 119.3,-799.44 119.3,-793.44 119.3,-793.44 119.3,-765.12 119.3,-765.12 119.3,-759.12 125.3,-753.12 131.3,-753.12 131.3,-753.12 321.72,-753.12 321.72,-753.12 327.72,-753.12 333.72,-759.12 333.72,-765.12 333.72,-765.12 333.72,-793.44 333.72,-793.44 333.72,-799.44 327.72,-805.44 321.72,-805.44"/>
-<text xml:space="preserve" text-anchor="middle" x="226.51" y="-783.48" font-family="DejaVu Sans" font-size="14.00">Shared multiscale features</text>
-<text xml:space="preserve" text-anchor="middle" x="226.51" y="-766.68" font-family="DejaVu Sans" font-size="14.00">256 + 64 tokens, width64</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M420.61,-957.76C420.61,-957.76 230.19,-957.76 230.19,-957.76 224.19,-957.76 218.19,-951.76 218.19,-945.76 218.19,-945.76 218.19,-917.44 218.19,-917.44 218.19,-911.44 224.19,-905.44 230.19,-905.44 230.19,-905.44 420.61,-905.44 420.61,-905.44 426.61,-905.44 432.61,-911.44 432.61,-917.44 432.61,-917.44 432.61,-945.76 432.61,-945.76 432.61,-951.76 426.61,-957.76 420.61,-957.76"/>
+<text xml:space="preserve" text-anchor="middle" x="325.4" y="-935.8" font-family="DejaVu Sans" font-size="14.00">Shared multiscale features</text>
+<text xml:space="preserve" text-anchor="middle" x="325.4" y="-919" font-family="DejaVu Sans" font-size="14.00">256 + 64 tokens, width64</text>
 </g>
 <!-- slots -->
 <g id="17-integrated-latent-agent-node3" class="node">
 <title>slots</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M357.51,-686.72C357.51,-686.72 95.51,-686.72 95.51,-686.72 89.51,-686.72 83.51,-680.72 83.51,-674.72 83.51,-674.72 83.51,-646.4 83.51,-646.4 83.51,-640.4 89.51,-634.4 95.51,-634.4 95.51,-634.4 357.51,-634.4 357.51,-634.4 363.51,-634.4 369.51,-640.4 369.51,-646.4 369.51,-646.4 369.51,-674.72 369.51,-674.72 369.51,-680.72 363.51,-686.72 357.51,-686.72"/>
-<text xml:space="preserve" text-anchor="middle" x="226.51" y="-664.76" font-family="DejaVu Sans" font-size="14.00">7 learned slots</text>
-<text xml:space="preserve" text-anchor="middle" x="226.51" y="-647.96" font-family="DejaVu Sans" font-size="14.00">2 machines +4 objects +background</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M456.4,-830.64C456.4,-830.64 194.4,-830.64 194.4,-830.64 188.4,-830.64 182.4,-824.64 182.4,-818.64 182.4,-818.64 182.4,-790.32 182.4,-790.32 182.4,-784.32 188.4,-778.32 194.4,-778.32 194.4,-778.32 456.4,-778.32 456.4,-778.32 462.4,-778.32 468.4,-784.32 468.4,-790.32 468.4,-790.32 468.4,-818.64 468.4,-818.64 468.4,-824.64 462.4,-830.64 456.4,-830.64"/>
+<text xml:space="preserve" text-anchor="middle" x="325.4" y="-808.68" font-family="DejaVu Sans" font-size="14.00">7 learned slots</text>
+<text xml:space="preserve" text-anchor="middle" x="325.4" y="-791.88" font-family="DejaVu Sans" font-size="14.00">2 machines +4 objects +background</text>
 </g>
 <!-- store -->
 <g id="17-integrated-latent-agent-node4" class="node">
 <title>store</title>
-<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M624.97,-805.44C624.97,-805.44 366.06,-805.44 366.06,-805.44 360.06,-805.44 354.06,-799.44 354.06,-793.44 354.06,-793.44 354.06,-765.12 354.06,-765.12 354.06,-759.12 360.06,-753.12 366.06,-753.12 366.06,-753.12 624.97,-753.12 624.97,-753.12 630.97,-753.12 636.97,-759.12 636.97,-765.12 636.97,-765.12 636.97,-793.44 636.97,-793.44 636.97,-799.44 630.97,-805.44 624.97,-805.44"/>
-<text xml:space="preserve" text-anchor="middle" x="495.51" y="-783.48" font-family="DejaVu Sans" font-size="14.00">WorldStore + content&#45;hashed blobs</text>
-<text xml:space="preserve" text-anchor="middle" x="495.51" y="-766.68" font-family="DejaVu Sans" font-size="14.00">Authoritative evidence and revisions</text>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M282.16,-703.52C282.16,-703.52 42.64,-703.52 42.64,-703.52 36.64,-703.52 30.64,-697.52 30.64,-691.52 30.64,-691.52 30.64,-646.4 30.64,-646.4 30.64,-640.4 36.64,-634.4 42.64,-634.4 42.64,-634.4 282.16,-634.4 282.16,-634.4 288.16,-634.4 294.16,-640.4 294.16,-646.4 294.16,-646.4 294.16,-691.52 294.16,-691.52 294.16,-697.52 288.16,-703.52 282.16,-703.52"/>
+<text xml:space="preserve" text-anchor="middle" x="162.4" y="-681.56" font-family="DejaVu Sans" font-size="14.00">WorldSession: one store +clock</text>
+<text xml:space="preserve" text-anchor="middle" x="162.4" y="-664.76" font-family="DejaVu Sans" font-size="14.00">Source events, instance identities</text>
+<text xml:space="preserve" text-anchor="middle" x="162.4" y="-647.96" font-family="DejaVu Sans" font-size="14.00">Atomic publication and revisions</text>
 </g>
 <!-- memory -->
 <g id="17-integrated-latent-agent-node5" class="node">
 <title>memory</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M347.47,-568C347.47,-568 73.55,-568 73.55,-568 67.55,-568 61.55,-562 61.55,-556 61.55,-556 61.55,-510.88 61.55,-510.88 61.55,-504.88 67.55,-498.88 73.55,-498.88 73.55,-498.88 347.47,-498.88 347.47,-498.88 353.47,-498.88 359.47,-504.88 359.47,-510.88 359.47,-510.88 359.47,-556 359.47,-556 359.47,-562 353.47,-568 347.47,-568"/>
-<text xml:space="preserve" text-anchor="middle" x="210.51" y="-546.04" font-family="DejaVu Sans" font-size="14.00">ConceptMemory</text>
-<text xml:space="preserve" text-anchor="middle" x="210.51" y="-529.24" font-family="DejaVu Sans" font-size="14.00">Appearance proposal +behavior check</text>
-<text xml:space="preserve" text-anchor="middle" x="210.51" y="-512.44" font-family="DejaVu Sans" font-size="14.00">Create / retrieve / recompute</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M484.8,-568C484.8,-568 202,-568 202,-568 196,-568 190,-562 190,-556 190,-556 190,-510.88 190,-510.88 190,-504.88 196,-498.88 202,-498.88 202,-498.88 484.8,-498.88 484.8,-498.88 490.8,-498.88 496.8,-504.88 496.8,-510.88 496.8,-510.88 496.8,-556 496.8,-556 496.8,-562 490.8,-568 484.8,-568"/>
+<text xml:space="preserve" text-anchor="middle" x="343.4" y="-546.04" font-family="DejaVu Sans" font-size="14.00">ConceptMemory session client</text>
+<text xml:space="preserve" text-anchor="middle" x="343.4" y="-529.24" font-family="DejaVu Sans" font-size="14.00">Appearance proposal +behaviour check</text>
+<text xml:space="preserve" text-anchor="middle" x="343.4" y="-512.44" font-family="DejaVu Sans" font-size="14.00">Rebuild from active evidence</text>
 </g>
 <!-- code -->
 <g id="17-integrated-latent-agent-node6" class="node">
 <title>code</title>
-<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M288.18,-301.76C288.18,-301.76 20.85,-301.76 20.85,-301.76 14.85,-301.76 8.85,-295.76 8.85,-289.76 8.85,-289.76 8.85,-261.44 8.85,-261.44 8.85,-255.44 14.85,-249.44 20.85,-249.44 20.85,-249.44 288.18,-249.44 288.18,-249.44 294.18,-249.44 300.18,-255.44 300.18,-261.44 300.18,-261.44 300.18,-289.76 300.18,-289.76 300.18,-295.76 294.18,-301.76 288.18,-301.76"/>
-<text xml:space="preserve" text-anchor="middle" x="154.51" y="-279.8" font-family="DejaVu Sans" font-size="14.00">Persistent derived concept Z</text>
-<text xml:space="preserve" text-anchor="middle" x="154.51" y="-263" font-family="DejaVu Sans" font-size="14.00">4 tokens x64, evidence dependencies</text>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M363.07,-288.56C363.07,-288.56 95.74,-288.56 95.74,-288.56 89.74,-288.56 83.74,-282.56 83.74,-276.56 83.74,-276.56 83.74,-248.24 83.74,-248.24 83.74,-242.24 89.74,-236.24 95.74,-236.24 95.74,-236.24 363.07,-236.24 363.07,-236.24 369.07,-236.24 375.07,-242.24 375.07,-248.24 375.07,-248.24 375.07,-276.56 375.07,-276.56 375.07,-282.56 369.07,-288.56 363.07,-288.56"/>
+<text xml:space="preserve" text-anchor="middle" x="229.4" y="-266.6" font-family="DejaVu Sans" font-size="14.00">Persistent derived concept Z</text>
+<text xml:space="preserve" text-anchor="middle" x="229.4" y="-249.8" font-family="DejaVu Sans" font-size="14.00">4 tokens x64, evidence dependencies</text>
 </g>
 <!-- core -->
 <g id="17-integrated-latent-agent-node7" class="node">
 <title>core</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M423.64,-445.68C423.64,-445.68 185.38,-445.68 185.38,-445.68 179.38,-445.68 173.38,-439.68 173.38,-433.68 173.38,-433.68 173.38,-388.56 173.38,-388.56 173.38,-382.56 179.38,-376.56 185.38,-376.56 185.38,-376.56 423.64,-376.56 423.64,-376.56 429.64,-376.56 435.64,-382.56 435.64,-388.56 435.64,-388.56 435.64,-433.68 435.64,-433.68 435.64,-439.68 429.64,-445.68 423.64,-445.68"/>
-<text xml:space="preserve" text-anchor="middle" x="304.51" y="-423.72" font-family="DejaVu Sans" font-size="14.00">Shared recurrent G / T core</text>
-<text xml:space="preserve" text-anchor="middle" x="304.51" y="-406.92" font-family="DejaVu Sans" font-size="14.00">Infer concepts and predict effects</text>
-<text xml:space="preserve" text-anchor="middle" x="304.51" y="-390.12" font-family="DejaVu Sans" font-size="14.00">Two tied loops by default</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M554.53,-432.48C554.53,-432.48 316.27,-432.48 316.27,-432.48 310.27,-432.48 304.27,-426.48 304.27,-420.48 304.27,-420.48 304.27,-375.36 304.27,-375.36 304.27,-369.36 310.27,-363.36 316.27,-363.36 316.27,-363.36 554.53,-363.36 554.53,-363.36 560.53,-363.36 566.53,-369.36 566.53,-375.36 566.53,-375.36 566.53,-420.48 566.53,-420.48 566.53,-426.48 560.53,-432.48 554.53,-432.48"/>
+<text xml:space="preserve" text-anchor="middle" x="435.4" y="-410.52" font-family="DejaVu Sans" font-size="14.00">Shared recurrent G / T core</text>
+<text xml:space="preserve" text-anchor="middle" x="435.4" y="-393.72" font-family="DejaVu Sans" font-size="14.00">Infer concepts and predict effects</text>
+<text xml:space="preserve" text-anchor="middle" x="435.4" y="-376.92" font-family="DejaVu Sans" font-size="14.00">Two tied loops by default</text>
 </g>
 <!-- goal -->
 <g id="17-integrated-latent-agent-node8" class="node">
 <title>goal</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M767.18,-437.28C767.18,-437.28 551.85,-437.28 551.85,-437.28 545.85,-437.28 539.85,-431.28 539.85,-425.28 539.85,-425.28 539.85,-396.96 539.85,-396.96 539.85,-390.96 545.85,-384.96 551.85,-384.96 551.85,-384.96 767.18,-384.96 767.18,-384.96 773.18,-384.96 779.18,-390.96 779.18,-396.96 779.18,-396.96 779.18,-425.28 779.18,-425.28 779.18,-431.28 773.18,-437.28 767.18,-437.28"/>
-<text xml:space="preserve" text-anchor="middle" x="659.51" y="-415.32" font-family="DejaVu Sans" font-size="14.00">Typed two&#45;lamp goal +budget</text>
-<text xml:space="preserve" text-anchor="middle" x="659.51" y="-398.52" font-family="DejaVu Sans" font-size="14.00">One utility contract</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M842.07,-424.08C842.07,-424.08 626.74,-424.08 626.74,-424.08 620.74,-424.08 614.74,-418.08 614.74,-412.08 614.74,-412.08 614.74,-383.76 614.74,-383.76 614.74,-377.76 620.74,-371.76 626.74,-371.76 626.74,-371.76 842.07,-371.76 842.07,-371.76 848.07,-371.76 854.07,-377.76 854.07,-383.76 854.07,-383.76 854.07,-412.08 854.07,-412.08 854.07,-418.08 848.07,-424.08 842.07,-424.08"/>
+<text xml:space="preserve" text-anchor="middle" x="734.4" y="-402.12" font-family="DejaVu Sans" font-size="14.00">Typed two&#45;lamp goal +budget</text>
+<text xml:space="preserve" text-anchor="middle" x="734.4" y="-385.32" font-family="DejaVu Sans" font-size="14.00">One utility contract</text>
 </g>
 <!-- plan -->
 <g id="17-integrated-latent-agent-node9" class="node">
 <title>plan</title>
-<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M548.05,-310.16C548.05,-310.16 396.97,-310.16 396.97,-310.16 390.97,-310.16 384.97,-304.16 384.97,-298.16 384.97,-298.16 384.97,-253.04 384.97,-253.04 384.97,-247.04 390.97,-241.04 396.97,-241.04 396.97,-241.04 548.05,-241.04 548.05,-241.04 554.05,-241.04 560.05,-247.04 560.05,-253.04 560.05,-253.04 560.05,-298.16 560.05,-298.16 560.05,-304.16 554.05,-310.16 548.05,-310.16"/>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-288.2" font-family="DejaVu Sans" font-size="14.00">Latent action rollouts</text>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-271.4" font-family="DejaVu Sans" font-size="14.00">At most two presses</text>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-254.6" font-family="DejaVu Sans" font-size="14.00">No simulator access</text>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M657.94,-296.96C657.94,-296.96 506.86,-296.96 506.86,-296.96 500.86,-296.96 494.86,-290.96 494.86,-284.96 494.86,-284.96 494.86,-239.84 494.86,-239.84 494.86,-233.84 500.86,-227.84 506.86,-227.84 506.86,-227.84 657.94,-227.84 657.94,-227.84 663.94,-227.84 669.94,-233.84 669.94,-239.84 669.94,-239.84 669.94,-284.96 669.94,-284.96 669.94,-290.96 663.94,-296.96 657.94,-296.96"/>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-275" font-family="DejaVu Sans" font-size="14.00">Latent action rollouts</text>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-258.2" font-family="DejaVu Sans" font-size="14.00">At most two presses</text>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-241.4" font-family="DejaVu Sans" font-size="14.00">No simulator access</text>
 </g>
 <!-- execute -->
 <g id="17-integrated-latent-agent-node10" class="node">
 <title>execute</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M587.95,-166.24C587.95,-166.24 357.07,-166.24 357.07,-166.24 351.07,-166.24 345.07,-160.24 345.07,-154.24 345.07,-154.24 345.07,-125.92 345.07,-125.92 345.07,-119.92 351.07,-113.92 357.07,-113.92 357.07,-113.92 587.95,-113.92 587.95,-113.92 593.95,-113.92 599.95,-119.92 599.95,-125.92 599.95,-125.92 599.95,-154.24 599.95,-154.24 599.95,-160.24 593.95,-166.24 587.95,-166.24"/>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-144.28" font-family="DejaVu Sans" font-size="14.00">Ground slot pointers to clicks</text>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-127.48" font-family="DejaVu Sans" font-size="14.00">Check read&#45;set before execution</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M713.51,-174.64C713.51,-174.64 451.3,-174.64 451.3,-174.64 445.3,-174.64 439.3,-168.64 439.3,-162.64 439.3,-162.64 439.3,-117.52 439.3,-117.52 439.3,-111.52 445.3,-105.52 451.3,-105.52 451.3,-105.52 713.51,-105.52 713.51,-105.52 719.51,-105.52 725.51,-111.52 725.51,-117.52 725.51,-117.52 725.51,-162.64 725.51,-162.64 725.51,-168.64 719.51,-174.64 713.51,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Typed action &#45;&gt; grounded clicks</text>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Check observation, weights, read set</text>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Enforce task budget and deadline</text>
 </g>
 <!-- verify -->
 <g id="17-integrated-latent-agent-node11" class="node">
 <title>verify</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M585.46,-52.32C585.46,-52.32 359.56,-52.32 359.56,-52.32 353.56,-52.32 347.56,-46.32 347.56,-40.32 347.56,-40.32 347.56,-12 347.56,-12 347.56,-6 353.56,0 359.56,0 359.56,0 585.46,0 585.46,0 591.46,0 597.46,-6 597.46,-12 597.46,-12 597.46,-40.32 597.46,-40.32 597.46,-46.32 591.46,-52.32 585.46,-52.32"/>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Independent observed outcome</text>
-<text xml:space="preserve" text-anchor="middle" x="472.51" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Success / failed / unknown</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M695.35,-52.32C695.35,-52.32 469.45,-52.32 469.45,-52.32 463.45,-52.32 457.45,-46.32 457.45,-40.32 457.45,-40.32 457.45,-12 457.45,-12 457.45,-6 463.45,0 469.45,0 469.45,0 695.35,0 695.35,0 701.35,0 707.35,-6 707.35,-12 707.35,-12 707.35,-40.32 707.35,-40.32 707.35,-46.32 701.35,-52.32 695.35,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Independent observed outcome</text>
+<text xml:space="preserve" text-anchor="middle" x="582.4" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Success / failed / unknown</text>
 </g>
 <!-- other -->
 <g id="17-integrated-latent-agent-node12" class="node">
 <title>other</title>
-<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M297.02,-174.64C297.02,-174.64 12,-174.64 12,-174.64 6,-174.64 0,-168.64 0,-162.64 0,-162.64 0,-117.52 0,-117.52 0,-111.52 6,-105.52 12,-105.52 12,-105.52 297.02,-105.52 297.02,-105.52 303.02,-105.52 309.02,-111.52 309.02,-117.52 309.02,-117.52 309.02,-162.64 309.02,-162.64 309.02,-168.64 303.02,-174.64 297.02,-174.64"/>
-<text xml:space="preserve" text-anchor="middle" x="154.51" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Existing BeliefAgent / WorldSession</text>
-<text xml:space="preserve" text-anchor="middle" x="154.51" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Multimodal readers and outputs</text>
-<text xml:space="preserve" text-anchor="middle" x="154.51" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Connection contracts; evidence pending</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M766.74,-839.04C766.74,-839.04 500.07,-839.04 500.07,-839.04 494.07,-839.04 488.07,-833.04 488.07,-827.04 488.07,-827.04 488.07,-781.92 488.07,-781.92 488.07,-775.92 494.07,-769.92 500.07,-769.92 500.07,-769.92 766.74,-769.92 766.74,-769.92 772.74,-769.92 778.74,-775.92 778.74,-781.92 778.74,-781.92 778.74,-827.04 778.74,-827.04 778.74,-833.04 772.74,-839.04 766.74,-839.04"/>
+<text xml:space="preserve" text-anchor="middle" x="633.4" y="-817.08" font-family="DejaVu Sans" font-size="14.00">Belief filter +typed action encoder</text>
+<text xml:space="preserve" text-anchor="middle" x="633.4" y="-800.28" font-family="DejaVu Sans" font-size="14.00">Same source pyramid</text>
+<text xml:space="preserve" text-anchor="middle" x="633.4" y="-783.48" font-family="DejaVu Sans" font-size="14.00">R2 wiring; learned alignment pending</text>
 </g>
 </g>
 </svg>
@@ -3787,11 +3812,11 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p class="links"><a href="diagrams/atlas/17-integrated-latent-agent.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
 <p>Alex delegated architecture choices, Claude Opus5.5 high planning and implementation, and Codex review/test/fix. This is a reference integration of the full target, not a claim that the existing agent or all modalities are newly validated.</p>
 <p>Two independent machines make reachable two-press goals possible. With one binary lamp and static actions, every reachable goal is at most one press away. The new task explicitly adopts factorized dynamics and does not claim general long-horizon planning.</p>
-<p>The neural core never receives rule IDs, concept IDs, generator truth or oracle answers. Exact identity/source/version/action metadata remains outside latent inference. Train-only simulator supervision is declared separately.</p>
+<p>The integrated runtime infers from observed pixels and action evidence with frozen weights; hidden rule IDs and generator truth never enter runtime binding or planning. Separate oracle-code research probes are explicitly diagnostic. Training-only simulator supervision is disclosed.</p>
 <p>Likelihood and expected-utility planning use the unweighted outcome objective. Unknown does not mean impossible. Software, controlled learning and natural-data gates are separate; no new green scope follows from this diagram.</p>
 <p>Natural data, partial observability and broader modality/action capabilities have explicit connection contracts in the owning plan and require their own learned evidence. Existing discussion statuses are unchanged.</p>
-<p>The executable reference now includes frozen-weight action feedback, retained source corrections, restart, bounded derived caches and current-head read sets. CPU/GPU smoke reports and independent regressions establish software behavior only; full regression and learned gates are tracked in the owning plan.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../docs/integrated-architecture-plan.md">docs/integrated-architecture-plan.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeaturePyramid:35</a></li><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:187</a></li><li><a href="../pathwm/models/slots.py">pathwm/models/slots.py · SlotPerception:112</a></li><li><a href="../pathwm/models/latent_core.py">pathwm/models/latent_core.py · LatentCore:41</a></li><li><a href="../pathwm/world_state/concepts.py">pathwm/world_state/concepts.py · ConceptAgent:236</a></li><li><a href="../pathwm/data/rule_world.py">pathwm/data/rule_world.py · TaskContract:364</a></li><li><a href="../pathwm/evaluation/rule_world.py">pathwm/evaluation/rule_world.py · run_life:354</a></li><li><a href="../experiments/latent_agent.py">experiments/latent_agent.py</a></li></ul></details>
+<p>R2 now composes the existing session, belief and concept memory: one source encoding, one publication owner, explicit goals, revision-dependent actions, external verification and restart recovery. Independent adversarial tests verify software contracts only; trained identity, action/belief alignment and full-agent learning remain unestablished.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../docs/integrated-architecture-plan.md">docs/integrated-architecture-plan.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeaturePyramid:35</a></li><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/models/slots.py">pathwm/models/slots.py · SlotPerception:112</a></li><li><a href="../pathwm/models/latent_core.py">pathwm/models/latent_core.py · LatentCore:41</a></li><li><a href="../pathwm/world_state/concepts.py">pathwm/world_state/concepts.py · ConceptAgent:278</a></li><li><a href="../pathwm/data/rule_world.py">pathwm/data/rule_world.py · TaskContract:457</a></li><li><a href="../pathwm/evaluation/rule_world.py">pathwm/evaluation/rule_world.py · run_life:380</a></li><li><a href="../experiments/latent_agent.py">experiments/latent_agent.py</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/unified.py">pathwm/world_state/unified.py · UnifiedAgent:152</a></li><li><a href="../experiments/unified_session.py">experiments/unified_session.py</a></li><li><a href="../tests/test_unified_session.py">tests/test_unified_session.py</a></li></ul></details>
 </div></details>
 <footer>Grounded in repository snapshot 60d0eaa. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>

@@ -6,7 +6,7 @@ tokens into K slots (declared bottleneck). A broadcast decoder reconstructs RGB 
 per-slot alpha. Environment masks/attributes are training labels only.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from itertools import permutations
 
 import torch
@@ -140,10 +140,18 @@ class SlotPerception(nn.Module):
         times = torch.zeros(len(rgb), 1, device=rgb.device, dtype=rgb.dtype)
         return self.encoder(Observation(rgb[:, None], times))
 
+    def frame_pyramid(self, rgb, times):
+        """Frame-local encoding (t=0, as trained) stamped with capture times [B]."""
+        return at_time(self.pyramid(rgb), times)
+
     def forward(self, rgb):
         if rgb.ndim != 4 or rgb.shape[1:] != (3, 64, 64):
             raise ValueError("SlotPerception expects RGB [B,3,64,64]")
-        tokens = self.pyramid(rgb).as_tokens()
+        return self.from_pyramid(self.pyramid(rgb))
+
+    def from_pyramid(self, pyramid):
+        """Slot consumer of an already encoded pyramid (times are metadata only)."""
+        tokens = pyramid.as_tokens()
         slots = self.slot_attention(tokens.values, tokens.valid)
         colors, alpha = self.decoder(slots)
         recon = (alpha.softmax(1)[:, :, None] * colors).sum(1)
@@ -198,6 +206,24 @@ class SymbolicSlots(nn.Module):
             VALUES,
         ).float() * 40 - 20
         return Percept(slots, alpha, torch.zeros(b, 3, 64, 64, device=device), attributes, lamp_logits, kind_logits)
+
+
+def at_time(pyramid, times):
+    """Stamp a frame-local (t=0) pyramid with absolute capture times [B] as metadata.
+
+    The image encoder adds an absolute time position to feature values and R1
+    perception is trained at t=0, so values stay frame-local; only the metadata
+    (read by the belief as event age) carries capture time. Values are shared.
+    """
+    first = pyramid.scales[0].times
+    times = torch.as_tensor(times, device=first.device).reshape(len(first), 1)
+
+    def stamp(scale):
+        t = times.to(scale.times.dtype).expand_as(scale.times).masked_fill(~scale.valid, 0)
+        content = None if scale.content_times is None else t.to(scale.content_times.dtype)
+        return replace(scale, times=t, content_times=content)
+
+    return replace(pyramid, scales=tuple(stamp(s) for s in pyramid.scales))
 
 
 def pointer(alpha, xy):

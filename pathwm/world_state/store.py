@@ -1,6 +1,8 @@
 """Bounded single-writer store with replayable operations and revocable identity links.
 
 Four logical views share one revision. No implicit neural inference or eviction.
+Components may declare the identity links their attribution used
+(`data["identity_links"]`); withdrawing a link invalidates them and descendants.
 The log retains all admitted records; capacity exhaustion requires an explicit new
 retention policy. This is a reference implementation, not a concurrent database.
 """
@@ -325,6 +327,14 @@ class WorldStore:
             ):
                 raise ValueError("Invalid or inactive parent component reference")
             self._reject_retracted(record.evidence)
+            links = record.data.get("identity_links", [])
+            if not isinstance(links, list) or any(
+                r not in self._relations
+                or not self._relations[r].active
+                or self._relations[r].type != "same_as"
+                for r in links
+            ):
+                raise ValueError("Identity links must name active same_as relations")
             if record.role not in {"observed", "inferred", "predicted"}:
                 raise ValueError("Invalid component role")
             if (
@@ -367,6 +377,7 @@ class WorldStore:
             if not record.active:
                 raise ValueError("Relation already retracted")
             self._relations[record.id] = replace(record, active=False)
+            self._invalidate_link_dependents({record.id}, event)
             return
         elif kind == "reassign":
             if (
@@ -410,11 +421,14 @@ class WorldStore:
             direct = {c.id for c in self._components.values() if old.id in c.evidence}
             self._invalidate(self._descendants(direct), event)
             # Relations (including accepted identity links) citing it are withdrawn too.
+            withdrawn = set()
             for r in list(self._relations.values()):
                 if r.active and old.id in r.evidence:
                     self._relations[r.id] = replace(
                         r, active=False, data={**r.data, "invalidated_by": event.id}
                     )
+                    withdrawn.add(r.id)
+            self._invalidate_link_dependents(withdrawn, event)
             return
         else:
             raise ValueError("Unknown world-state operation")
@@ -448,6 +462,20 @@ class WorldStore:
                 self._relations[r.id] = replace(
                     r, active=False, data={**r.data, "invalidated_by": event.id}
                 )
+
+    def _invalidate_link_dependents(self, relation_ids, event):
+        """Identity decisions record the links they used (`data["identity_links"]`).
+
+        Withdrawing such a link invalidates those components and their descendants;
+        source evidence stays. Records that did not use the link are untouched.
+        """
+        direct = {
+            c.id
+            for c in self._components.values()
+            if set(c.data.get("identity_links", ())) & set(relation_ids)
+        }
+        if direct:
+            self._invalidate(self._descendants(direct), event)
 
     def _reject_retracted(self, evidence_ids):
         if any(e in self._retracted for e in evidence_ids):

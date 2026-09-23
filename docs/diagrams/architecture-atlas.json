@@ -3019,7 +3019,7 @@
     {
       "id": "17-integrated-latent-agent",
       "title": "17 · Integrated latent agent: reference architecture",
-      "subtitle": "R1 two-machine pixel reference · executable integration and scoped tests · learned development underway",
+      "subtitle": "R1 pixel reference + R2 shared session · software contracts verified · learned gates still open",
       "direction": "TB",
       "feedback_edges": [
         [
@@ -3027,8 +3027,16 @@
           "observe"
         ],
         [
-          "store",
-          "memory"
+          "other",
+          "store"
+        ],
+        [
+          "execute",
+          "other"
+        ],
+        [
+          "code",
+          "core"
         ]
       ],
       "nodes": [
@@ -3049,12 +3057,12 @@
         ],
         [
           "store",
-          "WorldStore + content-hashed blobs\nAuthoritative evidence and revisions",
+          "WorldSession: one store +clock\nSource events, instance identities\nAtomic publication and revisions",
           "store"
         ],
         [
           "memory",
-          "ConceptMemory\nAppearance proposal +behavior check\nCreate / retrieve / recompute",
+          "ConceptMemory session client\nAppearance proposal +behaviour check\nRebuild from active evidence",
           "learned"
         ],
         [
@@ -3079,7 +3087,7 @@
         ],
         [
           "execute",
-          "Ground slot pointers to clicks\nCheck read-set before execution",
+          "Typed action -> grounded clicks\nCheck observation, weights, read set\nEnforce task budget and deadline",
           "external"
         ],
         [
@@ -3089,8 +3097,8 @@
         ],
         [
           "other",
-          "Existing BeliefAgent / WorldSession\nMultimodal readers and outputs\nConnection contracts; evidence pending",
-          "optional"
+          "Belief filter +typed action encoder\nSame source pyramid\nR2 wiring; learned alignment pending",
+          "learned"
         ]
       ],
       "edges": [
@@ -3165,18 +3173,33 @@
           "receipt and actual goal state"
         ],
         [
-          "code",
+          "pyramid",
           "other",
-          "declared compatible context adapter"
+          "same encoded frame; capture time is metadata"
+        ],
+        [
+          "slots",
+          "store",
+          "session owns temporal identity"
+        ],
+        [
+          "other",
+          "store",
+          "observed belief shares the atomic event"
+        ],
+        [
+          "execute",
+          "other",
+          "executed action only; not a second planner"
         ]
       ],
       "notes": [
         "Alex delegated architecture choices, Claude Opus5.5 high planning and implementation, and Codex review/test/fix. This is a reference integration of the full target, not a claim that the existing agent or all modalities are newly validated.",
         "Two independent machines make reachable two-press goals possible. With one binary lamp and static actions, every reachable goal is at most one press away. The new task explicitly adopts factorized dynamics and does not claim general long-horizon planning.",
-        "The neural core never receives rule IDs, concept IDs, generator truth or oracle answers. Exact identity/source/version/action metadata remains outside latent inference. Train-only simulator supervision is declared separately.",
+        "The integrated runtime infers from observed pixels and action evidence with frozen weights; hidden rule IDs and generator truth never enter runtime binding or planning. Separate oracle-code research probes are explicitly diagnostic. Training-only simulator supervision is disclosed.",
         "Likelihood and expected-utility planning use the unweighted outcome objective. Unknown does not mean impossible. Software, controlled learning and natural-data gates are separate; no new green scope follows from this diagram.",
         "Natural data, partial observability and broader modality/action capabilities have explicit connection contracts in the owning plan and require their own learned evidence. Existing discussion statuses are unchanged.",
-        "The executable reference now includes frozen-weight action feedback, retained source corrections, restart, bounded derived caches and current-head read sets. CPU/GPU smoke reports and independent regressions establish software behavior only; full regression and learned gates are tracked in the owning plan."
+        "R2 now composes the existing session, belief and concept memory: one source encoding, one publication owner, explicit goals, revision-dependent actions, external verification and restart recovery. Independent adversarial tests verify software contracts only; trained identity, action/belief alignment and full-agent learning remain unestablished."
       ],
       "sources": [
         "docs/integrated-architecture-plan.md",
@@ -3189,7 +3212,11 @@
         "pathwm/world_state/concepts.py#ConceptAgent",
         "pathwm/data/rule_world.py#TaskContract",
         "pathwm/evaluation/rule_world.py#run_life",
-        "experiments/latent_agent.py"
+        "experiments/latent_agent.py",
+        "pathwm/world_state/session.py#WorldSession",
+        "pathwm/world_state/unified.py#UnifiedAgent",
+        "experiments/unified_session.py",
+        "tests/test_unified_session.py"
       ]
     }
   ]

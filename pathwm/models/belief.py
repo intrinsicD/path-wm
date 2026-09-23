@@ -276,11 +276,24 @@ class BeliefAgent(MultimodalAgent):
             ):
                 raise ValueError("Packet batch mismatch or future observation")
         values, validity, labels, scales = [], [], [], []
+        supplied = dict(pending.features)
         for packet in packets:
             encoder = self.encoders[packet.modality]
             local_trace = {} if trace is not None else None
             # Source-only path: no current belief, workspace, task or controller conditioning.
-            if hasattr(encoder, "code_width"):
+            if packet.source in supplied:
+                # Encoded once by the caller from this packet's content (shared consumers).
+                features = supplied[packet.source]
+                _, times, valid = observation_values(packet.observation)
+                tokens = features.as_tokens()
+                low = times.masked_fill(~valid, torch.inf).amin(1, keepdim=True)
+                high = times.masked_fill(~valid, -torch.inf).amax(1, keepdim=True)
+                t = tokens.times.to(times.dtype)
+                if len(tokens.values) != len(times) or (
+                    tokens.valid & ((t < low) | (t > high))
+                ).any():
+                    raise ValueError("Supplied features do not match the packet time span")
+            elif hasattr(encoder, "code_width"):
                 features = encoder(
                     packet.observation, condition=None, trace=local_trace
                 )
@@ -316,13 +329,16 @@ class BeliefAgent(MultimodalAgent):
             trace["observe.valid"] = valid.detach().cpu()
         return values, valid, present
 
-    def add_packet(self, pending, packet, *, trace=None):
+    def add_packet(self, pending, packet, *, trace=None, features=None):
+        """`features`: this packet's FeaturePyramid, already encoded by a shared consumer."""
         if (
             not isinstance(packet, Packet)
             or not packet.source
             or len(packet.source) > 256
         ):
             raise ValueError("Packet needs a bounded source identity")
+        if features is not None and not isinstance(features, FeaturePyramid):
+            raise ValueError("Supplied packet features must be a FeaturePyramid")
         # Canonical sanitized content makes masked NaNs immaterial to deduplication too.
         values, times, valid = observation_values(packet.observation)
         packet = replace(
@@ -356,6 +372,10 @@ class BeliefAgent(MultimodalAgent):
         packets = tuple(
             sorted((*pending.packets, packet), key=lambda p: (p.modality, p.source))
         )
+        if features is not None:
+            pending = replace(
+                pending, features=(*pending.features, (packet.source, features))
+            )
         return self.correct_packets(replace(pending, packets=packets), trace=trace)
 
     def correct_packets(self, pending, *, trace=None):

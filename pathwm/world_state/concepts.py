@@ -43,19 +43,35 @@ R1_LIMITS = Limits(
 class ReadSet:
     components: tuple[tuple[str, int], ...]  # (component id, revision) pairs
     versions: tuple
+    # Live dependencies a caller pins besides stored heads (e.g. the observation,
+    # identity decisions and object references an action was chosen on).
+    live: tuple = ()
 
 
 class ConceptMemory:
-    """Durable store + blobs. Derived tensors leave this object only as clones."""
+    """Durable store + blobs. Derived tensors leave this object only as clones.
 
-    def __init__(self, directory, *, versions, limits=R1_LIMITS, store=None):
+    Standalone (R1): owns its store and clock. Client (`session=`): no store of its
+    own; reads `session.store`, uses the session clock and publishes internal and
+    correction records through `session.commit`. Source observations enter only
+    through `WorldSession.observe`.
+    """
+
+    def __init__(self, directory, *, versions, limits=R1_LIMITS, store=None, session=None):
+        if session is not None and store is not None:
+            raise ValueError("A session client has no store of its own")
         self.directory = Path(directory)
         (self.directory / "blobs").mkdir(parents=True, exist_ok=True)
         self.versions = dict(versions)
-        self.store = store if store is not None else WorldStore(limits)
+        self.session = session
+        self._store = None if session is not None else store if store is not None else WorldStore(limits)
         events = self.store.events()
         self.clock = max((e.available_at for e in events), default=0.0)
-        self._cache_revision, self._cache = -1, None
+        self._cache_key, self._cache = None, None
+
+    @property
+    def store(self):
+        return self.session.store if self.session is not None else self._store
 
     # blobs -------------------------------------------------------------
     def put_blob(self, frames):
@@ -80,7 +96,12 @@ class ConceptMemory:
 
     # transactions ------------------------------------------------------
     def begin(self, kind, *, payload=None, occurred_at=None):
-        self.clock += 1.0
+        if self.session is not None:
+            if kind == "observation":
+                raise ValueError("Source observations enter through WorldSession.observe")
+            self.clock = self.session.time
+        else:
+            self.clock += 1.0
         return self.store.begin(
             f"{self.store.revision + 1:06d}-{kind}",
             occurred_at=self.clock if occurred_at is None else occurred_at,
@@ -90,6 +111,9 @@ class ConceptMemory:
         )
 
     def commit(self, tx):
+        if self.session is not None:
+            # Derived records at the current clock: no belief filter step.
+            return self.session.commit(tx, advance_belief=False)
         return self.store.commit(tx)
 
     # read sets ---------------------------------------------------------
@@ -120,7 +144,8 @@ class ConceptMemory:
 
     def view(self):
         """Detached copies of all records, cached per committed revision."""
-        if self._cache_revision != self.store.revision:
+        store = self.store
+        if self._cache_key != (id(store), store.revision):
             components = self.store.components()
             latest = {}
             for c in sorted(components, key=lambda c: (c.valid_from, c.revision, c.id)):
@@ -133,12 +158,13 @@ class ConceptMemory:
                 relations=self.store.relations(),
                 retracted=self.store.retractions(),
             )
-            self._cache_revision = self.store.revision
+            self._cache_key = (id(store), store.revision)
         return self._cache
 
     # persistence -------------------------------------------------------
     def save(self):
-        self.store.save(self.directory / "store.json")
+        if self.session is None:  # a client's store is persisted by its session
+            self.store.save(self.directory / "store.json")
         atomic_json(self.directory / "memory.json", dict(versions=self.versions, clock=self.clock))
 
     def disk_bytes(self):
@@ -168,10 +194,26 @@ class ConceptMemory:
             )
         store = WorldStore.load(directory / "store.json")
         memory = cls(directory, versions=versions, store=store)
-        for e in store.evidence():  # restart integrity: every referenced blob verifies
-            if e.content_ref:
-                memory.get_blob(e.content_ref, e.content_hash)
+        memory.verify_blobs()
         return memory
+
+    @classmethod
+    def attach(cls, directory, session, *, versions):
+        """Client restart over a restored session: same versions, every blob verifies."""
+        saved = json.loads((Path(directory) / "memory.json").read_text())["versions"]
+        if saved != dict(versions):
+            raise ValueError(
+                f"Memory model versions {saved} differ from {dict(versions)}; "
+                "migration is not implemented"
+            )
+        memory = cls(directory, versions=versions, session=session)
+        memory.verify_blobs()
+        return memory
+
+    def verify_blobs(self):
+        for e in self.store.evidence():  # restart integrity: every referenced blob verifies
+            if e.content_ref:
+                self.get_blob(e.content_ref, e.content_hash)
 
 
 # ---------------------------------------------------------------- runtime agent
@@ -641,7 +683,8 @@ class ConceptAgent:
             for e in latest.evidence:
                 while e in retracted and retracted[e]["replacement"] is not None:
                     e = retracted[e]["replacement"]
-                if e not in retracted:
+                # A replacement teaches only on its own successful receipt.
+                if e not in retracted and view["evidence"][e].data.get("receipt") == "ok":
                     evidence.append(e)
             appearance = latest.parents[0]
             if not self.memory.view()["components"][appearance].active:
@@ -685,7 +728,9 @@ class ConceptAgent:
 
     # planning and execution ---------------------------------------------
     @torch.no_grad()
-    def plan(self, view, goal, *, presses_done, control=None):
+    def plan(self, view, goal, *, presses_done, control=None, budget=None):
+        """`budget`: total presses allowed for this task (default and cap: the contract's)."""
+        limit = self.contract.budget if budget is None else min(budget, self.contract.budget)
         if len(view.machines) != 2:
             return lc.Decision("abstain", None, self.contract.utility("abstain", presses_done), {}, 0), self.memory.read_set(())
         codes, ids = [], ()
@@ -706,7 +751,7 @@ class ConceptAgent:
             torch.stack([m["lamp"] for m in view.machines]),
             goal,
             self.contract,
-            budget_left=self.contract.budget - presses_done,
+            budget_left=limit - presses_done,
             presses_done=presses_done,
             loops=self.settings.loops,
         )

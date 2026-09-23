@@ -3,6 +3,10 @@ For the **integrated latent-agent reference integration (R1, RuleWorld-64)**, ru
 then the staged `audit/perception/core/symbolic/evaluate/gates` commands in the
 [adopted plan](integrated-architecture-plan.md#8-ressourcen-stufen-befehle-iteration).
 Smoke runs verify software only; no learned capability is established yet.
+The **R2 unified-session software slice** (one store, session identity plus concept
+memory, encode-once, structured goals) runs as
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.unified_session --output runs/my_r2_life [--perception RUN]`;
+it is a labelled software check ([plan §18](integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag)).
 
 # Running and editing experiments
 

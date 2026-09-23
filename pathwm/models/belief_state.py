@@ -167,3 +167,5 @@ class PendingEvent:
     noise: torch.Tensor
     packets: tuple[Packet, ...] = ()
     replay: bool = False
+    # (source, FeaturePyramid) encoded once by the caller; derived, never fingerprinted.
+    features: tuple = ()

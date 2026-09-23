@@ -12,13 +12,15 @@ read the particular record when needed, not the whole history at startup.
   computation and useful concept/instance memory that acquires, retrieves and
   corrects knowledge at runtime without weight retraining. Partial components do
   not establish the complete capability.
-- **Integrated architecture R1:** the [adopted plan](integrated-architecture-plan.md)
-  implements RuleWorld-64 as the first reference integration (pixels → slots →
-  concept memory → two-step plan → execution → correction). 722 CPU tests pass.
-  First 15-minute perception run: attributes/pointers ≈99–100%, lamp 91.6% (C1 fails);
-  symbolic core also misses its learning target; targeted repair comparisons run.
-  No integrated learned result;
-  natural data gate N1 open. Runs: `runs/latent_agent_r1/`.
+- **Integrated architecture R1/R2:** the [adopted plan](integrated-architecture-plan.md)
+  implements the pixel reference and a unified session (one store/clock, separate
+  instance identity and concept membership, shared source encoding, bounded actions,
+  external verification, restart recovery). All 752 CPU tests pass, including independent
+  action/correction/restart boundary tests. Learning remains open: texture
+  variation fixes lamp recognition but identity transfer is weak; a fresh symbolic
+  core now learns relational information with supplied rule codes, below the gates.
+  Paired latent-identity training and exact core continuation are the next trials.
+  No integrated learned capability is established.
 - **Latent concept learning:** the [abstract research review](latent-concept-learning-review.md)
   compares concept induction, latent memory and prerequisites with current primary
   sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is
