@@ -2932,3 +2932,11 @@ entries:
     from empirical human results and CLS theory.
   - No researcher endorsement or new local experiment resolves O389-O391; no unrelated closure, contradiction
     or abandonment inferred. No claims promoted.
+
+- turn: 2026-09-23_001#12
+  notes:
+  - N562 records explicit user direction, not an empirical capability claim. O393 stages concrete design details.
+  - O392 bundles additional mechanisms not endorsed here; retain it unpromoted, no blanket closure. No unrelated
+    abandonment inferred.
+  - Review corrected probe-as-leak-proof, mandatory subspaces/SSL, transfer-level conflation and scheduling versus
+    supervision controls.

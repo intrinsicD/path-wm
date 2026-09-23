@@ -1334,3 +1334,111 @@ Primärarbeiten/Autorentheorie:
 - https://pubmed.ncbi.nlm.nih.gov/27315762/
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC3077926/
 - https://pubmed.ncbi.nlm.nih.gov/1582172/
+
+
+## 22. Vorwissen als Lernziel: Entitäten, Eigenschaften und Beziehungen
+
+Alex wünscht Vortraining wiederverwendbarer Grundfähigkeiten vor tieferem Lernen,
+über Modalitäten hinweg. Dies übernimmt die Richtung strukturierten Vorwissens
+aus §21, nicht alle dort genannten Mechanismen und nicht die Behauptung, damit sei
+die Ursache der bisherigen Induktionsfehler gefunden. Das volle Agentenziel bleibt
+bestehen. Die folgende Ausgestaltung ist ein konkreter Planungsvorschlag; kein
+Training gestartet, keine Fähigkeit validiert.
+
+### Was gelernt werden soll
+
+| Fähigkeit | Beobachtbare Aufgabe | Entscheidende Abgrenzung |
+| --- | --- | --- |
+| Entität und Bindung | Teile/Beobachtungen einer verfolgbaren Quelle zuordnen | Instanz, Kategorie und momentaner Zustand getrennt prüfen; ununterscheidbare Zwillinge nicht erzwingen. |
+| Eigenschaften | Relevante Eigenschaften über Ansichten wiederfinden; veränderte von erhaltenen unterscheiden | Farbe, Form, Ort, Zustand, Tonhöhe sind Beispiele, keine universell verfügbare Merkmalsliste. |
+| Gleich/verschieden | Paare unter einer angegebenen oder aus Belegen erschließbaren Hinsicht vergleichen | Dieselbe Instanz ≠ gleicher Typ ≠ gleicher Eigenschaftswert. |
+| Vorher/nachher | Ereignisse zeitlich einordnen und Veränderungen verfolgen | Zeitordnung aus beobachteter Sequenz ist nicht Ursache; Umkehr kann ohne Zeitbeleg unbestimmbar sein. |
+| Veränderung und Übertragung | Dieselbe aus mehreren Belegen erschlossene Veränderung auf einen fremden Startzustand anwenden | Query-Endzustand bleibt außerhalb der Inferenz; Mehrdeutigkeit durch informative Belege oder Unsicherheit behandeln. |
+
+Wörter wie „object“, „Entität“ und „gleich“ sind später mögliche sprachliche
+Zugänge zu Fähigkeiten. Eine korrekte Wortzuordnung allein ist kein Nachweis.
+Entitäten zunächst als verfolgbare Quellen in einer kontrollierten Welt prüfen;
+Ereignisse und abstrakte Entitäten später gesondert qualifizieren, keine starre
+physische Objektontologie als allgemeine Definition einbauen.
+
+### Latente Umsetzung und Modalitäten
+
+Modalitätsspezifische Eingangsverarbeitung speist den gemeinsamen latenten Kern.
+Vergleich, Bindung und Anwendung sollen gelernte Operationen dieses Kerns sein;
+keine separate fest programmierte Regelmaschine je Begriff. Trainingsabfragen und
+schmale Ausleseköpfe dürfen Ziele ausdrücken; Erfolg muss sich anschließend im
+operativen Inferenzpfad zeigen. Wiederverwendbare Eingangsmerkmale einmal vorbereiten,
+Details erhalten, nur tatsächlich geteilte Information modalitätsübergreifend
+angleichen. Gleiche Vektorbreite und globale Ähnlichkeit reichen nicht.
+
+Zusammengehörige Video-, Audio- und Textbeobachtungen werden nur für die durch
+Belege identifizierbare Entität/Episode gebunden. Synchronität allein beweist nicht,
+dass ein sichtbares Objekt die Tonquelle ist. Text ist eine partielle Beschreibung,
+kein vollständiger Zustand. Farbe aus reinem Audio ist unbekannt, nicht negativ;
+fehlende Modalitäten und fehlende Eigenschaften explizit ausmaskieren und gesondert
+prüfen. Modale Details dürfen neben geteilter Struktur bestehen bleiben.
+
+### Lernfolge und erster prüfbarer Meilenstein
+
+1. Kurze kontrollierte visuelle Sequenzen und partielle strukturierte Beschreibungen:
+   Instanz/Typ/Zustand, Eigenschaftsvergleich und Zeitordnung. Strukturierte Eingaben
+   sind eine diagnostische zweite Darstellung, kein Nachweis natürlicher Sprache.
+   Simulator-IDs und vollständige Zielzustände ausschließlich als Trainingsziele/
+   Evaluatormetadaten, niemals als versteckte Identitätslösung im Modellinput.
+2. Neue Kombinationen und Transformationen aus Supportbelegen: Vorwissen wird zur
+   Anwendung auf unbekannte Fälle genutzt. Zuerst Gewichte einfrieren, dann bewusst
+   getrenntes gemeinsames Weiterlernen prüfen; Grundaufgaben weiter einmischen und
+   Vergessen messen. Kein ausschließliches Nacheinander mit ungeprüftem Kompetenzverlust.
+3. Geerdete Audio-/Sprachpaare und natürliche Daten ergänzen. Dieselben Relationen
+   pro Modalität und zwischen Modalitäten prüfen; kein „alle Modalitäten“-Erfolg
+   aus einer symbolisch-visuellen Diagnose ableiten.
+
+Der erste Vergleich hält Architektur, Datenpopulation, Gesamtrechenbudget und
+Auswertung gleich: strukturiertes Vortraining→Transfer gegen reines Zieltraining
+und von Anfang an gemischtes Training. Zusätzlich Leistung gegen Zahl der
+Zielbeispiele ausweisen; Vortraining kostet Daten und Rechenzeit. Falls nur das
+Budget für zwei Arme reicht, zuerst Vortraining versus reines Zieltraining testen
+und den Unterschied zum gemischten Training ausdrücklich offenlassen. Für die
+spezifische Aussage, dass strukturelle Lernziele statt bloß zusätzlicher Vorerfahrung
+helfen, ist zusätzlich gleich budgetiertes generisches Vortraining als Kontrolle
+nötig. Gemischtes Training vergleicht die Reihenfolge; dessen Überlegenheit würde
+den Nutzen des Vorwissens nicht widerlegen. Kontextlernen mit festen Gewichten
+und Fine-Tuning-Lernkurven werden nicht zu einer Transfermetrik vermischt.
+
+Train/Test nach Instanzen, Eigenschaftskombinationen, Transformationen und
+Darstellungsvarianten trennen. Bekannte Regeln auf neuen Fällen und wirklich neue
+Regeln separat messen. Ausgewogene Gegenbeispiele verhindern Farb-, Position-,
+Zeitstempel-, Antwortreihenfolge- und Wortschablonen-Shortcuts. Uninformative Fälle
+bleiben mehrdeutig statt eine willkürliche verborgene Wahrheit abzufragen.
+
+Erfolg bedeutet zugleich bessere Übertragung aus wenigen Belegen, reale
+Supportabhängigkeit (korrekt/leer/vertauscht), erhaltene Grundfähigkeiten und
+brauchbare Unsicherheit bei fehlender Evidenz. Hilfsaufgabenaccuracy allein genügt
+nicht. Vor Ausführung werden konkrete Generatorversion, Splitlisten, Seeds,
+Schwellen, Transfermetrik, Freeze-/Optimierungsregeln und Ressourcenobergrenze in
+diesem Plan festgelegt; aktuell keine numerischen Gates oder Laufbudgets gewählt.
+Keine neue Framework-/Trainerhierarchie und keine Änderung der Speicherverträge.
+
+### Forschungsbezug und Grenzen
+
+ImageBind zeigt gemeinsame Embeddings über sechs Modalitäten; das belegt noch keine
+instanzgenaue Bindung oder relationale Übertragung. Abstractors untersuchen gezielte
+relationale Architektur-Biases; daraus folgt keine Pflicht zur Übernahme dieses
+Moduls. Die aktuelle Arbeit Object Concepts Emerge from Motion (September 2026)
+berichtet instanzbezogene visuelle Repräsentationen aus Bewegungs-Pseudolabels;
+keine Bestätigung unseres Curriculums oder allgemeiner Kausalität. Verwendet wird
+die Lernidee, nicht das große Trainingsrezept oder ein ungeprüftes SOTA-Versprechen.
+
+- https://arxiv.org/abs/2305.05665
+- https://arxiv.org/abs/2304.00195
+- https://arxiv.org/abs/2609.04348
+
+Claude-Review: tatsächliches Opus 5.5, high, ausschließlich abstraktes öffentliches
+Briefing, keine privaten Quellen/Daten/Messwerte und keine Dateitools.
+Belege: `runs/reviews/structural_priors_20260923/`.
+
+Review-Korrekturen: Eine dekodierbare verborgene Variable beweist allein kein
+Datenleck; Eingangsprovenienz und beobachtungsgleiche Gegenfälle prüfen. Globale
+Ausrichtung kann Details kosten, muss sie aber nicht zerstören. Separate private
+Unterräume und eine vorgeschaltete SSL-Phase sind Optionen, keine Voraussetzungen.
+Neue Kombinationen sind kein Nachweis strukturell neuer Aufgabenfamilien.

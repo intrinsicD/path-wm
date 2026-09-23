@@ -18,7 +18,7 @@ Read the relevant record when needed.
   (100% versus54.6% cross-lamp), but misses one fresh-scene attribute guard:
   provisional development input. All five oracle application families pass
   (nu≥0.863). Code search and eight induction paths failed; copied-example recall was learned
-  but degraded during the failed transfer curriculum. Point 1 is under discussion: cross-example latent transition loss; no new run selected.
+  but degraded during the failed transfer curriculum. Alex selects structural-prior pretraining as the next direction (§22); concrete curriculum reviewed, no run yet.
   Rollout, learned full R1/R2 and natural data remain unproven.
   Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)

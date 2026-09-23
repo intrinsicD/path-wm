@@ -6927,3 +6927,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O393
+  timestamp: 2026-09-23T20:18+02:00
+  provenance: ai-suggested
+  content: Shared-core latent entity/property/comparison/temporal pretraining may improve evidence-based transfer.
+    Distinguish identity/type/state, aspect-relative equality, observability and causal identification; preserve
+    modal details and retention. Compare matched target-only, generic-pretraining and schedule controls with distinct
+    frozen-context and fine-tuning contracts.
+  context: Plan section22; actual Claude Opus5.5 high public-only review and six corrections. No local experiment
+    or validated remedy.
+  potential_type: architecture
+  bound_to:
+  - N562
+  - N557
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

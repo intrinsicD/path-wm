@@ -9388,3 +9388,21 @@ tree:
   - N557
   - N559
   status: open
+
+- id: N562
+  type: decision
+  title: Pretrain reusable structural prior abilities
+  provenance: user
+  timestamp: 2026-09-23T20:18+02:00
+  choice: User selects prior training of entity/object, properties, same/different and before/after across modalities
+    before deeper learning.
+  alternatives:
+  - Continue direct deeper-task training without explicit structural-prior stage
+  evidence:
+  - docs/integrated-architecture-plan.md#22-vorwissen-als-lernziel-entitäten-eigenschaften-und-beziehungen
+  description: Direction selected, concrete curriculum remains proposed. Full latent-agent goal retained; no new
+    run or capability claim.
+  also_depends_on:
+  - N561
+  - N560
+  status: open
