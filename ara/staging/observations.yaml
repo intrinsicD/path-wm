@@ -6945,3 +6945,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O394
+  timestamp: 2026-09-23T20:54+02:00
+  provenance: user
+  content: Failed lamp transfer may reflect unsuitable training experiences/objectives rather than failure of
+    the overall latent-learning concept.
+  context: Voice clarification; hypothesis only. Existing failures remain valid within tested conditions; no unique
+    cause isolated.
+  potential_type: claim
+  bound_to:
+  - N563
+  - N557
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

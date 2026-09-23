@@ -341,8 +341,9 @@ sessions:
     Full learned model remains incomplete; scope questionN559 pending. Turn11: human-learning comparison with
     primary sources; empirical effects and cognitive theories distinguished, no architecture adoption or new experiment.
     Turn12: user selects structural-prior pretraining direction; public-only Opus5.5 high review reconciled. Curriculum
-    proposed, no run.'
-  turn_count: 12
-  events_count: 34
+    proposed, no run. Turn13: initial nonlinguistic property tasks preferred; lamp failures do not isolate training-design
+    cause.'
+  turn_count: 13
+  events_count: 36
   claims_touched: []
   open_threads: 15

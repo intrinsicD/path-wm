@@ -2940,3 +2940,8 @@ entries:
     abandonment inferred.
   - Review corrected probe-as-leak-proof, mandatory subspaces/SSL, transfer-level conflation and scheduling versus
     supervision controls.
+
+- turn: 2026-09-23_001#13
+  notes:
+  - N563 refines initial modality scope; O394 stages user hypothesis without promoting a causal explanation. No
+    new empirical result or unrelated closure.

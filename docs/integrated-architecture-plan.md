@@ -1380,9 +1380,9 @@ prüfen. Modale Details dürfen neben geteilter Struktur bestehen bleiben.
 
 ### Lernfolge und erster prüfbarer Meilenstein
 
-1. Kurze kontrollierte visuelle Sequenzen und partielle strukturierte Beschreibungen:
-   Instanz/Typ/Zustand, Eigenschaftsvergleich und Zeitordnung. Strukturierte Eingaben
-   sind eine diagnostische zweite Darstellung, kein Nachweis natürlicher Sprache.
+1. Kurze kontrollierte visuelle Sequenzen mit nichtsprachlichen Abfragen:
+   Instanz/Typ/Zustand, Eigenschaftsvergleich und Zeitordnung. Partielle strukturierte
+   Beschreibungen bleiben eine optionale spätere Diagnose; kein anfänglicher Textpfad.
    Simulator-IDs und vollständige Zielzustände ausschließlich als Trainingsziele/
    Evaluatormetadaten, niemals als versteckte Identitätslösung im Modellinput.
 2. Neue Kombinationen und Transformationen aus Supportbelegen: Vorwissen wird zur
@@ -1442,3 +1442,24 @@ Datenleck; Eingangsprovenienz und beobachtungsgleiche Gegenfälle prüfen. Globa
 Ausrichtung kann Details kosten, muss sie aber nicht zerstören. Separate private
 Unterräume und eine vorgeschaltete SSL-Phase sind Optionen, keine Voraussetzungen.
 Neue Kombinationen sind kein Nachweis strukturell neuer Aufgabenfamilien.
+
+
+### Präzisierung im Gespräch: Trainingsgestaltung und Lampenbefund
+
+Alex betont den Einfluss von Erfahrungen, Daten und Trainingsaufgaben und möchte
+anfangs keine Textkopplung. Beispiel: eine verfolgte bewegte Entität, eine
+nichtsprachliche Eigenschaftsabfrage und ein Farbziel. Eine gelernte Abfrage oder
+eine Auswahl anhand von Beispielen genügt als Schnittstelle; Sprachverständnis
+ist keine Voraussetzung. Die konkrete Kodierung bleibt zu spezifizieren.
+
+Ein Farbziel über variierte Positionen/Bewegungen kann bereits Invarianz fördern;
+ein zusätzlicher expliziter Invarianz-Loss ist nicht grundsätzlich erforderlich.
+Geprüft werden müssen Zuordnung zur richtigen Entität und Übertragung auf neue
+Bewegungen/Ansichten sowie neue Kombinationen. Farbklassifikation allein belegt
+noch kein allgemein wiederverwendbares Eigenschaftskonzept.
+
+Die Lampendiagnosen zeigen fehlende Übertragung unter den tatsächlich geprüften
+Bedingungen. Sie widerlegen weder das volle Architekturziel noch latentes Lernen
+im Allgemeinen. Ein ungeeigneter Lernaufbau bleibt eine mögliche Erklärung neben
+Repräsentation, Optimierung und Kapazität; keine davon wurde als alleinige Ursache
+isoliert. Der neue Lehrplan ist eine prüfbare Hypothese, keine Erfolgsgarantie.

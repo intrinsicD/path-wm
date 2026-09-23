@@ -2,8 +2,8 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T20:18+02:00
-  turn_count: 12
+  last_turn: 2026-09-23T20:54+02:00
+  turn_count: 13
   summary: 'Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full
     modal decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
@@ -21,7 +21,8 @@ session:
     Full learned model remains incomplete; scope questionN559 pending. Turn11: human-learning comparison with
     primary sources; empirical effects and cognitive theories distinguished, no architecture adoption or new experiment.
     Turn12: user selects structural-prior pretraining direction; public-only Opus5.5 high review reconciled. Curriculum
-    proposed, no run.'
+    proposed, no run. Turn13: initial nonlinguistic property tasks preferred; lamp failures do not isolate training-design
+    cause.'
 events_logged:
 - turn: 7
   type: question
@@ -274,6 +275,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Concrete latent curriculum and transfer controls proposed; unvalidated.
+- turn: 13
+  type: decision
+  id: N563
+  routing: direct
+  provenance: user
+  summary: Prefer nonlinguistic initial property learning.
+- turn: 13
+  type: observation
+  id: O394
+  routing: staged
+  provenance: user
+  summary: Training-design explanation possible, not established.
 
 ai_actions:
 - turn: 7
@@ -397,6 +410,10 @@ ai_actions:
   - docs/integrated-architecture-plan.md
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
+- turn: 13
+  action: Clarified scoped negative evidence and that varied property supervision need not require a separate
+    invariance loss; updated plan and atlas.
+  provenance: ai-executed
 
 claims_touched: []
 key_context:
@@ -435,6 +452,8 @@ key_context:
 - turn: 12
   excerpt: Dann lass uns auch so eine Art Vorwissen trainieren ... object/Entität, gleich/verschieden, vorher/nachher,
     Eigenschaften, über alle Modalitäten.
+- turn: 13
+  excerpt: Lampenfehlschlag könnte am Trainingskonzept liegen; anfängliche Textkopplung unerwünscht.
 
 open_threads:
 - 'N549: choose concrete protocol, gates and compute budget.'

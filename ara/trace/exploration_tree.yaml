@@ -9406,3 +9406,17 @@ tree:
   - N561
   - N560
   status: open
+
+- id: N563
+  type: decision
+  title: Nonlinguistic initial property learning
+  provenance: user
+  timestamp: 2026-09-23T20:54+02:00
+  choice: Prefer initial property learning without text coupling; moving-entity color query as example.
+  alternatives:
+  - Start with text-coupled property tasks
+  evidence:
+  - docs/integrated-architecture-plan.md
+  also_depends_on:
+  - N562
+  status: open
