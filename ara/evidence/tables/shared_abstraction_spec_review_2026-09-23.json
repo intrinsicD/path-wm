@@ -1,0 +1,357 @@
+{
+  "date": "2026-09-23",
+  "kind": "actual_peer_review_and_finite_mathematical_audit_not_model_training",
+  "question": "Make the shared-abstraction comparison mathematically implementable and critically reconcile with actual Opus 5.5 max.",
+  "specification": "docs/shared-abstraction-spec.md",
+  "review_receipts": [
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/review-receipt.json",
+      "sha256": "6b33fbb14193d7a7000f3deff81451f89386b33406d4c6ad166870b2d9e6795c",
+      "model": "claude-opus-5-5",
+      "effort": "max",
+      "exit_code": 0,
+      "duration_seconds": 944.6352955700131,
+      "tools_enabled": false,
+      "auxiliary_models": []
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/reconciliation-receipt.json",
+      "sha256": "b38ba74a2a358b9dd705e05d5fa609ac096c2b4d404acb4c3f256e70e4012da9",
+      "model": "claude-opus-5-5",
+      "effort": "max",
+      "exit_code": 0,
+      "duration_seconds": 724.0606308979914,
+      "tools_enabled": false,
+      "auxiliary_models": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/brief.md",
+      "sha256": "17a46d820530424ffebd8543d2452719ae5064c77d8742a91f291249bfd66bb1",
+      "bytes": 4942
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/review.json",
+      "sha256": "2bfa200d29f1940cce956556a2ca2a5c64881ded50976d59ff7b08c036de6328",
+      "bytes": 29855
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/review.md",
+      "sha256": "9f19c233f455addc2f13026a0c29a8e482841fb9cce9372946ec7e033a3c7799",
+      "bytes": 27623
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/reconciliation-brief.md",
+      "sha256": "3030e5032a96585b0a0909bf5e3b13389a4f059c69255ed3ac0b9158d9631774",
+      "bytes": 34005
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/reconciliation.json",
+      "sha256": "a606168b35bb01df780678faa0aa2a0d6455e216fb219121fc8d8cfdecc402e4",
+      "bytes": 10477
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/reconciliation.md",
+      "sha256": "010c8666c4376b089c9822af850f06bd738a100bc4d69641d44dba8ad97ac8e0",
+      "bytes": 8539
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/independent-assessment.md",
+      "sha256": "3b70f8c708d648f5fb7ee6165852859a6efcf0a3c57ff4ab53e7a2a7ee9581e5",
+      "bytes": 3043
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/grammar_sanity.py",
+      "sha256": "0b952748a58111ab9f157558ce039531ba79474ef5b71dba0a9ff943bd5c9960",
+      "bytes": 4673
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/math-sanity.json",
+      "sha256": "72f6792b6f1c0c342fd705a9b31918b484a157a45af089e23c120241f906a390",
+      "bytes": 829
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/tensor_sanity.py",
+      "sha256": "23f8d53852cd88e43dd651469ca4f8af7b2288f18ab4f5f2da790f2a4712e15c",
+      "bytes": 3230
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/tensor-sanity.json",
+      "sha256": "dfe7ec657d510c6567e86355874e99857f879439c0ea7285d61aa7e3870f0182",
+      "bytes": 355
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/split-proposal.json",
+      "sha256": "d5cbc14113400c5a46dce47d6f579948401c52caecbeccf77881e8929eaf1e4d",
+      "bytes": 4239
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/oracle_calibration.py",
+      "sha256": "a34dd58747afb767fef234f44ea3bce981f81fe9fc4c0e8b91b1aa2c82475d3c",
+      "bytes": 2499
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/oracle-calibration-manifest.json",
+      "sha256": "d3cdf2c21401c76ec55a8783923121de7a66b7d5d10fe0ad7300d2624f3a0596",
+      "bytes": 751
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/oracle-calibration-raw.json",
+      "sha256": "d36e8e94d7ad1db1271c1de3c31d37e984e9d6c0c7ad7c107c60f377fa33784b",
+      "bytes": 537557
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/oracle-calibration.json",
+      "sha256": "a92828ccdbe31b3658a5b164ace729c649ba89f709ffb774863fe6b17419fd38",
+      "bytes": 1123
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/gate_audit.py",
+      "sha256": "0a7350e6eccaba10ef49b3af6826e53e442a0bfd4219f20d436b20d19624754e",
+      "bytes": 3683
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/gate-audit-manifest.json",
+      "sha256": "812f935165864423765e6eaeb550c63983f4535c795cdba6def6718917734fb7",
+      "bytes": 475
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/gate-audit-raw.json",
+      "sha256": "05a903f530dfa1f67db3c4697df9e650ae37bc95159f6344f35ab71bedeb86ec",
+      "bytes": 842362
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/gate-audit.json",
+      "sha256": "9da0e41a127121bd1e12764634f9e7eb5c77032e5800fd1588548edf597ca50c",
+      "bytes": 1416
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/run.json",
+      "sha256": "b83cce362fb74e4c86b2adc4aecb8593da20bb324459b696526f456c6b0c72e2",
+      "bytes": 1154
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/result.json",
+      "sha256": "e1b2e25c2393afb66faa0b992ccc8379b67aae81b2dc39658afbf8c43a94947d",
+      "bytes": 4704
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/status.json",
+      "sha256": "fe90b6d45b1951f46057ae61f71793a70ae129cfef3b14fae99f9478e8076b11",
+      "bytes": 115
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/metrics.jsonl",
+      "sha256": "501ee59e2ab3c3f788ed2cde6e92bbd4f8e8e929c71ec3bcbb1b59dddeabba5a",
+      "bytes": 3365
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/report.html",
+      "sha256": "b95c23e79fdd80752f2f68508ab7171c2a812eff933cac82ab467609797896ff",
+      "bytes": 19837
+    },
+    {
+      "path": "runs/reviews/shared_abstraction_formulas_20260923/report.qa.json",
+      "sha256": "8f37f69508726a16892a07f98b4edea47ba8dae5d71d973125cfc6ba2b46131f",
+      "bytes": 282
+    }
+  ],
+  "checks": {
+    "grammar": {
+      "input_count": 262144,
+      "rule_count": 280,
+      "distinct_truth_functions": 280,
+      "families": {
+        "category": {
+          "rule_count": 24,
+          "positive_rate_range": [
+            0.5,
+            0.5
+          ]
+        },
+        "relation": {
+          "rule_count": 64,
+          "positive_rate_range": [
+            0.25,
+            0.25
+          ]
+        },
+        "transition": {
+          "rule_count": 192,
+          "positive_rate_range": [
+            0.4375,
+            0.5625
+          ]
+        }
+      },
+      "oracle_support_consistency": true,
+      "scope": "Exhaustive proposed synthetic truth table and deterministic posterior algebra only; no learned model or empirical abstraction capability.",
+      "copy_state_accuracy_range": [
+        0.875,
+        0.9375
+      ],
+      "scalar_vector_checks": 143360,
+      "specialist_constructive_representation_checks": 143360,
+      "split_coverage_valid": true
+    },
+    "tensor": {
+      "support_permutation_max_error": 8.344650268554688e-07,
+      "padding_max_error": 0.0,
+      "query_batching_max_error": 3.129243850708008e-07,
+      "gradient_paths_passed": true,
+      "empty_support_finite": true,
+      "masked_vs_empty_support": true,
+      "save_load_equal": true,
+      "scope": "Random-weight equation invariants only; no training or learned ability."
+    },
+    "information": {
+      "manifest": "oracle-calibration-manifest.json",
+      "grid": [
+        0,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512
+      ],
+      "episodes": 5600,
+      "duration_seconds": 7.119090548017994,
+      "scope": "Finite-generator support-information calculation, not learned-model evidence.",
+      "families": {
+        "category": {
+          "singleton_fraction": [
+            0.0,
+            0.025,
+            0.7520833333333333,
+            0.9979166666666667,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "n90": 16,
+          "episodes": 480
+        },
+        "relation": {
+          "singleton_fraction": [
+            0.0,
+            0.0109375,
+            0.378125,
+            0.9671875,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "n90": 16,
+          "episodes": 1280
+        },
+        "transition": {
+          "singleton_fraction": [
+            0.0,
+            0.0,
+            0.012760416666666666,
+            0.134375,
+            0.5020833333333333,
+            0.9338541666666667,
+            0.9997395833333333,
+            1.0,
+            1.0
+          ],
+          "n90": 64,
+          "episodes": 3840
+        }
+      },
+      "proposed_common_Nstar": 128
+    },
+    "gates": {
+      "scope": "Finite generator/scored inference check; no learned model.",
+      "rho": {
+        "category": 0.5,
+        "relation": 0.25,
+        "open": 0.0625,
+        "close": 0.0625,
+        "toggle": 0.125
+      },
+      "exact_shortcut_floors": {
+        "category": 0.5,
+        "relation": 0.5,
+        "open": 0.9,
+        "close": 0.9,
+        "toggle": 0.7857142857142857
+      },
+      "transition_family_floor": 0.861904761904762,
+      "raw_competence_thresholds_for_nu_0_8": {
+        "category": 0.9,
+        "relation": 0.9,
+        "open": 0.98,
+        "close": 0.98,
+        "toggle": 0.9571428571428572
+      },
+      "oracle_support_count": 128,
+      "episodes": 5600,
+      "score_feasibility": {
+        "category": {
+          "mean_balanced_accuracy": 1.0,
+          "mean_normalized_competence": 1.0,
+          "above_0_8": true,
+          "episodes": 480
+        },
+        "relation": {
+          "mean_balanced_accuracy": 1.0,
+          "mean_normalized_competence": 1.0,
+          "above_0_8": true,
+          "episodes": 1280
+        },
+        "open": {
+          "mean_balanced_accuracy": 1.0,
+          "mean_normalized_competence": 1.0,
+          "above_0_8": true,
+          "episodes": 1280
+        },
+        "close": {
+          "mean_balanced_accuracy": 1.0,
+          "mean_normalized_competence": 1.0,
+          "above_0_8": true,
+          "episodes": 1280
+        },
+        "toggle": {
+          "mean_balanced_accuracy": 1.0,
+          "mean_normalized_competence": 1.0,
+          "above_0_8": true,
+          "episodes": 1280
+        }
+      },
+      "duration_seconds": 2.3112105180043727
+    }
+  },
+  "material_corrections": [
+    "Separate architectural sharing from common semantics and resource/routing confounds; A+ID and shared-G/specialized-F diagnostic added.",
+    "Copy-state and operator-only shortcuts invalidate raw or simple BA90 transition gates; use normalized competence and per-operator guards.",
+    "All-query endpoint retained; oracle-identification subset is secondary with coverage.",
+    "Loss weights depend on target change t, not y; per-element weight, no pos_weight, divide by query count. Sigmoid is cost-weighted score.",
+    "O_full is a declared reference, not a universal bound under mismatched prior; fixed rule/episode seed intervals and uncertainty limits declared.",
+    "Native learned operator states do not implement exact posterior inference; separate training does not prove intrinsically incompatible geometries.",
+    "Duplicates need not preserve attention; persistence/recompute are integration properties, not learned memory correction."
+  ],
+  "proposal_status": "Implementation-ready proposal; no trained model, architecture adoption, model-quality gate pass or production integration.",
+  "remaining_uncertainty": [
+    "Actual trainability/convergence and hardware costs unmeasured.",
+    "Five seed conditional intervals have distributional assumptions; test covers only two category complement groups.",
+    "Beyond finite Boolean grammar, independently learned semantics, perception and autonomous retrieval remain open."
+  ],
+  "report": {
+    "browser_checked": false,
+    "renderer_sha256": "1691ecc2fca96151d1eb1582d07bbd2ebdbd688665806d70854a883c2719ad64",
+    "report_sha256": "b95c23e79fdd80752f2f68508ab7171c2a812eff933cac82ab467609797896ff",
+    "rows": 27,
+    "self_contained": true,
+    "status": "structural_verified"
+  }
+}

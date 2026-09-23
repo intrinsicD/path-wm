@@ -6820,3 +6820,42 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O387
+  timestamp: 2026-09-23T07:45+02:00
+  provenance: ai-suggested
+  content: Compare shared format/shared operators, shared format/specialized operators,
+    specialists and evidence retrieval on overlapping categories, relations and conditional
+    rules. Evaluate frozen-weight transfer, correction, persistence, interference
+    and matched resources per family. Distinguish format from reader/training failure
+    and interface compatibility from shared usable semantics.
+  context: docs/latent-concept-learning-review.md#prüfvorschlag-gemeinsame-repräsentation-über-abstraktionsarten;
+    proposal only, thresholds and budgets open, no run or adoption.
+  potential_type: heuristic
+  bound_to:
+  - N549
+  - N548
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O388
+  timestamp: 2026-09-23T08:45+02:00
+  provenance: ai-suggested
+  content: Propose a precise shared G(S)->Z and shared F(x,Z) screen with A+ID, specialized-reader/encoder and native-operator
+    controls, weighted query BCE, finite reference posterior, component-closed splits, versioned evidence recomputation
+    and normalized competence gates. Calibrated support-information proposal N*=128; primary all-query scores and
+    operator guards avoid two shortcut families.
+  context: docs/shared-abstraction-spec.md and ara/evidence/tables/shared_abstraction_spec_review_2026-09-23.json;
+    actual Opus 5.5 max review/reconciliation complete. Defaults and budgets remain a proposal; neither peer agreement
+    nor equation checks establish trained abstraction.
+  potential_type: architecture
+  bound_to:
+  - N550
+  - N551
+  - N549
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

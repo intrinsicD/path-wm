@@ -2,8 +2,8 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T01:56+02:00
-  turn_count: 6
+  last_turn: 2026-09-23T08:45+02:00
+  turn_count: 8
   summary: Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full modal
     decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
@@ -14,7 +14,27 @@ session:
     question connects identity and uncertain state to action-conditioned effects; action-code arithmetic and causal
     interpretation remain unvalidated. User clarifies concept as shared structure above instances. Actual Opus 5.5
     max review/reconciliation broadens the framing and narrows five overclaims; no method or capability promotion.
+    Concrete shared-abstraction equations reviewed in two actual Opus 5.5 max calls; finite grammar, information
+    and shortcut-gate checks saved. No trained-model claim.
 events_logged:
+- turn: 7
+  type: question
+  id: N549
+  routing: direct
+  provenance: user
+  summary: User asks how to test whether one representation can support different
+    abstraction types. Controlled comparisons proposed; no experiment selected or
+    executed.
+- turn: 7
+  type: observation
+  id: O387
+  routing: staged
+  provenance: ai-suggested
+  summary: Compare shared format/shared operators, shared format/specialized operators,
+    specialists and evidence retrieval on overlapping categories, relations and conditional
+    rules. Evaluate frozen-weight transfer, correction, persistence, interference
+    and matched resources per family. Distinguish format from reader/training failure
+    and interface compatibility from shared usable semantics.
 - turn: 1
   type: question
   id: N544
@@ -123,7 +143,41 @@ events_logged:
     definition. Separate trained inference/use/update procedures from runtime evidence, bindings and hypotheses.
     Actions and analogies supply specialized signals; useful transfer, persistence and revision need scoped tests
     and budgets.
+- turn: 8
+  type: question
+  id: N550
+  routing: direct
+  provenance: user
+  summary: Requested actual Opus 5.5 max discussion and implementation-ready equations; completed with preserved
+    receipts.
+- turn: 8
+  type: experiment
+  id: N551
+  routing: direct
+  provenance: ai-executed
+  summary: 280 distinct truth functions over 262144 inputs; 143360 independent scalar and native-state checks each.
+    Random-weight tensor invariants pass. 5600 oracle-support episodes motivate proposed N*=128. Independently confirmed
+    copy-state and operator-only shortcuts; full scored oracle feasibility clears proposed normalized gate in sampled
+    queries. No trained model or abstraction capability result.
+- turn: 8
+  type: observation
+  id: O388
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose a precise shared G(S)->Z and shared F(x,Z) screen with A+ID, specialized-reader/encoder and native-operator
+    controls, weighted query BCE, finite reference posterior, component-closed splits, versioned evidence recomputation
+    and normalized competence gates. Calibrated support-information proposal N*=128; primary all-query scores and
+    operator guards avoid two shortcut families.
 ai_actions:
+- turn: 7
+  action: Documented proposed comparison and updated state/atlas notes without selecting
+    architecture or running an experiment.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-concept-learning-review.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 - turn: 1
   action: Verified selected public primary sources; completed actual Opus 5.5 max research and bounded reconciliation.
     Preserved timeout/logout receipts; restarted only interrupted bounded call. Documented scope and corrections,
@@ -186,8 +240,23 @@ ai_actions:
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
   - ara/evidence/tables/concept_abstraction_review_2026-09-23.json
+- turn: 8
+  action: Completed two actual Claude reviews, reconciled formula/metric corrections, independently checked finite
+    grammar and scoring feasibility, wrote implementation spec and existing-renderer audit report, updated owner
+    links/atlas without validation promotion.
+  provenance: ai-executed
+  files_changed:
+  - docs/shared-abstraction-spec.md
+  - ara/evidence/tables/shared_abstraction_spec_review_2026-09-23.json
+  - docs/project-state.md
+  - docs/latent-concept-learning-review.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
+- turn: 7
+  excerpt: Wie können wir genau das prüfen? — suitability of one representation for
+    different abstractions.
 - turn: 1
   excerpt: User prefers initially general and abstract latent-token methods, asks whether functioning encoder/decoder
     prerequisites are needed, and authorizes continuation after memory pressure logged the system out.
@@ -206,7 +275,11 @@ key_context:
 - turn: 6
   excerpt: User explicitly asks to discuss with Claude Opus 5.5 max whether to redirect, clarifying that concept
     was initially a placeholder for something above instances.
+- turn: 8
+  excerpt: bitte diskutiere das mit claude opus 5.5 max und formuliert die formeln dazu so dass es klar implementiert
+    werden kann
 open_threads:
+- 'N549: choose concrete protocol, gates and compute budget.'
 - 'N544: choose concept family and relevant operations, then compare example/prototype use, learned code inference
   and optional code search with family-specific generalization/revision and resource controls.'
 - 'N545: operator-based relational learning is a candidate; required concept families, ambiguous-example handling
@@ -219,6 +292,8 @@ open_threads:
   hierarchy or action-based mechanism. Frozen-weight far-family reach and optional explicit comparisons remain empirical.'
 - 'N532: integrated frozen-weight acquisition/use/correction demonstration still needs domain, data, gates and budget.'
 - Earlier open topics remain in 2026-09-22_001; this review does not imply their closure or abandonment.
+- Implement/train the proposed shared-abstraction comparison only as a separate authorized slice; convergence, real
+  resource costs and generalization beyond this grammar remain unknown.
 ai_suggestions_pending:
 - Staged/prior-feature diagnostics are a pragmatic comparison; joint learning is also viable within appropriate
   tasks. No concrete training route adopted.
@@ -228,3 +303,5 @@ ai_suggestions_pending:
   code representation or a training path.
 - Broaden target to shared reusable structure and evaluate appropriate uses; retain analogy/action signals as subcases.
   No universal representation or method comparison adopted.
+- 'O388: concrete mathematical protocol and normalized gates are proposed; no architecture or training budget is
+  adopted by peer agreement.'

@@ -33,6 +33,7 @@ read the particular record when needed, not the whole history at startup.
   The [direction review](latent-concept-learning-review.md#richtungsprüfung-geteilte-struktur-über-instanzen)
   broadens the target to reusable structure; actions and analogies remain subcases,
   with examples/prototypes and inferred codes still open alternatives.
+  The [implementation-ready protocol](shared-abstraction-spec.md) defines equations, shapes, loss, reference arms and frozen-weight updates. Actual Opus 5.5 max review and finite-generator checks refine the proposal; information calibration suggests 128 support examples. No trained-model result or architecture adoption.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented

@@ -9199,3 +9199,47 @@ tree:
   - N544
   - N532
   status: open
+
+- id: N549
+  type: question
+  title: Test shared representations across abstraction families
+  provenance: user
+  timestamp: 2026-09-23T07:45+02:00
+  description: User asks how to test whether one representation can support different
+    abstraction types. Controlled comparisons proposed; no experiment selected or
+    executed.
+  evidence:
+  - docs/latent-concept-learning-review.md#prüfvorschlag-gemeinsame-repräsentation-über-abstraktionsarten
+  also_depends_on:
+  - N548
+  status: open
+
+- id: N550
+  type: question
+  title: Implementation-ready equations with actual Opus 5.5 max review
+  provenance: user
+  timestamp: 2026-09-23T08:45+02:00
+  description: User explicitly requests Claude Opus 5.5 max discussion and formulas suitable for implementation.
+    Two actual isolated public-only calls completed and reconciled; model learning remains untested.
+  evidence:
+  - docs/shared-abstraction-spec.md
+  - ara/evidence/tables/shared_abstraction_spec_review_2026-09-23.json
+  also_depends_on:
+  - N549
+  status: resolved
+- id: N551
+  type: experiment
+  title: Finite shared-abstraction grammar and information audit
+  provenance: ai-executed
+  timestamp: 2026-09-23T08:45+02:00
+  result: 280 distinct truth functions over 262144 inputs; 143360 independent scalar and native-state checks each.
+    Random-weight tensor invariants pass. 5600 oracle-support episodes motivate proposed N*=128. Independently confirmed
+    copy-state and operator-only shortcuts; full scored oracle feasibility clears proposed normalized gate in sampled
+    queries. No trained model or abstraction capability result.
+  evidence:
+  - ara/evidence/tables/shared_abstraction_spec_review_2026-09-23.json
+  - docs/shared-abstraction-spec.md
+  - runs/reviews/shared_abstraction_formulas_20260923/report.html
+  also_depends_on:
+  - N550
+  status: resolved

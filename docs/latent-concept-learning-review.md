@@ -618,6 +618,87 @@ hier ein optionaler methodischer Vergleich, kein Fähigkeitsvorrang und keine Ab
 von Alex’ Präferenz für latente Verarbeitung. Keine Architektur und kein Lauf ist
 beschlossen; Übereinstimmung ersetzt keinen empirischen Nachweis.
 
+## Prüfvorschlag: gemeinsame Repräsentation über Abstraktionsarten
+
+23. September 2026. Alex fragt, wie die offene Eignung einer gemeinsamen
+Repräsentationsform konkret geprüft werden kann. Folgendes ist ein Vorschlag,
+keine gewählte Architektur, kein gestarteter Lauf und kein Ergebnis.
+
+**Hypothese:** Ein gemeinsam gelerntes Zustandsformat mit gemeinsamem Verfahren
+zum Erschließen, Anwenden und Aktualisieren kann mehrere Abstraktionsfamilien an
+neuen Fällen mit vertretbarem Qualitäts- und Ressourcenverlust gegenüber passenden
+Spezialisten tragen. Gleiche Vektorlänge allein belegt weder gemeinsame Semantik
+noch eine gemeinsame nutzbare Verarbeitung. Getrennte Codes für unterschiedliche
+Inhalte sind erlaubt; ein einziger Code für sämtliches Wissen ist nicht gefordert.
+
+**Kleinste Umgebung:** Eine kontrolliert erzeugte Objektwelt mit Farbe, Form,
+Größe, Position, Behältern und Schlüsseln. Dieselben Instanzen tragen überlappende
+Abstraktionen: Kategorien, geordnete Beziehungen und bedingte Zustandsänderungen.
+Eine spätere Erweiterung prüft zusammengesetzte Rollen wie Werkzeug–Ziel–Hindernis.
+Zunächst bereitgestellte Merkmale isolieren die Repräsentationsfrage; Pixel und
+weitere Modalitäten folgen als eigener Vergleich. Erfolg mit Merkmalen belegt
+keine gelernte Wahrnehmung oder vollständige Agentenfähigkeit.
+
+**Episode:** Supportevidenz → erschlossener Wissenszustand → zurückgehaltene
+Abfragen → neue Evidenz/Korrektur → erneute und unbetroffene Kontrollabfragen.
+Initiales Training lernt die Verfahren; Evaluation friert Gewichte und trainierte
+Buffer ein. Die dynamische Evidenz und der Wissenszustand dürfen sich verändern.
+Eine bekannte Abfrage kann das relevante Kriterium vorgeben; dessen selbständige
+Entdeckung ist ein separater, schwierigerer Test. Bei mehreren mit der Evidenz
+vereinbaren Regeln werden Hypothesen oder Unsicherheit bewertet; verborgenes
+Generatorwissen wird dem Modell nicht als eindeutig erschließbar zugeschrieben.
+
+**Vergleich:** (A) ein gemeinsames Zustandsformat und gemeinsame Kernoperationen;
+(B) dasselbe Format mit spezialisierten Kernoperationen als Diagnose;
+(C) passende spezialisierte Formate/Verfahren; (D) Beispielabruf mit vergleichbar
+leistungsfähigem Leser. Ein Prototyp ist eine zusätzliche Kategoriereferenz,
+kein künstlich schwacher universeller Gegner. Gleiche Evidenz, Splits und Such-
+bzw. Trainingsbudgets; Unterschiede in Parametern, Trainingsbeispielen pro Familie,
+Speicherbytes, tatsächlichen Evidenzzugriffen, FLOPs und Latenz separat ausweisen.
+Kapazitätskurven ergänzen einen einzelnen Budgetpunkt. Zunächst Code-only-Zugriff
+zur Diagnose, danach gleiche begrenzte Evidenzabrufe für alle Kandidaten.
+
+**Übertragung:** Neue Instanzen, neue Kombinationen, zurückgehaltene Regeln innerhalb
+trainierter Familien und vollständig zurückgehaltene Familien getrennt berichten.
+Split nach generativer Regel/Struktur, nicht bloß nach Bild. Kennungen, Oberflächen
+und Reihenfolge variieren; Testgenerator und Aufgabenlösung unabhängig prüfen.
+Gemeinsames Training wird zusätzlich gegen Training pro Familie verglichen, um
+Interferenz zu erkennen. Kombinierte Abfragen prüfen die Nutzung mehrerer gelernter
+Abstraktionen zusammen; sie sind keine Voraussetzung für jede einzelne Kategorie.
+
+**Kontrollen und Messung:** Wissenszustand entfernen/vertauschen, Supportevidenz
+entfernen und gezielt widersprechende Evidenz liefern. Ein Zustandswechsel soll
+vorhersagbare Änderungen auslösen. Ein passender gespeicherter Zustand soll nach
+Kontextwechsel abrufbar bleiben; Korrektur soll betroffene Antworten verbessern
+und unbetroffenes Wissen erhalten. Trefferquote/Fehler je Familie und Neuheitsstufe,
+Lernkurve über Supportumfang, Korrekturgewinn, Erhalt und Ressourcen getrennt
+berichten, über unabhängige Seeds und Episoden mit Unsicherheitsintervallen.
+
+**Entscheidung:** Vor dem Lauf absolute Mindestqualität und eine tolerierte Lücke
+zum Spezialisten je Familie festlegen (z. B. drei Prozentpunkte als zu diskutierende
+Nichtunterlegenheitsgrenze, nicht als bereits beschlossenes Gate), ebenso Seeds,
+Populationen und Rechenbudget. Ein guter Gesamtmittelwert darf keine schwache
+Familie verdecken. Bestehen stützt die getestete gemeinsame Lösung im benannten
+Umfang. Scheitern isoliert zunächst Format, Leser, Training, Kapazität oder
+Wahrnehmung; es widerlegt keine universelle Möglichkeit gemeinsamer Repräsentation.
+
+Stehende Prinzipien: Quellen einmal vorbereiten und mehrfach nutzen; Details und
+komprimierte Hypothesen getrennt zugänglich halten; Evidenzbesitz und Laufzeitwissen
+explizit behandeln; überprüfbare Aufgabenresultate statt bloßer Embeddingähnlichkeit
+verwenden. Spezialprojektionen sind eine Vergleichsoption, keine vorweggenommene
+Lösung. Multimodale Rohdaten und adaptive Rechentiefe folgen nach dem kleinen Test,
+um Wahrnehmungsfehler und zusätzliche Suche nicht mit Formatgüte zu vermischen.
+
+## Mathematische Konkretisierung des Vergleichs
+
+Alex bittet um tatsächliche Diskussion mit Claude Opus 5.5 bei `max` und Formeln,
+die eine eindeutige Implementierung ermöglichen. Die [Spezifikation](shared-abstraction-spec.md)
+definiert Eingabegrammatik, Tensorformen, gemeinsamen Erschließer/Leser,
+gewichteten Loss, Vergleichsarme, Splits, Oracle, Korrektur und Entscheidungskriterien.
+Die dortigen Reviewbelege trennen gemeinsame Schlussfolgerungen von methodischen
+Präferenzen. Ein endlicher Generator und zufällig initialisierte Tensorpfade wurden
+geprüft; kein Modelltraining und kein allgemeiner Abstraktionsnachweis.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen
