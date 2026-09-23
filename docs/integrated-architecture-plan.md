@@ -712,6 +712,15 @@ Protokoll/Begründung: `…/support-use-root-decision.md`, `…/support-use-curr
 Falls Wiedererkennen gelingt, aber der ursprüngliche Endpunkt weiter scheitert,
 folgt eine Umfangsentscheidung mit Alex statt weiterer automatischer Varianten.
 
+**SUC läuft:** `runs/latent_agent_r1/support_use_curriculum_20260923/SUC/`,
+Recipe-Hash `49a6a623…`. Start nach unabhängig geprüftem R-pair-Endergebnis.
+Ein vorab reproduzierter Wiederanlauffehler konnte die 2000er-Entscheidung umgehen;
+der Sitzungsstart prüft jetzt die im Checkpoint gespeicherte Entscheidung, am
+Grenzschritt zusätzlich auf den geladenen Gewichten. Originalfehler bleibt in
+`root_boundary_01/`; unverändertes unabhängiges Repro besteht in `root_boundary_02/`.
+Supportkopien, unveränderte disjunkte Pools, Gradienten, Gates und exakter Resume
+sind auf CPU geprüft; Rohberichte bleiben erhalten. Noch kein Lernergebnis.
+
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 
 **Anlass:** Der 15-min-Wahrnehmungslauf `runs/latent_agent_r1/dev_perception_20260923/`
