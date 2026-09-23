@@ -735,3 +735,20 @@ actual byte-text decoder, including image/audio/video questions. Its training an
 language/interface limitations remain visible. Existing factor and generated-output
 quality suites remain separate; neither is replaced by these question-answer tasks.
 See [protocol, scope and missing domains](understanding-suite-plan.md).
+
+## Core-input property diagnosis
+
+The nonlinguistic color diagnostic uses saved scenes and paired color/position
+interventions, frozen-token probes, and matched frozen/adaptive encoder arms:
+
+```bash
+python -m experiments.core_information \
+  --perception <perception-run>/last.pt --core <core-run>/last.pt \
+  --data data/<fresh-dataset> --output runs/<fresh-comparison> --device cuda
+```
+
+Both directories must be new; this bounded diagnostic does not resume. Defaults
+and predeclared gates are in CI1 of `integrated-architecture-plan.md`. Each arm
+owns its report, raw predictions and checkpoint. The dataset contains exact shared
+training batches plus held-out panels. This trains a new pointed property query,
+not temporal tracking or the original lamp policy; no text input is required.

@@ -29,3 +29,22 @@ def test_freeze_allows_only_intended_gradients():
         enc = list(model.perception.encoder.parameters())
         assert any(p.grad is not None and p.grad.abs().sum()>0 for p in enc) == adapt
         assert any(p.grad is not None and p.grad.abs().sum()>0 for p in model.core.block.parameters())
+
+
+def test_constant_answers_cannot_pass_pair_screen():
+    from experiments.core_information import paired_metrics, accuracy_screen
+    logits=torch.tensor([[10.,0,0,0]]).expand(8,-1)
+    target=torch.arange(8)%4
+    m=paired_metrics(logits,logits,logits,target,(target+1)%4)
+    assert m['color_pair']==0
+    assert not accuracy_screen(m)
+
+
+def test_probe_owns_no_encoder_gradients_or_rng_changes():
+    from experiments.core_information import fit_probe
+    x=torch.randn(16,8,requires_grad=True);y=torch.arange(16)%4
+    before=torch.get_rng_state().clone()
+    p,h=fit_probe(x,y,2)
+    assert torch.equal(before,torch.get_rng_state())
+    assert x.grad is None
+    assert torch.isfinite(p(x)).all()
