@@ -14,9 +14,10 @@ read the particular record when needed, not the whole history at startup.
   not establish the complete capability.
 - **Integrated architecture R1:** the [adopted plan](integrated-architecture-plan.md)
   implements RuleWorld-64 as the first reference integration (pixels → slots →
-  concept memory → two-step plan → execution → correction). 712 CPU tests pass.
+  concept memory → two-step plan → execution → correction). 722 CPU tests pass.
   First 15-minute perception run: attributes/pointers ≈99–100%, lamp 91.6% (C1 fails);
-  diagnosis and symbolic-core development underway. No integrated learned result;
+  symbolic core also misses its learning target; targeted repair comparisons run.
+  No integrated learned result;
   natural data gate N1 open. Runs: `runs/latent_agent_r1/`.
 - **Latent concept learning:** the [abstract research review](latent-concept-learning-review.md)
   compares concept induction, latent memory and prerequisites with current primary

@@ -474,3 +474,141 @@ def test_feedback_does_not_stale_reads_of_unrelated_concepts(tmp_path):
     read_other = agent.memory.read_set(agent.concept_state(other)[1])
     assert agent._act(rw.Actuator(world), view, m, record)["feedback"] is not None
     assert agent.memory.is_current(read_other)
+
+
+# ---------------------------------------------------------------- S1 texture repair
+
+
+def test_randomized_arm_sees_the_same_base_scenes_and_labels():
+    import experiments.latent_agent as recipe
+
+    kinds = rw.KIND_SPLIT["train"]
+    base = recipe.perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu")
+    aug = recipe.perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu", randomize=1.0,
+                                  augmentation=recipe.augmentation_stream(1101, 0))
+    (s0, l0, rgb0, e0, stats0), (s1, l1, rgb1, e1, stats1) = base, aug
+    assert stats0 is None and stats1["replaced"] == 12
+    assert all(torch.equal(x, y) for x, y in zip(vars(s0).values(), vars(s1).values()))
+    assert torch.equal(l0, l1) and torch.equal(e0, e1)
+    changed = (rgb0 != rgb1).any(1)
+    assert changed.any() and ((e0[changed] == 1) | (e0[changed] == 2)).all()
+    again = recipe.perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu", randomize=1.0,
+                                    augmentation=recipe.augmentation_stream(1101, 0))
+    assert torch.equal(again[2], rgb1)
+    other_step = recipe.perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu", randomize=1.0,
+                                         augmentation=recipe.augmentation_stream(1101, 1))
+    assert not torch.equal(other_step[2], rgb1)
+
+
+def run_recipe(monkeypatch, *arguments):
+    import sys
+    import experiments.latent_agent as recipe
+
+    monkeypatch.setattr(sys, "argv", ["latent_agent", *arguments])
+    recipe.main()
+
+
+def test_warm_start_records_parent_and_uses_a_fresh_optimizer(tmp_path, monkeypatch):
+    import json
+    from pathwm.io import file_hash, state_hash
+    from pathwm.models.slots import SlotPerception
+    import experiments.latent_agent as recipe
+
+    common = ["--stage", "perception", "--size", "check", "--device", "cpu"]
+    run_recipe(monkeypatch, *common, "--updates", "2", "--output", str(tmp_path / "parent"))
+    run_recipe(monkeypatch, *common, "--updates", "2", "--texture-randomization", "1.0",
+               "--init-perception", str(tmp_path / "parent"), "--output", str(tmp_path / "child"))
+    record = json.loads((tmp_path / "child" / "run.json").read_text())
+    settings = record["identity"]["settings"]
+    parent_file = tmp_path / "parent" / "last.pt"
+    s = recipe.SIZES["check"]
+    parent = SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])
+    recipe.load_component(parent, parent_file, "perception")
+    assert settings["warm_start"]["init_perception_file_sha256"] == file_hash(parent_file)
+    assert settings["warm_start"]["init_perception_state_sha256"] == state_hash(parent)
+    assert settings["texture_randomization"] == 1.0 and settings["texture_sampler"]["near_lamp"] == 0.25
+    child = torch.load(tmp_path / "child" / "last.pt", weights_only=True)
+    assert child["step"] == 2  # counts only its own updates: a new run, not a resume
+    assert all(v["step"] == 2 for v in child["optimizer"]["state"].values())
+    rows = [json.loads(l) for l in (tmp_path / "child" / "metrics.jsonl").read_text().splitlines()]
+    assert all(r["texture_replaced"] == 2 * s["perception_batch"] for r in rows if r["split"] == "train")
+    default = json.loads((tmp_path / "parent" / "run.json").read_text())["identity"]["settings"]
+    assert "texture_randomization" not in default and "warm_start" not in default  # default identity unchanged
+
+
+def test_randomized_warm_started_pause_resume_matches_uninterrupted(tmp_path, monkeypatch):
+    common = ["--stage", "perception", "--size", "check", "--device", "cpu"]
+    run_recipe(monkeypatch, *common, "--updates", "1", "--output", str(tmp_path / "parent"))
+    arm = [*common, "--updates", "4", "--texture-randomization", "1.0", "--init-perception", str(tmp_path / "parent")]
+    run_recipe(monkeypatch, *arm, "--stop-after", "2", "--output", str(tmp_path / "paused"))
+    run_recipe(monkeypatch, "--stage", "perception", "--resume", str(tmp_path / "paused"))
+    run_recipe(monkeypatch, *arm, "--output", str(tmp_path / "straight"))
+    a = torch.load(tmp_path / "paused" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
+    assert a["step"] == b["step"] == 4 and a["rows"] == b["rows"]
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+
+
+def test_perception_diagnosis_companion_reports_and_applies_adoption_rule(tmp_path, monkeypatch):
+    import json
+    import numpy as np
+    from pathwm.io import file_hash
+    import sys
+    import experiments.perception_diagnosis as diagnosis
+
+    run_recipe(monkeypatch, "--stage", "perception", "--size", "check", "--device", "cpu", "--updates", "1",
+               "--output", str(tmp_path / "run"))
+    small = ["--run", str(tmp_path / "run"), "--scenes", "4", "--per-cell", "2"]
+    monkeypatch.setattr(sys, "argv", ["diagnosis", *small, "--output", str(tmp_path / "control")])
+    diagnosis.main()
+    monkeypatch.setattr(sys, "argv", ["diagnosis", *small, "--control", str(tmp_path / "control"),
+                                      "--output", str(tmp_path / "candidate")])
+    diagnosis.main()
+    result = json.loads((tmp_path / "candidate" / "diagnosis.json").read_text())
+    assert set(result["per_texture"]) == {str(k) for k in rw.KIND_SPLIT["validation"]}
+    assert set(result["adoption"]["checks"]) == {
+        "lamp", "each_texture", "attributes", "pointers", "appearance", "appearance_across_lamp_states"}
+    assert result["adoption"]["checks"]["appearance"] is True  # identical model vs itself
+    assert result["adoption"]["checks"]["appearance_across_lamp_states"] is True
+    assert (tmp_path / "candidate" / "report.html").exists()
+    assert torch.equal(rw.KIND_COLORS, rw._kind_table()[0])  # interventions restored the table
+    # Per-example arrays survive with provenance; aggregates are recomputable from them.
+    arrays = np.load(tmp_path / "candidate" / "per_example.npz")
+    count = len(rw.KIND_SPLIT["validation"]) * 2 * 2 * 2
+    assert arrays["cells/kind"].shape == (count,) and arrays["cells/token"].shape[0] == count
+    assert "kind48_colour0_lamp_yellow/correct" in arrays.files
+    per_texture = {str(k): float(arrays["cells/correct"][arrays["cells/kind"] == k].mean()) for k in rw.KIND_SPLIT["validation"]}
+    assert per_texture == result["per_texture"]
+    record = json.loads((tmp_path / "candidate" / "run.json").read_text())
+    assert record["source"]["sha256"] and record["identity"]["data"]["checkpoint_sha256"] == result["checkpoint"]["sha256"]
+    assert result["per_example"]["sha256"] == file_hash(tmp_path / "candidate" / "per_example.npz")
+    assert json.loads((tmp_path / "candidate" / "status.json").read_text())["report"] == "structural_verified"
+
+
+def test_adoption_rule_rejects_a_large_regression_across_lamp_states():
+    import experiments.perception_diagnosis as diagnosis
+
+    def summary(overall, crossed):
+        return dict(c1=dict(lamp_accuracy=0.995, attribute_accuracy=[1.0] * 4, machine_pointer_accuracy=1.0,
+                            object_pointer_accuracy=1.0, machine_detection=1.0),
+                    per_texture={48: 0.99, 53: 0.98},
+                    appearance=dict(nn_texture_accuracy=overall, nn_texture_accuracy_across_lamp_states=crossed))
+
+    control = summary(0.95, 0.95)
+    assert diagnosis.adoption(summary(0.95, 0.94), control)["adopt"] is True
+    decision = diagnosis.adoption(summary(0.96, 0.60), control)  # overall fine, cross-state collapse
+    assert decision["checks"]["appearance"] is True
+    assert decision["checks"]["appearance_across_lamp_states"] is False and decision["adopt"] is False
+
+
+def test_diagnosis_companion_marks_failures_visibly(tmp_path, monkeypatch):
+    import json
+    import sys
+    import experiments.perception_diagnosis as diagnosis
+
+    (tmp_path / "broken").mkdir()
+    monkeypatch.setattr(sys, "argv", ["diagnosis", "--run", str(tmp_path / "broken"), "--output", str(tmp_path / "out")])
+    with pytest.raises(FileNotFoundError):
+        diagnosis.main()
+    state = json.loads((tmp_path / "out" / "status.json").read_text())
+    assert state["result"] == "failed" and state["report"] == "incomplete" and "FileNotFoundError" in state["error"]

@@ -31,6 +31,7 @@ from pathwm.io import (
     atomic_json,
     digest,
     environment,
+    file_hash,
     evaluation_mode,
     load_component,
     resume_arguments,
@@ -217,31 +218,79 @@ def audit(args, s):
 # ---------------------------------------------------------------- S1 perception
 
 
-def perception_batch(generator, kinds, count, device):
+def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmentation=None):
+    """Base scenes/lamps always come from `generator` with unchanged draws.
+
+    With `randomize>0`, each machine body texture is replaced with that probability
+    by a procedural texture drawn ONLY from the separate `augmentation` generator, so
+    randomized and unchanged arms see identical base scenes, lamps and labels.
+    """
     pick = torch.tensor(kinds)[torch.randint(len(kinds), (count, 2), generator=generator)]
     scenes = rw.sample_scenes(generator, pick)
     lamps = torch.randint(2, (count, 2), generator=generator)
-    rgb, entity = rw.render(ev._scenes_to(scenes, device), lamps.to(device))
-    return scenes, lamps, rgb, entity
+    textures, stats = None, None
+    if randomize:
+        base = rw.kind_textures(scenes.kind)
+        drawn, stats = rw.TextureSampler().sample(augmentation, count)
+        replace = torch.rand(count, 2, generator=augmentation) < randomize
+        textures = base.where(replace, drawn)
+        stats = dict(stats, replaced=int(replace.sum()))
+    rgb, entity = rw.render(ev._scenes_to(scenes, device), lamps.to(device), textures)
+    return scenes, lamps, rgb, entity, stats
+
+
+def augmentation_stream(seed, step):
+    """Deterministic per-update texture stream: exact resume, no base-sampler draws."""
+    return torch.Generator().manual_seed(seed * 1_000_003 + 7_919 + step)
+
+
+def warm_start(module, path):
+    """Load perception weights from a parent run (new optimizer, new run; not a resume)."""
+    path = Path(path)
+    checkpoint = path / "last.pt" if path.is_dir() else path
+    load_component(module, checkpoint, "perception")
+    return dict(init_perception=str(checkpoint), init_perception_file_sha256=file_hash(checkpoint),
+                init_perception_state_sha256=state_hash(module))
 
 
 def train_perception(args, s):
     seed_everything(args.seed)
-    model = nn.ModuleDict(dict(perception=SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"]))).to(args.device)
+    model = nn.ModuleDict(dict(perception=SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])))
+    parent = warm_start(model["perception"], args.init_perception) if args.init_perception else {}
+    model = model.to(args.device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
     settings = dict(stage="perception", seed=args.seed, updates=args.updates, lr=args.lr, device=args.device,
                     size=args.size, sizes=s, purpose="development", precision="fp32",
                     max_reserved_gib=args.max_reserved_gib,
                     objective="RGB MSE + 0.5*(matched mask CE + kind CE + attribute CE + lamp BCE); labels training-only")
+    # Options appear in settings only when used, so default runs keep their identity.
+    # Keys named like CLI flags are restored by resume_arguments.
+    if args.texture_randomization:
+        sampler = rw.TextureSampler()
+        settings["texture_randomization"] = args.texture_randomization
+        settings["texture_sampler"] = dict(
+            near_lamp=sampler.near_lamp, radius=sampler.radius, exclusion=sampler.exclusion,
+            cap=sampler.cap, heldout_kinds=list(sampler.heldout),
+            stream="Generator(seed*1000003 + 7919 + step); training scenes only; validation unchanged",
+        )
+    if parent:
+        settings["init_perception"] = str(args.init_perception)
+        settings["warm_start"] = dict(parent, optimizer="fresh AdamW; not a resume of the parent run")
     runner = Run(args.resume or args.output, settings=settings, data=rw.manifest(), recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
     started = time.perf_counter()
     try:
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
-            scenes, lamps, rgb, entity = perception_batch(runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device)
+            scenes, lamps, rgb, entity, stats = perception_batch(
+                runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
+                randomize=args.texture_randomization, augmentation=augmentation_stream(args.seed, runner.step),
+            )
             percept = model["perception"](rgb)
             loss, metrics = perception_loss(percept, rgb, entity, scenes.attrs.to(args.device), lamps.to(args.device))
+            if stats:
+                metrics.update(texture_replaced=stats["replaced"], texture_near_lamp=stats["near_lamp"],
+                               texture_heldout_rejections=stats["heldout_rejections"], texture_draws=stats["draws"])
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -256,7 +305,7 @@ def train_perception(args, s):
         runner.save()
         with evaluation_mode(model):
             metrics = ev.perception_metrics(model["perception"], torch.Generator().manual_seed(args.seed + 17), "validation", s["validation_scenes"], args.device)
-            _, _, rgb, _ = perception_batch(torch.Generator().manual_seed(args.seed + 18), rw.KIND_SPLIT["validation"], 8, args.device)
+            _, _, rgb, _, _ = perception_batch(torch.Generator().manual_seed(args.seed + 18), rw.KIND_SPLIT["validation"], 8, args.device)
             recon = model["perception"](rgb).recon
         elapsed = time.perf_counter() - started
         result = dict(
@@ -283,7 +332,7 @@ def validate_perception(perception, step, args, s):
     was = perception.training
     perception.eval()
     g = torch.Generator().manual_seed(args.seed + 5)
-    scenes, lamps, rgb, entity = perception_batch(g, rw.KIND_SPLIT["validation"], min(32, s["validation_scenes"]), args.device)
+    scenes, lamps, rgb, entity, _ = perception_batch(g, rw.KIND_SPLIT["validation"], min(32, s["validation_scenes"]), args.device)
     loss, metrics = perception_loss(perception(rgb), rgb, entity, scenes.attrs.to(args.device), lamps.to(args.device))
     perception.train(was)
     return dict(step=step, split="validation", **metrics)
@@ -534,6 +583,10 @@ def main():
     parser.add_argument("--population", choices=("validation", "test"), default="validation")
     parser.add_argument("--evaluations", type=Path, nargs="*")
     parser.add_argument("--check", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--texture-randomization", type=float, default=0.0,
+                        help="perception only: per-machine probability of a procedural training body texture")
+    parser.add_argument("--init-perception", type=Path,
+                        help="perception only: warm-start weights from a run/last.pt (new optimizer and run)")
     args = resume_arguments(parser, parser.parse_args())
     if args.stage == "check":
         args.device = "cpu"
@@ -544,6 +597,10 @@ def main():
     if args.output is None and args.resume is None:
         parser.error("--output required (a new directory)")
     s = SIZES[args.size]
+    if (args.texture_randomization or args.init_perception) and args.stage != "perception":
+        parser.error("--texture-randomization/--init-perception apply to the perception stage only")
+    if not 0.0 <= args.texture_randomization <= 1.0:
+        parser.error("--texture-randomization must be a probability")
     if args.stage == "audit":
         audit(args, s)
     elif args.stage == "perception":

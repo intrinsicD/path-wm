@@ -187,6 +187,93 @@ def _kind_table():
 
 
 KIND_COLORS, KIND_PATTERN, KIND_PERIOD = _kind_table()
+HELDOUT_KINDS = KIND_SPLIT["validation"] + KIND_SPLIT["test"]
+
+
+@dataclass(frozen=True)
+class Textures:
+    """Explicit machine body textures per scene: colours [B,2,2,3], pattern/period [B,2].
+
+    Rendering-only nuisance; lamp, panel, geometry, masks and labels do not depend on it.
+    """
+
+    colors: torch.Tensor
+    pattern: torch.Tensor
+    period: torch.Tensor
+
+    def where(self, mask, other):
+        """Per-machine choice [B,2]: `other` where mask is True, else self."""
+        return Textures(
+            torch.where(mask[..., None, None], other.colors, self.colors),
+            torch.where(mask, other.pattern, self.pattern),
+            torch.where(mask, other.period, self.period),
+        )
+
+
+def kind_textures(kinds):
+    """The fixed texture table for kind ids [B,2] (the default renderer's lookup)."""
+    kinds = torch.as_tensor(kinds).long()
+    return Textures(KIND_COLORS[kinds], KIND_PATTERN[kinds], KIND_PERIOD[kinds])
+
+
+@dataclass(frozen=True)
+class TextureSampler:
+    """S1-only procedural body textures (declared training-data design).
+
+    Colour pairs, pattern and period follow the kind generator's ranges; with
+    probability `near_lamp` one colour is drawn within `radius` (per channel) of the
+    rendered lamp-on or lamp-off colour. Any texture whose pattern and period equal a
+    declared held-out (validation/test) texture and whose two colours are both within
+    `exclusion` (Euclidean) of that texture's colours is rejected. This partition is
+    fixed by kind ids, never by model outcomes. At most `cap` draws per texture.
+    """
+
+    near_lamp: float = 0.25
+    radius: float = 0.12
+    exclusion: float = 0.1
+    cap: int = 64
+    heldout: tuple = HELDOUT_KINDS
+
+    def heldout_like(self, colors, pattern, period):
+        kinds = torch.tensor(self.heldout)
+        same = (KIND_PATTERN[kinds] == pattern) & (KIND_PERIOD[kinds] == period)
+        close = (KIND_COLORS[kinds] - colors).norm(dim=-1).le(self.exclusion).all(-1)
+        return bool((same & close).any())
+
+    def sample(self, generator, count):
+        """-> Textures [count,2] and draw statistics (deterministic in `generator`)."""
+        g = generator
+        colors = torch.empty(count, 2, 2, 3)
+        pattern = torch.empty(count, 2, dtype=torch.long)
+        period = torch.empty(count, 2, dtype=torch.long)
+        stats = dict(textures=0, draws=0, heldout_rejections=0, near_lamp=0)
+        anchors = torch.tensor([LAMP[1], LAMP[0]])
+        for b in range(count):
+            for m in range(2):
+                # Decide near-lamp once per texture: retries must not bias its rate.
+                near = float(torch.rand(1, generator=g)) < self.near_lamp
+                anchor = anchors[int(torch.randint(2, (1,), generator=g))]
+                index = int(torch.randint(2, (1,), generator=g))
+                for _ in range(self.cap):
+                    stats["draws"] += 1
+                    pair = 0.2 + 0.75 * torch.rand(2, 3, generator=g)
+                    if near:
+                        jitter = (torch.rand(3, generator=g) * 2 - 1) * self.radius
+                        pair[index] = (anchor + jitter).clamp(0, 1)
+                    kind_pattern = int(torch.randint(6, (1,), generator=g))
+                    kind_period = int(torch.randint(2, 5, (1,), generator=g))
+                    if (pair[0] - pair[1]).abs().mean() <= 0.25:
+                        continue
+                    if self.heldout_like(pair, kind_pattern, kind_period):
+                        stats["heldout_rejections"] += 1
+                        continue
+                    break
+                else:
+                    raise ValueError(f"Texture sampler exhausted its cap of {self.cap} draws")
+                colors[b, m], pattern[b, m], period[b, m] = pair, kind_pattern, kind_period
+                stats["textures"] += 1
+                stats["near_lamp"] += int(near)
+        return Textures(colors, pattern, period), stats
 
 
 @dataclass(frozen=True)
@@ -244,9 +331,16 @@ def _grid(device):
     return x, y
 
 
-def render(scenes, lamps):
-    """Scenes [B], lamps [B,2] -> rgb [B,3,64,64] (8-bit exact), entity map [B,64,64]."""
+def render(scenes, lamps, textures=None):
+    """Scenes [B], lamps [B,2] -> rgb [B,3,64,64] (8-bit exact), entity map [B,64,64].
+
+    `textures` optionally overrides machine body textures (training nuisance only);
+    the default renders each kind from the fixed texture table.
+    """
     device = scenes.kind.device
+    if textures is None:
+        textures = kind_textures(scenes.kind.cpu())
+    textures = Textures(*(v.to(device) for v in vars(textures).values()))
     lamps = torch.as_tensor(lamps, device=device).long().reshape(len(scenes), 2)
     x, y = _grid(device)
     b = len(scenes)
@@ -254,14 +348,13 @@ def render(scenes, lamps):
         b, 1, SIZE, SIZE
     )
     entity = torch.zeros(b, SIZE, SIZE, dtype=torch.long, device=device)
-    colors = KIND_COLORS.to(device)
     for m in range(2):
         cx = scenes.machine_xy[:, m, 0, None, None]
         cy = scenes.machine_xy[:, m, 1, None, None]
         dx, dy = x - cx, y - cy
         body = (dx.abs() <= 11) & (dy.abs() <= 8)
         u, v = (dx + 11).long(), (dy + 8).long()
-        p = KIND_PERIOD.to(device)[scenes.kind[:, m]][:, None, None]
+        p = textures.period[:, m][:, None, None]
         patterns = torch.stack(
             (
                 ((u // p + v // p) % 2) == 0,
@@ -273,9 +366,9 @@ def render(scenes, lamps):
             ),
             1,
         )
-        choose = KIND_PATTERN.to(device)[scenes.kind[:, m]]
+        choose = textures.pattern[:, m]
         first = patterns[torch.arange(b, device=device), choose]
-        pair = colors[scenes.kind[:, m]]  # [B,2,3]
+        pair = textures.colors[:, m]  # [B,2,3]
         texture = torch.where(
             first[:, None], pair[:, 0, :, None, None], pair[:, 1, :, None, None]
         )

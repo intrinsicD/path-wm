@@ -21,8 +21,17 @@ nicht dessen Arm A.
   Quellkopie (`runs/latent_agent_r1/source_dev_20260923/` → `…/dev_perception_20260923/`).
   Frische Validation: Attribute 100/99,41/99,71/99,90%, Maschinenzeiger 100%,
   Objektzeiger 99,90%, **Lampe 91,60% – C1 verfehlt**. 1,746 GiB reserviert;
-  Checkpoint, Rohmetriken und strukturell geprüfter Bericht erhalten. CPU-Diagnose
-  und 15-min-Strukturdiagnose laufen; Pixel-Kerntraining wartet auf die C1-Reparatur.
+  Checkpoint, Rohmetriken und strukturell geprüfter Bericht erhalten. CPU-Diagnose:
+  texturspezifische Farbverwechslung; vorab erklärter Reparaturvergleich in §17.
+- **Strukturdiagnose verfehlt das Lernziel:** 6421 Updates/15 Minuten, 1,971 GiB
+  reserviert (`…/dev_symbolic_20260923/`): Validation ν Kategorie 0,095,
+  Relation/Toggle 0, Open/Close −1,333; ECE 0,0166 ist kein Kompetenznachweis.
+  Unabhängige Diagnose auf frischen Trainingsregeln bestätigt das Problem
+  (`…/core_diagnosis_20260923/`). Einzelregeln sind dagegen lernbar: Kategorie
+  nach 250 und Relation nach 1000 Updates BA=1,0, mit Ergebnis-Loss früher als mit
+  dem vollen Loss (`…/fixed_rule_probe_20260923/`, `…/fixed_relation_probe_1000_20260923/`).
+  Diese begrenzten Fits belegen keine Meta-Generalisierung. Pixel-Kerntraining
+  wartet auf Wahrnehmungs- und Kernreparatur; alle negativen Läufe bleiben erhalten.
 - **Kein vollständiger gelernter R1-Nachweis.** Smoke- und Checkläufe prüfen nur
   Software. Kein Gesamtgate ist als Fähigkeit bestanden,
   keine Aussage zu natürlichen Daten, und R1 ist nicht das vollständige Zielmodell.
@@ -468,3 +477,70 @@ verifiziert.
 3. Eine Entwicklungsevaluation (Validation, volles Lebensprotokoll mit Familienplan)
    zur Kalibrierung von τ, λ und τ_feedback; danach formale Iterationszahlen und Seeds
    in §8 eintragen, bevor die Testpopulation berührt wird.
+
+## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
+
+**Anlass:** Der 15-min-Wahrnehmungslauf `runs/latent_agent_r1/dev_perception_20260923/`
+verfehlt C1 nur bei der Lampe (Validation 0,916). Die CPU-Diagnose
+(`runs/latent_agent_r1/lamp_diagnosis_v2_20260923/findings.md`) zeigt korrekte Zeiger
+und Lampenpixel-Zuordnung, aber texturspezifische Fehler (Validationstextur 53: 0,50),
+die sich durch Farbinterventionen am Maschinenkörper verschieben: eine Verwechslung
+von Körper- und Lampenfarbe bei nur 48 festen Trainingstexturen. Lineare Proben auf dem
+Maschinentoken erreichen ~0,92; das stützt die Deutung, beweist aber nicht, dass kein
+nichtlinearer Leser die Information gewinnen könnte.
+
+**Reparatur (nur S1-Trainingsdaten, Architektur unverändert):**
+`--texture-randomization P` ersetzt je Maschine mit Wahrscheinlichkeit P die
+Körpertextur durch eine prozedurale (`rw.TextureSampler`: Farbpaar, Muster, Periode
+wie der Artgenerator; 25 % mit einer Farbe innerhalb ±0,12 je Kanal der gerenderten
+Lampe-an- oder -aus-Farbe; Entscheidung einmal je Textur, Wiederholungen verzerren die
+Rate nicht). Deklarierte Generatorpartition: Texturen mit Muster und Periode einer
+Validation-/Testtextur und beiden Farben innerhalb 0,1 (euklidisch) werden abgelehnt,
+festgelegt über Art-IDs, nie über Modellergebnisse; höchstens 64 Ziehungen je Textur,
+sonst Fehler. Der Standardrenderer ist bitgleich; Lampe, Paneel, Geometrie, Masken und
+Labels hängen nicht von der Textur ab. Die Randomisierung zieht ausschließlich aus
+einem eigenen Strom `Generator(seed·1 000 003 + 7 919 + Update)`, sodass beide Arme
+identische Basisszenen, Lampen und Labels sehen und Resume exakt bleibt. Validation und
+Evaluation rendern unverändert die festen Texturen. `--init-perception RUN` startet
+Gewichte eines Elternlaufs mit neuem Optimizer in einem neuen Lauf (Datei- und
+Zustandshash des Elternteils in den Einstellungen; kein Resume des Elternlaufs).
+
+**Vergleich (Entwicklung, nur Validation):** zwei Arme à 7,5 Minuten, beide ab
+`dev_perception_20260923/last.pt`, Seed 1101, frischer AdamW, gleiche Basis-Szenen:
+
+```bash
+.venv/bin/python -m experiments.latent_agent --stage perception --max-minutes 7.5 --device cuda \
+  --init-perception runs/latent_agent_r1/dev_perception_20260923 --output runs/latent_agent_r1/texture_control_20260923
+.venv/bin/python -m experiments.latent_agent --stage perception --max-minutes 7.5 --device cuda \
+  --init-perception runs/latent_agent_r1/dev_perception_20260923 --texture-randomization 1.0 \
+  --output runs/latent_agent_r1/texture_randomized_20260923
+.venv/bin/python -m experiments.perception_diagnosis --run runs/latent_agent_r1/texture_control_20260923 \
+  --output runs/latent_agent_r1/texture_control_20260923/diagnosis
+.venv/bin/python -m experiments.perception_diagnosis --run runs/latent_agent_r1/texture_randomized_20260923 \
+  --control runs/latent_agent_r1/texture_control_20260923/diagnosis \
+  --output runs/latent_agent_r1/texture_randomized_20260923/diagnosis
+```
+
+**Vorab erklärte Übernahmeregel** (Validation, gegen den Kontrollarm): Lampe ≥ 0,99 im
+256-Szenen-C1-Screen; jede Validationstextur ≥ 0,97; Attribute und Zeiger sinken um
+höchstens 0,005; der Aussehensproxy (Leave-one-out-1-NN-Texturidentifikation aus
+Maschinentokens) sinkt um höchstens 0,02 **sowohl insgesamt als auch über
+Lampenzustände hinweg** (nächster Nachbar mit anderem Lampenzustand). Diese zweite
+Bedingung wurde vor dem Lauf beider Arme ergänzt und verschärft die Regel. C1-Schwellen
+bleiben unverändert. Scheitert
+die Regel, wird zuerst die zugesagte Alternative (randomisiertes Training von Grund auf,
+15 min) ausgewertet, bevor die Architektur geändert wird (Rückfall: Slot-Verfeinerung
+per erneuter Cross-Attention auf die feine Pyramide). Alle negativen Läufe bleiben
+erhalten. Ein formaler C1-Nachweis braucht danach einen frischen Lauf mit dem
+übernommenen Rezept; warm gestartete Arme sind Entwicklung.
+
+**Softwareprüfung:** Tests in `tests/test_rule_world.py` und
+`tests/test_latent_agent.py` (Standardrenderer bitgleich, nur Körperpixel ändern sich,
+angeforderte Farben, deterministischer Sampler mit Ausschluss und Cap, gleiche
+Basisszenen in beiden Armen, Warmstart mit Elternhash und frischem Optimizer, exaktes
+Pause/Resume des randomisierten Arms, Diagnose-Begleitskript mit Übernahmeregel, die
+einen großen Einbruch über Lampenzustände ablehnt). Das Begleitskript speichert alle
+Einzelbeispiele (`per_example.npz`, gehasht) mit Checkpoint-, Eltern- und Quellidentität
+und hinterlässt bei jedem Fehler einen sichtbaren Status.
+Log: `runs/reviews/integrated_architecture_20260923/texture-repair-worktree-tests.log`.
+Kein Training, kein GPU-Lauf in diesem Schritt.

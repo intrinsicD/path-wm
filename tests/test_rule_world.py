@@ -189,3 +189,68 @@ def test_life_sampler_rejects_unsatisfiable_disjoint_queries(monkeypatch):
     monkeypatch.setattr(rw, "sample_scenes", identical)
     with pytest.raises(ValueError, match="disjoint"):
         ev.sample_life(torch.Generator().manual_seed(1), "validation", n_support=128, queries=4, goals=0, distract=8, counter=8)
+
+
+# ---------------------------------------------------------------- texture nuisance (S1)
+
+
+def test_default_render_equals_explicit_kind_texture_table():
+    g = torch.Generator().manual_seed(31)
+    scenes = rw.sample_scenes(g, torch.randint(72, (6, 2), generator=g))
+    lamps = torch.randint(2, (6, 2), generator=g)
+    rgb, entity = rw.render(scenes, lamps)
+    rgb2, entity2 = rw.render(scenes, lamps, rw.kind_textures(scenes.kind))
+    assert torch.equal(rgb, rgb2) and torch.equal(entity, entity2)
+
+
+def test_texture_override_changes_only_machine_body_pixels():
+    g = torch.Generator().manual_seed(32)
+    scenes = rw.sample_scenes(g, torch.randint(48, (8, 2), generator=g))
+    lamps = torch.randint(2, (8, 2), generator=g)
+    base, entity = rw.render(scenes, lamps)
+    textures, _ = rw.TextureSampler().sample(torch.Generator().manual_seed(5), 8)
+    other, entity2 = rw.render(scenes, lamps, textures)
+    assert torch.equal(entity, entity2)  # geometry and masks unchanged
+    flipped, _ = rw.render(scenes, 1 - lamps, textures)
+    lamp_or_panel = (other == torch.tensor(rw.PANEL)[None, :, None, None]).all(1) | (other != flipped).any(1)
+    changed = (base != other).any(1)
+    assert changed.any()
+    assert ((entity[changed] == 1) | (entity[changed] == 2)).all()  # only machine bodies
+    assert not (changed & lamp_or_panel).any()  # lamp and panel pixels untouched
+
+
+def test_texture_override_renders_the_requested_colours():
+    g = torch.Generator().manual_seed(33)
+    scenes = rw.sample_scenes(g, torch.tensor([[0, 1]]))
+    colour = torch.tensor([0.945, 0.895, 0.391])
+    textures = rw.kind_textures(scenes.kind)
+    solid = rw.Textures(
+        torch.stack((colour, colour))[None, None].expand(1, 2, 2, 3).clone(),
+        torch.full((1, 2), 5), torch.full((1, 2), 2),
+    )
+    textures = textures.where(torch.tensor([[True, False]]), solid)
+    rgb, entity = rw.render(scenes, torch.zeros(1, 2, dtype=torch.long), textures)
+    cx, cy = scenes.machine_xy[0, 0].long().tolist()
+    body = rgb[0, :, cy + 6, cx - 9]  # inside the body, outside panel/lamp
+    assert torch.allclose(body, (colour * 255).round() / 255)
+    base, _ = rw.render(scenes, torch.zeros(1, 2, dtype=torch.long))
+    assert torch.equal(rgb[..., 32:], base[..., 32:])  # the untouched right machine
+
+
+def test_texture_sampler_is_deterministic_excludes_heldout_and_is_capped():
+    sampler = rw.TextureSampler()
+    a, stats_a = sampler.sample(torch.Generator().manual_seed(7), 256)
+    b, stats_b = sampler.sample(torch.Generator().manual_seed(7), 256)
+    assert all(torch.equal(x, y) for x, y in zip(vars(a).values(), vars(b).values())) and stats_a == stats_b
+    for k in rw.HELDOUT_KINDS:
+        assert sampler.heldout_like(rw.KIND_COLORS[k], int(rw.KIND_PATTERN[k]), int(rw.KIND_PERIOD[k]))
+        assert sampler.heldout_like(rw.KIND_COLORS[k] + 0.03, int(rw.KIND_PATTERN[k]), int(rw.KIND_PERIOD[k]))
+    for i in range(256):
+        for m in range(2):
+            assert not sampler.heldout_like(a.colors[i, m], int(a.pattern[i, m]), int(a.period[i, m]))
+    assert 0.18 < stats_a["near_lamp"] / stats_a["textures"] < 0.32
+    assert set(a.pattern.flatten().tolist()) == set(range(6)) and set(a.period.flatten().tolist()) == {2, 3, 4}
+    # Held-out textures cover every pattern/period pair; a huge exclusion radius
+    # therefore rejects everything and the finite cap must fail explicitly.
+    with pytest.raises(ValueError, match="cap"):
+        rw.TextureSampler(exclusion=10.0, cap=5).sample(torch.Generator().manual_seed(1), 1)
