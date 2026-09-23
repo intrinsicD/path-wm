@@ -46,7 +46,7 @@ nicht dessen Arm A.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
   direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
   Evidenz-Lesepfad ohne vorgeschaltete Kompression scheitert ebenfalls;
-  auch der geteilte gelernte Paarvergleich verfehlt den Lernscreen. Berichte:
+  auch Paarvergleich und Support-Curriculum verfehlen den Transfer-Screen. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -712,7 +712,7 @@ Protokoll/Begründung: `…/support-use-root-decision.md`, `…/support-use-curr
 Falls Wiedererkennen gelingt, aber der ursprüngliche Endpunkt weiter scheitert,
 folgt eine Umfangsentscheidung mit Alex statt weiterer automatischer Varianten.
 
-**SUC läuft:** `runs/latent_agent_r1/support_use_curriculum_20260923/SUC/`,
+**SUC abgeschlossen, Transfer fehlgeschlagen:** `runs/latent_agent_r1/support_use_curriculum_20260923/SUC/`,
 Recipe-Hash `49a6a623…`. Start nach unabhängig geprüftem R-pair-Endergebnis.
 Ein vorab reproduzierter Wiederanlauffehler konnte die 2000er-Entscheidung umgehen;
 der Sitzungsstart prüft jetzt die im Checkpoint gespeicherte Entscheidung, am
@@ -724,8 +724,25 @@ sind auf CPU geprüft; Rohberichte bleiben erhalten.
 ν=0,9972 gegenüber Empty=0, Swap=−0,0157 und permutiert=−0,0141.
 Unabhängige Neuberechnung aus Rohdaten: `…/support-use-root-positive-control.json`.
 Erstmals ist damit in diesem trainierten Leser eine deutliche Nutzung der Belege
-nachgewiesen. **Noch kein Nachweis disjunkter Regelübertragung**; der festgelegte
-Abbau der Trainingsüberschneidung läuft weiter.
+nachgewiesen, **nur im gespeicherten 2000er-Zustand**.
+
+**Endergebnis bei 8000:** TRAIN und Validation auf disjunkten Queries jeweils ν=0,
+AUC 0,536/0,469; beide Screens verfehlt. Auch Wiedererkennen sinkt auf ν=0,0443,
+gegenüber 0,9972 bei 2000. Das zeigt in diesem Lauf verlorene Kopierkompetenz während
+der Umstellung und keinen erfolgreichen Regeltransfer; es isoliert keine Ursache
+und beweist keine prinzipielle Unmöglichkeit. Alle 72 Vorhersagedateien sind endlich
+und hashgeprüft, eingefrorene Gewichte unverändert; maximal 0,676 GiB reserviert,
+Exit 0. Rohwerte unabhängig neu berechnet. Quittungen:
+`…/support-use-root-result.json`, `…/support-use-root-nu-recomputed.json`;
+Bericht `SUC/report.html` strukturell geprüft.
+
+**Nächster Schritt angehalten zur Umfangsklärung:** Alex wurde gefragt, ob der volle
+Regelableitungsanspruch mit grundlegend überarbeitetem Lernansatz bestehen bleibt
+oder zunächst ein engerer durchgängiger Agent mit Beispiel-/Prototypwissen entstehen
+soll. Noch keine Antwort oder Umfangsänderung angenommen, keine weitere Variante
+gestartet. Ein bedingter Entwurf für gespeicherte latente Kontexte liegt in
+`…/retained-context-runtime-review.md` mit `…/retained-context-review-corrections.md`;
+er ist nicht übernommen. Das vollständige Modell ist weiterhin **nicht** fertig.
 
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 

@@ -17,8 +17,8 @@ Read the relevant record when needed.
   identity-key sharing and correction. J passes the primary identity screen
   (100% versus54.6% cross-lamp), but misses one fresh-scene attribute guard:
   provisional development input. All five oracle application families pass
-  (nu≥0.863). Code search and seven induction paths failed; the support-use
-  curriculum now passes copied-example recall and tests disjoint transfer.
+  (nu≥0.863). Code search and eight induction paths failed; copied-example recall was learned
+  but degraded during the failed transfer curriculum. A scope decision is pending.
   Rollout, learned full R1/R2 and natural data remain unproven.
   Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
