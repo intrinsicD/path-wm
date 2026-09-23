@@ -6891,3 +6891,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O391
+  timestamp: 2026-09-23T19:23+02:00
+  provenance: ai-suggested
+  content: Cross-example latent prediction with withheld target can formulate the user proposal. Existing support/query
+    outcome BCE already transfers between examples, but recent diagnostics omit full latent next-state loss. A single
+    pair may not identify its transformation; informative support or uncertainty remains necessary. Augmentation
+    must preserve semantics; joint encoder learning needs collapse control. No adopted fix or efficacy claim.
+  context: N560; integrated architecture plan section20; VICReg primary source for collapse caveat. Refines earlier
+    O383.
+  potential_type: architecture
+  bound_to:
+  - N560
+  - N557
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

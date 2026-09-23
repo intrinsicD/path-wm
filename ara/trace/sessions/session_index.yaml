@@ -338,8 +338,9 @@ sessions:
     and shortcut-gate checks saved. No trained-model claim. Turn9: delegated R1/R2 integration with actual Opus5.5
     high implemented and reviewed;816 CPU tests pass. Known-rule oracle application succeeds; copied recall is learned
     then degraded, and all tried disjoint transfer endpoints fail. Full learned model remains incomplete; scope
-    questionN559 pending.'
-  turn_count: 9
-  events_count: 28
+    questionN559 pending. Turn10: discussion-only of point1 paired latent transition loss and augmentation; no new
+    run or scope choice.'
+  turn_count: 10
+  events_count: 30
   claims_touched: []
-  open_threads: 12
+  open_threads: 13

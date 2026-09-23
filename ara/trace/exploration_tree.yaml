@@ -9350,3 +9350,20 @@ tree:
   - ara/evidence/tables/integrated_architecture_2026-09-23.json
   - docs/integrated-architecture-plan.md
   status: open
+
+- id: N560
+  type: question
+  title: Discuss point1 cross-example latent transition training
+  provenance: user
+  timestamp: 2026-09-23T19:23+02:00
+  description: User proposes at least two start/end pairs under the same transformation, infer from one and predict
+    the other, with augmentation; explicitly requests discussion before proceeding point by point.
+  evidence:
+  - docs/integrated-architecture-plan.md#20-diskussion-punkt-1-übertragung-zwischen-startzuständen
+  - pathwm/data/rule_world.py
+  - pathwm/models/latent_core.py
+  - experiments/latent_agent.py
+  also_depends_on:
+  - N557
+  - N559
+  status: open

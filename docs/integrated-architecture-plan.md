@@ -1276,3 +1276,31 @@ Erfolg ersetzen. Beide Diagnoseberichte und Roharrays liegen beim jeweiligen Lau
 Ein Seed, synthetische vollständig beobachtete Szenen, acht Validationsarten; kein
 C3-, Zwillingsidentitäts-, Naturdaten- oder Gesamtagentennachweis.
 Entscheidung: `runs/reviews/integrated_architecture_20260923/identity-adoption-decision.md`.
+
+## 20. Diskussion Punkt 1: Übertragung zwischen Startzuständen
+
+Alex möchte zuerst Punkt 1 besprechen; kein neuer Lauf oder Umbau. Vorschlag:
+Aus einem Start-/Endpaar einen Übergang ableiten, auf einen anderen Startzustand
+derselben Transformation anwenden und den anderen Endzustand als Lossziel nutzen.
+Diskussionsformel: z1=G(E(s1),a1,E(s1')); L=d(T(E(s2),a2,z1),sg(E(s2'))),
+optional symmetrisch. Der fremde Endzustand darf nicht in die Inferenz gelangen.
+
+Ist-Abgleich: Oracle-Anwendung nutzt mittrainierte Regelcodes und Outcome-BCE.
+Induktionsdiagnosen nutzen bereits Support→disjunkte Query-Übertragung, gewöhnlich
+8–128 Belege und 32 Queries je Episode unter derselben Regel. Die späteren
+Diagnosen bewerten jedoch nur das Lampenergebnis; latente Folgezustands-/Rollout-
+Ziele aus dem ursprünglichen episode_loss waren dort nicht aktiv.
+
+Ein Paar aus→an unterscheidet Einschalten und Umschalten nicht. Zwei Trainingspaare
+machen die Eingabe nicht eindeutig, wenn G nur eines sieht: mehr informative Belege
+oder Unsicherheit bleiben nötig. Unterschiedliche Endzustände sind hilfreich gegen
+Kopieren, aber keine allgemeine Pflicht (Einschalten kann Endzustände zusammenführen).
+Die Transformation ist nicht notwendig ein additiver Vektorunterschied.
+Augmentation muss die Regel erhalten und gegebenenfalls Endzustände/Argumente
+konsistent verändern; neue Ansichten sind nicht automatisch neue kausale Fälle.
+Ein geeigneter fester Encoder trennt Repräsentationslernen zunächst ab; bei gemeinsamem
+Training ist Kollapsschutz nötig. Stop-Gradient allein garantiert ihn nicht
+(VICReg: https://arxiv.org/abs/2105.04906). Keine Behauptung, dass der vorgeschlagene
+Loss das bisherige Scheitern behebt, keine Architekturübernahme. Prinzipien:
+geteilte latente Anwendung, wiederverwendbare Belege, Endzustandsziele außerhalb
+der Inferenz und unabhängige Übertragungsprüfung.
