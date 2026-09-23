@@ -41,11 +41,12 @@ nicht dessen Arm A.
   Das ist weiterhin **Oracle-Anwendung mit vorgegebenen Trainingsregelcodes**,
   kein Erschließen neuer Regeln. E1a mit festen Startcodes verfehlt Trainings- und
   Validierungsscreen. E1a-R mit Support-Abruf verfehlt beide ebenfalls (§16).
-  Gemeinsames G/T-Lernen mit Oracle-Anker läuft nun als Entwicklungsversuch. Berichte:
+  Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
+  die Induktion. Zwei geteilte latente Verfeinerungsrunden werden jetzt geprüft. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; aktiv:
-  `…/core_amortize_20260923/E1b_C192/`.
+  `…/core_refine_20260923/E1c_C192/` (E1b: `…/core_amortize_20260923/E1b_C192/`).
 - **Kein vollständiger gelernter R1/R2-Nachweis.** Pixel-Kerntraining und vollständige
   Agentenleben warten auf Induktion und trainierte latente Zustandsfolgen: Der
   Next-State-Kopf wurde in der bisherigen Oracle-Diagnostik nicht trainiert.
@@ -515,6 +516,21 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Tests prüfen tatsächliche Gradienten, Query-Label-Unabhängigkeit und exakten Resume
    samt aufbewahrter Pausenevidenz. Ein früher Erhaltungsfehlschlag widerlegt nur diese
    Trainingsfolge, nicht die prinzipielle Induktionsfähigkeit.
+   E1b ist bei 8000 Updates abgeschlossen: Erhaltung besteht durchgehend, alle
+   eingefrorenen Hashes bleiben gleich und 54 Vorhersagedateien sind endlich.
+   Induktion verfehlt beide Screens (Validation Kategorie 0,0069, Relation/Toggle 0,
+   Open/Close −1,333). Der Kern nutzt grobe Verhaltensarten, keine verlässlich
+   erschlossenen konkreten Regeln. Bericht: `…/core_amortize_20260923/E1b_C192/`.
+   **Bedingt vorab festgelegtes E1c, jetzt aktiv:** Z0=G(S), dann zwei Runden aus
+   T-Zwischenzuständen derselben Supportübergänge, beobachtetem Post-Slot und
+   erneutem Lesen durch denselben Block mit vorherigem Z als Start. Keine neuen
+   Parameter, Regel-IDs oder Query-Labels in der Induktion; gleicher C192-Elternstand,
+   Verlust, Stream, Gates und Updatebudget. Mehr Rechenaufwand wird ausgewiesen
+   (CPU-Vorwärts/Rückwärtsprobe bei N=128 ca. 7,6×); kein gleicher Rechenvergleich.
+   Die Iteration kann weiterhin überanpassen. T-Zwischenzustände sind kein Ersatz
+   mit mathematischer Gleichheit zu Supportgradienten. Bei Erfolg muss R=2 als
+   Teil der Runtime und Modellversion in das normale Rezept übernommen werden;
+   identische Parameterformen machen die alten G- und neuen G/T-Pfade nicht austauschbar.
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
 4. **Pixelintegration:** nach funktionierender Induktion/Anwendung und Zustandsfolge
