@@ -44,7 +44,8 @@ nicht dessen Arm A.
   Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
-  ein letzter direkter G/T-Lernversuch ohne Oracle-Codebank läuft. Berichte:
+  direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
+  Evidenz-Lesepfad ohne vorgeschaltete Kompression wird vorbereitet. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -573,8 +574,10 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Evidenz-/Inferenzvertrag wird grundsätzlich geprüft. Keine automatische weitere
    Verlustvariante oder Budgeterhöhung. Entscheidung und Korrekturen des Reviews:
    `runs/reviews/integrated_architecture_20260923/induction-bounded-review-corrections.md`.
-   Die Bedingung ist nun erfüllt. J44 ist nach unabhängiger Vertragsprüfung gestartet;
-   Quelle und Protokoll eingefroren, Ergebnis offen:
+   Die Bedingung ist erfüllt. J44 ist bei 8000 Updates abgeschlossen (Exit 0):
+   Trainings- und Validierungsrelation sowie alle 44 Trainingsregeln erreichen ν=0.
+   Zweites Relationsbit AUROC=0,525 im Trainingspool; 36 Vorhersagedateien sind endlich,
+   eingefrorene Hashes unverändert, keine Codebank im Checkpoint. Ergebnis/Bericht:
    `…/induction_direct_20260923/J44/`. Neustartgleichheit und Query-Label-Unabhängigkeit
    sind geprüft; Oracle-Codebank ist aus Modell und Vorhersage entfernt. Dies ist
    ein neuer direkter Lernansatz mit gemeinsam geänderten Trainingsbedingungen,
