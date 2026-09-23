@@ -92,3 +92,11 @@ This assessment changes neither the current integrated-agent priority nor the
 existing failed transfer and retention results. No external scientific review is
 claimed; a consequential adopted experiment still follows the repository review
 and predeclared-budget workflow.
+
+## Reconstruction preference
+
+Alex explicitly wants better reconstruction quality where possible, alongside
+concept learning and training efficiency. Retain reconstruction as an explicit
+evaluation objective when comparing compression and processing depth. No loss
+weight, architecture, acceptable cost trade-off or experiment is selected yet.
+Reconstruction quality and downstream usefulness must be reported separately.

@@ -345,7 +345,7 @@ sessions:
     cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment. Turn15: CI1
     implemented with actual Opus5.5 high and dedicated saved dataset; frozen color query passes, adaptive retention
     fails.820 CPU tests pass; full prior curriculum remains open.'
-  turn_count: 16
-  events_count: 44
+  turn_count: 17
+  events_count: 45
   claims_touched: []
   open_threads: 17
