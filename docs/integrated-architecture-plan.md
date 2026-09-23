@@ -43,10 +43,11 @@ nicht dessen Arm A.
   Validierungsscreen. E1a-R mit Support-Abruf verfehlt beide ebenfalls (§16).
   Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
-  Der gezielte Vergleich einer vielfältigeren Query-Initialisierung läuft. Berichte:
+  Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen
+  wird als begrenzter nächster Schritt vorbereitet. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
-  `…/code_search_retrieval_20260923/E1aR_C192/`; aktiv:
+  `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
   `…/core_query_scale_20260923/E1bS_C192/`; abgeschlossen:
   `…/core_refine_20260923/E1c_C192/` und `…/core_amortize_20260923/E1b_C192/`.
 - **Kein vollständiger gelernter R1/R2-Nachweis.** Pixel-Kerntraining und vollständige
@@ -548,6 +549,16 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Budgets und Retention bleiben wie E1b; geometrische Trainingsdiagnostik wählt
    weder Checkpoints noch Gates. Lauf: `…/core_query_scale_20260923/E1bS_C192/`.
    Audit und eigenständiger Bericht: `…/induction_collapse_audit_20260923/`.
+   E1b-S ist abgeschlossen (8000 Updates): Tokens bleiben verschieden (Rang 3,34,
+   Kosinus 0,487), aber beide Induktionsscreens scheitern; Validation Kategorie 0,011,
+   Relation/Toggle 0, Open/Close −1,333. Retention besteht überall. Die Initialisierung
+   allein erklärt/löst den Lernfehler somit nicht. **Bedingter nächster Schritt I1:**
+   dieselbe Ausgangskonfiguration, G nur auf Relationsregeln, Oracle-Anker weiterhin
+   gemischt. Primär ist nun ausschließlich die vorab festgelegte Relation-Induktion;
+   kein heimlich abgesenkter Fünffamilien-Screen. Erst bei Erfolg folgt gemischte
+   Induktion I2. Ein Fehlschlag isoliert keine eindeutige Ursache. Details und feste
+   Stopregeln stehen vor Ausführung in `…/induction_relation_20260923/protocol.md`.
+
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
 4. **Pixelintegration:** nach funktionierender Induktion/Anwendung und Zustandsfolge
