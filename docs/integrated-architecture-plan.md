@@ -571,6 +571,14 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Evidenz-/Inferenzvertrag wird grundsätzlich geprüft. Keine automatische weitere
    Verlustvariante oder Budgeterhöhung. Entscheidung und Korrekturen des Reviews:
    `runs/reviews/integrated_architecture_20260923/induction-bounded-review-corrections.md`.
+   Ein rein evaluativer Informationscheck findet bei N=128 in allen acht
+   Trainingsrelationsepisoden des Pools 9101 genau eine mit dem Support konsistente
+   Relation unter allen 64 Grammatikprädikaten. Der wahre Kandidat ist jeweils
+   enthalten; ohne Evidenz bleiben alle 64. Dies prüft Identifizierbarkeit innerhalb
+   dieser bekannten Grammatik, nicht die Lernbarkeit durch G oder natürliche
+   Konzepte. Kein Grammatiksolver wird Runtime. Rohdaten und reparierter Bericht:
+   `…/support_identifiability_20260923/attempt02/`; beide ursprünglichen
+   Ausführungs-/Berichtsfehler und identische Rohdaten bleiben erhalten.
 
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
