@@ -29,6 +29,7 @@ from pathwm.models.slots import at_time, pointer
 from .concepts import SOURCE, BoundedCache, ConceptAgent, SceneView, from_uint8, slot_candidates, to_uint8
 from .records import finite_time, identifier
 from .session import SourceItem
+from .store import primitive
 
 OPS = ("press",)
 PREDICATES = ("lamp_state",)
@@ -108,6 +109,27 @@ class VerificationRecord:
 
 
 @dataclass(frozen=True)
+class Claim:
+    """Source-attributed typed assertion: pressing `action` now leaves its machine's
+    lamp at `outcome` (0/1). Testimony only: never concept support, never truth."""
+
+    claim_id: str
+    source: str
+    action: TypedAction
+    outcome: int
+
+    def __post_init__(self):
+        identifier(self.claim_id)
+        identifier(self.source)
+        if self.source == SOURCE:
+            raise ValueError("A claim cannot speak as the camera source")
+        if not isinstance(self.action, TypedAction) or self.action.op not in OPS:
+            raise ValueError("A claim names one typed press action")
+        if not _integer(self.outcome) or self.outcome not in (0, 1):
+            raise ValueError("A claimed lamp outcome is 0 or 1")
+
+
+@dataclass(frozen=True)
 class Dispatch:
     kind: str  # plan, ask, unsupported or expired
     reason: str
@@ -184,7 +206,7 @@ class UnifiedAgent(ConceptAgent):
     # `repair`, `receive_retract` and `receive_supersede` are re-implemented below.
     observe_scene = _r1_only("observe_scene", "observe()")
     observe_session = _r1_only("observe_session", "observe(transitions=...)")
-    receive_claim = _r1_only("receive_claim", "no testimony/claim path yet (declared absent in R2)")
+    receive_claim = _r1_only("receive_claim", "receive_testimony(Claim) and test_claim(...)")
     _act = _r1_only("_act", "execute()")
     _attach = _r1_only("_attach", "attribution through observe()/execute()")
     _instances = _r1_only("_instances", "WorldSession identity decisions")
@@ -225,7 +247,7 @@ class UnifiedAgent(ConceptAgent):
     # observation ----------------------------------------------------------------
     @torch.no_grad()
     def observe(self, rgb, *, transitions=(), attribute_with=None, action=None,
-                verification=None, goal=None, candidates=None, supersedes=None):
+                verification=None, goal=None, candidates=None, supersedes=None, claim=None):
         """Publish one observation event, then derive concept records from source.
 
         transitions: (pre, record, receipt status, post) source items of this event;
@@ -234,21 +256,29 @@ class UnifiedAgent(ConceptAgent):
         `verification(t)` returns this event's VerificationRecord (for `goal`, if
         given); an invalid record is not published and raises after the rest is.
         `candidates(percept, frame)` replaces the slot-key source (SOFTWARE fixtures).
-        `supersedes` = {transition index: old evidence id}.
+        `supersedes` = {transition index: old evidence id}. `claim`: the testimony item
+        these transitions test (provenance link only; it never changes attribution).
         """
         self.check()
         t = self.session.time + STEP
         count = sum(e.kind == "observation" for e in self.session.store.events())
         event_id = f"obs-{count + 1:06d}"
+        perceived_in = event_id if attribute_with is None else attribute_with.event_id
+        if claim is not None:  # a claim link is validated, never trusted, before any effect
+            for _, record, _, _ in transitions:
+                problem = self._claim_link_problem(claim, record.as_dict(), perceived_in)
+                if problem:
+                    raise ValueError(f"Invalid claim link: {problem}")
         sha, pyramid = self.encode(rgb)
         _, percept = self.percept(rgb)
         ref, blob = self.memory.put_blob(to_uint8(rgb)[None])
         supersedes = supersedes or {}
-        perceived_in = event_id if attribute_with is None else attribute_with.event_id
         items = [SourceItem(SOURCE, "image", ref, blob)]
         for k, (pre, record, status, post) in enumerate(transitions):
             r, h = self.memory.put_blob(np.stack((to_uint8(pre), to_uint8(post))))
             data = dict(action=record.as_dict(), receipt=status, perceived_in=perceived_in)
+            if claim is not None:
+                data["claim"] = claim
             items.append(SourceItem(SOURCE, "transition", r, h, data, supersedes.get(k)))
         problem = None
         if verification is not None:
@@ -488,7 +518,9 @@ class UnifiedAgent(ConceptAgent):
         view = self.memory.view()
         touched = [e.id for e in view["entities"].values()
                    if e.kind == "instance" and e.id not in repaired and not self._consistent(e.id, view)]
-        return repaired | {instance: self._rebind(instance) for instance in sorted(touched)}
+        repaired = repaired | {instance: self._rebind(instance) for instance in sorted(touched)}
+        self._judge_pending()
+        return repaired
 
     def _consistent(self, instance, view):
         """Derived membership matches the instance's active attributions: the latest
@@ -531,8 +563,9 @@ class UnifiedAgent(ConceptAgent):
             raise ValueError(f"Unknown evidence {evidence_id!r}")
         if evidence_id in view["retracted"]:
             raise ValueError("Evidence already withdrawn")
-        if old.source != SOURCE or old.modality != "transition":
-            raise ValueError("Only camera transition items are corrected through this legacy API")
+        if not ((old.source == SOURCE and old.modality == "transition")
+                or (old.source != SOURCE and old.modality == "claim")):
+            raise ValueError("Only camera transitions and testimony claims are corrected through this API")
         return old
 
     @torch.no_grad()
@@ -560,6 +593,8 @@ class UnifiedAgent(ConceptAgent):
         """
         self.check()
         old = self._withdrawable(old_id)
+        if old.modality != "transition":
+            raise ValueError("Only camera transitions can be superseded by a transition")
         pre, record, status, post = transition
         if status not in RECEIPTS or not hasattr(record, "as_dict"):
             raise ValueError("A replacement needs an ActionRecord and a known receipt status")
@@ -577,6 +612,158 @@ class UnifiedAgent(ConceptAgent):
         self._attribute([new])
         self._refresh()
         return new
+
+    # testimony: typed claims, one own test, evidence-based judgment ------------------
+    @torch.no_grad()
+    def receive_testimony(self, claim):
+        """Publish a typed claim as source-attributed testimony (a frameless observation).
+
+        The claim's references must name exactly one visible identified machine and
+        visible objects of the current camera view; they are recorded resolved. It
+        teaches nothing: no attribution, support, binding or code follows from it.
+        """
+        self.check()
+        if not isinstance(claim, Claim):
+            raise ValueError("Testimony must be a Claim record")
+        self._refresh()
+        if self.view is None:
+            raise ValueError("A claim needs a current camera view to resolve its references")
+        m = self._check_action(claim.action)
+        machine = self.view.machines[m]
+        data = primitive(dict(
+            claim_id=claim.claim_id, action=asdict(claim.action), outcome=claim.outcome,
+            record=self.record_for(self.view, (m, claim.action.a, claim.action.b)).as_dict(),
+            perceived_in=self.view.event_id, instance=machine["instance"], recognition=machine["recognition"],
+        ))
+        for e in self.memory.view()["evidence"].values():
+            if e.modality == "claim" and e.source == claim.source and e.data.get("claim_id") == claim.claim_id:
+                if e.data != data:
+                    raise ValueError("A claim with this id from this source differs from the recorded one")
+                return e.id
+        count = sum(e.kind == "observation" for e in self.session.store.events())
+        t = self.session.time + STEP
+        result = self.session.observe(f"obs-{count + 1:06d}", occurred_at=t, available_at=t,
+                                      evidence=(SourceItem(claim.source, "claim", data=data),))
+        return result["evidence"][0]
+
+    def claim_status(self, claim_evidence):
+        """retracted, consistent/contradicted (active judgment) or untested: a store read."""
+        view = self.memory.view()
+        if claim_evidence in view["retracted"]:
+            return dict(status="retracted", judgment=None)
+        judgments = [c for c in view["components"].values()
+                     if c.name == "judgment" and c.active and c.data["claim"] == claim_evidence]
+        if not judgments:
+            return dict(status="untested", judgment=None)
+        latest = max(judgments, key=lambda c: (c.revision, c.id))
+        return dict(status=latest.data["status"], judgment=latest.id, transition=latest.data["transition"])
+
+    def _claim_link_problem(self, claim_evidence, record, perceived_in):
+        """Why a transition with this action/observation cannot test this claim, or None.
+
+        The link must name an active typed claim, and the transition must be exactly
+        the claimed action (resolved pixels) chosen in the claim's camera observation.
+        """
+        view = self.memory.view()
+        claim = view["evidence"].get(claim_evidence) if isinstance(claim_evidence, str) else None
+        if claim is None or claim.modality != "claim" or claim.source == SOURCE:
+            return "the link does not name a typed testimony claim"
+        if claim_evidence in view["retracted"]:
+            return "the claim has been withdrawn"
+        if record != claim.data.get("record"):
+            return "the action differs from the claimed action"
+        if perceived_in != claim.data.get("perceived_in"):
+            return "the action was not chosen in the claim's camera observation"
+        return None
+
+    def _judge(self, claim_evidence, transition):
+        """Judge a claim by ONE retained own test: its ok receipt, its attribution to the
+        claimed instance and the agent's own perception of the post frame. Otherwise None."""
+        view = self.memory.view()
+        e = view["evidence"].get(transition)
+        if (e is None or e.source != SOURCE or e.modality != "transition" or transition in view["retracted"]
+                or e.data.get("claim") != claim_evidence or e.data.get("receipt") != "ok"
+                or self._claim_link_problem(claim_evidence, e.data.get("action"),
+                                            e.data.get("perceived_in", e.event_id))):
+            return None  # retained links are re-validated, never trusted
+        claim = view["evidence"][claim_evidence]
+        for c in view["components"].values():
+            if c.name == "judgment" and c.active and c.data["claim"] == claim_evidence and c.data["transition"] == transition:
+                return c.id
+        attributions = [c for c in view["components"].values()
+                        if c.name == "attribution" and c.active and c.data["transition"] == transition]
+        if len(attributions) != 1 or attributions[0].entity_id != claim.data["instance"]:
+            return None  # identity ambiguity stays unknown
+        observed = int(self.evidence_tokens(transition)["outcome"])
+        claimed = claim.data["outcome"]
+        entity = f"claim:{claim_evidence}"
+        tx = self.memory.begin("internal")
+        if entity not in view["entities"]:
+            tx.create_entity(claim.data["claim_id"], kind="claim", entity_id=entity)
+        judgment = tx.put_component(
+            entity, "judgment", torch.tensor([float(observed == claimed)]), space="claim-judgment",
+            model_version=self.core_version, role="inferred", evidence=(claim_evidence, transition),
+            parents=(attributions[0].id,),
+            data=dict(claim=claim_evidence, transition=transition, claimed=claimed, observed=observed,
+                      status="consistent" if observed == claimed else "contradicted"),
+        )
+        self.memory.commit(tx)
+        return judgment
+
+    def _judge_pending(self):
+        """Judgments derivable from retained ok claim tests but not (or no longer) present."""
+        view = self.memory.view()
+        tests = sorted((e for e in view["evidence"].values()
+                        if e.modality == "transition" and isinstance(e.data.get("claim"), str)
+                        and e.data.get("receipt") == "ok" and e.id not in view["retracted"]),
+                       key=lambda e: (e.available_at, e.id))
+        for e in tests:
+            if self.claim_status(e.data["claim"])["judgment"] is None:
+                self._judge(e.data["claim"], e.id)
+
+    @torch.no_grad()
+    def test_claim(self, claim_evidence, actuator, goal, *, presses_done=0, candidates=None):
+        """One bounded own test of a claim through `execute` (read set, task budget and
+        deadline, exact visible references, model checks). Only an ok receipt attributed
+        to the claimed instance can judge it; nothing else labels or teaches."""
+        self.check()
+        view = self.memory.view()
+        claim = view["evidence"].get(claim_evidence)
+        if claim is None or claim.modality != "claim":
+            raise ValueError(f"Unknown claim {claim_evidence!r}")
+        data = claim.data
+        if (not isinstance(goal, GoalSpec) or goal.predicate != "claim_test"
+                or goal.targets != ((data["instance"], data["outcome"]),)):
+            raise ValueError("The goal must authorize testing exactly this claim: "
+                             "GoalSpec(task, 'claim_test', ((claimed machine, claimed outcome),), ...)")
+        out = dict(status=None, judgment=None, transition=None, predicted=None)
+        if claim_evidence in view["retracted"]:
+            return out | dict(status="retracted")
+        self._refresh()
+        status = self.claim_status(claim_evidence)
+        if status["judgment"] is None:  # a retained ok test whose judgment was never derived
+            self._judge_pending()
+            status = self.claim_status(claim_evidence)
+        if status["judgment"] is not None:
+            return out | dict(status="judged", judgment=status["judgment"], transition=status["transition"])
+        if self.view is None or data["perceived_in"] != self.view.event_id:
+            return out | dict(status="stale")  # its object references name another scene
+        machines = [m["instance"] for m in self.view.machines]
+        if machines.count(data["instance"]) != 1:
+            return out | dict(status="unresolved")
+        action = TypedAction(**(data["action"] | dict(task_id=goal.task_id)))
+        record = self.record_for(self.view, (machines.index(action.machine), action.a, action.b))
+        if record.as_dict() != data["record"]:
+            return out | dict(status="stale")
+        prediction = self.predict(self.view, record)
+        read = replace(prediction["read_set"], live=self._live(self.view))
+        result = self.execute(actuator, action, read, goal=goal, presses_done=presses_done,
+                              candidates=candidates, claim=claim_evidence)
+        out.update(status=result["status"], transition=result["evidence"], predicted=prediction["p"])
+        if result["status"] != "ok":
+            return out
+        judgment = self._judge(claim_evidence, result["evidence"])
+        return out | dict(status="judged" if judgment else "unknown", judgment=judgment)
 
     # goals, planning and execution -------------------------------------------------
     def remaining(self, goal, presses_done):
@@ -676,7 +863,7 @@ class UnifiedAgent(ConceptAgent):
 
     @torch.no_grad()
     def execute(self, actuator, action, read, *, goal=None, presses_done=0, verification=None,
-                candidates=None):
+                candidates=None, claim=None):
         """Check models, references, task limits and the pinned read set; press once;
         publish receipt + post frame (+ verifier record) as one observation event."""
         self.check()
@@ -687,13 +874,17 @@ class UnifiedAgent(ConceptAgent):
             return dict(status="stale", evidence=None)
         pre_view = self.view
         record = self.record_for(pre_view, (m, action.a, action.b))
+        if claim is not None:
+            problem = self._claim_link_problem(claim, record.as_dict(), pre_view.event_id)
+            if problem:
+                raise ValueError(f"Invalid claim link: {problem}")
         pre = actuator.frame()
         self.check()  # nothing may change between the checks and the side effect
         receipt = actuator.press(record)
         post = actuator.frame()
         _, result = self.observe(post, transitions=((pre, record, receipt.status, post),),
                                  attribute_with=pre_view, action=action, verification=verification,
-                                 goal=goal, candidates=candidates)
+                                 goal=goal, candidates=candidates, claim=claim)
         return dict(status=receipt.status, record=record, evidence=result["evidence"][1])
 
     @torch.no_grad()
