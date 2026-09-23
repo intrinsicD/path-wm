@@ -1017,14 +1017,53 @@ und unterschiedliche Arten mit derselben Regel. Dadurch werden zeitliche Identit
 Aussehen und Konzeptzugehörigkeit tatsächlich getrennt geprüft. Unklare Identität
 bleibt unbekannt; gleicher Schlüssel darf Zwillinge nicht still vereinigen.
 
-Für dieses R2-Protokoll werden vor dem ersten gelernten Lauf Split/Seeds, Ereignis-
-kontinuität, Schwellen und Budgets vollständig fixiert. Gemessen werden Identitäts-
-präzision/-abdeckung und korrekte Übergangszuordnung je Teilpopulation, zusätzlich
-C2–C5 durch denselben `UnifiedAgent` einschließlich Budget, Frist, Read-Sets,
-Neustart und Verifikation. Pixel-Fixture und vertauschte Schlüssel bleiben benannte
-Kontrollen. Ein fehlender Behauptungs-/Testimony-Pfad darf nicht als bestanden oder
-als still übersprungenes C5 erscheinen. Der Binder ist noch zu kalibrieren; ein
-bestandener §19-Schlüsseltest allein belegt keine zeitliche Instanzbindung.
+**R2-Auswertungsvertrag jetzt vorab festgelegt (noch nicht implementiert):**
+Review mit Claude Opus 5.5 high, Version 3; vollständiger Vertrag und unabhängige
+Korrekturen in `runs/reviews/integrated_architecture_20260923/r2-learned-life-protocol.md`
+und `…/r2-life-root-adoption.md`.
+
+- Testpopulation, drei unterschiedliche Trainings-Seeds, Evaluations-Seed **3301**;
+  N=8/32 je vier Leben, N=128 sechs Leben, jeweils 64 Queries und 16 Ziele.
+  Pro Leben zwei persistente Instanzen mit Lücken 1/4/16, zwei neue Instanzen,
+  zwei Zwillingspaare, zwei Paare verschiedener Erscheinung mit gleicher Regel
+  und vier unabhängig behauptete Testwerte. Höchstens zwei Maschinen gleichzeitig.
+- Persistente eindeutige Erscheinungen: Identitätsabdeckung ≥0,90, Präzision ≥0,95;
+  neue Instanzen ≥0,90. Falsche Vereinigung, Zwillingskollision und unbegründete
+  Identitätsfestlegung bei allein wiederkehrenden Zwillingen jeweils ≤0,10.
+  Sichere Unbekanntheit wird nicht für zufällig richtige Vermutungen abgewertet.
+- Übergangszuordnung: richtige Zuordnungen / **alle** ausgeführten Übergänge ≥0,90,
+  Präzision unter zugeordneten ≥0,95. Fehlende Zuordnung senkt die Abdeckung.
+  Mindestens 100 solche Übergänge pro Seed; Nichtstun kann nicht bestehen.
+- Konzeptprüfung bei N=128: geteilter verifizierter Begriff über verschiedene
+  Erscheinungen ≥0,90; korrekt getrennte, verifizierte Zwillingsbegriffe mit
+  jeweils Query-ν≥0,7 ebenfalls ≥0,90; falsches Teilen ≤0,10.
+  Nur vorab definierte, aus ihrem Support auf den Query-Eingaben unterscheidbare
+  Paare zählen; ausgeschlossene Paare werden ausgewiesen. Zwillingserwerb und Queries
+  liegen in einem visuell kontinuierlichen festen Szenensegment.
+- Mindestzahlen **je Seed**: 50 eindeutige Wiederkehren, je zwölf T-/U-Beobachtungen,
+  je acht diagnostische geteilte/getrennte Konzeptpaare bei N=128 und 48 Behauptungen.
+  Die gepoolten Mindestzahlen sind jeweils dreimal so hoch (Behauptungen zusätzlich
+  je Seed). Für Erfolgsraten gelten einseitige 95%-Untergrenzen über drei Seeds,
+  für Fehlerraten Obergrenzen; fehlender Seed/Teilpopulation bleibt unvollständig.
+- C2–C4 und C5a/b behalten ihre Definitionen. Wiedergeben der eigenen Beobachtung
+  ist weiterhin ein Softwarecheck. Korrektes eigenes Behauptungsurteil ≥0,95 und
+  frische Konzeptvorhersagen nach Feedback ν≥0,7 werden getrennt gemessen.
+  Vorher-/Nachher-Gewinn bleibt separat; schon vorher korrektes Wissen belegt
+  keine durch den Test bewirkte Korrektur.
+- R2 muss durch denselben `UnifiedAgent` laufen. Reine R1-, Pixel-Fixture- oder
+  Zufallsgewichtsleben sind nicht qualifiziert. P und S1-Schlüssel stammen aus
+  demselben qualifizierten Stand; Laden des Kerns darf den Schlüssel nicht
+  überschreiben. Hashes werden nach allen Ladevorgängen geprüft. Andere Inferenzpfade
+  brauchen explizite Versionierung von Runtime, Read-Sets und Snapshots.
+- Manipulierte Prüfanmerkungen dürfen **keine** beobachtbaren Eingaben ändern:
+  Frames, Ausführungsbelege, Ziele, Behauptungen und Korrekturen werden als
+  Eingabespur verglichen. Physikregeln bleiben unverändert.
+  Budget, Frist, Read-Sets, Neustart, Invalidierung und Verifikation bleiben Pflicht.
+
+Diese neuen R2-Schwellen sind vorab gewählte Abnahmekriterien, keine bereits
+belegte Fähigkeit. Pixelinduktion, qualifizierte Schlüssel und Binderkalibrierung
+fehlen weiterhin; ein bestandener §19-Schlüsseltest allein belegt keine zeitliche
+Instanzbindung.
 Belief und Aktionsencoding haben gegenwärtig keinen Leser im R2-Planungsweg; erst
 ein trainierter Leser und ein Verdeckungs-/Kontextvergleich begründen ihren Nutzen.
 
