@@ -13,13 +13,13 @@ Read the relevant record when needed.
   not establish the complete capability.
 - **Integrated architecture R1/R2:** the [adopted plan](integrated-architecture-plan.md)
   connects session/store/clock, image features, concept memory, typed
-  execution and external verification. 812 CPU tests pass, including typed claims, causally checked own tests,
+  execution and external verification. 816 CPU tests pass, including typed claims, causally checked own tests,
   identity-key sharing and current-view correction.
   Perception J passes the primary identity
   screen (100% versus54.6% cross-lamp); fresh scenes confirm the key gain but miss one
   relative attribute-preservation guard. J is provisional for development.
   Relation-first training now passes all five oracle application families (nu≥0.863);
-  code search and seven induction paths fail; a bounded support-use curriculum is running. Rollout,
+  code search and seven induction paths fail; the support-use curriculum passes copied-example recall and is testing disjoint transfer. Rollout,
   learned full R1/R2 and natural data remain unproven. Plan §0,10,11,16,18–19 owns the
   contracts; runs: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
