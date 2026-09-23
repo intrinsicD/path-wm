@@ -9465,3 +9465,13 @@ tree:
   - N565
   - N557
   status: completed
+- id: N567
+  type: question
+  title: Which compact-compute handoff ideas fit current PATH-WM?
+  provenance: user
+  timestamp: 2026-09-23T22:40+02:00
+  description: Assess existing architecture before adopting more mechanisms; compare parameter reuse and useful
+    compute empirically.
+  evidence:
+  - docs/compact-compute-assessment.md
+  status: open

@@ -2958,3 +2958,8 @@ entries:
     negative adaptive retention and old lamp failures.
   - No unrelated closure/abandonment inferred. Source delta after full-suite snapshot changes report scope/headline
     only; targeted tests rerun.
+- turn: 2026-09-23_001#16
+  notes:
+  - N567 records assessment request; O397 remains staged. No experiment, adoption or capability promotion.
+    Existing unresolved retention/transfer interpretations unchanged; no unrelated closure signal or topic
+    abandonment inferred.

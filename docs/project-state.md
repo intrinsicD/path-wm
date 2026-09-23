@@ -1,10 +1,11 @@
 # Current work
 
-Read the task plan. This index links current work; earlier decisions and run/report
-receipts remain in the [historical record](project-history.md) and owning documents.
-Read the relevant record when needed.
+Task plans own current work; older decisions and run receipts remain in the
+[historical record](project-history.md) and owning documents.
 
 ## Current priorities
+
+- [Compact-compute assessment](compact-compute-assessment.md).
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
