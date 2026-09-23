@@ -42,11 +42,13 @@ nicht dessen Arm A.
   kein Erschließen neuer Regeln. E1a mit festen Startcodes verfehlt Trainings- und
   Validierungsscreen. E1a-R mit Support-Abruf verfehlt beide ebenfalls (§16).
   Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
-  die Induktion. Zwei geteilte latente Verfeinerungsrunden werden jetzt geprüft. Berichte:
+  die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
+  Der gezielte Vergleich einer vielfältigeren Query-Initialisierung läuft. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; aktiv:
-  `…/core_refine_20260923/E1c_C192/` (E1b: `…/core_amortize_20260923/E1b_C192/`).
+  `…/core_query_scale_20260923/E1bS_C192/`; abgeschlossen:
+  `…/core_refine_20260923/E1c_C192/` und `…/core_amortize_20260923/E1b_C192/`.
 - **Kein vollständiger gelernter R1/R2-Nachweis.** Pixel-Kerntraining und vollständige
   Agentenleben warten auf Induktion und trainierte latente Zustandsfolgen: Der
   Next-State-Kopf wurde in der bisherigen Oracle-Diagnostik nicht trainiert.
@@ -521,7 +523,7 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Induktion verfehlt beide Screens (Validation Kategorie 0,0069, Relation/Toggle 0,
    Open/Close −1,333). Der Kern nutzt grobe Verhaltensarten, keine verlässlich
    erschlossenen konkreten Regeln. Bericht: `…/core_amortize_20260923/E1b_C192/`.
-   **Bedingt vorab festgelegtes E1c, jetzt aktiv:** Z0=G(S), dann zwei Runden aus
+   **Bedingt vorab festgelegtes E1c, abgeschlossen:** Z0=G(S), dann zwei Runden aus
    T-Zwischenzuständen derselben Supportübergänge, beobachtetem Post-Slot und
    erneutem Lesen durch denselben Block mit vorherigem Z als Start. Keine neuen
    Parameter, Regel-IDs oder Query-Labels in der Induktion; gleicher C192-Elternstand,
@@ -531,6 +533,21 @@ verifiziert; R2 leitet sie erneut ab (§18).
    mit mathematischer Gleichheit zu Supportgradienten. Bei Erfolg muss R=2 als
    Teil der Runtime und Modellversion in das normale Rezept übernommen werden;
    identische Parameterformen machen die alten G- und neuen G/T-Pfade nicht austauschbar.
+   E1c verfehlt nach 8000 Updates beide Screens bei durchgehend erhaltener Anwendung;
+   Validation Kategorie −0,032, Relation/Toggle 0, Open/Close −1,333. Alle Rohvorhersagen
+   sind endlich, eingefrorene Hashes gleich; 0,666 GiB maximal reserviert.
+   **Gezielter Initialisierungsvergleich E1b-S:** Ein unabhängiger Trainingsaudit
+   findet zwischen vier induzierten Tokens Kosinus 0,9999, effektiven Rang ≈1,1
+   und nahezu parallele Gradienten. Die gemeinsame SEED-Typ-Einbettung hat Norm≈8,
+   die individuellen Queries nur≈0,16. Das ist ein konkreter Fehlerkandidat, kein
+   Unmöglichkeitsbeweis für andere einvektorige Codes. E1b-S startet wieder bei C192
+   und skaliert ausschließlich dessen Query-Seeds mit 50, ohne Richtungen, übrige
+   Tensoren, RNG oder Datenfolge zu ändern. T-Oracle-Vorhersagen bleiben bitgleich.
+   Vorab festgelegter Mechanikcheck besteht: Tokenkosinus 0,805 (<0,9), Rang 3,08
+   (>2). Das zeigt die beabsichtigte Änderung, noch keine Induktion. Lernkriterien,
+   Budgets und Retention bleiben wie E1b; geometrische Trainingsdiagnostik wählt
+   weder Checkpoints noch Gates. Lauf: `…/core_query_scale_20260923/E1bS_C192/`.
+   Audit und eigenständiger Bericht: `…/induction_collapse_audit_20260923/`.
    Next-Latent- und Zweischritt-Rollout-Ziele kommen anschließend zurück, zunächst
    nur am Zustandskopf bei festem Kern. Outcome-BCE allein belegt keine Planung.
 4. **Pixelintegration:** nach funktionierender Induktion/Anwendung und Zustandsfolge
