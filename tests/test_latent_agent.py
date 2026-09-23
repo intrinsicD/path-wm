@@ -612,3 +612,178 @@ def test_diagnosis_companion_marks_failures_visibly(tmp_path, monkeypatch):
         diagnosis.main()
     state = json.loads((tmp_path / "out" / "status.json").read_text())
     assert state["result"] == "failed" and state["report"] == "incomplete" and "FileNotFoundError" in state["error"]
+
+
+# ---------------------------------------------------------------- S1 paired identity objective
+
+
+def test_key_head_factory_is_exactly_the_core_key_head():
+    core = tiny_core()
+    head = lc.key_head(WIDTH, 8)
+    assert {k: v.shape for k, v in head.state_dict().items()} == {k: v.shape for k, v in core.key_head.state_dict().items()}
+    assert [type(m) for m in head] == [type(m) for m in core.key_head]
+
+
+def test_view_a_of_the_paired_batch_is_the_default_batch():
+    import experiments.latent_agent as recipe
+
+    kinds = rw.KIND_SPLIT["train"]
+    for randomize in (0.0, 1.0):
+        base = recipe.perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu", randomize=randomize,
+                                       augmentation=recipe.augmentation_stream(1101, 0))
+        both = recipe.paired_perception_batch(torch.Generator().manual_seed(4), kinds, 6, "cpu", randomize=randomize,
+                                              augmentation=recipe.augmentation_stream(1101, 0),
+                                              pairing=recipe.pairing_stream(1101, 0))
+        scenes, lamps, rgb, entity, stats, (textures, source) = both
+        assert torch.equal(rgb[:6], base[2]) and torch.equal(entity[:6], base[3]) and torch.equal(lamps[:6], base[1])
+        assert all(torch.equal(v[:6], w) for v, w in zip(vars(scenes).values(), vars(base[0]).values()))
+        assert stats == base[4] and len(rgb) == 12 and source.shape == (6, 2)
+
+
+def identity_setup(seed=5):
+    import experiments.latent_agent as recipe
+
+    s = recipe.SIZES["check"]
+    torch.manual_seed(seed)
+    perception = SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])
+    key = lc.key_head(s["width"], s["key_width"])
+    batch = recipe.paired_perception_batch(torch.Generator().manual_seed(seed), rw.KIND_SPLIT["train"], 4, "cpu",
+                                           randomize=1.0, augmentation=recipe.augmentation_stream(seed, 0),
+                                           pairing=recipe.pairing_stream(seed, 0))
+    return recipe, perception, key, batch
+
+
+def test_identity_gradient_reaches_perception_only_when_joint():
+    for mode in ("joint", "detached"):
+        recipe, perception, key, (scenes, lamps, rgb, entity, stats, (textures, source)) = identity_setup()
+        loss, metrics = recipe.identity_loss(key, perception(rgb), scenes, textures, source, detached=mode == "detached")
+        loss.backward()
+        assert torch.isfinite(loss) and 0.0 <= metrics["identity_accuracy"] <= 1.0
+        assert all(p.grad is not None and p.grad.abs().sum() > 0 for p in key.parameters())
+        touched = [n for n, p in perception.named_parameters() if p.grad is not None and p.grad.abs().sum() > 0]
+        if mode == "joint":
+            assert any(n.startswith("encoder") for n in touched) and any(n.startswith("slot_attention") for n in touched)
+        else:
+            assert touched == []
+
+
+def test_identity_loss_masks_exactly_equal_textures_and_targets_the_permutation():
+    recipe, perception, key, (scenes, lamps, rgb, entity, stats, (textures, source)) = identity_setup(seed=6)
+    n = 2 * len(source)
+    same = recipe.texture_matches(textures, n)
+    target = torch.argsort(source.flatten())
+    assert same[torch.arange(n), target].all()  # every positive is an exact texture match
+    duplicate = rw.Textures(textures.colors.clone(), textures.pattern.clone(), textures.period.clone())
+    duplicate.colors[1, 1], duplicate.pattern[1, 1], duplicate.period[1, 1] = (
+        duplicate.colors[0, 0], duplicate.pattern[0, 0], duplicate.period[0, 0])
+    assert recipe.texture_matches(duplicate, n)[3, target[0]]  # an equal non-positive texture is a false negative
+
+
+def test_identity_run_is_optional_records_metadata_and_exports_the_key(tmp_path, monkeypatch):
+    import json
+    from pathwm.io import state_hash
+    import experiments.latent_agent as recipe
+
+    common = ["--stage", "perception", "--size", "check", "--device", "cpu", "--updates", "2"]
+    run_recipe(monkeypatch, *common, "--output", str(tmp_path / "default"))
+    run_recipe(monkeypatch, *common, "--texture-randomization", "1.0", "--identity", "joint", "--output", str(tmp_path / "joint"))
+    default = json.loads((tmp_path / "default" / "run.json").read_text())["identity"]["settings"]
+    assert not any(k.startswith("identity") for k in default)  # legacy identity unchanged
+    assert all(k.startswith("perception.") for k in torch.load(tmp_path / "default" / "last.pt", weights_only=True)["model"])
+    settings = json.loads((tmp_path / "joint" / "run.json").read_text())["identity"]["settings"]
+    assert settings["identity"] == "joint" and settings["identity_weight"] == 0.2
+    assert settings["identity_objective"]["temperature"] == 0.1 and "104729" in settings["identity_objective"]["pairing_stream"]
+    s = recipe.SIZES["check"]
+    key = lc.key_head(s["width"], s["key_width"])
+    recipe.load_component(key, tmp_path / "joint" / "last.pt", "key")
+    result = json.loads((tmp_path / "joint" / "result.json").read_text())
+    assert result["key_export"]["state_sha256"] == state_hash(key) and result["key_export"]["component"] == "key"
+    rows = [json.loads(l) for l in (tmp_path / "joint" / "metrics.jsonl").read_text().splitlines()]
+    train = [r for r in rows if r["split"] == "train"]
+    assert len(train) == 2 and all("identity_nce" in r and r["texture_replaced"] == 2 * s["perception_batch"] for r in train)
+    assert all(abs(r["loss"] - (r["perception_loss"] + 0.2 * r["identity_nce"])) < 1e-5 for r in train)
+    with pytest.raises(SystemExit):
+        run_recipe(monkeypatch, "--stage", "core", "--size", "check", "--device", "cpu", "--identity", "joint",
+                   "--perception", str(tmp_path / "default"), "--output", str(tmp_path / "bad"))
+
+
+def test_identity_warm_started_pause_resume_matches_uninterrupted(tmp_path, monkeypatch):
+    common = ["--stage", "perception", "--size", "check", "--device", "cpu"]
+    run_recipe(monkeypatch, *common, "--updates", "1", "--output", str(tmp_path / "parent"))
+    arm = [*common, "--updates", "4", "--texture-randomization", "1.0", "--identity", "detached",
+           "--init-perception", str(tmp_path / "parent")]
+    run_recipe(monkeypatch, *arm, "--stop-after", "2", "--output", str(tmp_path / "paused"))
+    run_recipe(monkeypatch, "--stage", "perception", "--resume", str(tmp_path / "paused"))
+    run_recipe(monkeypatch, *arm, "--output", str(tmp_path / "straight"))
+    a = torch.load(tmp_path / "paused" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
+    assert a["step"] == b["step"] == 4 and a["rows"] == b["rows"]
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+    assert any(k.startswith("key.") for k in a["model"])
+
+
+def test_core_initializes_the_key_only_explicitly_from_an_identity_run(tmp_path, monkeypatch):
+    import json
+    from pathwm.io import state_hash
+    import experiments.latent_agent as recipe
+
+    s = recipe.SIZES["check"]
+    common = ["--stage", "perception", "--size", "check", "--device", "cpu", "--updates", "1"]
+    run_recipe(monkeypatch, *common, "--output", str(tmp_path / "plain"))
+    run_recipe(monkeypatch, *common, "--identity", "joint", "--output", str(tmp_path / "identity"))
+    core = ["--stage", "core", "--size", "check", "--device", "cpu", "--updates", "1"]
+    run_recipe(monkeypatch, *core, "--perception", str(tmp_path / "identity"), "--output", str(tmp_path / "core_default"))
+    settings = json.loads((tmp_path / "core_default" / "run.json").read_text())["identity"]["settings"]
+    assert "init_key" not in settings and "init_key_source" not in settings  # never implicit
+    run_recipe(monkeypatch, *core, "--perception", str(tmp_path / "identity"), "--init-key",
+               "--output", str(tmp_path / "core_key"))
+    settings = json.loads((tmp_path / "core_key" / "run.json").read_text())["identity"]["settings"]
+    exported = lc.key_head(s["width"], s["key_width"])
+    recipe.load_component(exported, tmp_path / "identity" / "last.pt", "key")
+    assert settings["init_key"] is True and settings["init_key_source"]["state_sha256"] == state_hash(exported)
+    assert settings["init_key_source"]["mode"] == "joint"
+    with pytest.raises(ValueError, match="--identity"):
+        run_recipe(monkeypatch, *core, "--perception", str(tmp_path / "plain"), "--init-key",
+                   "--output", str(tmp_path / "core_bad"))
+
+
+def test_diagnosis_reports_learned_keys_and_applies_the_identity_screen(tmp_path, monkeypatch):
+    import json
+    import sys
+    import experiments.perception_diagnosis as diagnosis
+
+    run_recipe(monkeypatch, "--stage", "perception", "--size", "check", "--device", "cpu", "--updates", "1",
+               "--identity", "detached", "--output", str(tmp_path / "run"))
+    small = ["--run", str(tmp_path / "run"), "--scenes", "4", "--per-cell", "2"]
+    monkeypatch.setattr(sys, "argv", ["diagnosis", *small, "--output", str(tmp_path / "control")])
+    diagnosis.main()
+    monkeypatch.setattr(sys, "argv", ["diagnosis", *small, "--control", str(tmp_path / "control"),
+                                      "--output", str(tmp_path / "candidate")])
+    diagnosis.main()
+    result = json.loads((tmp_path / "candidate" / "diagnosis.json").read_text())
+    assert set(result["appearance_key"]) == {"nn_texture_accuracy", "nn_texture_accuracy_across_lamp_states"}
+    assert set(result["identity_screen"]["checks"]) == {
+        "lamp", "each_texture", "attributes", "machine_pointer", "object_pointer",
+        "key_cross_lamp", "key_overall_versus_control", "key_cross_lamp_gain"}
+    assert result["identity_screen"]["checks"]["key_cross_lamp_gain"] is False  # identical model: no gain
+    assert "adoption" in result  # the raw-cosine rule stays recorded
+    outcome = json.loads((tmp_path / "candidate" / "result.json").read_text())
+    assert outcome["gate"] is False and "identity_screen" in outcome["metrics"]
+
+
+def test_identity_screen_needs_absolute_key_level_and_gain_over_the_detached_reader():
+    import experiments.perception_diagnosis as diagnosis
+
+    def summary(overall, crossed):
+        return dict(c1=dict(lamp_accuracy=0.995, attribute_accuracy=[1.0] * 4, machine_pointer_accuracy=1.0,
+                            object_pointer_accuracy=1.0, machine_detection=1.0),
+                    per_texture={48: 0.99, 53: 0.98},
+                    appearance_key=dict(nn_texture_accuracy=overall, nn_texture_accuracy_across_lamp_states=crossed))
+
+    control = summary(0.60, 0.40)
+    assert diagnosis.identity_screen(summary(0.90, 0.85), control)["pass"] is True
+    assert diagnosis.identity_screen(summary(0.90, 0.79), control)["checks"]["key_cross_lamp"] is False
+    small_gain = diagnosis.identity_screen(summary(0.90, 0.85), summary(0.60, 0.80))
+    assert small_gain["checks"]["key_cross_lamp_gain"] is False and small_gain["pass"] is False
+    lost = diagnosis.identity_screen(summary(0.57, 0.85), control)
+    assert lost["checks"]["key_overall_versus_control"] is False

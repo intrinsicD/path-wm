@@ -4,7 +4,10 @@ Standalone analysis companion to experiments/latent_agent.py; not library code.
 Reports the C1 screen, lamp accuracy per validation texture x lamp state, a colour-
 intervention panel and an appearance proxy (leave-one-out 1-NN texture identification
 from machine slot tokens). With --control it applies the predeclared adoption rule of
-the texture-repair comparison. The sealed test textures are never rendered.
+the texture-repair comparison. If the checkpoint exports an identity key (S1
+`--identity`), the same proxy is also reported on the learned keys and, with a control
+that has keys too, the predeclared identity screen (plan §19) is applied; the raw rule
+stays recorded. The sealed test textures are never rendered.
 
     .venv/bin/python -m experiments.perception_diagnosis --run runs/<arm> --output runs/<arm>/diagnosis
     .venv/bin/python -m experiments.perception_diagnosis --run runs/<arm> --control runs/<control>/diagnosis --output ...
@@ -16,11 +19,13 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from torch.nn import functional as F
 
 from pathwm.data import rule_world as rw
 from pathwm.evaluation import rule_world as ev
 from pathwm.evaluation.report import write_report
 from pathwm.io import atomic_json, environment, file_hash, load_component, source_record
+from pathwm.models.latent_core import key_head
 from pathwm.models.slots import SlotPerception, pointer
 
 YELLOW = (0.945, 0.895, 0.391)  # validation texture 53 interior, near the lamp-on colour
@@ -33,6 +38,9 @@ INTERVENTIONS = (
 # Appearance must not decline by more than 0.02 overall AND across lamp states
 # (strengthened before either comparison arm ran).
 ADOPTION = dict(lamp=0.99, per_texture=0.97, attribute_pointer_decline=0.005, appearance_decline=0.02)
+# Identity screen of the paired S1 comparison (plan §19): joint candidate vs detached control.
+IDENTITY = dict(lamp=0.99, per_texture=0.97, attribute=0.95, machine_pointer=0.99, object_pointer=0.97,
+                decline=0.005, key_cross_lamp=0.80, key_overall_decline=0.02, key_cross_lamp_gain=0.10)
 
 
 def load(run):
@@ -40,6 +48,16 @@ def load(run):
     model = SlotPerception(settings["width"], settings["slots"], settings["iterations"], decoder_width=settings["decoder_width"])
     load_component(model, Path(run) / "last.pt", "perception")
     return model.eval()
+
+
+def load_key(run):
+    """The exported identity key of an S1 `--identity` run, else None."""
+    record = json.loads((Path(run) / "run.json").read_text())["identity"]["settings"]
+    if not record.get("identity"):
+        return None
+    head = key_head(record["sizes"]["width"], record["sizes"]["key_width"])
+    load_component(head, Path(run) / "last.pt", "key")
+    return head.eval()
 
 
 @torch.no_grad()
@@ -119,6 +137,27 @@ def adoption(candidate, control):
     return dict(criteria=ADOPTION, checks=checks, adopt=all(checks.values()))
 
 
+def identity_screen(candidate, control):
+    """Predeclared paired identity screen (plan §19); every check required."""
+    c, k = candidate["c1"], control["c1"]
+    key, base = candidate["appearance_key"], control["appearance_key"]
+    cross = "nn_texture_accuracy_across_lamp_states"
+    checks = dict(
+        lamp=c["lamp_accuracy"] >= IDENTITY["lamp"],
+        each_texture=min(candidate["per_texture"].values()) >= IDENTITY["per_texture"],
+        attributes=all(a >= IDENTITY["attribute"] and a >= b - IDENTITY["decline"]
+                       for a, b in zip(c["attribute_accuracy"], k["attribute_accuracy"])),
+        machine_pointer=c["machine_pointer_accuracy"] >= IDENTITY["machine_pointer"]
+        and c["machine_pointer_accuracy"] >= k["machine_pointer_accuracy"] - IDENTITY["decline"],
+        object_pointer=c["object_pointer_accuracy"] >= IDENTITY["object_pointer"]
+        and c["object_pointer_accuracy"] >= k["object_pointer_accuracy"] - IDENTITY["decline"],
+        key_cross_lamp=key[cross] >= IDENTITY["key_cross_lamp"],
+        key_overall_versus_control=key["nn_texture_accuracy"] >= base["nn_texture_accuracy"] - IDENTITY["key_overall_decline"],
+        key_cross_lamp_gain=key[cross] - base[cross] >= IDENTITY["key_cross_lamp_gain"],
+    )
+    return dict(criteria=IDENTITY, checks=checks, **{"pass": all(checks.values())})
+
+
 def status(output, result, report, step=0, error=None):
     atomic_json(output / "status.json", dict(result=result, report=report, step=step, error=error))
 
@@ -165,6 +204,10 @@ def main():
         c1 = ev.perception_metrics(model, torch.Generator().manual_seed(args.seed + 17), "validation", args.scenes, "cpu")
         data = cells(model, torch.Generator().manual_seed(args.seed + 29), args.per_cell)
         arrays = {f"cells/{key}": value for key, value in data.items()}
+        key = load_key(args.run)
+        if key is not None:
+            with torch.no_grad():
+                arrays["cells/key"] = F.normalize(key(torch.from_numpy(data["token"])), dim=-1).numpy()
         interventions = intervene(model, args.per_cell, args.seed, arrays)
         np.savez_compressed(output / "per_example.npz", **arrays)
         per_texture = {int(k): float(data["correct"][data["kind"] == k].mean()) for k in rw.KIND_SPLIT["validation"]}
@@ -180,18 +223,28 @@ def main():
             appearance=appearance_proxy(data),
             interventions=interventions,
         )
-        if args.control:
-            summary["adoption"] = adoption(summary, json.loads((args.control / "diagnosis.json").read_text()))
+        if key is not None:
+            summary["appearance_key"] = appearance_proxy(dict(data, token=arrays["cells/key"]))
+        control = json.loads((args.control / "diagnosis.json").read_text()) if args.control else None
+        if control:
+            summary["adoption"] = adoption(summary, control)  # raw-cosine rule, always recorded
+            if "appearance_key" in summary and "appearance_key" in control:
+                summary["identity_screen"] = identity_screen(summary, control)
         atomic_json(output / "diagnosis.json", summary)
         (output / "metrics.jsonl").write_text(json.dumps(dict(split="validation", lamp_accuracy=c1["lamp_accuracy"])) + "\n")
+        screen = summary.get("identity_screen")
         atomic_json(output / "result.json", dict(
-            evaluation_scope=summary["scope"], gate=summary.get("adoption", {}).get("adopt"),
+            evaluation_scope=summary["scope"],
+            gate=screen["pass"] if screen else summary.get("adoption", {}).get("adopt"),
             metrics=dict(c1={k: v for k, v in c1.items() if not isinstance(v, list)},
                          attributes={f"attribute_{i}": v for i, v in enumerate(c1["attribute_accuracy"])},
                          per_texture={f"kind_{k}": v for k, v in per_texture.items()},
                          appearance=summary["appearance"], interventions=summary["interventions"],
-                         **({"adoption": summary["adoption"]["checks"]} if args.control else {})),
-            limitations=["Development validation population; colour interventions edit the in-process texture table only."],
+                         **({"appearance_key": summary["appearance_key"]} if "appearance_key" in summary else {}),
+                         **({"adoption": summary["adoption"]["checks"]} if args.control else {}),
+                         **({"identity_screen": screen["checks"]} if screen else {})),
+            limitations=["Development validation population; colour interventions edit the in-process texture table only."]
+            + (["Gate = identity screen (plan §19); the raw-cosine adoption rule is reported, not replaced."] if screen else []),
         ))
     except Exception as error:
         status(output, "failed", "incomplete", step, f"{type(error).__name__}: {error}")
@@ -203,7 +256,8 @@ def main():
         status(output, "completed", "failed", step, f"report: {type(error).__name__}: {error}")
         raise
     print(json.dumps({k: summary[k] for k in ("per_texture", "appearance", "interventions")}
-                     | dict(c1_lamp=c1["lamp_accuracy"], adoption=summary.get("adoption")), indent=1))
+                     | dict(c1_lamp=c1["lamp_accuracy"], adoption=summary.get("adoption"),
+                            appearance_key=summary.get("appearance_key"), identity_screen=summary.get("identity_screen")), indent=1))
 
 
 if __name__ == "__main__":

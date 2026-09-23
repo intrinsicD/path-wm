@@ -322,6 +322,35 @@ def sample_scenes(generator, kinds, attrs=None):
     return Scenes(kinds, machine_xy, attrs, object_xy)
 
 
+def paired_view(generator, scenes, lamps, textures, cap=64):
+    """Second view for S1 identity training (loss/generator knowledge only).
+
+    New layouts and objects; the 2B machine body textures of the first view are
+    permuted exactly onto the 2B machine places of the second view, and every
+    machine's lamp is inverted relative to its source. Side and partner machine are
+    therefore no matching shortcut. No second-view scene holds both machines of one
+    first-view scene. Returns (scenes, lamps, textures, source) where `source` [B,2]
+    is the flat first-view machine index (scene*2 + side) shown at each place.
+    """
+    b = len(scenes)
+    if b < 2:
+        raise ValueError("A paired view needs at least two scenes")
+    for _ in range(cap):
+        source = torch.randperm(2 * b, generator=generator).reshape(b, 2)
+        if ((source[:, 0] // 2) != (source[:, 1] // 2)).all():
+            break
+    else:
+        raise ValueError(f"Paired view found no valid permutation in {cap} draws")
+    flat = source.flatten()
+    shared = Textures(
+        textures.colors.reshape(2 * b, 2, 3)[flat].reshape(b, 2, 2, 3),
+        textures.pattern.flatten()[flat].reshape(b, 2),
+        textures.period.flatten()[flat].reshape(b, 2),
+    )
+    view = sample_scenes(generator, scenes.kind.flatten()[flat].reshape(b, 2))
+    return view, 1 - lamps.flatten()[flat].reshape(b, 2), shared, source
+
+
 def _grid(device):
     y, x = torch.meshgrid(
         torch.arange(SIZE, device=device, dtype=torch.float32),

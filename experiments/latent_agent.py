@@ -22,6 +22,7 @@ import time
 import numpy as np
 import torch
 from torch import nn
+from torch.nn import functional as F
 
 from pathwm.data import rule_world as rw
 from pathwm.evaluation import rule_world as ev
@@ -40,8 +41,10 @@ from pathwm.io import (
     state_hash,
     training_mode,
 )
-from pathwm.models.latent_core import LatentCore, episode_loss
-from pathwm.models.slots import SlotPerception, SymbolicSlots, perception_loss
+from pathwm.models.latent_core import LatentCore, cross_entropy, episode_loss, key_head
+from pathwm.models.slots import SlotPerception, SymbolicSlots, perception_loss, pointer
+
+IDENTITY_TEMPERATURE, IDENTITY_WEIGHT = 0.1, 0.2  # the S2 key InfoNCE temperature and weight
 
 SIZES = dict(
     full=dict(width=64, heads=4, slots=7, iterations=3, decoder_width=32, loops=2, code_tokens=4, key_width=32,
@@ -218,7 +221,7 @@ def audit(args, s):
 # ---------------------------------------------------------------- S1 perception
 
 
-def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmentation=None):
+def perception_scenes(generator, kinds, count, *, randomize=0.0, augmentation=None):
     """Base scenes/lamps always come from `generator` with unchanged draws.
 
     With `randomize>0`, each machine body texture is replaced with that probability
@@ -235,8 +238,67 @@ def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmenta
         replace = torch.rand(count, 2, generator=augmentation) < randomize
         textures = base.where(replace, drawn)
         stats = dict(stats, replaced=int(replace.sum()))
+    return scenes, lamps, textures, stats
+
+
+def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmentation=None):
+    scenes, lamps, textures, stats = perception_scenes(generator, kinds, count, randomize=randomize, augmentation=augmentation)
     rgb, entity = rw.render(ev._scenes_to(scenes, device), lamps.to(device), textures)
     return scenes, lamps, rgb, entity, stats
+
+
+def paired_perception_batch(generator, kinds, count, device, *, randomize, augmentation, pairing):
+    """View A (the unchanged default batch) followed by its paired view B (`rw.paired_view`).
+
+    Returns the concatenated 2*count batch plus loss-only (textures, source) pairing.
+    """
+    scenes, lamps, textures, stats = perception_scenes(generator, kinds, count, randomize=randomize, augmentation=augmentation)
+    textures = rw.kind_textures(scenes.kind) if textures is None else textures
+    scenes_b, lamps_b, textures_b, source = rw.paired_view(pairing, scenes, lamps, textures)
+    scenes = rw.Scenes.cat([scenes, scenes_b])
+    lamps = torch.cat((lamps, lamps_b))
+    textures = rw.Textures(*(torch.cat((a, b)) for a, b in zip(vars(textures).values(), vars(textures_b).values())))
+    rgb, entity = rw.render(ev._scenes_to(scenes, device), lamps.to(device), textures)
+    return scenes, lamps, rgb, entity, stats, (textures, source)
+
+
+def pairing_stream(seed, step):
+    """Deterministic per-update view-B stream, separate from base and texture streams."""
+    return torch.Generator().manual_seed(seed * 1_000_003 + 104_729 + step)
+
+
+def texture_matches(textures, n):
+    """[n,n] exact body-texture equality between view-A machines (rows) and view-B machines."""
+    colors = textures.colors.reshape(-1, 2, 3)
+    pattern, period = textures.pattern.flatten(), textures.period.flatten()
+    return ((colors[:n, None] == colors[None, n:]).flatten(2).all(-1)
+            & (pattern[:n, None] == pattern[None, n:]) & (period[:n, None] == period[None, n:]))
+
+
+def identity_loss(key, percept, scenes, textures, source, *, detached, temperature=IDENTITY_TEMPERATURE):
+    """InfoNCE from view-A machine keys to view-B machine keys (S2 form, tau 0.1).
+
+    Positive = the place showing the same sampled texture; other exactly equal textures
+    are masked as false negatives. Machine tokens use the runtime pointer. `detached`
+    trains the key on sg(slot): no identity gradient reaches perception.
+    """
+    device = percept.slots.device
+    rows = torch.arange(len(scenes), device=device)
+    slots = torch.stack([percept.slots[rows, pointer(percept.alpha, scenes.machine_xy[:, m].to(device))]
+                         for m in (0, 1)], 1).flatten(0, 1)  # flat index = scene*2 + side
+    if detached:
+        slots = slots.detach()
+    keys = F.normalize(key(slots), dim=-1)
+    n = len(keys) // 2
+    target = torch.argsort(source.flatten()).to(device)  # A machine i -> the B place showing it
+    false_negative = texture_matches(textures, n).to(device)
+    false_negative[torch.arange(n, device=device), target] = False
+    similarity = (keys[:n] @ keys[n:].T / temperature).masked_fill(false_negative, -1e4)
+    loss = cross_entropy(similarity, target)
+    with torch.no_grad():
+        metrics = dict(identity_nce=float(loss), identity_accuracy=float((similarity.argmax(-1) == target).float().mean()),
+                       identity_false_negatives=int(false_negative.sum()))
+    return loss, metrics
 
 
 def augmentation_stream(seed, step):
@@ -256,6 +318,8 @@ def warm_start(module, path):
 def train_perception(args, s):
     seed_everything(args.seed)
     model = nn.ModuleDict(dict(perception=SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])))
+    if args.identity:
+        model["key"] = key_head(s["width"], s["key_width"])  # exported for S2 (`--init-key`)
     parent = warm_start(model["perception"], args.init_perception) if args.init_perception else {}
     model = model.to(args.device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
@@ -273,6 +337,17 @@ def train_perception(args, s):
             cap=sampler.cap, heldout_kinds=list(sampler.heldout),
             stream="Generator(seed*1000003 + 7919 + step); training scenes only; validation unchanged",
         )
+    if args.identity:
+        settings["identity"] = args.identity
+        settings["identity_weight"] = args.identity_weight
+        settings["identity_objective"] = dict(
+            temperature=IDENTITY_TEMPERATURE, key="pathwm.models.latent_core.key_head(width, key_width)",
+            views="A = default batch; B = rw.paired_view: new layouts/objects, exact permuted body textures, inverted lamps",
+            pairing_stream="Generator(seed*1000003 + 104729 + step)",
+            loss="perception_loss(A+B) + identity_weight * InfoNCE(key(A machines) -> key(B machines))",
+            gradient="perception and key" if args.identity == "joint" else "key only (reads sg(slot))",
+            labels="pairing indices/textures are loss-only; the forward pass sees pixels only",
+        )
     if parent:
         settings["init_perception"] = str(args.init_perception)
         settings["warm_start"] = dict(parent, optimizer="fresh AdamW; not a resume of the parent run")
@@ -282,12 +357,26 @@ def train_perception(args, s):
     try:
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
-            scenes, lamps, rgb, entity, stats = perception_batch(
-                runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
-                randomize=args.texture_randomization, augmentation=augmentation_stream(args.seed, runner.step),
-            )
+            augmentation = augmentation_stream(args.seed, runner.step)
+            if args.identity:
+                scenes, lamps, rgb, entity, stats, (textures, source) = paired_perception_batch(
+                    runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
+                    randomize=args.texture_randomization, augmentation=augmentation,
+                    pairing=pairing_stream(args.seed, runner.step),
+                )
+            else:
+                scenes, lamps, rgb, entity, stats = perception_batch(
+                    runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
+                    randomize=args.texture_randomization, augmentation=augmentation,
+                )
             percept = model["perception"](rgb)
             loss, metrics = perception_loss(percept, rgb, entity, scenes.attrs.to(args.device), lamps.to(args.device))
+            if args.identity:
+                identity, identity_metrics = identity_loss(model["key"], percept, scenes, textures, source,
+                                                           detached=args.identity == "detached")
+                metrics.update(identity_metrics, perception_loss=metrics["loss"])
+                loss = loss + args.identity_weight * identity
+                metrics["loss"] = float(loss.detach())
             if stats:
                 metrics.update(texture_replaced=stats["replaced"], texture_near_lamp=stats["near_lamp"],
                                texture_heldout_rejections=stats["heldout_rejections"], texture_draws=stats["draws"])
@@ -320,6 +409,12 @@ def train_perception(args, s):
             stop_reason=stop_reason(runner, args, started),
             limitations=["Synthetic rendered scenes; training-only mask/attribute/lamp supervision is disclosed."],
         )
+        if args.identity:
+            result["key_export"] = dict(component="key", architecture=settings["identity_objective"]["key"],
+                                        width=s["width"], key_width=s["key_width"], mode=args.identity,
+                                        state_sha256=state_hash(model["key"]))
+            result["limitations"].append("Identity pairs are disclosed generator knowledge (same sampled texture); "
+                                         "no autonomous discovery, C3 or natural-image claim.")
         finish(runner, result, complete=runner.step >= args.updates, images=(rgb.cpu(), recon.cpu()))
     except Exception as error:
         runner.status("failed", "incomplete", str(error))
@@ -362,6 +457,13 @@ def train_core(args, s, *, symbolic=False):
         load_component(model.perception, Path(args.perception) / "last.pt", "perception")
         model.perception.requires_grad_(False)
         perceive = ev.pixel_perceiver(model.perception)
+    key_source = None
+    if getattr(args, "init_key", False):  # explicit only: never inferred from the perception run
+        record = json.loads((Path(args.perception) / "run.json").read_text())["identity"]["settings"]
+        if not record.get("identity"):
+            raise ValueError("--init-key needs a perception run trained with --identity")
+        load_component(model.core.key_head, Path(args.perception) / "last.pt", "key")
+        key_source = dict(run=str(args.perception), mode=record["identity"], state_sha256=state_hash(model.core.key_head))
     trainable = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable, lr=args.lr, weight_decay=0.01)
     floors = rw.floors()
@@ -375,6 +477,9 @@ def train_core(args, s, *, symbolic=False):
                     key_weight=key_weight,
                     diagnostic=("supplied render symbols and exact slot masks; fixed symbol embeddings; no appearance, "
                                 "so no key objective and no retrieval claim; not an R1 pixel gate") if symbolic else None)
+    if key_source:
+        settings["init_key"] = True
+        settings["init_key_source"] = key_source
     data = rw.manifest()
     runner = Run(args.resume or args.output, settings=settings, data=data, recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
@@ -587,6 +692,12 @@ def main():
                         help="perception only: per-machine probability of a procedural training body texture")
     parser.add_argument("--init-perception", type=Path,
                         help="perception only: warm-start weights from a run/last.pt (new optimizer and run)")
+    parser.add_argument("--identity", choices=("joint", "detached"),
+                        help="perception only: paired-view appearance-key InfoNCE (joint trains perception too)")
+    parser.add_argument("--identity-weight", type=float,
+                        help=f"perception only, with --identity: loss weight (default {IDENTITY_WEIGHT})")
+    parser.add_argument("--init-key", action="store_true",
+                        help="core only: initialize core.key_head from the --perception run's exported identity key")
     args = resume_arguments(parser, parser.parse_args())
     if args.stage == "check":
         args.device = "cpu"
@@ -601,6 +712,14 @@ def main():
         parser.error("--texture-randomization/--init-perception apply to the perception stage only")
     if not 0.0 <= args.texture_randomization <= 1.0:
         parser.error("--texture-randomization must be a probability")
+    if (args.identity or args.identity_weight is not None) and args.stage != "perception":
+        parser.error("--identity/--identity-weight apply to the perception stage only")
+    if args.identity_weight is not None and not args.identity:
+        parser.error("--identity-weight requires --identity")
+    if args.identity and args.identity_weight is None:
+        args.identity_weight = IDENTITY_WEIGHT
+    if args.init_key and args.stage != "core":
+        parser.error("--init-key applies to the core stage only")
     if args.stage == "audit":
         audit(args, s)
     elif args.stage == "perception":
