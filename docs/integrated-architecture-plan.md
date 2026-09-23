@@ -457,6 +457,9 @@ Geändert: `pathwm/world_state/store.py`. Neu: `pathwm/data/rule_world.py`,
 | [Recurrent depth](https://arxiv.org/abs/2502.05171) | geteilte Wiederholung; Nutzen über Loop-Budgets gemessen |
 | [Latent Program Spaces](https://arxiv.org/abs/2411.08706) | aus Support erschlossene Codes; Gültigkeit außerhalb der Familie offen |
 | [Titans](https://arxiv.org/abs/2501.00663) | Abgrenzung: Gradientenspeicher ist ein anderer Laufzeitvertrag |
+| [Abstractors](https://arxiv.org/abs/2304.00195) | zusätzliche Entwurfshypothese: relationale von objektbezogener Information trennen; kein lokaler Nachweis |
+| [Dual Attention Transformers](https://arxiv.org/html/2405.16727v3) | gelernte Paarvergleiche als eigene Werte; mögliche höhere latente Operation, noch nicht übernommen |
+| [Relational BabyLM, 17.09.2026](https://arxiv.org/html/2609.20530v1) | aktueller Sprachbefund zu relationaler Aufmerksamkeit und latentem Hilfsziel; kein Nachweis unserer visuellen Konzeptinduktion |
 
 Keine Behauptung, den Forschungsstand zu übertreffen.
 
