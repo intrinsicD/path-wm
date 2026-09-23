@@ -1304,3 +1304,33 @@ Training ist Kollapsschutz nötig. Stop-Gradient allein garantiert ihn nicht
 Loss das bisherige Scheitern behebt, keine Architekturübernahme. Prinzipien:
 geteilte latente Anwendung, wiederverwendbare Belege, Endzustandsziele außerhalb
 der Inferenz und unabhängige Übertragungsprüfung.
+
+
+## 21. Menschliches Lernen als Vergleich (Diskussion, keine Übernahme)
+
+Menschen können Vorwissen und wiederverwendbare Strukturen einsetzen, Fälle gezielt
+vergleichen und informative Interventionen wählen. Experimente zu analogischem
+Vergleich und kausalem Lernen belegen begrenzte Vorteile dieser Prozesse; sie
+beweisen keinen universellen menschlichen Regelinduktor. Menschen wurden auf
+unserem konkreten Benchmark nicht getestet.
+
+Komplementäre Lernsysteme sind eine Theorie über das Zusammenwirken schneller
+episodischer Speicherung und strukturierter Wissensbildung; Replay und Vorwissen
+spielen darin eine Rolle. Dies ist kein vollständig geklärter neuronaler Bauplan.
+Menschliches Lernen umfasst Plastizität; feste Modellgewichte zur Laufzeit sind
+unsere technische Vorgabe, keine wörtliche biologische Beschreibung.
+
+Als **unbestätigte Ableitung für PATH-WM** kommen strukturierte Vorerfahrung,
+Vergleich über verschiedene Fälle, unterscheidende Testaktionen und Erhaltung
+früherer Kompetenz bei weiterem Lernen infrage. Ein beobachteter Vergleichs- oder
+Gedächtniseffekt schreibt keine separate Softwarekomponente oder symbolische
+Laufzeitrepräsentation vor. Keine Ursache der bisherigen Fehlschläge isoliert,
+kein neuer Loss, keine Architektur- oder Umfangsänderung, kein Lauf beschlossen.
+
+Primärarbeiten/Autorentheorie:
+- https://pubmed.ncbi.nlm.nih.gov/26659050/
+- https://groups.psych.northwestern.edu/gentner/papers/GentnerLoewensteinThompson03.pdf
+- https://doi.org/10.1207/s15516709cog2703_6
+- https://pubmed.ncbi.nlm.nih.gov/27315762/
+- https://pmc.ncbi.nlm.nih.gov/articles/PMC3077926/
+- https://pubmed.ncbi.nlm.nih.gov/1582172/

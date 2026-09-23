@@ -6909,3 +6909,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O392
+  timestamp: 2026-09-23T19:51+02:00
+  provenance: ai-suggested
+  content: Human findings motivate considering reusable prior structure, cross-case comparison, informative
+    interventions and retention/replay for PATH-WM. These are candidate functional principles, not a proven
+    remedy, literal neural blueprint or requirement for symbolic runtime modules. Human learning includes plasticity;
+    frozen runtime weights are an engineering constraint.
+  context: Discussion only; sources and scope in integrated-architecture-plan section21. No human baseline
+    on the exact RuleWorld task.
+  potential_type: heuristic
+  bound_to:
+  - N561
+  - N557
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

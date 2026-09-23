@@ -2925,3 +2925,10 @@ entries:
     inferred.
   - Actual code shows cross-example outcome supervision already exists, while full latent next-state objectives
     were omitted in later diagnostics.
+
+- turn: 2026-09-23_001#11
+  notes:
+  - N561 records a question, not a scope choice or adoption. O392 stages engineering inferences separately
+    from empirical human results and CLS theory.
+  - No researcher endorsement or new local experiment resolves O389-O391; no unrelated closure, contradiction
+    or abandonment inferred. No claims promoted.
