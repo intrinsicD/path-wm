@@ -1,0 +1,233 @@
+{
+  "scope": "CI1, one seed, existing pretrained checkpoints; synthetic pointed static color task",
+  "results": {
+    "probes": {
+      "evaluation_scope": "CI1 frozen checkpoint inputs, one seed, synthetic property task; composition holdout is only for this diagnostic training, not established unseen in pretrained checkpoints",
+      "initial_retention": {
+        "attribute_0": 1.0,
+        "attribute_1": 0.9931640625,
+        "attribute_2": 1.0,
+        "attribute_3": 1.0,
+        "lamp": 1.0,
+        "pointer": 1.0
+      },
+      "metrics": {
+        "rgb_mean": {
+          "accuracy": 1.0,
+          "color_accuracy": 1.0,
+          "color_drop_old": 0.969779702136293,
+          "color_gain_new": 0.9682974424213171,
+          "color_pair": 1.0,
+          "color_tv": 0.9793671586085111,
+          "motion_accuracy": 1.0,
+          "motion_argmax_stable_NOT_success": 1.0,
+          "motion_pair": 1.0,
+          "motion_shift_true": -0.00047737546265125275,
+          "motion_tv": 0.011015498704637139,
+          "n": 256,
+          "n_color_changed": 256,
+          "screen": true,
+          "shuffled_label_accuracy": 0.2890625,
+          "train_accuracy": 1.0
+        },
+        "token": {
+          "accuracy": 1.0,
+          "color_accuracy": 1.0,
+          "color_drop_old": 0.9461315935477614,
+          "color_gain_new": 0.9704273664392531,
+          "color_pair": 1.0,
+          "color_tv": 0.9789002081379294,
+          "motion_accuracy": 1.0,
+          "motion_argmax_stable_NOT_success": 1.0,
+          "motion_pair": 1.0,
+          "motion_shift_true": 0.005098495166748762,
+          "motion_tv": 0.04573458380610873,
+          "n": 256,
+          "n_color_changed": 256,
+          "screen": true,
+          "shuffled_label_accuracy": 0.203125,
+          "train_accuracy": 1.0
+        }
+      },
+      "report_clarification": "Scope and headline clarified after independent audit; raw measurements and predeclared thresholds unchanged."
+    },
+    "frozen": {
+      "elapsed_seconds": 10.094328489038162,
+      "evaluation_scope": "CI1 newly trained property query through tied core; not original lamp policy, no temporal tracking; composition holdout is only for this diagnostic training, not established unseen in pretrained checkpoints",
+      "final_probe": {
+        "accuracy": 1.0,
+        "color_accuracy": 1.0,
+        "color_drop_old": 0.9461315935477614,
+        "color_gain_new": 0.9704273664392531,
+        "color_pair": 1.0,
+        "color_tv": 0.9789002081379294,
+        "motion_accuracy": 1.0,
+        "motion_argmax_stable_NOT_success": 1.0,
+        "motion_pair": 1.0,
+        "motion_shift_true": 0.005098495166748762,
+        "motion_tv": 0.04573458380610873,
+        "n": 256,
+        "n_color_changed": 256
+      },
+      "frozen_unchanged": true,
+      "gate": true,
+      "initial_hash": "a48e5364e0046b497328d623c8dd3b03c32ca275fc664987240340f6725b2715",
+      "initial_retention": {
+        "attribute_0": 1.0,
+        "attribute_1": 0.9931640625,
+        "attribute_2": 1.0,
+        "attribute_3": 1.0,
+        "lamp": 1.0,
+        "pointer": 1.0
+      },
+      "metrics": {
+        "property": {
+          "accuracy": 1.0,
+          "color_accuracy": 1.0,
+          "color_drop_old": 0.9841474229469895,
+          "color_gain_new": 0.98852124880068,
+          "color_pair": 1.0,
+          "color_tv": 0.9904937560204417,
+          "motion_accuracy": 0.9921875,
+          "motion_argmax_stable_NOT_success": 0.9921875,
+          "motion_pair": 0.9921875,
+          "motion_shift_true": -0.016647444805130363,
+          "motion_tv": 0.023761035244149298,
+          "n": 256,
+          "n_color_changed": 256,
+          "shuffled_accuracy": 0.23828125,
+          "zero_accuracy": 0.2890625
+        },
+        "retention": {
+          "attribute_0": 1.0,
+          "attribute_1": 0.9931640625,
+          "attribute_2": 1.0,
+          "attribute_3": 1.0,
+          "lamp": 1.0,
+          "pointer": 1.0
+        }
+      },
+      "peak_reserved_gib": 0.255859375,
+      "property_gate": true,
+      "report_clarification": "Scope and headline clarified after independent audit; raw measurements and predeclared thresholds unchanged.",
+      "retention_pass": true
+    },
+    "adaptive": {
+      "elapsed_seconds": 16.72152681701118,
+      "evaluation_scope": "CI1 newly trained property query through tied core; not original lamp policy, no temporal tracking; composition holdout is only for this diagnostic training, not established unseen in pretrained checkpoints",
+      "final_probe": {
+        "accuracy": 1.0,
+        "color_accuracy": 1.0,
+        "color_drop_old": 0.988956376677379,
+        "color_gain_new": 0.9931956748478115,
+        "color_pair": 1.0,
+        "color_tv": 0.995442958548665,
+        "motion_accuracy": 0.99609375,
+        "motion_argmax_stable_NOT_success": 0.99609375,
+        "motion_pair": 0.99609375,
+        "motion_shift_true": -0.008075196063145995,
+        "motion_tv": 0.015965999417936416,
+        "n": 256,
+        "n_color_changed": 256
+      },
+      "frozen_unchanged": true,
+      "gate": false,
+      "initial_hash": "a48e5364e0046b497328d623c8dd3b03c32ca275fc664987240340f6725b2715",
+      "initial_retention": {
+        "attribute_0": 1.0,
+        "attribute_1": 0.9931640625,
+        "attribute_2": 1.0,
+        "attribute_3": 1.0,
+        "lamp": 1.0,
+        "pointer": 1.0
+      },
+      "metrics": {
+        "property": {
+          "accuracy": 1.0,
+          "color_accuracy": 1.0,
+          "color_drop_old": 0.9883133706171066,
+          "color_gain_new": 0.9909446532838047,
+          "color_pair": 1.0,
+          "color_tv": 0.9922053795307875,
+          "motion_accuracy": 1.0,
+          "motion_argmax_stable_NOT_success": 1.0,
+          "motion_pair": 1.0,
+          "motion_shift_true": -0.0042520195711404085,
+          "motion_tv": 0.011113206713332602,
+          "n": 256,
+          "n_color_changed": 256,
+          "shuffled_accuracy": 0.23828125,
+          "zero_accuracy": 0.1953125
+        },
+        "retention": {
+          "attribute_0": 1.0,
+          "attribute_1": 0.71875,
+          "attribute_2": 0.9521484375,
+          "attribute_3": 0.99609375,
+          "lamp": 1.0,
+          "pointer": 1.0
+        }
+      },
+      "peak_reserved_gib": 0.484375,
+      "property_gate": true,
+      "report_clarification": "Scope and headline clarified after independent audit; raw measurements and predeclared thresholds unchanged.",
+      "retention_pass": false
+    }
+  },
+  "dataset_manifest": "data/core_information_ci1/dataset.json",
+  "dataset_manifest_sha256": "2968086f3a0536509db00d2053bfbf8c9549bdf6e7bf3efcb23d2deac629f891",
+  "independent_audit": {
+    "adaptive": {
+      "finite": true,
+      "independent_metrics": true,
+      "raw_sha256": "3a72c29c530b63126e28faf80628d5d6727f59a92ca6f8d77e166f3221c34ed9"
+    },
+    "conclusion": "Frozen arm passes property and retention; adaptive arm passes property but fails retention. No general encoder limitation isolated.",
+    "dataset_files_verified": 401,
+    "frozen": {
+      "finite": true,
+      "independent_metrics": true,
+      "raw_sha256": "1f28c3ab03f9fc34ed39518b7d81df959629be161be4bceb6fb02fe0e56a15ec"
+    },
+    "initial_weights_equal": true,
+    "probes": {
+      "finite": true,
+      "independent_metrics": true,
+      "raw_sha256": "12cd4e3513c2f45cd2b240e852fff00f64c90e6fd7d1072a7e7fb82f561d4654"
+    },
+    "scope": "one seed, supplied pointer, existing pretrained features, synthetic static pairs"
+  },
+  "pixel_audit": {
+    "pairs": 256,
+    "color_changes_only_target_pixels": true,
+    "motion_changes_only_target_old_new_footprint": true,
+    "all_interventions_nonempty": true,
+    "pointing_coordinate_follows_target": true
+  },
+  "checkpoint_audit": {
+    "adaptive": {
+      "changes_only_allowed": true,
+      "perception_changed_tensors": 50,
+      "retention_independently_recomputed": true
+    },
+    "frozen": {
+      "changes_only_allowed": true,
+      "perception_changed_tensors": 0,
+      "retention_independently_recomputed": true
+    }
+  },
+  "full_tests": {
+    "exit_code": 0,
+    "seconds": 665.7875521183014
+  },
+  "test_source": "final-source-manifest.json",
+  "post_test_source_delta": {
+    "run_source_sha256": "90f3efb0a136beed83c057ee0f11aa0990d6ecf2879d45d6e6c830178766eb98",
+    "final_source_sha256": "5a8a5207cc70680f4fe1991c897be0db25d796ef58c93c64e48e422f51b01531",
+    "computational_source_unchanged": true,
+    "changes": "report scope and combined predeclared property+retention headline only",
+    "post_fix_tests": "post-report-fix-tests.log"
+  },
+  "report_status": "structural_verified",
+  "claude_receipt": "runs/reviews/core_information_20260923/claude-receipt.json"
+}

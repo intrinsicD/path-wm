@@ -9431,3 +9431,37 @@ tree:
   evidence:
   - docs/integrated-architecture-plan.md
   status: open
+
+- id: N565
+  type: decision
+  title: Run core-information diagnosis with Claude and a dedicated dataset
+  provenance: user
+  timestamp: 2026-09-23T21:21+02:00
+  choice: User requests actual Claude collaboration to execute the three checks and create a dataset containing
+    these cases.
+  alternatives:
+  - Explanation only
+  evidence:
+  - docs/integrated-architecture-plan.md
+  - runs/reviews/core_information_20260923/claude-receipt.json
+  also_depends_on:
+  - N564
+  - N563
+  status: completed
+- id: N566
+  type: experiment
+  title: CI1 color information and frozen/adaptive query comparison
+  provenance: ai-executed
+  timestamp: 2026-09-23T21:21+02:00
+  result: Input-slot linear probe100%; frozen core property query base/color-pair100%, position-pair99.21875%,
+    retention PASS. Adaptive property100%, old shape99.3164→71.875% and size100→95.2148%, retention FAIL. Same
+    initial weights,400 exact shared batches; one seed, no original lamp-policy or full prior-learning claim.
+  evidence:
+  - ara/evidence/tables/core_information_2026-09-23.json
+  - data/core_information_ci1/dataset.json
+  - runs/reviews/core_information_20260923/independent-audit.json
+  - runs/reviews/core_information_20260923/checkpoint-retention-audit.json
+  also_depends_on:
+  - N565
+  - N557
+  status: completed

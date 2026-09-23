@@ -13,12 +13,12 @@ Read the relevant record when needed.
   not establish the complete capability.
 - **Integrated architecture R1/R2:** the [plan](integrated-architecture-plan.md)
   connects one session/store/clock, shared image features, concept memory, typed
-  execution and verification. 816 CPU tests pass, including causal claims,
+  execution and verification. 820 CPU tests pass, including causal claims,
   identity-key sharing and correction. J passes the primary identity screen
   (100% versus54.6% cross-lamp), but misses one fresh-scene attribute guard:
   provisional development input. All five oracle application families pass
   (nu≥0.863). Code search and eight induction paths failed; copied-example recall was learned
-  but degraded during the failed transfer curriculum. Alex selects structural-prior pretraining as the next direction (§22); concrete curriculum reviewed, no run yet.
+  but degraded during the failed transfer curriculum. CI1 (§22): color reaches core; frozen property query passes. Encoder adaptation loses shape/size retention; full prior curriculum remains open.
   Rollout, learned full R1/R2 and natural data remain unproven.
   Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
 - **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)

@@ -1529,3 +1529,88 @@ Ressourcen und Standalonebericht je Arm. Frische Ausgabeverzeichnisse; diese kur
 Diagnose startet bei Unterbrechung neu, kein ungetestetes Resume. Fehlende/gescheiterte
 Gates bleiben sichtbar. Claude implementiert abstrakte Diagnosehilfen ohne private
 Repositorydaten; lokale Integration und unabhängige Prüfung durch Codex.
+
+CI1 Implementierungspräzisierung vor Hauptlauf: Claude liefert standardisierte
+Float64-CPU-Linearprobe (300 Updates, lr.03, L2=.001), samt Labelpermutationskontrolle
+und beidseitig korrekten Paarmetriken. Keine universelle Zufallsrate für abhängige
+Paare behaupten. Trainingsbatches werden einmal als Tensor-Dateien unter `data/`
+gespeichert, beide Arme laden dieselben SHA256-geprüften Dateien. Eval-/Probedaten
+inklusive RGB, Zeigepositionen, Zielen und Generator-Metadaten liegen separat als
+NPZ vor; nur RGB und Zeigeposition gehen in den Modellforward. Keine Decoder-
+Gewichtsadaption in CI1; dies bleibt eine getrennte optionale Frage.
+
+CI1 Claude-Vorreview abgeglichen: Retention-Training nutzt ausschließlich die
+jeweilige Trainingsszene, nie Evaluationsdaten; alle vier Objekte respektieren den
+Kombinationssplit. Beim Verschieben bewegt sich die externe Zeigeposition mit dem
+Objekt; dies ist keine autonome Wiedererkennung. Generator prüft Zeigeposition
+gegen Zielmaske, Evaluation prüft gewählten Slot gegen nachträgliche Maskenzuordnung.
+Pointer-Erhaltung wird ebenfalls mit .02 Toleranz berichtet. Slots sind deterministisch;
+keine zufällige Slotinitialisierung im Forward. Decoder/Slot-Auswahlalgorithmus ist
+in beiden Armen gleich, die Ausgabe kann durch Encoderadaption variieren. Zusätzliche
+Linearprobe auf finalen Armmerkmalen nutzt wieder nur Trainingsbeispiele zum Fit.
+
+
+### CI1 Ergebnis und Einordnung
+
+Hauptlauf abgeschlossen, Prozess exit0, 41,40s Gesamtzeit; 6.400 gespeicherte
+Trainingsszenen (400×16), 512 Probe-Trainingsszenen, 256 Evaluationstripel.
+Unveränderlicher Quellstand und Quellenhashes im final-source-manifest des Reviews.
+
+| Messung | Eingefrorene Wahrnehmung | Nur Bildencoder adaptiv |
+| --- | ---: | ---: |
+| Farbquery Basis | 1,000000 | 1,000000 |
+| Beide Farbgegenfälle korrekt | 1,000000 | 1,000000 |
+| Beide Positionsansichten korrekt | 0,992188 | 1,000000 |
+| Nulltoken-Accuracy | 0,289063 | 0,195313 |
+| Vertauschte Tokens Accuracy | 0,238281 | 0,238281 |
+| Bisherige Formaccuracy | 0,993164 | 0,718750 |
+| Bisherige Größenaccuracy | 1,000000 | 0,952148 |
+| Eigenschaftsprüfung / Erhaltung | PASS / PASS | PASS / FAIL |
+| Training Sekunden / Peak reserviert GiB | 10,09 / 0,256 | 16,72 / 0,484 |
+
+Die anfängliche Linearprobe auf Eingangsslots erreicht Basis/Farbpaar/Positionspaar
+je1,000; Labelpermutationskontrolle0,203125. Lokaler RGB-Mittelwert ebenfalls1,000,
+Kontrolle0,289063. Finalprobe Frozen bleibt1,000; Adaptive Basis/Farbpaar1,000,
+Positionspaar0,996094. Zeigerzuordnung bei beiden Armen in allen drei Ansichten1,000.
+Alte Farbe/Lampe1,000 in beiden; adaptives Muster0,996094. Encodergradient im
+Frozen-Arm0, im adaptiven Arm vorhanden; exakt0 gegenüber50 veränderten
+Wahrnehmungstensoren, ausschließlich Encoderparameter im adaptiven Arm.
+
+Folgerung innerhalb dieses Versuchs: Farbe ist am Kerneingang verfügbar und der
+neue gemeinsame-Kern-Abfragepfad kann sie bei fester Wahrnehmung verwenden. Kein
+nachgewiesener Bedarf an Encoderadaption für diese einfache Aufgabe. Adaptive
+Variante wegen Erhaltungsfehler nicht übernehmen; kein Sweep zur nachträglichen
+Schönung. Keine Aussage, dass Encoder für alle anderen Aufgaben hinreichen oder
+dass die ursprüngliche Lampeninduktion Farbe nutzte. Das Testen grundlegender
+Eigenschaften ersetzt weder Relationsinduktion noch den vollen Vortrainingsvergleich.
+
+**Splitgrenze:** Die ausgeschlossenen Kombinationen gelten nur für CI1. Die früheren
+Checkpoints wurden nicht mit diesem Ausschluss trainiert; kein Nachweis global
+ungesehener Kombinationen. Strukturierte Farbziele sind schon im visuellen
+Vortraining vorhanden. Es wird vorhandene Information geprüft, kein erstmaliges
+Erlernen des abstrakten Eigenschaftsbegriffs behauptet.
+
+Rohlogits und sämtliche 401 Datasetdateien unabhängig nachgerechnet bzw. gehasht;
+Erhaltung zusätzlich aus Roharrays nachgerechnet, erlaubte Parameteränderungen
+an Checkpoints verifiziert. Berichte strukturell geprüft, unveränderter Renderer,
+keine Browser-QA behauptet. Nach Review Berichtskopf korrigiert: Gesamt-Gate enthält
+bereits vorab definierte Erhaltung; Property-Gate separat. Ursprüngliche Resultate/
+Berichte als before_scope_clarification erhalten; keine Messwerte/Grenzen geändert.
+
+Datensatz: `data/core_information_ci1/README.md` und `dataset.json`.
+Berichte: `runs/core_information_ci1/{probes,frozen,adaptive}/report.html`.
+Unabhängige Belege: `runs/reviews/core_information_20260923/independent-audit.json`,
+`checkpoint-retention-audit.json`, `comparison.exit.json`. Tatsächliches Claude
+Opus5.5 high lieferte Probe-/Paarmetriken und abstrakten Vorreview mit Korrekturen;
+keine privaten lokalen Messwerte extern geteilt. Lokale Integration/Review durch Codex.
+
+Zusätzliche Pixelprüfung: sämtliche256 Farbpaare verändern ausschließlich die
+Zielobjektmaske, sämtliche Positionspaare ausschließlich die Vereinigung aus alter
+und neuer Zielmaske; jede Intervention verändert tatsächlich Pixel. Beleg:
+`pixel-intervention-audit.json`. Kein CI1-Checkpoint ersetzt C192 oder den gesamten
+Agenten: Erhaltung der ursprünglichen Regelanwendung wurde hier nicht getestet.
+
+CI1 Softwareprüfung: vier gezielte Tests bestehen, vollständige CPU-Suite820Tests
+exit0 in665,79s auf finalem Rechensnapshot. Danach ausschließlich Report-Scope/
+Gesamt-Gate-Darstellung präzisiert und gezielte Tests erneut bestanden; exakter
+Delta-Nachweis `report-only-source-change.json`. Kein ungetesteter Rechenpfadwechsel.

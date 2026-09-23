@@ -342,8 +342,10 @@ sessions:
     primary sources; empirical effects and cognitive theories distinguished, no architecture adoption or new experiment.
     Turn12: user selects structural-prior pretraining direction; public-only Opus5.5 high review reconciled. Curriculum
     proposed, no run. Turn13: initial nonlinguistic property tasks preferred; lamp failures do not isolate training-design
-    cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment.'
-  turn_count: 14
-  events_count: 38
+    cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment. Turn15: CI1
+    implemented with actual Opus5.5 high and dedicated saved dataset; frozen color query passes, adaptive retention
+    fails.820 CPU tests pass; full prior curriculum remains open.'
+  turn_count: 15
+  events_count: 42
   claims_touched: []
-  open_threads: 15
+  open_threads: 16

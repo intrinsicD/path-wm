@@ -6972,6 +6972,22 @@ observations:
   potential_type: heuristic
   bound_to:
   - N564
+  promoted: true
+  promoted_to: heuristic:H80
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O396
+  timestamp: 2026-09-23T21:21+02:00
+  provenance: ai-suggested
+  content: For this synthetic color task, information is available at actual core input and a new query through
+    the tied core learns to use it with frozen perception. Encoder adaptation is unnecessary for this bounded
+    task and fails predeclared retention; this does not explain general rule-induction failures.
+  context: CI1; one seed, supplied pointer, previously supervised color features. Composition holdout applies
+    only to current diagnostic, not old checkpoint training.
+  potential_type: claim
+  bound_to:
+  - N566
   promoted: false
   promoted_to: null
   crystallized_via: null

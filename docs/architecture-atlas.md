@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-23, repository snapshot `02eb0c0`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-23, repository snapshot `b2ee017145bdd408e6519d73ec6f8323edeaf119`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -1392,5 +1392,7 @@ Human-learning comparison (plan section21): prior structure, cross-case comparis
 §22 Gesprächspräzisierung: anfangs nichtsprachliche Eigenschaftsabfragen; variierte Farbziele können Invarianz ohne separaten Invarianz-Loss fördern. Lampenfehlschläge gelten für geprüfte Bedingungen, nicht als allgemeine Widerlegung; Trainingsgestaltung als Ursache unisoliert.
 
 §22: Informationsdiagnose am tatsächlichen Kerneingang und Nutzung durch kontrollierte Gegenfälle getrennt vorgeschlagen; Probe-Misserfolg beweist keine Abwesenheit. Keine neuen Tests ausgeführt.
+
+CI1: Eingangsslot-Farbprobe100%; neuer Kern-Farbpfad bei fester Wahrnehmung Basis/Farbpaar100%, Positionspaar99,22%, Erhaltung bestanden. Encoderadaption: Positionspaar100%, Form99,32→71,88% und Größe100→95,21%; Erhaltung verfehlt, nicht übernommen. Ein Seed, externe Zeigeposition, synthetische Ansichten; Split nur im Diagnosetraining, keine volle Vortrainings-/Induktionsvalidierung. Berichte runs/core_information_ci1/, Rohdaten unabhängig geprüft.
 
 Source: [docs/integrated-architecture-plan.md](../docs/integrated-architecture-plan.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/shared-abstraction-spec.md](../docs/shared-abstraction-spec.md), [pathwm/models/multiscale.py · FeaturePyramid:35](../pathwm/models/multiscale.py), [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/models/slots.py · SlotPerception:112](../pathwm/models/slots.py), [pathwm/models/latent_core.py · LatentCore:46](../pathwm/models/latent_core.py), [pathwm/world_state/concepts.py · ConceptAgent:278](../pathwm/world_state/concepts.py), [pathwm/data/rule_world.py · TaskContract:486](../pathwm/data/rule_world.py), [pathwm/evaluation/rule_world.py · run_life:410](../pathwm/evaluation/rule_world.py), [experiments/latent_agent.py](../experiments/latent_agent.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/unified.py · UnifiedAgent:185](../pathwm/world_state/unified.py), [experiments/unified_session.py](../experiments/unified_session.py), [tests/test_unified_session.py](../tests/test_unified_session.py), [tests/test_unified_testimony.py](../tests/test_unified_testimony.py), [tests/test_unified_claim_provenance.py](../tests/test_unified_claim_provenance.py).

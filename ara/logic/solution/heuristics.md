@@ -794,3 +794,15 @@
 - **Code ref**: [standing workflow](../../../docs/experiment-workflow.md#standing-design-principles), [required entry point](../../../CLAUDE.md). This is a development practice, not a neural implementation.
 - **Evidence**: N506; explicit user instruction and the committed workflow update.
 - **Scope**: All model-related architecture, interfaces, memory, training/data, inference, planning and supporting systems; preserve the small-library/recipe boundary.
+
+
+## H80: Separate information availability from task use at the actual core input
+
+- **Rationale**: Fit held-out probes on consumed tokens, check paired relevant/nuisance interventions, and compare matched frozen/adaptive encoders while retaining old abilities. Probe failure alone does not prove absence; a new query does not establish old-policy use.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O395
+- **Sensitivity**: Probe capacity, prior supervision, selection errors, dataset shortcuts and unequal trainable capacity limit interpretation. No universal diagnosis from one task.
+- **Code ref**: [diagnostic recipe](../../../experiments/core_information.py), [contract checks](../../../tests/test_core_information.py).
+- **Evidence**: N565–N566; [CI1 evidence](../../evidence/tables/core_information_2026-09-23.json).
+- **Scope**: Implemented diagnostic procedure, not a general representation sufficiency claim.

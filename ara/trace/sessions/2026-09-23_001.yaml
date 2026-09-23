@@ -2,8 +2,8 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T20:56+02:00
-  turn_count: 14
+  last_turn: 2026-09-23T21:21+02:00
+  turn_count: 15
   summary: 'Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full
     modal decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
@@ -22,7 +22,9 @@ session:
     primary sources; empirical effects and cognitive theories distinguished, no architecture adoption or new experiment.
     Turn12: user selects structural-prior pretraining direction; public-only Opus5.5 high review reconciled. Curriculum
     proposed, no run. Turn13: initial nonlinguistic property tasks preferred; lamp failures do not isolate training-design
-    cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment.'
+    cause. Turn14: core-input information versus utilization diagnostics proposed; no experiment. Turn15: CI1
+    implemented with actual Opus5.5 high and dedicated saved dataset; frozen color query passes, adaptive retention
+    fails.820 CPU tests pass; full prior curriculum remains open.'
 events_logged:
 - turn: 7
   type: question
@@ -299,6 +301,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Scoped diagnostic proposal.
+- turn: 15
+  type: decision
+  id: N565
+  routing: direct
+  provenance: user
+  summary: Execute three diagnostics with Claude and dedicated dataset.
+- turn: 15
+  type: experiment
+  id: N566
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen color query passes; adaptive retention fails.
+- turn: 15
+  type: observation
+  id: O396
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped information sufficiency interpretation.
+- turn: 15
+  type: heuristic
+  id: H80
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Implemented O395 diagnostic procedure.
 
 ai_actions:
 - turn: 7
@@ -429,6 +455,15 @@ ai_actions:
 - turn: 14
   action: Explained probe limits and controlled utilization checks; recorded proposal without training.
   provenance: ai-executed
+- turn: 15
+  action: Actual Opus5.5 high probe/metric implementation and abstract reviews integrated locally; generated dataset,
+    ran immutable comparison, independently recomputed raw results, verified parameter changes, repaired report
+    scope/headline without changing metrics. Full suite and post-report targeted tests passed.
+  provenance: ai-executed
+  files_changed:
+  - experiments/core_information.py
+  - tests/test_core_information.py
+  - docs/integrated-architecture-plan.md
 
 claims_touched: []
 key_context:
@@ -469,6 +504,9 @@ key_context:
     Eigenschaften, über alle Modalitäten.
 - turn: 13
   excerpt: Lampenfehlschlag könnte am Trainingskonzept liegen; anfängliche Textkopplung unerwünscht.
+- turn: 15
+  excerpt: Genau, kannst du das zusammen mit Claude mal machen; einen Datensatz erstellen, der genau diese Dinge
+    enthält.
 
 open_threads:
 - 'N549: choose concrete protocol, gates and compute budget.'
@@ -495,6 +533,8 @@ open_threads:
   choice yet.'
 - 'N562/O393: specify first bounded structural-prior experiment and gates before execution; multimodal transfer
   unproven.'
+- 'N566/O396: extend beyond supervised color and supplied pointing; temporal tracking, relations, original rule
+  retention and full prior curriculum unproven.'
 
 ai_suggestions_pending:
 - Staged/prior-feature diagnostics are a pragmatic comparison; joint learning is also viable within appropriate
@@ -513,3 +553,4 @@ ai_suggestions_pending:
   transition transfer.'
 - 'O392: no human-performance baseline or verified remedy for current transfer failure.'
 - 'O393: concrete curriculum proposal unvalidated; user selected the direction, not every proposed mechanism.'
+- 'O396: scoped CI1 interpretation awaits researcher discussion; no general remedy adopted.'
