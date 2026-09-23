@@ -46,7 +46,7 @@ nicht dessen Arm A.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
   direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
   Evidenz-Lesepfad ohne vorgeschaltete Kompression scheitert ebenfalls;
-  ein geteilter gelernter Paarvergleich läuft als Architekturhypothese. Berichte:
+  auch der geteilte gelernte Paarvergleich verfehlt den Lernscreen. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -677,9 +677,9 @@ Er qualifiziert weder Induktion noch Pixeltransfer, Planung oder R2.
 Sein Checkpoint hat die normale Komponentenstruktur und ist nicht direkt mit
 den historischen C192/E1-Diagnoseladern austauschbar.
 
-### R-pair: geprüfter Start des Relationsvergleichs
+### R-pair: Relationsvergleich abgeschlossen, Lernscreen verfehlt
 
-Der angekündigte gemeinsame latente Paarvergleich läuft nun als `RPAIR` unter
+Der gemeinsame latente Paarvergleich ist als `RPAIR` abgeschlossen unter
 `runs/latent_agent_r1/relation_reader_20260923/` (maximal 8000 Updates,
 Trainingsentscheidung ab 2000, bestehende D1-Population/Kontrollen).
 Zusätzlich wird nur bei der Auswertung der Relationspfad ausgeschaltet.
@@ -688,7 +688,18 @@ Ein vor dem Start gefundener CUDA-Zufallszustandsfehler wurde behoben:
 Initialgewichte bleiben bitgleich, CPU- und CUDA-Generatoren stimmen nach
 Konstruktion mit D1 überein. Originalfehler und unabhängiger Gegencheck:
 `…/relation-reader-root-rng-red.json`, `…/relation-reader-root-rng-green.json`;
-Recipe-Hash `20f7e9ef…`. Noch kein Ergebnis.
+Recipe-Hash `20f7e9ef…`.
+
+**Ergebnis bei 8000 Updates:** TRAIN und Validation verfehlen den Screen, jeweils
+ν=0; AUC 0,535/0,434. Alle 44 Trainingsrelationen ebenfalls ν=0, zweites Bit AUC
+0,569. Vertauschte Belege verändern TRAIN-NLL nur um 0,000045; kein Nachweis
+nützlicher Support-Abhängigkeit. Ohne Relationsmerkmale bleibt ν=0.
+Das Ausschalten verschlechtert TRAIN-NLL um 0,00358, verbessert Validation-NLL
+aber um 0,00862: kein belastbarer Transfergewinn. 54 rohe Vorhersagedateien endlich
+und hashgeprüft, eingefrorene Gewichte unverändert, maximal 0,674 GiB reserviert.
+Exit 0, Bericht `RPAIR/report.html` strukturell geprüft. Unabhängige Quittung:
+`…/relation-reader-root-result.json`. Keine Aussage gegen relationale Verfahren
+allgemein; die konkrete Architektur/Trainingskombination hat den Vertrag nicht gelernt.
 
 **Vorab festgelegter Folgeschritt nur bei endgültigem TRAIN-Fehlschlag von R-pair:**
 Ein einzelner Lernvertragsvergleich beginnt mit Wiedererkennen eigener beobachteter
