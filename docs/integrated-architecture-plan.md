@@ -15,10 +15,10 @@ nicht dessen Arm A.
   Sitzung, einem Speicher und einer Uhr; getrennte Instanzidentität und
   Konzeptzugehörigkeit, ein geteilter Bildencoder, ein Entscheidungs-Forecaster,
   aktuelle Aktionsabhängigkeiten, externe Verifikation und Wiederherstellung.
-  Vollständige CPU-Regression: **795 Tests bestanden**, einschließlich des neuen
-  kausal geprüften Behauptungspfads. Belege:
-  `runs/reviews/integrated_architecture_20260923/unified-testimony-full-suite-retry.log`
-  und `…/unified-testimony-full-suite-retry-exit.json` (Exit 0).
+  Vollständige CPU-Regression: **812 Tests bestanden**, einschließlich des kausal
+  geprüften Behauptungspfads und des übernommenen Oracle-Curriculums. Belege:
+  `runs/reviews/integrated_architecture_20260923/oracle-recipe-full-suite.log`
+  und `…/oracle-recipe-full-suite-exit.json` (Exit 0, Quellstand `7685c46`).
   Der erste Versuch brach nativ ab; Original und separater Testnachweis bleiben
   erhalten (`…/unified-testimony-native-crash-note.md`).
   Diskussion mit Alex bleibt separat offen.
@@ -46,7 +46,7 @@ nicht dessen Arm A.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
   direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
   Evidenz-Lesepfad ohne vorgeschaltete Kompression scheitert ebenfalls;
-  ein geteilter gelernter Paarvergleich wird als Architekturhypothese vorbereitet. Berichte:
+  ein geteilter gelernter Paarvergleich läuft als Architekturhypothese. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -655,6 +655,39 @@ verifiziert; R2 leitet sie erneut ab (§18).
 Quellen, genaue Protokolle, Kontrollen und Konfundierungen: die `protocol.md`-Dateien
 bei R44, C192 und E1a unter `runs/latent_agent_r1/`; unabhängige Übergabeprüfung:
 `runs/reviews/integrated_architecture_20260923/core-curriculum-root-transfer.log`.
+
+### Bedienbares Oracle-Curriculum (übernommen, Software geprüft)
+
+Der bestandene R44→C192-Anwendungspfad ist in `experiments.latent_agent` verfügbar:
+`--stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/<neu>`.
+Die normale Recipe importiert keine historischen Versuche. Der Übergang kopiert nur
+die 44 Relationscodes, erhält die übrigen 148 Anfangscodes und startet AdamW neu.
+Im vollständigen Lauf muss der vorab festgelegte Relations-Screen bestehen.
+Atomare Grenz-Snapshots sind an Laufidentität, Quelle und Schritt gebunden;
+Pausenberichte bleiben erhalten, abgeschlossene/gestoppte Läufe werden nicht
+fortgesetzt. CPU-Parität bestätigt Startgewichte, erste Updates und historische
+Auswertungen; **kein neuer vollständiger GPU-Lauf** wurde für die Übernahme behauptet.
+17 neue Tests, vollständige Regression 812/812. Belege: `…/oracle-recipe-parity-check-final.json`,
+`…/oracle-recipe-root-final-green.log`, `…/oracle-recipe-full-suite-exit.json`
+unter `runs/reviews/integrated_architecture_20260923/`.
+
+Dies ist ein eigenständiger Anwendungstest mit bekannten Trainings-Regelcodes.
+Er qualifiziert weder Induktion noch Pixeltransfer, Planung oder R2.
+Sein Checkpoint hat die normale Komponentenstruktur und ist nicht direkt mit
+den historischen C192/E1-Diagnoseladern austauschbar.
+
+### R-pair: geprüfter Start des Relationsvergleichs
+
+Der angekündigte gemeinsame latente Paarvergleich läuft nun als `RPAIR` unter
+`runs/latent_agent_r1/relation_reader_20260923/` (maximal 8000 Updates,
+Trainingsentscheidung ab 2000, bestehende D1-Population/Kontrollen).
+Zusätzlich wird nur bei der Auswertung der Relationspfad ausgeschaltet.
+Das prüft die Nutzung der Merkmale, nicht deren alleinige Hinlänglichkeit.
+Ein vor dem Start gefundener CUDA-Zufallszustandsfehler wurde behoben:
+Initialgewichte bleiben bitgleich, CPU- und CUDA-Generatoren stimmen nach
+Konstruktion mit D1 überein. Originalfehler und unabhängiger Gegencheck:
+`…/relation-reader-root-rng-red.json`, `…/relation-reader-root-rng-green.json`;
+Recipe-Hash `20f7e9ef…`. Noch kein Ergebnis.
 
 ## 17. Vergleich zur Wahrnehmungsreparatur (Texturrandomisierung, vorab erklärt)
 

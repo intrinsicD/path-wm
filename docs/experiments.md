@@ -8,6 +8,15 @@ memory, encode-once, structured goals) runs as
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.unified_session --output runs/my_r2_life [--perception RUN]`;
 it is a labelled software check ([plan §18](integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag)).
 
+The validated **known-rule application curriculum** is available through the same recipe:
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.
+Resume a paused/interrupted run with `--stage symbolic --resume runs/my_oracle_curriculum`.
+A tiny workflow check uses `--size check --device cpu --oracle-curriculum 3 --updates 6`;
+its relation-gate exemption is explicit and establishes no capability.
+This mode learns oracle rule codes, not induction, pixel transfer or planning.
+Its checkpoint uses the normal component layout, not the historical diagnostic layout.
+See [plan §16](integrated-architecture-plan.md#16-lernfolge-und-nächster-nachweis).
+
 # Running and editing experiments
 
 For the **remaining encoder scaling bottleneck**, run

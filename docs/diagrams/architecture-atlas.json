@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-23",
-  "source_commit": "3bd0d63",
+  "source_commit": "7685c46",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -3224,7 +3224,7 @@
         "Likelihood and expected-utility planning use the unweighted outcome objective. Unknown does not mean impossible. Software, controlled learning and natural-data gates are separate; no new green scope follows from this diagram.",
         "Natural data, partial observability and broader modality/action capabilities have explicit connection contracts in the owning plan and require their own learned evidence. Existing discussion statuses are unchanged.",
         "R2 now composes the existing session, belief and concept memory: one source encoding, one publication owner, explicit goals, revision-dependent actions, external verification and restart recovery. Independent adversarial tests verify software contracts only; trained identity, action/belief alignment and full-agent learning remain unestablished.",
-        "R2 typed testimony is separate from direct evidence. Only an own successful test with matching action, camera event and attributed instance can support a judgment; claim retraction preserves the independent test. Recovery never repeats a completed test. Full CPU regression: 795 passed; software only, no learned C5 qualification. See integrated architecture plan section18 and retained review receipts."
+        "R2 typed testimony is separate from direct evidence. Only an own successful test with matching action, camera event and attributed instance can support a judgment; claim retraction preserves the independent test. Recovery never repeats a completed test. Full CPU regression: 812 passed; software only, no learned C5 qualification. See integrated architecture plan section18 and retained review receipts."
       ],
       "sources": [
         "docs/integrated-architecture-plan.md",
