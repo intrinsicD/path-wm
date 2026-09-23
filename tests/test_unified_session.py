@@ -377,7 +377,12 @@ def test_prepared_action_pins_live_observation_identity_and_objects(tmp_path):
     link_tx.reassign(agent.view.machines[0]["recognition"], b)
     agent.correct(link_tx)
     assert not agent.is_ready(read) and actuator.presses == 0
-    assert agent.execute(actuator, TypedAction("press", a, 0, 1), agent.memory.read_set(()))["status"] == "stale"
+    # The correction refreshed the live view: `a` is no longer a visible identity, so an
+    # action naming it is rejected before any effect (earlier than a stale read set).
+    assert [m["instance"] for m in agent.view.machines][0] == b
+    with pytest.raises(ValueError, match="not one visible"):
+        agent.execute(actuator, TypedAction("press", a, 0, 1), agent.memory.read_set(()))
+    assert actuator.presses == 0
 
 
 def test_identity_change_stales_an_action_even_without_concept_heads(tmp_path):

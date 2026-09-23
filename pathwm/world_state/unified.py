@@ -273,7 +273,7 @@ class UnifiedAgent(ConceptAgent):
         # Published atomically above; everything below is re-derivable (recover()).
         view = self._event_view(event_id)
         if supersedes:
-            self.repair_identity()  # withdrawn items invalidated dependents in the store
+            self._repair()  # withdrawn items invalidated dependents; this event's view follows
         self._memberships(view)
         self._attribute(result["evidence"][1 : 1 + len(transitions)])
         self._memberships(view)
@@ -461,6 +461,23 @@ class UnifiedAgent(ConceptAgent):
         re-derived and re-verified; untouched records stay.
         """
         self.check()
+        repaired = self._repair()
+        self._refresh()
+        return repaired
+
+    def _refresh(self, view=None):
+        """Bring a live view's identities and memberships to the heads now in force.
+
+        Only derived records move: the frame, percept, event and clock stay those of
+        the last camera observation. `_memberships` re-derives an invalidated binding
+        once and reads consistent ones, so repeated refreshes write nothing.
+        """
+        view = self.view if view is None else view
+        if view is not None:
+            self._memberships(view)
+        return view
+
+    def _repair(self):
         view = self.memory.view()
         latest = {}
         for c in sorted((c for c in view["components"].values() if c.name == "attribution"),
@@ -499,7 +516,9 @@ class UnifiedAgent(ConceptAgent):
         pending = sorted((e for e in view["evidence"].values()
                           if e.modality == "transition" and e.id not in seen),
                          key=lambda e: (e.available_at, e.id))
-        return self._attribute([e.id for e in pending]) | self.repair_identity()
+        repaired = self._attribute([e.id for e in pending]) | self._repair()
+        self._refresh()
+        return repaired
 
     def repair(self):
         """Legacy name, R2 meaning (R1 `repair` assumes the standalone record layout)."""
@@ -554,10 +573,9 @@ class UnifiedAgent(ConceptAgent):
             evidence=(SourceItem(SOURCE, "transition", ref, blob, data, old_id),),
         )
         new = result["evidence"][0]
-        self.repair_identity()
+        self._repair()
         self._attribute([new])
-        if self.view is not None:
-            self._memberships(self.view)
+        self._refresh()
         return new
 
     # goals, planning and execution -------------------------------------------------
@@ -570,6 +588,8 @@ class UnifiedAgent(ConceptAgent):
 
     def dispatch(self, request=None, goal=None):
         """Structured goals plan; free text or unresolvable references ask."""
+        self.check()
+        self._refresh()  # resolve references against the identities now in force
         if goal is None:
             return Dispatch("ask", "no structured GoalSpec; free text is not interpreted")
         if request is not None and request.task_id != goal.task_id:
@@ -621,12 +641,14 @@ class UnifiedAgent(ConceptAgent):
     @torch.no_grad()
     def plan(self, view, goal, *, presses_done, control=None, budget=None):
         self.check()
+        self._refresh(view)  # a fresh plan reads only current identities and heads
         decision, read = super().plan(view, goal, presses_done=presses_done, control=control, budget=budget)
         return decision, replace(read, live=self._live(view))
 
     @torch.no_grad()
     def predict(self, view, record, *, code=None, loops=None):
         self.check()
+        self._refresh(view)
         return super().predict(view, record, code=code, loops=loops)
 
     def action_for(self, decision, task_id=""):
