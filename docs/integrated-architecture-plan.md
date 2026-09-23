@@ -43,8 +43,8 @@ nicht dessen Arm A.
   Validierungsscreen. E1a-R mit Support-Abruf verfehlt beide ebenfalls (§16).
   Gemeinsames G/T-Lernen mit Oracle-Anker erhält T, verfehlt aber nach 8000 Updates
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
-  Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen
-  läuft als begrenzter nächster Schritt. Berichte:
+  Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
+  ein letzter direkter G/T-Lernversuch ohne Oracle-Codebank läuft. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -558,8 +558,10 @@ verifiziert; R2 leitet sie erneut ab (§18).
    kein heimlich abgesenkter Fünffamilien-Screen. Erst bei Erfolg folgt gemischte
    Induktion I2. Ein Fehlschlag isoliert keine eindeutige Ursache. Details und feste
    Stopregeln stehen vor Ausführung in `…/induction_relation_20260923/protocol.md`.
-   I1 ist nach dem abgeschlossenen E1b-S und unabhängiger CPU-Vertragsprüfung gestartet;
-   Ergebnis offen: `…/induction_relation_20260923/I1_C192/`.
+   I1 ist bei 8000 Updates abgeschlossen (Exit 0): Trainings- und Validierungsrelation
+   ν=0, zweites Relationsbit AUROC=0,465, alle Retentionsprüfungen bestanden.
+   Alle 54 Rohvorhersagedateien sind endlich und die eingefrorenen Hashes unverändert.
+   Ergebnis/Bericht: `…/induction_relation_20260923/I1_C192/`.
    **Vor I1-Endergebnis festgelegte Grenze:** Falls I1 den Trainingsrelationsscreen
    bei intakter Retention verfehlt, folgt einmal J44: frischer geteilter Kern,
    skalierte Queries, ausschließlich Relationsbeispiele, direkte Query-BCE über
@@ -571,6 +573,12 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Evidenz-/Inferenzvertrag wird grundsätzlich geprüft. Keine automatische weitere
    Verlustvariante oder Budgeterhöhung. Entscheidung und Korrekturen des Reviews:
    `runs/reviews/integrated_architecture_20260923/induction-bounded-review-corrections.md`.
+   Die Bedingung ist nun erfüllt. J44 ist nach unabhängiger Vertragsprüfung gestartet;
+   Quelle und Protokoll eingefroren, Ergebnis offen:
+   `…/induction_direct_20260923/J44/`. Neustartgleichheit und Query-Label-Unabhängigkeit
+   sind geprüft; Oracle-Codebank ist aus Modell und Vorhersage entfernt. Dies ist
+   ein neuer direkter Lernansatz mit gemeinsam geänderten Trainingsbedingungen,
+   kein isolierter Vergleich eines einzelnen Faktors.
    Ein rein evaluativer Informationscheck findet bei N=128 in allen acht
    Trainingsrelationsepisoden des Pools 9101 genau eine mit dem Support konsistente
    Relation unter allen 64 Grammatikprädikaten. Der wahre Kandidat ist jeweils
