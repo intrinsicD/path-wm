@@ -45,7 +45,8 @@ nicht dessen Arm A.
   die Induktion. Auch zwei geteilte latente Verfeinerungsrunden verfehlen den Screen.
   Auch vielfältigere Query-Seeds lösen die Induktion nicht. Isoliertes Relationslernen scheitert ebenfalls;
   direktes G/T-Lernen ohne Oracle-Codebank scheitert auch. Ein neuer
-  Evidenz-Lesepfad ohne vorgeschaltete Kompression wird geprüft. Berichte:
+  Evidenz-Lesepfad ohne vorgeschaltete Kompression scheitert ebenfalls;
+  ein geteilter gelernter Paarvergleich wird als Architekturhypothese vorbereitet. Berichte:
   `…/core_relation_probe_20260923/R44/`, `…/core_curriculum_20260923/C192/`;
   E1a: `…/code_search_20260923/E1a_C192/`; E1a-R:
   `…/code_search_retrieval_20260923/E1aR_C192/`; weitere abgeschlossene Läufe:
@@ -603,12 +604,26 @@ verifiziert; R2 leitet sie erneut ab (§18).
    Gradientenpfad wird ausgewiesen. Erfolg isoliert keine Kompressionsursache,
    Fehlschlag isoliert keinen Evidenzencoder. Details vor Ausführung:
    `runs/reviews/integrated_architecture_20260923/post-j44-root-contract.md`.
-   D1 ist nach J44-Abschluss und unabhängiger CPU-Vertragsprüfung gestartet:
-   `…/evidence_reader_20260923/D1/`. Alle Kontextmasken, leeren Supports,
+   D1 ist nach 8000 Updates abgeschlossen (Exit 0): Training, Validation und alle
+   44 Trainingsregeln erreichen ν=0; Trainings-AUROC des zweiten Bits=0,511.
+   36 Vorhersagedateien sind endlich, eingefrorene Hashes gleich.
+   Ergebnis/Bericht: `…/evidence_reader_20260923/D1/`. Alle Kontextmasken, leeren Supports,
    Episodengrenzen, Kontrollen und exakter Resume sind geprüft. CPU-Update kostet
-   etwa 4,45× gegenüber J44; GPU-Passung und Lernqualität bleiben offen. Der
+   etwa 4,45× gegenüber J44; der GPU-Lauf benötigt 636 Sekunden und maximal
+   0,668 GiB reservierten Speicher. Die Lernkriterien scheitern. Der
    versionierte Inferenzvertrag steht auch im Checkpoint und verhindert striktes
-   Laden als gewöhnliches G/T-Modell trotz gleicher Parameterformen. Rohdaten und reparierter Bericht:
+   Laden als gewöhnliches G/T-Modell trotz gleicher Parameterformen.
+   **Entscheidung nach D1:** Ein einzelner R-pair-Vergleich ergänzt einen generischen
+   gelernten Paarvergleich r(a,b), gemeinsam für Evidenz und Frage. 16 Kanäle aus
+   bilinearen Abbildungen mit Rang 16; rohe Merkmale bleiben erhalten. Keine
+   Grammatikfaktoren oder Regelkennungen im Vorwärtspfad. Neuer Fragetoken und
+   zusätzliche Parameter/Rechenarbeit sind Teil der Änderung. Eine reine
+   Auswertungsablation setzt r an beiden Stellen auf null; sie misst Abhängigkeit,
+   keine eindeutige Ursache der alten Fehlschläge. Budget/Relationsscreens bleiben
+   gleich, D2 und neue Verlustfunktionen werden nicht kombiniert. Dies ist eine
+   lokale Hypothese, kein übernommener Standard für alle Modalitäten und keine
+   wörtliche DAT-Implementierung. Vorbereitungsentscheidung:
+   `runs/reviews/integrated_architecture_20260923/relation-reader-root-decision.md`. Rohdaten und reparierter Bericht:
    `…/support_identifiability_20260923/attempt02/`; beide ursprünglichen
    Ausführungs-/Berichtsfehler und identische Rohdaten bleiben erhalten.
 
