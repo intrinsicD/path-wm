@@ -58,7 +58,9 @@ quality, and larger dimensions alone do not establish a production configuration
 
 ## Budget and evidence
 
-No new training, tuning or architecture changes. One existing GPU profile invocation
+No new experiment training, tuning or architecture changes. The rollback correctness
+test makes two disposable optimizer proposals on the actual model; it produces no
+trained checkpoint or quality claim. One existing GPU profile invocation
 <=10min/6GiB allocation; one CPU R2 life<=5min; actual-module correctness reruns
 <=20min CPU total, two threads. Stop failed runs without scientific repairs or gate
 relaxation. Keep process exit, source hashes, settings, logs, results and standalone
@@ -67,5 +69,89 @@ they are not scientific training runs. No fresh capability gates are selected.
 
 ## Status
 
-Rules written; source/test inventory underway. No claim that all requested real-model
-reruns are complete. Missing-path decisions will be presented to Alex before code.
+Rules committed in `a5279ee`. Static inventory covers107 files and689 named test
+functions; manual counterpart mapping and all-model reruns remain incomplete.
+Missing-path decisions below require joint planning before implementation.
+
+### Completed executable slice
+
+Evidence directory: `runs/reviews/actual_model_reruns_20260924/`. Every invocation
+has a log, command/exit/timing receipt and source manifest; all completed with exit0
+and unchanged Python sources during execution.
+
+| Check | Actual path exercised | Result and evidence |
+| --- | --- | --- |
+|11 belief +4 Gaussian assertions | Existing default-width32 multimodal builder; categorical memory32/8/16 | Passed; original assertion names are retained as pytest parameters |
+|2 complete-event checks | Width32, full memory; eval and training modes | Passed; posterior, gradient and RNG equivalence |
+|3 actual-model replacements | Full-capacity memory filling, real dynamics planning, whole-model guarded optimizer update | Passed; replaces small-capacity, Toy-transition and scalar-model coverage for these contracts |
+|3 R1 module checks +1 query check | Native SlotPerception64/7slots/3iterations and LatentCore64/4code tokens | Passed; gradients, induction and query isolation |
+|4 encoder checks | Actual image/video/audio/text multiscale encoders | Passed; exported scales and future masking; visual inputs64×64 |
+|8 R1 runtime assertions | Actual native-size perception and core | Passed; restart, frozen weights, planner boundary and feedback contracts |
+| Resource recipe | Existing width32 categorical graph; image256, video4×64, dense/packed/local arms | Completed49.7s; `profile.receipt.json`; report in `runs/actual_model_profile_20260924_v1/` |
+| R2 session recipe | Native shared perception encoder and existing J learned identity checkpoint | Completed12.1s; restart equal,4/4 successful presses; `integrated.receipt.json`; report in `runs/actual_model_integrated_20260924_v1/` |
+
+The **36 unique reference-configuration checks** live in
+`tests/test_model_reference_configuration.py`; `assertions3.xml` records36 passes.
+Earlier20/28-pass invocations are subsets, not additional tests. The combined
+regression invocation recorded **105 passes** in39.36s (`regression.xml`):36 new
+checks plus69 original adjacent unit checks. Those69 original checks are not
+additional full-configuration reruns.
+
+Limits: assertion reruns use untrained weights and crafted inputs. R1 feedback
+assertions retain deliberate permissive policy thresholds and small scene sets
+to exercise branches; they do not validate learned/default-policy performance.
+The resource run establishes execution, not reconstruction quality. The J checkpoint
+is provisional; R2's other core/belief/action/value modules remain untrained.
+Both recipe reports passed structural/self-contained verification; neither has
+browser visual QA (`report.qa.json`). The full original suite was not rerun in
+this slice; library and recipe code were unchanged. No assertion here closes the
+DetailCodec, lexical-policy or other missing-counterpart obligations above.
+
+## Joint planning required before the remaining reruns
+
+These are proposals for discussion, not approved implementations. No production
+module or new model has been added in this audit.
+
+1. **Pin the actual reference composition.** R2 already shares the real multiscale
+   encoder with slot perception and supplies one session/store/core composition.
+   The categorical multimodal recipe also remains active underneath these pieces.
+   R2's existing J checkpoint loads perception and the identity key; its recipe
+   explicitly leaves core/belief/action/value modules untrained. Agree which exact
+   composition, checkpoint manifest and input/output tasks define the requested
+   full-model evaluation. A random initialized full-size graph is suitable for
+   software contracts, not trained quality. The reference question has been sent
+   to Alex; no answer is assumed.
+2. **Persistent visual detail → existing output consumer.** `DetailCodec`'s four
+   part IDs,64-value codes, masked replacement and finite-pose decoder are its own
+   contracts. The actual `SlotPerception` takes native RGB64, consumes the real
+   `FeaturePyramid`, emits seven64-wide slots and uses a nonlinear broadcast decoder.
+   `WorldStore` can store tensors, but that alone is not a source-validated consumer
+   implementing the four-part recall task. Jointly specify which existing exported
+   representation should be retained, how actual instance/region ownership is bound,
+   and which existing decoder should consume the recalled values. Reuse the store,
+   versioning and output modules; do not add another codec. Then implement only the
+   missing connection and rerun acquisition, correction, old-detail preservation,
+   restart, transfer and output fidelity through that path. The affine-range SVD
+   diagnostic is intrinsically specific to the surrogate linear decoder; it cannot
+   be transplanted as a bound on the existing nonlinear decoder.
+3. **Context selection through the actual task path.** Main `build_model` constructs
+   `TaskPolicy(width)` with `context_selector=None`; the standalone `LexicalPolicy`
+   supplies a separate24-token embedding. Its100% lexical result is not a rerun on
+   the real task model. Jointly specify query/candidate features from the existing
+   interpreter/context path, wire the existing optional selector if needed, and
+   agree training/evaluation data and budgets before adding that connection. Do not
+   silently attach the old surrogate embedding or claim template copying is language.
+4. **Oracle/fixture and historical experimental families.** R1 symbolic slots,
+   hand-set concept thresholds, entity `Scorer` fixtures, simple foundation adapters,
+   and separate spatial/video/image-readout experiments need explicit counterpart
+   mapping against the chosen reference. Fault-injection and arithmetic unit tests
+   remain useful but cannot stand in for successful learned operation. Record any
+   unavailable full-model counterpart as open, never silently substitute another
+   experimental model. The existing R2 life can run without supplied pixel identity,
+   and that rerun is already available; it does not close every historical assertion.
+
+The first proposed implementation slice, after agreement, is the smallest missing
+persistent-feature-to-existing-consumer connection in the chosen real architecture.
+Before coding, specify the exact source/consumer tensor contract and acceptance
+checks together. Keep current components and checkpoints intact. No architecture
+redesign, new codec, training sweep or unapproved quality gate is part of this plan.

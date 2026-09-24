@@ -13,6 +13,11 @@ Updated 24 September 2026 for a new Codex session in
 - All selected runs and checks finished. No job from this continuation remains to
   resume. Final evidence is recorded in the nonlinear-fidelity plan.
 
+**Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
+owns the audit. Prefer the real model; any downscaled check must be followed by the
+actual configuration. Missing functionality must be planned with Alex before adding
+it. Full-model reruns remain incomplete until the ledger and missing-path items close.
+
 **User correction: work on the existing architecture.** The separate `DetailCodec`
 was introduced for a small memory demonstration and then reused for transfer and
 fidelity screens. It bypasses the main multiscale representation. Continuing to
