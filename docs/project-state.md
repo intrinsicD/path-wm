@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Active slice:** [Nonlinear output fidelity](nonlinear-fidelity-plan.md): preregistered frozen decoder-range diagnostic, fresh populations and numeric gates; essential checks are red (missing recipe). Actual Claude Opus5.5 medium public review is running. No new neural training.
+- **Active slice:** [Nonlinear output fidelity](nonlinear-fidelity-plan.md): implemented frozen decoder-range diagnostic with numeric checks; development identifies a candidate output-range blocker. Actual Claude Opus5.5 medium review repaired numerical validation; fresh final evaluation and CPU suite pending. No new neural training.
 
 - **Latest slice:** [Frozen representation transfer](representation-transfer-plan.md): actual Claude Opus5.5 medium, two frozen codecs × two fresh populations pass affine transfer gates. Latent MSE0.00021–0.00026; pixel ridge is stronger. Nonlinear threshold reconstruction remains poor. 862 CPU tests pass; source unchanged. [Handoff](architecture-continuation-handoff.md) owns the broader agenda; indexed lookup is complete.
 

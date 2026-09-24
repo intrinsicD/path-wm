@@ -84,3 +84,36 @@ imports and reporting. Every completed run saves raw arrays, frozen checkpoint,
 result before report, source snapshot and standalone report using unchanged renderer.
 Report status is independent of numeric gate outcome. Browser QA is not newly
 claimed. Failed experiments remain visible and immutable.
+
+## Pre-execution review reconciliation
+
+Actual Claude Opus5.5 medium round1 confirmed the affine-range interpretation;
+round2 supplied generic SVD/threshold code and explicitly withdrew its erroneous
+requirement for disjoint support/query thresholds, categorical shuffle-degradation
+rule and unregistered inconsistent-support fallback. Local implementation follows
+the reviewed SVD/minimum-norm equations and strict bounded threshold contract,
+with additional device/finite validation and defined zero-rank helper behavior.
+Within each episode support/query share a relation; only dev/final operators differ.
+Adopt constant and identity diagnostics, native-decoder discrepancy, per-image
+MSE/p95 and balanced pixel error (undefined for missing classes). Edge-band scores
+are not needed to decide the registered mean-MSE gate and are not a new gate.
+Saved exact briefs and model receipts stay in the review directory.
+
+## Development and sole software repair
+
+Smoke and development v1 completed with raw data/reports; all integrity checks pass.
+Development decoder optimum MSE0.0371386 versus gate0.002; target encode/decode
+0.0519878; raw threshold0; reconstruction-then-threshold0.0201823. This remains
+development evidence, not final. No thresholds, populations or fitting settings change.
+
+Claude round3 correctly noted that a numerically truncated SVD range cannot in
+general establish a lower bound for unrestricted real codes. The recipe already
+rejects rank-deficient checkpoints before completing a result. The sole allowed
+software repair makes the conclusion explicitly conditional on full retained column
+rank, sigma_min>100*rank_tolerance, independent Householder QR residual gap<=1e-12,
+QR/SVD output max difference<=1e-8, and existing gels MSE agreement<=1e-9. Subtract
+a conservative1e-8 numerical margin before comparing the minimum with the unchanged
+0.002 blocker gate. This is a cross-checked numerical result, not an interval-arithmetic
+proof. Record code norms and native-dtype discrepancy. Repeat development once in
+v2, preserve v1, then freeze. These additional numerical checks precede final exposure;
+no scientific repair, training or gate relaxation is authorized.

@@ -34,7 +34,7 @@ def test_support_threshold_bounds_and_rejects_unidentified_or_inconsistent_data(
     with pytest.raises(ValueError): fit_threshold(x*float('nan'), y)
 
 
-def test_inference_has_no_target_input_and_preserves_codec():
+def test_inference_replay_support_dependence_and_preserves_codec():
     from pathwm.models.detail_memory import DetailCodec
     from pathwm.data.detail_views import sample_tiles
     from pathwm.io import state_hash
@@ -44,11 +44,32 @@ def test_inference_has_no_target_input_and_preserves_codec():
     labels = (support > .4).float()
     before = state_hash(model)
     a = infer(model, support, labels, query)
-    poisoned_target = torch.full_like(query, float('nan'))
     b = infer(model, support, labels, query)
-    assert torch.isnan(poisoned_target).all()
     assert a.keys() == b.keys()
     for name in a['predictions']:
         assert torch.equal(a['predictions'][name], b['predictions'][name])
     assert state_hash(model) == before
     assert all(p.grad is None for p in model.parameters())
+
+    changed = infer(model, support, (support > .5).float(), query)
+    assert not torch.equal(a['bounds'], changed['bounds'])
+    assert not torch.equal(a['predictions']['raw_threshold'], changed['predictions']['raw_threshold'])
+
+
+def test_report_failure_preserves_completed_result(monkeypatch, tmp_path):
+    import json
+    from experiments import nonlinear_fidelity as recipe
+    from pathwm.models.detail_memory import DetailCodec
+    model = DetailCodec(hidden=16,variant='linear').eval().requires_grad_(False)
+    checkpoint = tmp_path/'input.pt'
+    torch.save(model.state_dict(),checkpoint)
+    monkeypatch.setattr(recipe,'load_codec',lambda _: model)
+    def fail(*args, **kwargs): raise RuntimeError('renderer failed')
+    monkeypatch.setattr(recipe,'write_report',fail)
+    out = tmp_path/'run'
+    with pytest.raises(RuntimeError,match='renderer failed'):
+        recipe.execute(out,checkpoint,count=4,support=4)
+    status = json.loads((out/'status.json').read_text())
+    assert status['result']=='completed' and status['report']=='failed'
+    assert (out/'raw.pt').exists() and (out/'last.pt').exists()
+    assert 'decoder_blocked' in json.loads((out/'result.json').read_text())
