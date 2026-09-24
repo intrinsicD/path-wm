@@ -1,8 +1,7 @@
 # Scan-limited discovery: indexed feasibility screen
 
 24 September 2026. Continuation of [context retrieval](context-retrieval-plan.md)
-and the [handoff](architecture-continuation-handoff.md). Status: preregistered;
-implementation and results pending. Actual Claude Opus 5.5, medium, reviews public
+and the [handoff](architecture-continuation-handoff.md). Status: complete bounded screen; both frozen final populations and856 tests pass. Actual Claude Opus 5.5, medium, reviews public
 hypothetical briefs; private implementation and evidence remain local.
 
 ## Decision and slices
@@ -134,3 +133,116 @@ This uses the first allowed development repair/recheck; v1 is preserved. No fina
 population has been inspected. Final Claude round acknowledges the declared tie
 and duplicate-error semantics, accepts the corrected fail-closed contract, and
 requires no additional mechanism before this narrow screen.
+
+
+## Frozen final result
+
+Implementation commit `00abd78`; red plan/check commit `014cc40`. No library/model
+source changed. Both independently seeded final populations pass every registered
+gate on the same frozen implementation. Each has128 queries ×5 arms,32 source
+corrections,16 logical restarts, and256 initial+64 distractor source components.
+
+| Metric | Seed924317 | Seed924329 |
+| --- | ---: | ---: |
+| Index / cached / reset exact status, text and source agreement | 100% /100% /100% | 100% /100% /100% |
+| Full scan diagnostic agreement | 100% | 100% |
+| First-16 scan diagnostic agreement | 0% (128 omitted) | 0% (128 omitted) |
+| Cache-reset answer changes | 0/128 | 0/128 |
+| Stale cached references rejected | 32/32 | 32/32 |
+| Logical restart checks | 16/16 | 16/16 |
+| Index / cached p95, including validation and instrumentation | 0.950 /1.340ms | 0.950 /1.293ms |
+| Complete invocation wall /CPU, including report | 7.884 /7.834s | 7.845 /7.805s |
+| Index build plus32 rebuilds | 0.214s | 0.213s |
+| Logical snapshot/replay and comparison | 5.666s | 5.638s |
+| Index serialized bytes | 20,482 | 20,474 |
+| Peak process RSS | 523.11MiB | 523.64MiB |
+
+Bounded contenders probe at most1 candidate (index/reset) or2 (stale cached
+recovery), return at most1 payload, retain <=4 pins. Full scan reaches320
+candidate probes. The weak scan deliberately cannot reach old tail targets, and
+cannot certify absence after truncation; this is expected diagnostic failure,
+not a learned-method comparison. The full scan is also physically fast here
+(p95 about6ms), so no physical necessity for the16-candidate cap is established.
+
+**Negative result:** neither learned retrieval nor useful retention is needed to
+solve this exact-descriptor task. No selector was trained. Cache reset leaves all
+answers unchanged. This closes the predeclared stage-zero screen, not semantic
+retrieval, identity inference, retention learning or the integrated architecture.
+
+**Cost finding:** indexed validation still performs2H header visits per successful
+lookup, or3H after stale-cache rejection, where H includes all historical source
+components. Maxima704/1056. Whole measured harness597,072 header visits per seed,
+about63.1MB of serialized record materialization through the public read APIs.
+This includes all arms, rebuilds, fixtures and logical recovery. These counters
+exclude private transaction/replay loops; their time is included in whole-invocation
+CPU and wall measurements. These are instrumentation costs/serialized bytes,
+not hardware bandwidth or peak allocator bytes. Indexing saves candidate work;
+it does not make this reference store globally sublinear. Actual total invocation
+cost includes reporting in `invocation.json`; result timing ends before rendering.
+No GPU, energy or general efficiency claim.
+
+### Evidence, review and repeatability
+
+- Final runs: `runs/scan_discovery_final_924317_v1/` and
+  `runs/scan_discovery_final_924329_v1/`; each contains source snapshot/identities,
+  environment/settings, per-query `predictions.jsonl`, causal final `last.json`,
+  all logical-restart snapshots, metrics, result, invocation timing and standalone
+  `report.html`. Report QA is structural using the unchanged renderer.
+- Preserved development runs: `runs/scan_discovery_dev_924301_v1/` and `_v2/`.
+  V2 rechecks the source-ID namespace improvement; no threshold changed.
+  All four complete invocations use about32 CPU seconds, below900-second budget.
+- Four actual Claude Opus5.5 medium rounds, session
+  `65ffe535-c0ac-49ce-9cd1-7fbc89abfca3`; exact briefs, responses and usage receipts
+  under `runs/reviews/scan_discovery_20260924/`. Public-only contracts; private
+  implementation and measurements reviewed locally. Resumed usage is not summed.
+- Independent `audit.py` reconstructs each query's gold from saved source events,
+  without importing the recipe/index. All1,280 raw rows agree with metrics;
+  the two test streams and development have disjoint descriptors, all historical
+  payloads and component IDs. Counterfactual stale payloads, false unknown answers
+  and OMITTED-as-ABSENT each fail the independent checker. All final source hashes
+  and report/checkpoint/result hashes are bound in `raw-artifact-audit.json`.
+- Eight new focused tests plus six existing context tests pass. Deterministic
+  future answers/store/context after restart match uninterrupted execution under
+  reversed record enumeration. This is no process-crash durability claim.
+
+```bash
+.venv/bin/python -m experiments.scan_discovery --output runs/my_scan_dev --seed 924301
+.venv/bin/python -m experiments.scan_discovery --output runs/my_scan_tiny --seed 924300 --records 32 --queries 16
+.venv/bin/python -m pytest tests/test_scan_discovery.py tests/test_working_context.py
+.venv/bin/python -m pytest
+```
+
+These final seeds are now consumed. A changed method needs newly preregistered
+populations; rerunning these commands provides regression evidence only. No
+training/resume CLI is invented for an index-only screen; portable `last.json`
+and saved restart snapshots cover the applicable state contract.
+
+## Next priority and remaining limits
+
+Stop adding learned context machinery to this exact-key task. The next scientific
+priority remains **useful representations and concept/instance transfer** from the
+handoff: distinguish source-supplied descriptors/association from learned access,
+compare remembered examples with inferred shared structure, and retain the earlier
+R1 transfer/CI1 retention failures. Consult their owning plans before registering
+fresh populations, reconstruction/transfer gates and a separate compute budget.
+This screen does not pick an untested concept architecture or spend that budget.
+
+The measured linear head-validation path is a concrete engineering follow-up if
+larger stores need it: preserve latest-before-active semantics and exact replay,
+then compare actual whole-pipeline cost. Its sub-millisecond-to-low-millisecond
+cost here is not a reason to preempt the representation question. Noisy evidence,
+harder visual alignment, shared depth, grounded dialogue/audio and learned
+context control remain open in the continuation handoff.
+
+
+## Completion verification
+
+Full `.venv/bin/python -m pytest`: **856 passed in662.14 seconds**, exit0.
+Supervisor elapsed663.68 seconds, below1200-second ceiling, with all recipe,
+library and test source hashes unchanged across execution. Saved log and receipt:
+`runs/reviews/scan_discovery_20260924/full-suite.log` and `full-suite-exit.json`.
+Independent causal/artifact audit,109 affected local links, research YAML/session
+counts, regenerated atlas and `git diff --check` pass. Project state stays <=8KiB.
+Research records bind N577 and staged O401; no general claim is promoted.
+The selected screen is complete; the next scientific priority and remaining
+architecture limitations above are preserved explicitly.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-24_001
   date: '2026-09-24'
   started: 2026-09-24T12:52+02:00
-  last_turn: 2026-09-24T14:36+02:00
-  turn_count: 3
-  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open."
+  last_turn: 2026-09-24T15:25+02:00
+  turn_count: 4
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains."
 events_logged:
 - turn: 1
   type: question
@@ -74,6 +74,19 @@ events_logged:
   provenance: ai-suggested
   summary: Narrow lexical transfer; no learned retention or general language inference.
 
+- turn: 4
+  type: experiment
+  id: N577
+  routing: direct
+  provenance: ai-executed
+  summary: Exact indexed screen passes two populations; no cache benefit, validation still linear.
+- turn: 4
+  type: observation
+  id: O401
+  routing: staged
+  provenance: ai-suggested
+  summary: Stop learned complexity on exact descriptors only; representation/transfer question remains open.
+
 ai_actions:
 - turn: 1
   action: Inspected current plans/source; updated walkthrough, atlas coverage and project-state pointer.
@@ -107,6 +120,16 @@ ai_actions:
   - experiments/context_retrieval.py
   - docs/context-retrieval-plan.md
 
+- turn: 4
+  action: Planned, implemented and reviewed indexed feasibility recipe with four actual Opus5.5 medium public-only
+    rounds; preserved development versions, audited final rows and causal replay, updated scoped architecture
+    evidence.
+  provenance: ai-executed
+  files_changed:
+  - experiments/scan_discovery.py
+  - tests/test_scan_discovery.py
+  - docs/scan-discovery-plan.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -119,7 +142,8 @@ key_context:
 open_threads:
 - 'N569: bounded contracts now implemented; general learned concepts/context/language/audio remain open.'
 - Existing failed transfer/retention and natural language/audio learning remain unresolved.
-- 'N575: preregister scan-limited candidate discovery/retention with a strong indexed baseline; current complete search does not establish retention utility.'
+- 'N577: indexed screen complete; choose useful representations/concept-instance transfer with fresh gates. General learned retention remains open.'
 ai_suggestions_pending:
 - 'O398: proposed design order and visual demonstration, then grounded text and audio.'
 - 'O400: scoped lexical-selection interpretation remains staged; no user empirical endorsement.'
+- 'O401: narrow index sufficiency interpretation staged; no user empirical endorsement.'

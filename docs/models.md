@@ -1,5 +1,10 @@
 # Models and tensor flow
 
+[Indexed discovery screen](scan-discovery-plan.md): the recipe combines existing
+WorldStore and WorkingContext with an exact descriptor index. Two populations pass
+without training; reset context does not change answers. Authoritative validation
+still scans historical components. No new learned module or default-model change.
+
 [Bounded context retrieval](context-retrieval-plan.md): optional `TaskPolicy.context_selector`
 ranks candidate metadata plus an explicit null. `WorkingContext` retains bounded,
 versioned component pins in flat or Local/Global views; live-session reads resolve

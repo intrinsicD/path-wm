@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Continue:** [Scan-discovery screen](scan-discovery-plan.md) preregistered with actual Claude Opus 5.5 medium; red checks precede implementation. [Prior results](context-retrieval-plan.md): 848 tests, counting matches learned selection, no retention benefit. [Handoff](architecture-continuation-handoff.md) owns remaining priorities.
+- **Continue:** [Indexed screen](scan-discovery-plan.md): two populations100%, no cache benefit; Claude Opus5.5 medium. 856 tests pass. Next: representation/instance transfer; [handoff](architecture-continuation-handoff.md).
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent computation, shared depth and runtime

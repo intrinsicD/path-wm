@@ -7054,3 +7054,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O401
+  timestamp: 2026-09-24T15:25+02:00
+  provenance: ai-suggested
+  content: A strong exact descriptor index suffices at this tested scale; learned discovery/retention complexity
+    is unwarranted for this workload. Candidate bounds do not bound total storage work because authoritative
+    validation scans history. Useful representations and concept-instance transfer remain separate open questions.
+  context: Two fresh registered populations and four actual Claude medium public-contract reviews; no learned
+    model, identity inference or semantic retrieval claim. docs/scan-discovery-plan.md
+  potential_type: claim
+  bound_to:
+  - N577
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -210,3 +210,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Current attention kernel survey, 22 September](tables/attention_kernel_survey_2026-09-22.json): pinned FA4/Sage sources, hardware and native SDPA eligibility predicates. No new backend execution, speed measurement or integration.
 
 - [Integrated latent architecture,23 September](tables/integrated_architecture_2026-09-23.json): actual Opus5.5 high design/implementation and independent review;816 CPU tests;known-rule application passes, eight induction paths fail. Copied recall0.997→0.044 during failed transfer curriculum; full learned R1/R2 not qualified. Scoped reports structurally verified.
+
+- [Indexed discovery screen,24 September](tables/scan_discovery_2026-09-24.json): two fresh populations100% exact index agreement; no cache-reset effect; no training; validation remains linear in source history. Independent causal audit and four actual Opus5.5 medium public-contract reviews.

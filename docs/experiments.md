@@ -1,3 +1,10 @@
+For the **indexed candidate-discovery feasibility screen**, run
+`.venv/bin/python -m experiments.scan_discovery --output runs/my_scan --seed 924301`.
+The [protocol and results](scan-discovery-plan.md) compare exact indexing, cache
+reset and scan diagnostics with measured validation/rebuild/restart costs. Two
+fresh populations pass; no learned retention benefit or model-training claim.
+Each run saves raw query rows, causal store state and a standalone report.
+
 For the **bounded context / lexical retrieval continuation**, run
 `.venv/bin/python -m experiments.context_retrieval --output runs/my_context --seed 17 --final`.
 The [registered protocol and results](context-retrieval-plan.md) cover delayed facts,

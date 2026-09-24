@@ -7,6 +7,20 @@ Earlier evidence-loop implementation: `b51d949` (plan/red checks `3371600`).
 The working tree was clean before this documentation update. All selected runs and
 the full suite finished; no job from this continuation remains to resume.
 
+
+## Latest continuation: indexed screen completed
+
+The [scan-discovery plan](scan-discovery-plan.md) supersedes the starting experiment
+below: implementation `00abd78`, two fresh populations924317/924329 pass all gates.
+Four actual Opus5.5 medium public-contract reviews. Strong index, cached index and
+reset index answer100%; cache reset changes no answers. No learned selector was
+trained. Head validation remains O(history); full scan is physically feasible at
+this scale. Next prioritize useful representations/concept-instance transfer,
+consulting the earlier failed transfer/retention results; do not rerun these consumed
+seeds as a fresh test. Full regression:856 tests pass in662.14s with unchanged source. Detailed
+artifacts, costs, limitations and the separate engineering follow-up are in the plan.
+The historical startup text below explains the now-completed screen's motivation.
+
 ## Paste into the new Codex session
 
 > Continue PATH-WM from `docs/architecture-continuation-handoff.md`. Read CLAUDE.md

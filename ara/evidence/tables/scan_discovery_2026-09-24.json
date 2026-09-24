@@ -1,0 +1,633 @@
+{
+  "scope": "Indexed exact-descriptor stage-zero screen; no learned model or general capability claim",
+  "plan": "docs/scan-discovery-plan.md",
+  "implementation_commit": "00abd78",
+  "red_commit": "014cc40",
+  "final": {
+    "924317": {
+      "path": "runs/scan_discovery_final_924317_v1",
+      "result": {
+        "compute": {
+          "cache_bytes": {
+            "cached": 639,
+            "full": 373,
+            "index": 373,
+            "reset": 373,
+            "scan": 373
+          },
+          "correction_seconds": 0.41618582501541823,
+          "fixture_seconds": 0.04849189892411232,
+          "index_build_and_rebuild_seconds": 0.2136173481703736,
+          "index_bytes": 20482,
+          "ingestion_seconds": 0.038041460036765784,
+          "logical_restart_seconds": 5.666419207060244,
+          "peak_process_rss_kib": 535660,
+          "store_bytes": 292625,
+          "total_cpu_seconds": 7.8225342950000005,
+          "total_header_visits": 597072,
+          "total_materialized_bytes": 63132618,
+          "total_wall_seconds": 7.868153298040852,
+          "training_updates": 0
+        },
+        "evaluation_scope": "Exact supplied descriptors, current source copies; candidate budget is not a total storage-work bound.",
+        "gate": true,
+        "gates": {
+          "budgets": true,
+          "correction": true,
+          "exact": true,
+          "latency": true,
+          "resources": true,
+          "restart": true
+        },
+        "limitations": [
+          "No learned model, semantic retrieval, identity inference or reconstruction/prediction result.",
+          "Full scan remains physically feasible; first-16 ranking cap is an experimental constraint.",
+          "Latest-head validation scans history; payload_reads counts returned payloads, not internal copies.",
+          "Logical restart only; no process-crash atomicity. Timing includes instrumentation.",
+          "Evaluation cost includes all arms and fixtures, excludes report rendering; not an isolated deployment benchmark.",
+          "Structural report verification with unchanged renderer; no new browser QA."
+        ],
+        "metrics": {
+          "cached": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1411105,
+            "max_header_ratio": 3.0,
+            "max_headers": 1056,
+            "max_ms": 1.619092,
+            "max_probes": 2,
+            "omitted": 0,
+            "p95_ms": 1.3400714999999996,
+            "query_seconds": 0.053991363,
+            "source_agreement": 1.0,
+            "stale_rejections": 32,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 1.5003968
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7935289499999997
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.03304675
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.0260315
+              }
+            }
+          },
+          "full": {
+            "accuracy": 1.0,
+            "materialized_bytes": 19842557,
+            "max_header_ratio": 3.0,
+            "max_headers": 1056,
+            "max_ms": 6.259028,
+            "max_probes": 320,
+            "omitted": 0,
+            "p95_ms": 6.0333083,
+            "query_seconds": 0.646005759,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 6.180206549999999
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 5.5456768
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 6.0838695000000005
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 5.0148725
+              }
+            }
+          },
+          "index": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1143952,
+            "max_header_ratio": 2.0,
+            "max_headers": 704,
+            "max_ms": 1.153868,
+            "max_probes": 1,
+            "omitted": 0,
+            "p95_ms": 0.9502062499999999,
+            "query_seconds": 0.043753154,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 0.99973105
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7755157999999994
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.0552845
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.01432425
+              }
+            }
+          },
+          "reset": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1143952,
+            "max_header_ratio": 2.0,
+            "max_headers": 704,
+            "max_ms": 1.148675,
+            "max_probes": 1,
+            "omitted": 0,
+            "p95_ms": 0.9662609999999999,
+            "query_seconds": 0.044128746,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 1.0480483
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7694409999999996
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.08181875
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.0178785
+              }
+            }
+          },
+          "scan": {
+            "accuracy": 0.0,
+            "materialized_bytes": 18698605,
+            "max_header_ratio": 1.0,
+            "max_headers": 352,
+            "max_ms": 34.439255,
+            "max_probes": 16,
+            "omitted": 128,
+            "p95_ms": 5.11361105,
+            "query_seconds": 0.634367451,
+            "source_agreement": 0.125,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 0.0,
+                "count": 32,
+                "p95_ms": 5.22540715
+              },
+              "delayed": {
+                "accuracy": 0.0,
+                "count": 64,
+                "p95_ms": 4.9970172999999996
+              },
+              "restart": {
+                "accuracy": 0.0,
+                "count": 16,
+                "p95_ms": 5.09422225
+              },
+              "unknown": {
+                "accuracy": 0.0,
+                "count": 16,
+                "p95_ms": 12.32813975
+              }
+            }
+          }
+        },
+        "population_sha256": "8c062f29f9d303187b5aeeb326f117f0314aa6e9fb8b3cc97c6e52826ea5216c"
+      },
+      "invocation": {
+        "cpu_seconds": 7.834068361,
+        "includes_report": true,
+        "wall_seconds": 7.8841650650138035
+      }
+    },
+    "924329": {
+      "path": "runs/scan_discovery_final_924329_v1",
+      "result": {
+        "compute": {
+          "cache_bytes": {
+            "cached": 639,
+            "full": 373,
+            "index": 373,
+            "reset": 373,
+            "scan": 373
+          },
+          "correction_seconds": 0.411686341103632,
+          "fixture_seconds": 0.047365344827994704,
+          "index_build_and_rebuild_seconds": 0.21268984506605193,
+          "index_bytes": 20474,
+          "ingestion_seconds": 0.03744062804616988,
+          "logical_restart_seconds": 5.638117029971909,
+          "peak_process_rss_kib": 536208,
+          "store_bytes": 292625,
+          "total_cpu_seconds": 7.7931045480000005,
+          "total_header_visits": 597072,
+          "total_materialized_bytes": 63130818,
+          "total_wall_seconds": 7.828202546981629,
+          "training_updates": 0
+        },
+        "evaluation_scope": "Exact supplied descriptors, current source copies; candidate budget is not a total storage-work bound.",
+        "gate": true,
+        "gates": {
+          "budgets": true,
+          "correction": true,
+          "exact": true,
+          "latency": true,
+          "resources": true,
+          "restart": true
+        },
+        "limitations": [
+          "No learned model, semantic retrieval, identity inference or reconstruction/prediction result.",
+          "Full scan remains physically feasible; first-16 ranking cap is an experimental constraint.",
+          "Latest-head validation scans history; payload_reads counts returned payloads, not internal copies.",
+          "Logical restart only; no process-crash atomicity. Timing includes instrumentation.",
+          "Evaluation cost includes all arms and fixtures, excludes report rendering; not an isolated deployment benchmark.",
+          "Structural report verification with unchanged renderer; no new browser QA."
+        ],
+        "metrics": {
+          "cached": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1411024,
+            "max_header_ratio": 3.0,
+            "max_headers": 1056,
+            "max_ms": 1.600216,
+            "max_probes": 2,
+            "omitted": 0,
+            "p95_ms": 1.2932925999999991,
+            "query_seconds": 0.053623345,
+            "source_agreement": 1.0,
+            "stale_rejections": 32,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 1.4847915
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7813394499999996
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.0306354999999998
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.03214825
+              }
+            }
+          },
+          "full": {
+            "accuracy": 1.0,
+            "materialized_bytes": 19841964,
+            "max_header_ratio": 3.0,
+            "max_headers": 1056,
+            "max_ms": 6.352154,
+            "max_probes": 320,
+            "omitted": 0,
+            "p95_ms": 5.9643507,
+            "query_seconds": 0.641807869,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 6.2042142
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 5.58438035
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 5.92102725
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 5.0208882500000005
+              }
+            }
+          },
+          "index": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1143871,
+            "max_header_ratio": 2.0,
+            "max_headers": 704,
+            "max_ms": 1.099102,
+            "max_probes": 1,
+            "omitted": 0,
+            "p95_ms": 0.9504829499999998,
+            "query_seconds": 0.043617243,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 1.0354804499999999
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7705392499999998
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.0511395000000001
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.016361999999999998
+              }
+            }
+          },
+          "reset": {
+            "accuracy": 1.0,
+            "materialized_bytes": 1143871,
+            "max_header_ratio": 2.0,
+            "max_headers": 704,
+            "max_ms": 1.103673,
+            "max_probes": 1,
+            "omitted": 0,
+            "p95_ms": 0.9393402999999999,
+            "query_seconds": 0.043889017,
+            "source_agreement": 1.0,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 1.0,
+                "count": 32,
+                "p95_ms": 1.020327
+              },
+              "delayed": {
+                "accuracy": 1.0,
+                "count": 64,
+                "p95_ms": 0.7858863499999997
+              },
+              "restart": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 1.0436655
+              },
+              "unknown": {
+                "accuracy": 1.0,
+                "count": 16,
+                "p95_ms": 0.014324
+              }
+            }
+          },
+          "scan": {
+            "accuracy": 0.0,
+            "materialized_bytes": 18698093,
+            "max_header_ratio": 1.0,
+            "max_headers": 352,
+            "max_ms": 35.25268,
+            "max_probes": 16,
+            "omitted": 128,
+            "p95_ms": 5.15319445,
+            "query_seconds": 0.633990306,
+            "source_agreement": 0.125,
+            "stale_rejections": 0,
+            "strata": {
+              "corrected": {
+                "accuracy": 0.0,
+                "count": 32,
+                "p95_ms": 5.29310035
+              },
+              "delayed": {
+                "accuracy": 0.0,
+                "count": 64,
+                "p95_ms": 4.98112275
+              },
+              "restart": {
+                "accuracy": 0.0,
+                "count": 16,
+                "p95_ms": 4.8797685
+              },
+              "unknown": {
+                "accuracy": 0.0,
+                "count": 16,
+                "p95_ms": 13.101364
+              }
+            }
+          }
+        },
+        "population_sha256": "a9aaac109bbfbe23b66e0443542e6cea547d6a37e9a8091f2cd41a8ce55ac738"
+      },
+      "invocation": {
+        "cpu_seconds": 7.804778046000001,
+        "includes_report": true,
+        "wall_seconds": 7.844559099001344
+      }
+    }
+  },
+  "review": {
+    "rounds": [
+      {
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "exit_code": 0,
+        "seconds": 58.42334723472595,
+        "public_only": true,
+        "brief_sha256": "d30c5ce088f11c2192b7e906823f6978c45b9fc818767016be249443e39b7d78",
+        "session_id": "65ffe535-c0ac-49ce-9cd1-7fbc89abfca3",
+        "model_usage": {
+          "claude-opus-5-5": {
+            "inputTokens": 2,
+            "outputTokens": 5350,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 828,
+            "webSearchRequests": 0,
+            "costUSD": 0.113632,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 128000,
+            "thinkingTokens": 2147,
+            "canonicalModel": "claude-opus-5-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "is_error": false
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "exit_code": 0,
+        "seconds": 41.11813259124756,
+        "public_only": true,
+        "brief_sha256": "3a3d539c7ddeb421ac1bc38e7d86383290a080b3587b407bef6bc5ef1127dae6",
+        "session_id": "65ffe535-c0ac-49ce-9cd1-7fbc89abfca3",
+        "model_usage": {
+          "claude-opus-5-5": {
+            "inputTokens": 4,
+            "outputTokens": 9077,
+            "thinkingTokens": 3471,
+            "cacheReadInputTokens": 828,
+            "cacheCreationInputTokens": 6883,
+            "webSearchRequests": 0,
+            "costUSD": 0.23678559999999998,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 128000,
+            "canonicalModel": "claude-opus-5-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "is_error": false
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "exit_code": 0,
+        "seconds": 34.2225067615509,
+        "public_only": true,
+        "brief_sha256": "994ec37ca3960b68a57f3d4a7beacd4a802397b64600750995512694c3274699",
+        "session_id": "65ffe535-c0ac-49ce-9cd1-7fbc89abfca3",
+        "model_usage": {
+          "claude-opus-5-5": {
+            "inputTokens": 6,
+            "outputTokens": 12242,
+            "thinkingTokens": 4518,
+            "cacheReadInputTokens": 7711,
+            "cacheCreationInputTokens": 11402,
+            "webSearchRequests": 0,
+            "costUSD": 0.3376222,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 128000,
+            "canonicalModel": "claude-opus-5-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "is_error": false
+      },
+      {
+        "model": "claude-opus-5-5",
+        "effort": "medium",
+        "exit_code": 0,
+        "seconds": 17.889134407043457,
+        "public_only": true,
+        "brief_sha256": "a0156faca57427dc2e1ed8fcc11e9b5c6a1cc256e1654948a5c9de97d9341237",
+        "session_id": "65ffe535-c0ac-49ce-9cd1-7fbc89abfca3",
+        "model_usage": {
+          "claude-opus-5-5": {
+            "inputTokens": 8,
+            "outputTokens": 13668,
+            "thinkingTokens": 5012,
+            "cacheReadInputTokens": 19113,
+            "cacheCreationInputTokens": 15290,
+            "webSearchRequests": 0,
+            "costUSD": 0.39953459999999996,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 128000,
+            "canonicalModel": "claude-opus-5-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "is_error": false
+      }
+    ],
+    "note": "Resumed-session usage retained verbatim; totals may overlap and are not summed. Costs are API-equivalent list estimates, not subscription billing."
+  },
+  "audit": {
+    "populations_disjoint": true,
+    "audits": [
+      {
+        "path": "runs/scan_discovery_final_924317_v1",
+        "rows": 640,
+        "independent_causal_replay": true,
+        "cache_reset_answer_changes": 0,
+        "negative_controls": {
+          "stale_payload_rejected": true,
+          "omitted_is_not_absent": true,
+          "unknown_guess_rejected": true
+        },
+        "source_unchanged": true,
+        "gate": true,
+        "artifacts": {
+          "result.json": "2045a56b24ee19438d921aaec261695191a995a83db5c2378a808f643036607e",
+          "predictions.jsonl": "a07de18810fde73e5ef38bd2192526eb952a126e44945ccab5c9479864aa27cd",
+          "last.json": "18cbbbd966ccb29ff7b592889067e1dcedb6fac70fab37f34835e0cc19801ec6",
+          "report.html": "19bd171ea46e8eec6cddc3860e46e7376e67a656ca94c8aec145249e09ff59bd",
+          "run.json": "7fba3239a45afdd32796df5618addab21caab3ac5759baad8241b678de32ae57"
+        }
+      },
+      {
+        "path": "runs/scan_discovery_final_924329_v1",
+        "rows": 640,
+        "independent_causal_replay": true,
+        "cache_reset_answer_changes": 0,
+        "negative_controls": {
+          "stale_payload_rejected": true,
+          "omitted_is_not_absent": true,
+          "unknown_guess_rejected": true
+        },
+        "source_unchanged": true,
+        "gate": true,
+        "artifacts": {
+          "result.json": "6978c19dad255bf4c8aeadc3f2d8c0ece6a0bfdb4b3a5bc70774a9841cf033e6",
+          "predictions.jsonl": "2c186691338f4edd55b998a13b082b69740642734e9822a63dad0832b7e9535e",
+          "last.json": "b43c32cca0d8b4b22f838ad6d5e6ac1fe954bc12963d635d9e1ab781125fa1e3",
+          "report.html": "8a8cd3e8302eba00b31dfc148d12315be602fd521ce4285d745117a73860c836",
+          "run.json": "36a983c429f2bbe5661c4df19eb25dee52033bab53560b54ac906431acceff5a"
+        }
+      }
+    ]
+  },
+  "verification": {
+    "full_suite": {
+      "exit_code": 0,
+      "seconds": 663.678989648819,
+      "source_unchanged": true
+    },
+    "tests_passed": 856,
+    "pytest_seconds": 662.14,
+    "doc_checks": {
+      "local_links_checked": 109,
+      "project_state_bytes": 8184,
+      "yaml_files": 5,
+      "session_counts_verified": true
+    }
+  }
+}

@@ -9595,3 +9595,18 @@ tree:
   - runs/context_codec_regression_s17_v1/result.json
   - runs/context_codec_regression_s29_v1/result.json
   status: completed
+- id: N577
+  type: experiment
+  title: Indexed exact discovery passes; no retention benefit and head scans remain
+  provenance: ai-executed
+  timestamp: 2026-09-24T15:25+02:00
+  result: 'Frozen populations924317/924329,128 queries each with five arms: exact index, cached/reset index
+    and full scan100%; first16 scan omits all128 queries.32 stale cached pins rejected and16 logical restarts
+    pass per population. Cache reset changes0 answers. Index p95~0.950ms; cached1.340/1.293ms. Whole invocation7.884/7.845s.
+    No training; validation2H or3H visits. Four actual Opus5.5 medium public-contract rounds; local implementation
+    and independent causal audit.'
+  evidence:
+  - docs/scan-discovery-plan.md
+  - ara/evidence/tables/scan_discovery_2026-09-24.json
+  - runs/reviews/scan_discovery_20260924/raw-artifact-audit.json
+  status: completed
