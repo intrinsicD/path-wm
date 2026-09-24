@@ -45,3 +45,24 @@ def test_source_correction_and_context_restart(tmp_path):
     y = x * 2 + 1
     checks = memory_check(x, y, x[:4], 'test-codec', tmp_path)
     assert all(checks.values()), checks
+
+
+def test_predict_query_isolation_and_no_target_argument():
+    from experiments.representation_transfer import predict, ARMS
+    g = torch.Generator().manual_seed(38)
+    x, y, q = [torch.randn(n, 3, generator=g) for n in (20, 20, 9)]
+    code = fit_affine(x, y)
+    for arm in ARMS[:-1]:
+        one = predict(arm, x, y, q[:1], code, None, None)
+        many = predict(arm, x, y, q, code, None, None)
+        assert torch.allclose(one, many[:1], atol=1e-12)
+        # Independent query batches cannot enter support-only statistics.
+        assert torch.equal(code, fit_affine(x, y))
+
+
+def test_large_offset_affine_intercept_is_not_regularized():
+    x = torch.tensor([[0., 1.], [1., 0.], [1., 2.], [2., 1.]], dtype=torch.float64) + 100
+    y = 2*x + torch.tensor([300., -700.])
+    code = fit_affine(x, y)
+    assert torch.allclose(apply_affine(x.mean(0,keepdim=True),code), y.mean(0,keepdim=True), atol=1e-12)
+    assert (apply_affine(x,code)-y).abs().max()<.002
