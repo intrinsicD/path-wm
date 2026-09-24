@@ -26,8 +26,10 @@ memory, encode-once, structured goals) runs as
 it is a labelled software check ([plan §18](integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag)).
 
 The [native visual-memory slice](real-visual-memory-plan.md) uses that same recipe,
-the existing J perception/key checkpoint and the existing slot decoder. Calibrate
-the existing identity policy on training scenes, then evaluate fresh validation scenes:
+the native perception/key and existing slot decoder. The commands below reproduce
+the J baseline, which is not qualified for reliable relocation. Current training
+repairs and their preserved failures are in the owning plan. Calibrate the existing
+identity policy on training scenes, then evaluate validation scenes:
 
 ```bash
 .venv/bin/python -m experiments.unified_session --calibrate-visual-binding --identity-run runs/latent_agent_r1/identity_joint_20260923 --seed 3403 --scenes 64 --output runs/my_visual_calibration
@@ -41,8 +43,10 @@ life command. Native visual-slot recall is distinct from fine-detail reconstruct
 and full-agent learning. Other R2 components remain untrained.
 
 The optional **frozen-perception identity repair** trains the existing key only,
-using the parent's recorded texture randomization (J:1.0). Its train-kind screen
-must pass before calibration; training completion alone is not qualification:
+using the parent's recorded texture randomization (J:1.0). Its cosine screen is
+a reported development diagnostic; it is not the actual runtime gate. The
+[protocol amendment](real-visual-memory-plan.md#prospective-protocol-amendment-measure-the-actual-task)
+preserves failed diagnostics and requires separate calibration and task results:
 
 ```bash
 OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage perception \
@@ -56,7 +60,8 @@ OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage perceptio
 Resume with `--stage perception --resume runs/my_key_repair`. The run records
 parent hashes, train-kind cosine diagnostics, a checkpoint and standalone report.
 Perception/decoder/heads are hash-guarded. Use this run as `--identity-run` for a
-new calibration (seed3404), then fresh visual-memory evaluations (2405/2406).
+new calibration, then the evaluation populations fixed in the owning plan.
+The recorded W1/W100 key-only attempts did not qualify the full task.
 The current calibration sequence includes lamp changes, new layouts, alternating
 side swaps and novel arrivals, with labels confined to evaluation/calibration.
 

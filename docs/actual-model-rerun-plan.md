@@ -56,7 +56,7 @@ quality, and larger dimensions alone do not establish a production configuration
 | R1 oracle/slot-core and R2 identity | Supplied symbols/keys or random modules in software checks | Existing learned perception/key path can run; a fully trained unified checkpoint and unsupported tasks cannot be invented. |
 | Reduced real-module unit tests | Small widths, image sizes and short memory; some custom stubs | Run existing real-graph counterparts where available; track outstanding same-assertion/full-size coverage separately. |
 
-## Budget and evidence
+## Initial audit budget and evidence
 
 No new experiment training, tuning or architecture changes. The rollback correctness
 test makes two disposable optimizer proposals on the actual model; it produces no
@@ -72,6 +72,26 @@ they are not scientific training runs. No fresh capability gates are selected.
 Rules committed in `a5279ee`. Static inventory covers107 files and689 named test
 functions; manual counterpart mapping and all-model reruns remain incomplete.
 Missing-path decisions below require joint planning before implementation.
+
+### Authorized native visual-memory follow-up
+
+Alex subsequently authorized Codex and actual Claude Opus 5.5 at medium effort to
+plan, implement, review, test and repair the first native R2 visual-memory slice.
+The [owning plan](real-visual-memory-plan.md) records that agreement, its separate
+training budgets, and all failures. Items 1 and 2 below are therefore historical
+planning questions for this selected composition, not still-unanswered blockers.
+
+The existing RGB64 multiscale encoder, SlotPerception and broadcast decoder now
+connect through source-validated persistent visual slots. Native persistence,
+source withdrawal, restart and direct decoder parity pass; 942 CPU tests pass.
+The W100 key repair failed the required two-population identity screen. Joint
+training preserved measured perception abilities but failed calibration; a
+registered duration-only continuation is running. Learned identity qualification
+is still open. No new codec or representation has been introduced.
+
+This closes the missing connection for those specific software contracts. It does
+not close fine-detail fidelity, part-wise correction, pose/operator transfer,
+lexical-context integration, full-agent learning, or every historical test family.
 
 ### Completed executable slice
 
@@ -109,8 +129,9 @@ DetailCodec, lexical-policy or other missing-counterpart obligations above.
 
 ## Joint planning required before the remaining reruns
 
-These are proposals for discussion, not approved implementations. No production
-module or new model has been added in this audit.
+The list records the original audit proposals. The native R2 composition and
+visual-memory connection (items 1–2) were subsequently authorized as described
+above; other counterparts remain open. No substitute model is authorized.
 
 1. **Pin the actual reference composition.** R2 already shares the real multiscale
    encoder with slot perception and supplies one session/store/core composition.
@@ -150,8 +171,8 @@ module or new model has been added in this audit.
    experimental model. The existing R2 life can run without supplied pixel identity,
    and that rerun is already available; it does not close every historical assertion.
 
-The first proposed implementation slice, after agreement, is the smallest missing
-persistent-feature-to-existing-consumer connection in the chosen real architecture.
-Before coding, specify the exact source/consumer tensor contract and acceptance
-checks together. Keep current components and checkpoints intact. No architecture
-redesign, new codec, training sweep or unapproved quality gate is part of this plan.
+The authorized first implementation slice is tracked in the
+[real visual-memory plan](real-visual-memory-plan.md). Keep the remaining families
+separate: each needs a concrete mapping and gap plan before adding functionality.
+The surrogate affine-range result cannot be promoted into a bound on the native
+nonlinear decoder, and a native software pass is not a learned-quality pass.

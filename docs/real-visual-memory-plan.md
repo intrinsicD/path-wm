@@ -55,11 +55,15 @@ updates during memory acquisition/correction. These establish the connection,
 not fine-detail quality or the full agent. Quality gates will be specified before
 the first new quality evaluation after tracing the existing task and checkpoint.
 
-## Status
+## Current status
 
-Claude round1 completed on actual `claude-opus-5-5`, explicit medium effort.
-Implementation round underway; no new quality result yet.
-Exact briefs/replies: `runs/reviews/real_visual_memory_20260924/`.
+Native memory and training support are committed through54117d7;942 CPU tests pass.
+Software contracts pass on actual native runs. Learned relocation is not yet
+qualified: W100 fails one population; joint3000 fails both2407/2408 at60/64.
+Existing identity-weight repair is in progress; see the final protocol below.
+No architecture replacement or surrogate is used. Actual Claude Opus5.5 medium
+has planned, implemented, reviewed and diagnosed each slice; exact receipts:
+`runs/reviews/real_visual_memory_20260924/`.
 
 ## Reconciled implementation and evaluation protocol
 
@@ -351,3 +355,188 @@ Final source including diagnostic disclosure passes942 CPU tests again
 (790.60s, unchanged source). Metadata-only change reviewed clean by Claude
 round13; calibration manifests and allreports retain exact parent hashes.
 This software pass does not change the failed W100 two-population task result.
+
+## Joint continuation for observed stripe-phase sensitivity
+
+Round14 identifies every remaining W100 miss as a below-threshold correct
+identity (not a wrong match), concentrated on validation stripe kinds49/50.
+Controlled1–3px shifts alter keycosine strongly while slotcoverage stays>=.95.
+This is evidence for learned phase sensitivity, not proof that the architecture
+cannot work. More key-only fits or a new data framework are not adopted.
+
+Preregister `real_visual_joint_repair_3501_v1`: existing J perception+key, native
+fullconfig, seed3501,1000updates,lr3e-4,pairedproceduralrate1, identity joint,
+margin(.95,.50,W100),<=20minGPU/6GiB. Lastcheckpointonly. Single intervention
+relativeW100: permit existingperception weights to learn under its existing
+RGB/mask/kind/attribute/lamp objectives plus identity. No modules added, no
+encoder/decoder replacement. Existingrecipe supports this without sourceedits.
+
+The earlier bit-identical-perception guarantee ends for this separate candidate;
+J/olderruns remain unchanged and new stores use the new perceptionversion.
+Retention beforecalibration: identical256 TRAIN-kind scenes,seed3506, J vsjoint:
+RGBMSE<=1.10xJ; pixel/mask, eachattribute, machine detection, lamp and both
+pointer accuracies>=J-.005; kindaccuracy>=J-.001; existing C1screen true.
+Use actual `ev.perception_metrics` and `perception_loss`, report all scores.
+Jointrecipe's usual validation-kind C1monitoring is disclosed, never used to
+select checkpoints. Phase robustness remains diagnostic, not an added gate.
+
+If retentionpasses, calibrateonce seed3405/64TRAINscenes, samegrid/selection.
+Primary: untouched2407/2408,32sceneseach, originalgates, bothrequired. Jcontrol
+usesits3404manifest, notselectable. Secondaryknown2405/2406 reportedseparately.
+Mechanism diagnosis used validationkinds; no unseen-kind or sealed-test claim.
+All failures remain visible; further repairs require a separate concrete plan.
+
+Joint3501 completed1,000 updates in180.11s, reserved3.416GiB, source unchanged;
+C1validation passes (allfour attributes, lamps, machine detection and both
+pointers100%; RGBMSE.010272). Matched retention also PASSES all12 checks:
+J→joint RGBMSE.009126→.008898, pixelaccuracy.98406→.98617; kind/lamp/detection/
+pointers remain100%; attribute1 improves.99219→1, othersremain1. Identical
+256TRAIN scenes are hash-checked across both evaluators/models; standalone
+report `runs/real_visual_retention_joint_3501_v1/report.html`, structuralQA.
+The secondary known-kind phase diagnostic is mixed: kind49 minimum cosine
+.412(W100)→.852(joint), kind50.799→.682. It is not a gate or selection tool,
+and does not establish the mechanism is solved. Calibration3405 is underway.
+
+Joint calibration3405 FAILED after431.73s: threshold.85 gives100%matching but
+one false novel merge/64; threshold.90 gives99.22%matching with the same merge;
+threshold.95 removesfalsemerges but matchingfalls to89.06%. No manifest exported,
+no2407/2408 evaluations launched; those primary scenes remain untouched.
+Retention remains a pass, identity calibration remains a fail. Round16 diagnoses
+the actual TRAIN false merge before choosing one further existing-training-control
+change. No threshold relaxation or new representation is adopted.
+
+## Duration-only continuation
+
+Round16 reproduced the TRAIN falsemerge: episode20 replaces kind17 with33;
+the newmachine matches17 at cosine.909. These have similarpalettes and different
+patterns. Controlled scores are also high in J(.93) and W100(.94), so this
+confusion predates jointtraining;3404 simply did not contain that pair.
+No mixture/dataoption is adopted: the fixedtable and proceduralgenerator share
+their parameter family, and repeatedly showing48fixedidentities would not
+by itself establish unseen-pattern discrimination.
+
+Preregister fresh `real_visual_joint_repair_3501_u3000_v1` from J: only the
+update budget changes1000→3000; same seed3501/batches/lr3e-4/pairedprocedural1,
+joint identityweight.2, margins.95/.50/W100. Max20min/6GiB, lastcheckpointonly.
+The first1000 updates repeat the same data stream; no altered resume identity.
+Training curves were still improving and retention had headroom. This is a
+bounded optimization test, not a claim that longer training guarantees success.
+
+Repeat identical retention3506/256scenes and all12checks. Ifpass, repeat SAME
+calibration3405 episodes/grid/selection so the identified17/33 failure remains
+included; label this calibration as development data that motivated the repair.
+Only afterbothpass: untouched2407/2408 primary, same runtime gates, bothrequired;
+Jcontrol uses3404manifest, known2405/2406 secondary. No extra seeds/threshold
+shopping. If similar-palette failure persists, round16 proposes separately
+testing identityweight1.0 at1000updates; not combined with this duration test.
+
+The3,000-update run completed475.25s at3.418GiB reserved; source unchanged.
+All first1,000 training metric rows exactly match the shorter run (retained
+prefix audit). C1 passes with all reported attributes/lamps/detection/pointers100%.
+Identical retention3506 passes all12checks: J→candidate RGBMSE.009126→.008639;
+pixelaccuracy.984057→.984651; allattributes now1 and otherheads/pointers1.
+The new checkpoint is now repeating calibration3405, including17/33.
+
+Diagnostic correction: the original phase probe added0–3px to already-jittered
+centers and therefore included positions outside the real generator bounds
+(machine0 x14–18,y12–15). Its extreme cosines are preserved but are not evidence
+for a defect restricted to the actual task domain, nor proof that encoder stride
+is the unique cause. Codex is repeating the controlled comparison at all20 valid
+positions, same real models and fixed scenes. Actual runtime/calibration failures
+use the normal generator and remain valid. The standing workflow now requires
+explicit input-domain disclosure and an actual-domain follow-up for such probes.
+
+The corrected actual-domain phase check covers all20validpositions on each of
+8known validation kinds. Minimum same-identity cosines for kinds49/50 are
+J .751/.825, W100 .722/.748, joint1000 .898/.876, joint3000 .863/.926.
+This supports residual learned position sensitivity inside the task domain,
+without identifying a unique architectural cause. Weights remained unchanged.
+
+Duration-only joint3000 calibration3405 PASSED: selected .95/.90/.10 gives
+acquisition1, same-layout1, relocated123/128=.9609375, no false matches or novel
+merges, novel detection1. The two reserved primary populations2407/2408 and
+fixed J control have now started. No identity-weight branch is adopted.
+Claude round17's pattern diagnostic suggests weak pattern discrimination, but
+near-unit slot cosine and weak centroid decoding do not prove information is
+absent or unrecoverable. Its shifted-position subset also needs domain correction;
+its base pattern comparisons are reviewed separately.
+
+## Existing identity-weight intervention
+
+The duration candidate fails BOTH primary populations2407/2408 at60/64 relocated
+matches (.9375); all other task gates and all persistence contracts pass. This
+failed qualification is preserved. Calibration's strict .95 match cutoff was
+needed to avoid the TRAIN novel merge; increasing duration alone did not resolve
+the separation/position tradeoff sufficiently.
+
+Adopt Claude rounds16/17's already-planned next single-factor branch: native J
+initialization, seed3501,1000updates, all joint1000 settings identical except
+existing `--identity-weight 1.0` (previously .2). No new modules or data options.
+Output `real_visual_joint_repair_3501_iw1_v1`; <=20min/6GiB, lastcheckpoint only.
+Compare against joint1000 for the scientific intervention, not against3000 as a
+matched-budget claim. Repeat same retention3506/256 and calibration3405/64.
+If both pass, require unchanged task gates on ALL known2405–2408 regression
+populations plus untouched2409/2410,32scenes each; fixed J remains the control.
+Do not discard failures by moving to new seeds. Fresh scenes remain development
+validation, not unseen-kind or sealed-test evidence. If retention/calibration
+fails, diagnose before another intervention; no automatic sweep.
+
+Claude round19 independently reviewed the identity-weight registration and actual
+loss/pairing/pointer/gradient code: no concrete bug found. Global gradient clipping
+couples effective step sizes, so increasing identity weight changes the objective
+balance but is not a clean claim about gradient magnitude alone. Joint held-out
+slot geometry was not separately measured; no stronger attribution is made.
+Failed duration comparison has its own aggregate report:
+`runs/real_visual_memory_comparison_joint_u3000_v1/report.html` (structuralQA).
+
+Identity-weight1 training completed1,000updates in160.71s,3.416GiB reserved,
+source unchanged; C1passes. Retention3506 passesall12: J→candidate RGBMSE
+.009126→.009371 (+2.68%); pixelaccuracy .984057→.980046 (-.00401),
+objectpointer1→.999023, attribute3 1→.998047, attribute1 .992188→.996094;
+otherheads unchanged. These are within registered tolerances, not no-degradation
+claims. Calibration3405 is running. Training already has a valid101-file source
+snapshot; its original index/hashes verify (the generic evaluation sealer stopped
+on an ordering collision without modifying indexed files).
+
+Round20 rejects a proposed positive target .99 continuation: existing .95 target
+is not saturated (8–14% training positives still violate), while confusable
+negatives force the high matching cutoff. No such fit is launched. Corrected
+TRAIN-palette position probes improve with iw1 (q01 .933→.958); pattern-only
+negative similarity barely changes. These are diagnostics, not new gates or proof
+of absent slot information. Conditional planning considers targeted confusable
+training pairs in the existing recipe only if the actual task still fails.
+
+## Conditional confusable-pair data repair (joint plan, round21)
+
+If the current iw1calibration completes with no admissible policy, adopt one
+bounded training-data repair in the existing perception recipe. Runtime failure
+involves similar-colour different-pattern machines; independently drawn palettes
+rarely force pattern discrimination. Add optional `--confusable-twins .25`:
+a selected scene's second body shares the first's ordered colours and period,
+but uses a different pattern among0–3. Check every proposed twin against the
+existing held-out-texture exclusion; rejected twins retain original data and
+are counted. Base scenes/lamps/labels remain identical; default0 consumes no
+additional randomness and keeps existing behavior/settings/resume compatible.
+No model, decoder, trainer or runtime labels are added.
+
+Native-full red checks cover default equivalence, rendered distinctness, held-out
+rejection, pairing/negative masks, finite gradients into real J perception/key,
+invalid CLI and exact pause/resume. Claude implements; Codex independently reviews
+and runs checks, then full CPU suite. Source stays frozen for each run. Only the
+existing recipe should change; determine calibration hash validity from actual
+source dependencies rather than assuming every repository edit invalidates it.
+
+Single factor vs joint1000: Jinit,seed3501,1000updates,lr3e-4,procedural1,
+identityweight.2,margins.95/.5/W100,plus twins.25; output
+`real_visual_joint_twins_3501_v1`,<=20min/6GiB,lastcheckpointonly. Retention3506
+(all12), calibration3405, allknown2405–2408 plus fixed2409/2410 with unchanged
+gates. Existing J controls stay historical matched-input controls, never selected.
+Report actual twin counts and diagnostics; no proxy becomes a new gate. If this
+fails, inspect the real failure before further changes; no automatic sweep or
+representation replacement. This necessary training repair is within Alex's
+explicit delegated planning/implementation with Claude and same permissions.
+
+IW1calibration completed404.79s, source unchanged: FAILED. Every policy has at
+least one false novel merge/64; .95matching122/128=.953125 stillmerges1/64.
+No manifest exported, no candidate validation launched. The conditional data
+repair is now adopted; paired native training examples are the only new behavior.

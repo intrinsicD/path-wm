@@ -32,6 +32,12 @@ scientific evaluation and completion:
    missing implementations requiring discussion. Preserve previous runs and failed
    results. A broad pytest pass alone does not close outstanding real-model reruns.
 
+Controlled diagnostics must also declare changes to the actual input domain,
+including positions, scales and augmentations. Check those bounds against the real
+generator or task before using a diagnostic to justify a repair. An intentional
+out-of-domain stress test is useful evidence only for that scope; follow it with
+the actual task conditions before claiming an in-task defect.
+
 ## Work in small complete slices
 
 1. **Plan.** Update the active plan linked from project-state.md: concrete problem,

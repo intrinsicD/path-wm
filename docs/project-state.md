@@ -7,7 +7,7 @@ Task plans own current work; older decisions remain in the
 
 - **Active:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
-- **Latest evidence:** Native memory/training committedfab8296;942 CPU tests pass.2404 identity fails57/64; key repair keeps J perception fixed. Proxy failures preserved; W100 actual cross-layout59/64 and63/64: two-population gate fails. Next repair planned; [plan](real-visual-memory-plan.md).
+- **Latest evidence:** Native memory/training committed54117d7;942 CPU tests pass. Persistence contracts pass. Joint3,000-update repair preserves perception and passes calibration, but relocation60/64 on both2407/2408 misses the95% gate. Identity-weight repair also fails calibration; confusable training-pair repair is being implemented within the same model. [Plan](real-visual-memory-plan.md) owns failures and corrected pose diagnostics.
 
 - **Earlier screens:** [Affine transfer](representation-transfer-plan.md) passes surrogate gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Actual-model counterparts remain subject to the rerun audit.
 
@@ -25,21 +25,12 @@ Task plans own current work; older decisions remain in the
   but degraded during the failed transfer curriculum. CI1 (§22): color reaches core; frozen property query passes. Encoder adaptation loses shape/size retention; full prior curriculum remains open.
   Rollout, learned full R1/R2 and natural data remain unproven.
   Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
-- **Earlier concept-learning review:** the [abstract research review](latent-concept-learning-review.md)
-  compares concept induction, latent memory and prerequisites with current primary
-  sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is
-  not a universal prerequisite; joint learning, staged learning and pretrained
-  features remain alternatives. Concept-code search is distinct from weight
-  retraining. No mechanism, experiment budget or new capability is adopted.
-  The [concept/understanding discussion](latent-concept-learning-review.md#konzept-objektverständnis-und-latente-aktionen)
-  now relates object identity/state, latent actions and conditional effects; raw
-  action differences alone do not establish semantics or causal understanding.
-  Alex clarifies that “concept” initially means something shared above instances.
-  The [direction review](latent-concept-learning-review.md#richtungsprüfung-geteilte-struktur-über-instanzen)
-  broadens the target to reusable structure; actions and analogies remain subcases,
-  with examples/prototypes and inferred codes still open alternatives.
-  The unchanged [protocol](shared-abstraction-spec.md) defines equations, loss, arms
-  and frozen-weight updates; no trained-model result.
+- **Concept-learning discussion:** the [research review](latent-concept-learning-review.md)
+  records current literature and actual Claude Opus5.5 max review. Alex's initial
+  target is structure shared above instances; actions and analogies are subcases.
+  Joint/staged learning, latent codes and exemplars remain alternatives. The
+  [shared-abstraction protocol](shared-abstraction-spec.md) defines proposed
+  frozen-weight updates; no new mechanism or trained-model result is adopted.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented
@@ -90,7 +81,9 @@ Task plans own current work; older decisions remain in the
 Use the [discussion checklist](architecture-discussion.md) and atlas. Discussion
 coverage is separate from validation; green applies only to its named scope.
 The [experiment workflow](experiment-workflow.md) retains the standing design
-principles, public-only external-review boundary and run/report obligations.
+principles and run/report obligations. For this native-memory task, Alex explicitly
+authorized Claude as a same-permission implementation/review partner; the older
+public-only review boundary does not block this delegated work.
 The [coding-agent efficiency plan](agent-token-efficiency-plan.md) is complete;
 its measurements and limitations remain in that record.
 

@@ -4,19 +4,30 @@ Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
 **Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
-Actual Claude Opus5.5 medium is the implementation/review partner. Native memory/training
-software is committed at `fab8296`; all942 CPU tests pass (812.70s, unchanged
-source). Calibration3403_v2 passes; fresh validation2403 passes,2404 fails
-cross-layout identity (57/64), while all memory contracts pass in both. These
-are development results, not full-agent or fine-detail qualification.
+Actual Claude Opus 5.5 at medium effort is the planning, implementation, review and
+test partner. Native memory/training support is committed through `54117d7`; the
+latest complete CPU suite passes 942 tests in 790.60 seconds with unchanged source.
 
-Two bounded existing-key fits finished with J perception/decoder frozen; both
-failed the added cosine diagnostic. A prospective protocol correction keeps
-those failures visible while testing W100 versus J under the original actual-task
-gates. Matched training calibration3404 is underway, then fresh2405/2406. See the owning
-plan and `runs/reviews/real_visual_memory_20260924/claude-identity-repair-plan.md`.
-No alternate codec or representation is adopted. Historical866-test results
-and surrogate fidelity experiments remain preserved below and in their plans.
+Native memory contracts pass. Learned identity remains open: the fixed W100 key
+candidate scored 59/64 and 63/64 on fresh cross-layout populations, failing the
+requirement that both pass. Its stricter cosine diagnostic also remains failed;
+the prospective stop-rule correction is fully disclosed. Joint perception/key
+continuation passed matched retention but failed calibration on a similar-palette,
+different-pattern new machine. No richer representation or alternate codec is used.
+
+The duration-only continuation completed3,000 updates and passed retention and
+calibration3405, but failed both primary2407/2408 at60/64 relocated matches.
+All persistence contracts pass; J control scores57/64 and56/64. The separately
+registered next intervention increases existing identity-loss weight .2→1 at
+1,000 updates from J, with unchanged architecture/data. Its run
+`runs/real_visual_joint_repair_3501_iw1_v1` passes retention but fails calibration:
+even .95 still merges1/64 novel arrivals. Claude is implementing the jointly planned
+optional confusable training pairs in the existing recipe. Architecture unchanged;
+retention and all known/fixed-fresh populations remain required. See the owning plan.
+Earlier failed comparison: `runs/real_visual_memory_comparison_v1/report.html`.
+Other rerun families remain open. Original pose diagnostics included out-of-domain
+positions; corrected actual-domain evidence and Claude's interpretation correction
+are preserved in `runs/reviews/real_visual_memory_20260924/`.
 
 **Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
 owns the audit. Prefer the real model; any downscaled check must be followed by the
@@ -33,7 +44,7 @@ context and intended output consumers. Identify a concrete defect, missing
 connection or unimplemented contract in that actual path. Reuse existing modules;
 add code only where the identified gap requires it. The prior suggestion to choose
 a new decoder or residual path for `DetailCodec` is withdrawn as the default next
-step. Preserve its scoped evidence; do not repeat or expand those screens. Only the bounded existing-key training in the current owning plan is selected;
+step. Preserve its scoped evidence; do not repeat or expand those screens. Only bounded training of the existing perception/key in the owning plan is selected;
 no alternate architecture is selected by this handoff.
 
 ## Completed surrogate diagnostic: nonlinear fidelity (24 September)
