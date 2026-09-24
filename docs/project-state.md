@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- [Next architecture interfaces](architecture-walkthrough.md#completion-priorities-after-the-concept-and-conversation-discussion).
+- **Active implementation:** [evidence/episode loop](evidence-loop-plan.md), with Claude Opus5.5 medium. Plan and red checks in progress; no result yet.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
