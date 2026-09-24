@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Continue:** [Context/retrieval results](context-retrieval-plan.md): two seeds100%, matching counted lookup; no retention/layout benefit. Claude Opus5.5 medium verified. 848 tests pass; broader architecture remains open.
+- **Continue:** [Handoff](architecture-continuation-handoff.md); [results](context-retrieval-plan.md). 848 tests; two seeds100%, matching counting, no retention benefit. Next: scan-limited retrieval with Claude Opus5.5 medium.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent computation, shared depth and runtime
