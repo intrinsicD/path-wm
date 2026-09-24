@@ -5,13 +5,12 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Continue:** [Bounded context/retrieval slices](context-retrieval-plan.md) from the [Claude medium handoff](architecture-continuation-handoff.md). Planning with verified Claude Opus 5.5 medium; no new learned result yet. [Evidence-loop results](evidence-loop-plan.md): two seeds and838 tests pass.
+- **Continue:** [Context/retrieval results](context-retrieval-plan.md): two seeds100%, matching counted lookup; no retention/layout benefit. Claude Opus5.5 medium verified. 848 tests pass; broader architecture remains open.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
-  remains the priority: compatible latent perception/thinking/action, shared-depth
-  computation and useful concept/instance memory that acquires, retrieves and
-  corrects knowledge at runtime without weight retraining. Partial components do
-  not establish the complete capability.
+  remains the priority: compatible latent computation, shared depth and runtime
+  concept/instance acquisition and correction without retraining. Component checks
+  do not establish the complete capability.
 - **Integrated architecture R1/R2:** the [plan](integrated-architecture-plan.md)
   connects one session/store/clock, shared image features, concept memory, typed
   execution and verification. 820 CPU tests pass, including causal claims,

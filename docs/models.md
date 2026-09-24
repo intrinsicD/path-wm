@@ -1,5 +1,14 @@
 # Models and tensor flow
 
+[Bounded context retrieval](context-retrieval-plan.md): optional `TaskPolicy.context_selector`
+ranks candidate metadata plus an explicit null. `WorkingContext` retains bounded,
+versioned component pins in flat or Local/Global views; live-session reads resolve
+the current atomically replaced store. Epoch checks support synchronous consumption;
+`EpisodeClient.emit` remains the transactional output boundary. Two lexical-selection
+seeds generalize to held-out alias pairings but only match a counted lookup baseline.
+Supplied identity and complete candidate search mean no learned retention, association
+or general language claim. Context resets never erase authoritative World State.
+
 [Evidence-loop detail codec](evidence-loop-plan.md): `DetailCodec` learns familiar
 quarter-turn maps for controlled RGB16 textures. `to_parts` rearranges
 `[B,3,16,16]` into `[B,4,192]`; a shared encoder produces `[B,4,64]`. A supplied

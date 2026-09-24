@@ -9552,3 +9552,46 @@ tree:
   - runs/evidence_loop_final_s29/result.json
   - runs/reviews/architecture_completion_20260924/final-focused.log
   status: completed
+- id: N574
+  type: decision
+  title: Continue architecture in measurable slices with actual Claude medium
+  provenance: user
+  timestamp: 2026-09-24T14:36+02:00
+  choice: Continue the existing handoff with actual Claude Opus 5.5 medium; plan, implement, review and test
+    bounded slices under the public-only boundary.
+  alternatives:
+  - Starting a replacement architecture
+  - Substituting another model for Claude
+  evidence:
+  - docs/architecture-continuation-handoff.md
+  - runs/reviews/architecture_continuation_20260924/claude-receipt.json
+  status: resolved
+- id: N575
+  type: experiment
+  title: Bounded lexical context retrieval matches counting; retention benefit absent
+  provenance: ai-executed
+  timestamp: 2026-09-24T14:36+02:00
+  result: 'Seeds17/29,1200 updates each,64 worlds and2560 queries per split: IID and unseen two-alias pairings
+    reach100% current-source agreement in flat and Local/Global views. Counted lookup and rule also100%; reset/swap
+    interventions change no answers. Without supplied entity mask39.49%.705 trainable parameters; nine live-session
+    checks pass. No language/concept/retention-learning claim.'
+  evidence:
+  - docs/context-retrieval-plan.md
+  - ara/evidence/tables/context_retrieval_2026-09-24.json
+  - runs/context_final_s17_v1/result.json
+  - runs/context_final_s29_v1/result.json
+  status: completed
+- id: N576
+  type: experiment
+  title: Frozen detail codec remains unchanged through context continuation
+  provenance: ai-executed
+  timestamp: 2026-09-24T14:36+02:00
+  result: 'Existing two codec checkpoints,512 original test textures and four familiar poses: direct/recalled
+    outputs bit-identical, no weight updates. Mean MSE0.000242578/0.000238929, all poses below0.003. Regression
+    only, not new visual learning.'
+  evidence:
+  - docs/context-retrieval-plan.md
+  - ara/evidence/tables/context_retrieval_2026-09-24.json
+  - runs/context_codec_regression_s17_v1/result.json
+  - runs/context_codec_regression_s29_v1/result.json
+  status: completed

@@ -351,8 +351,8 @@ sessions:
   open_threads: 17
 - id: 2026-09-24_001
   date: '2026-09-24'
-  summary: Evidence-loop implementation with Claude medium; two-seed RGB16 gates and838 repository tests pass; general concepts and dialogue unproven.
-  turn_count: 2
-  events_count: 7
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open."
+  turn_count: 3
+  events_count: 11
   claims_touched: []
-  open_threads: 2
+  open_threads: 3

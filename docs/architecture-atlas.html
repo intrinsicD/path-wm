@@ -26,65 +26,65 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>
 <details id="01-overview" open>
 <summary><span>1 · The agent loop</span><small>General categorical agent · runtime data and control flow</small></summary>
-<div class="section-body"><p><strong>Red: to discuss. Blue: discussed. Green: validated within the labelled scope.</strong> <a href="architecture-discussion.md">Discussion and validation checklist</a>.</p><p>Red = a dedicated discussion remains. Blue = discussed, with validation still incomplete. Green = validated within the explicitly labelled test scope, not general capability. Discussion coverage is retained separately, including for green parts that still need a walkthrough. Evidence refers to the recorded configurations and must be revisited after relevant changes.</p><div class="diagram" role="img" aria-label="1 · The agent loop. General categorical agent · runtime data and control flow"><svg style="min-width:775px" width="968pt" height="954pt"
- viewBox="0.00 0.00 968.00 954.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="01-overview-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 939.76)">
+<div class="section-body"><p><strong>Red: to discuss. Blue: discussed. Green: validated within the labelled scope.</strong> <a href="architecture-discussion.md">Discussion and validation checklist</a>.</p><p>Red = a dedicated discussion remains. Blue = discussed, with validation still incomplete. Green = validated within the explicitly labelled test scope, not general capability. Discussion coverage is retained separately, including for green parts that still need a walkthrough. Evidence refers to the recorded configurations and must be revisited after relevant changes.</p><div class="diagram" role="img" aria-label="1 · The agent loop. General categorical agent · runtime data and control flow"><svg style="min-width:775px" width="968pt" height="971pt"
+ viewBox="0.00 0.00 968.00 971.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="01-overview-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 956.56)">
 <title>G</title>
-<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-939.76 953.63,-939.76 953.63,14.4 -14.4,14.4"/>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-956.56 953.63,-956.56 953.63,14.4 -14.4,14.4"/>
 <!-- world&#45;&gt;input -->
 <g id="01-overview-edge1" class="edge">
 <title>world&#45;&gt;input</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-872.68C252.67,-859.76 252.67,-843.61 252.67,-828.31"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-828.6 252.67,-821.6 250.22,-828.6 255.12,-828.6"/>
-<text xml:space="preserve" text-anchor="middle" x="315.51" y="-843.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">delivered observations</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-889.48C252.67,-876.56 252.67,-860.41 252.67,-845.11"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-845.4 252.67,-838.4 250.22,-845.4 255.12,-845.4"/>
+<text xml:space="preserve" text-anchor="middle" x="315.51" y="-859.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">delivered observations</text>
 </g>
 <!-- input&#45;&gt;encode -->
 <g id="01-overview-edge2" class="edge">
 <title>input&#45;&gt;encode</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-733.46C252.67,-719.14 252.67,-703.35 252.67,-689.75"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-689.83 252.67,-682.83 250.22,-689.83 255.12,-689.83"/>
-<text xml:space="preserve" text-anchor="middle" x="294.28" y="-704.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">source packets</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-750.26C252.67,-735.94 252.67,-720.15 252.67,-706.55"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-706.63 252.67,-699.63 250.22,-706.63 255.12,-706.63"/>
+<text xml:space="preserve" text-anchor="middle" x="294.28" y="-720.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">source packets</text>
 </g>
 <!-- encode&#45;&gt;belief -->
 <g id="01-overview-edge3" class="edge">
 <title>encode&#45;&gt;belief</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-627.97C252.67,-614.78 252.67,-598.52 252.67,-584.26"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-584.36 252.67,-577.36 250.22,-584.36 255.12,-584.36"/>
-<text xml:space="preserve" text-anchor="middle" x="321.77" y="-598.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">features + support times</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-644.77C252.67,-631.58 252.67,-615.32 252.67,-601.06"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-601.16 252.67,-594.16 250.22,-601.16 255.12,-601.16"/>
+<text xml:space="preserve" text-anchor="middle" x="321.77" y="-615.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">features + support times</text>
 </g>
 <!-- belief&#45;&gt;memory -->
 <g id="01-overview-edge4" class="edge">
 <title>belief&#45;&gt;memory</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-522.57C252.67,-510.09 252.67,-494.4 252.67,-478.77"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-478.77 252.67,-471.77 250.22,-478.77 255.12,-478.77"/>
-<text xml:space="preserve" text-anchor="middle" x="284.11" y="-492.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">store event</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-539.16C252.67,-526.72 252.67,-511.07 252.67,-495.22"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-495.59 252.67,-488.59 250.22,-495.59 255.12,-495.59"/>
+<text xml:space="preserve" text-anchor="middle" x="284.11" y="-509.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">store event</text>
 </g>
 <!-- belief&#45;&gt;workspace -->
 <g id="01-overview-edge6" class="edge">
 <title>belief&#45;&gt;workspace</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M169.93,-522.38C96.25,-499.53 0,-469.68 0,-469.68 0,-469.68 0,-350.16 0,-350.16 0,-350.16 96.24,-317.11 169.93,-291.81"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M169.93,-539.18C96.25,-516.33 0,-486.48 0,-486.48 0,-486.48 0,-350.16 0,-350.16 0,-350.16 96.24,-317.11 169.93,-291.81"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="170.48,-294.21 176.31,-289.62 168.89,-289.58 170.48,-294.21"/>
-<text xml:space="preserve" text-anchor="middle" x="35.33" y="-406.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="35.33" y="-415.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world tokens</text>
 </g>
 <!-- belief&#45;&gt;plan -->
 <g id="01-overview-edge11" class="edge">
 <title>belief&#45;&gt;plan</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M412.77,-525.64C578.27,-502.48 812.67,-469.68 812.67,-469.68 812.67,-469.68 812.67,-350.16 812.67,-350.16 812.67,-350.16 799.67,-316.96 799.67,-316.96 799.67,-316.96 782.87,-309.82 761.54,-300.75"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="762.75,-298.61 755.35,-298.12 760.84,-303.12 762.75,-298.61"/>
-<text xml:space="preserve" text-anchor="middle" x="870.53" y="-406.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">branch starting state</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M412.77,-542.44C578.27,-519.28 812.67,-486.48 812.67,-486.48 812.67,-486.48 812.67,-350.16 812.67,-350.16 812.67,-350.16 800.67,-316.96 800.67,-316.96 800.67,-316.96 783.73,-309.82 762.23,-300.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="763.39,-298.58 755.99,-298.12 761.49,-303.1 763.39,-298.58"/>
+<text xml:space="preserve" text-anchor="middle" x="870.53" y="-415.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">branch starting state</text>
 </g>
 <!-- memory&#45;&gt;belief -->
 <g id="01-overview-edge5" class="edge">
 <title>memory&#45;&gt;belief</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M303.86,-470.21C313.52,-481.4 320.67,-489.68 320.67,-489.68 320.67,-489.68 320.67,-502.88 320.67,-502.88 320.67,-502.88 310.56,-509.6 298.13,-517.85"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="296.9,-515.72 292.43,-521.64 299.61,-519.8 296.9,-515.72"/>
-<text xml:space="preserve" text-anchor="middle" x="356.7" y="-492.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">history reads</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M305.24,-486.7C314.19,-498.18 320.67,-506.48 320.67,-506.48 320.67,-506.48 320.67,-519.68 320.67,-519.68 320.67,-519.68 310.56,-526.4 298.13,-534.65"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="296.9,-532.52 292.43,-538.44 299.61,-536.6 296.9,-532.52"/>
+<text xml:space="preserve" text-anchor="middle" x="356.7" y="-509.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">history reads</text>
 </g>
 <!-- memory&#45;&gt;workspace -->
 <g id="01-overview-edge7" class="edge">
 <title>memory&#45;&gt;workspace</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-349.73C252.67,-331.81 252.67,-312.74 252.67,-297.1"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-297.45 252.67,-290.45 250.22,-297.45 255.12,-297.45"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M252.67,-349.81C252.67,-331.71 252.67,-312.91 252.67,-297.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="255.12,-297.48 252.67,-290.48 250.22,-297.48 255.12,-297.48"/>
 <text xml:space="preserve" text-anchor="middle" x="289.27" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">thinking read</text>
 </g>
 <!-- workspace&#45;&gt;emit -->
@@ -104,16 +104,16 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- request&#45;&gt;workspace -->
 <g id="01-overview-edge8" class="edge">
 <title>request&#45;&gt;workspace</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M558.19,-383.24C493.1,-357.71 393.44,-318.62 325.78,-292.08"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="327.07,-289.95 319.66,-289.68 325.28,-294.51 327.07,-289.95"/>
-<text xml:space="preserve" text-anchor="middle" x="480.45" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">interpreted task tokens</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M561.99,-391.73C495.92,-364.32 391.29,-320.91 322.31,-292.29"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="323.44,-290.11 316.03,-289.69 321.56,-294.63 323.44,-290.11"/>
+<text xml:space="preserve" text-anchor="middle" x="469.44" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">interpreted task tokens</text>
 </g>
 <!-- request&#45;&gt;plan -->
 <g id="01-overview-edge12" class="edge">
 <title>request&#45;&gt;plan</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M632.49,-383.24C639.9,-361.67 650.64,-330.42 659.29,-305.24"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="661.52,-306.29 661.48,-298.87 656.89,-304.7 661.52,-306.29"/>
-<text xml:space="preserve" text-anchor="middle" x="724.64" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">recipe&#45;defined goal / cost</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M631.92,-391.9C639.55,-368.43 651.02,-333.13 660.01,-305.46"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="662.24,-306.5 662.07,-299.09 657.58,-304.99 662.24,-306.5"/>
+<text xml:space="preserve" text-anchor="middle" x="726.09" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">recipe&#45;defined goal / cost</text>
 </g>
 <!-- plan&#45;&gt;act -->
 <g id="01-overview-edge13" class="edge">
@@ -132,9 +132,9 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- act&#45;&gt;world -->
 <g id="01-overview-edge14" class="edge">
 <title>act&#45;&gt;world</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M738.33,-175.09C764.06,-185.29 787.67,-194.64 787.67,-194.64 787.67,-194.64 859.67,-227.84 859.67,-227.84 859.67,-227.84 933.67,-350.16 933.67,-350.16 933.67,-350.16 933.67,-469.68 933.67,-469.68 933.67,-469.68 383.67,-853.04 383.67,-853.04 383.67,-853.04 361.19,-860.79 334.86,-869.86"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="334.36,-867.44 328.54,-872.04 335.96,-872.08 334.36,-867.44"/>
-<text xml:space="preserve" text-anchor="middle" x="897.73" y="-545.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">external action</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M738.33,-175.09C764.06,-185.29 787.67,-194.64 787.67,-194.64 787.67,-194.64 859.67,-227.84 859.67,-227.84 859.67,-227.84 933.67,-350.16 933.67,-350.16 933.67,-350.16 933.67,-486.48 933.67,-486.48 933.67,-486.48 383.67,-869.84 383.67,-869.84 383.67,-869.84 361.19,-877.59 334.86,-886.66"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="334.36,-884.24 328.54,-888.84 335.96,-888.88 334.36,-884.24"/>
+<text xml:space="preserve" text-anchor="middle" x="897.73" y="-562.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">external action</text>
 </g>
 <!-- reflect&#45;&gt;workspace -->
 <g id="01-overview-edge16" class="edge">
@@ -146,42 +146,43 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- world -->
 <g id="01-overview-node1" class="node">
 <title>world</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M352.08,-925.36C352.08,-925.36 153.26,-925.36 153.26,-925.36 147.26,-925.36 141.26,-919.36 141.26,-913.36 141.26,-913.36 141.26,-885.04 141.26,-885.04 141.26,-879.04 147.26,-873.04 153.26,-873.04 153.26,-873.04 352.08,-873.04 352.08,-873.04 358.08,-873.04 364.08,-879.04 364.08,-885.04 364.08,-885.04 364.08,-913.36 364.08,-913.36 364.08,-919.36 358.08,-925.36 352.08,-925.36"/>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-903.4" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">World / user / environment</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-886.6" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Images / video / audio / text</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M352.08,-942.16C352.08,-942.16 153.26,-942.16 153.26,-942.16 147.26,-942.16 141.26,-936.16 141.26,-930.16 141.26,-930.16 141.26,-901.84 141.26,-901.84 141.26,-895.84 147.26,-889.84 153.26,-889.84 153.26,-889.84 352.08,-889.84 352.08,-889.84 358.08,-889.84 364.08,-895.84 364.08,-901.84 364.08,-901.84 364.08,-930.16 364.08,-930.16 364.08,-936.16 358.08,-942.16 352.08,-942.16"/>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-920.2" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">World / user / environment</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-903.4" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Images / video / audio / text</text>
 </g>
 <!-- input -->
 <g id="01-overview-node2" class="node">
 <title>input</title>
-<path fill="#dcfce7" stroke="#15803d" stroke-width="1.1" d="M372.8,-819.84C372.8,-819.84 132.54,-819.84 132.54,-819.84 126.54,-819.84 120.54,-813.84 120.54,-807.84 120.54,-807.84 120.54,-745.92 120.54,-745.92 120.54,-739.92 126.54,-733.92 132.54,-733.92 132.54,-733.92 372.8,-733.92 372.8,-733.92 378.8,-733.92 384.8,-739.92 384.8,-745.92 384.8,-745.92 384.8,-807.84 384.8,-807.84 384.8,-813.84 378.8,-819.84 372.8,-819.84"/>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-797.88" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Observation adapters</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-781.08" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Values + time + validity + source</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-764.28" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Validated: Event mechanics</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-747.48" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Discussion still pending</text>
+<path fill="#dcfce7" stroke="#15803d" stroke-width="1.1" d="M372.8,-836.64C372.8,-836.64 132.54,-836.64 132.54,-836.64 126.54,-836.64 120.54,-830.64 120.54,-824.64 120.54,-824.64 120.54,-762.72 120.54,-762.72 120.54,-756.72 126.54,-750.72 132.54,-750.72 132.54,-750.72 372.8,-750.72 372.8,-750.72 378.8,-750.72 384.8,-756.72 384.8,-762.72 384.8,-762.72 384.8,-824.64 384.8,-824.64 384.8,-830.64 378.8,-836.64 372.8,-836.64"/>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-814.68" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Observation adapters</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-797.88" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Values + time + validity + source</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-781.08" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Validated: Event mechanics</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-764.28" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Discussion still pending</text>
 </g>
 <!-- encode -->
 <g id="01-overview-node3" class="node">
 <title>encode</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M381.42,-680.72C381.42,-680.72 123.92,-680.72 123.92,-680.72 117.92,-680.72 111.92,-674.72 111.92,-668.72 111.92,-668.72 111.92,-640.4 111.92,-640.4 111.92,-634.4 117.92,-628.4 123.92,-628.4 123.92,-628.4 381.42,-628.4 381.42,-628.4 387.42,-628.4 393.42,-634.4 393.42,-640.4 393.42,-640.4 393.42,-668.72 393.42,-668.72 393.42,-674.72 387.42,-680.72 381.42,-680.72"/>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-658.76" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Modality encoders &#45;&gt; section 2&#45;3</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-641.96" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Processed features at several scales</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M381.42,-697.52C381.42,-697.52 123.92,-697.52 123.92,-697.52 117.92,-697.52 111.92,-691.52 111.92,-685.52 111.92,-685.52 111.92,-657.2 111.92,-657.2 111.92,-651.2 117.92,-645.2 123.92,-645.2 123.92,-645.2 381.42,-645.2 381.42,-645.2 387.42,-645.2 393.42,-651.2 393.42,-657.2 393.42,-657.2 393.42,-685.52 393.42,-685.52 393.42,-691.52 387.42,-697.52 381.42,-697.52"/>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-675.56" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Modality encoders &#45;&gt; section 2&#45;3</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-658.76" font-family="DejaVu Sans" font-size="14.00" fill="#202a36">Processed features at several scales</text>
 </g>
 <!-- belief -->
 <g id="01-overview-node4" class="node">
 <title>belief</title>
-<path fill="#fee2e2" stroke="#b91c1c" stroke-width="1.1" d="M400.56,-575.2C400.56,-575.2 104.78,-575.2 104.78,-575.2 98.78,-575.2 92.78,-569.2 92.78,-563.2 92.78,-563.2 92.78,-534.88 92.78,-534.88 92.78,-528.88 98.78,-522.88 104.78,-522.88 104.78,-522.88 400.56,-522.88 400.56,-522.88 406.56,-522.88 412.56,-528.88 412.56,-534.88 412.56,-534.88 412.56,-563.2 412.56,-563.2 412.56,-569.2 406.56,-575.2 400.56,-575.2"/>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-553.24" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Predict and correct &#45;&gt; section 4</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-536.44" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Recurrent world state + categorical belief</text>
+<path fill="#fee2e2" stroke="#b91c1c" stroke-width="1.1" d="M400.56,-592C400.56,-592 104.78,-592 104.78,-592 98.78,-592 92.78,-586 92.78,-580 92.78,-580 92.78,-551.68 92.78,-551.68 92.78,-545.68 98.78,-539.68 104.78,-539.68 104.78,-539.68 400.56,-539.68 400.56,-539.68 406.56,-539.68 412.56,-545.68 412.56,-551.68 412.56,-551.68 412.56,-580 412.56,-580 412.56,-586 406.56,-592 400.56,-592"/>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-570.04" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Predict and correct &#45;&gt; section 4</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-553.24" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Recurrent world state + categorical belief</text>
 </g>
 <!-- memory -->
 <g id="01-overview-node5" class="node">
 <title>memory</title>
-<path fill="#dcfce7" stroke="#15803d" stroke-width="1.1" d="M412.94,-469.68C412.94,-469.68 92.4,-469.68 92.4,-469.68 86.4,-469.68 80.4,-463.68 80.4,-457.68 80.4,-457.68 80.4,-362.16 80.4,-362.16 80.4,-356.16 86.4,-350.16 92.4,-350.16 92.4,-350.16 412.94,-350.16 412.94,-350.16 418.94,-350.16 424.94,-356.16 424.94,-362.16 424.94,-362.16 424.94,-457.68 424.94,-457.68 424.94,-463.68 418.94,-469.68 412.94,-469.68"/>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-447.72" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Local / Global Context + optional World State</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-430.92" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">&#45;&gt; section 5/13</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-414.12" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Internal split to discuss / external</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-397.32" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">entities/evidence</text>
-<text xml:space="preserve" text-anchor="middle" x="252.67" y="-380.52" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Validated: Storage / causal reads</text>
+<path fill="#dcfce7" stroke="#15803d" stroke-width="1.1" d="M412.94,-486.48C412.94,-486.48 92.4,-486.48 92.4,-486.48 86.4,-486.48 80.4,-480.48 80.4,-474.48 80.4,-474.48 80.4,-362.16 80.4,-362.16 80.4,-356.16 86.4,-350.16 92.4,-350.16 92.4,-350.16 412.94,-350.16 412.94,-350.16 418.94,-350.16 424.94,-356.16 424.94,-362.16 424.94,-362.16 424.94,-474.48 424.94,-474.48 424.94,-480.48 418.94,-486.48 412.94,-486.48"/>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-464.52" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Local / Global Context + optional World State</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-447.72" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">&#45;&gt; section 5/13</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-430.92" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Internal split to discuss / external</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-414.12" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">entities/evidence</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-397.32" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Validated: Storage / causal reads / bounded</text>
+<text xml:space="preserve" text-anchor="middle" x="252.67" y="-380.52" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">lexical selection</text>
 <text xml:space="preserve" text-anchor="middle" x="252.67" y="-363.72" font-family="DejaVu Sans" font-size="14.00" fill="#14532d">Discussion still pending</text>
 </g>
 <!-- workspace -->
@@ -194,9 +195,9 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- request -->
 <g id="01-overview-node7" class="node">
 <title>request</title>
-<path fill="#fee2e2" stroke="#b91c1c" stroke-width="1.1" d="M790.3,-436.08C790.3,-436.08 457.04,-436.08 457.04,-436.08 451.04,-436.08 445.04,-430.08 445.04,-424.08 445.04,-424.08 445.04,-395.76 445.04,-395.76 445.04,-389.76 451.04,-383.76 457.04,-383.76 457.04,-383.76 790.3,-383.76 790.3,-383.76 796.3,-383.76 802.3,-389.76 802.3,-395.76 802.3,-395.76 802.3,-424.08 802.3,-424.08 802.3,-430.08 796.3,-436.08 790.3,-436.08"/>
-<text xml:space="preserve" text-anchor="middle" x="623.67" y="-414.12" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Task request</text>
-<text xml:space="preserve" text-anchor="middle" x="623.67" y="-397.32" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Instruction + output controls + actor metadata</text>
+<path fill="#fee2e2" stroke="#b91c1c" stroke-width="1.1" d="M790.3,-444.48C790.3,-444.48 457.04,-444.48 457.04,-444.48 451.04,-444.48 445.04,-438.48 445.04,-432.48 445.04,-432.48 445.04,-404.16 445.04,-404.16 445.04,-398.16 451.04,-392.16 457.04,-392.16 457.04,-392.16 790.3,-392.16 790.3,-392.16 796.3,-392.16 802.3,-398.16 802.3,-404.16 802.3,-404.16 802.3,-432.48 802.3,-432.48 802.3,-438.48 796.3,-444.48 790.3,-444.48"/>
+<text xml:space="preserve" text-anchor="middle" x="623.67" y="-422.52" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Task request</text>
+<text xml:space="preserve" text-anchor="middle" x="623.67" y="-405.72" font-family="DejaVu Sans" font-size="14.00" fill="#7f1d1d">Instruction + output controls + actor metadata</text>
 </g>
 <!-- plan -->
 <g id="01-overview-node8" class="node">
@@ -232,7 +233,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 </svg>
 </div>
 <p><strong>Observation adapters — validated scope:</strong> Packet deduplication/order, one action/time advance per event, commit-once and masked-input handling. Complete-event union scheduling now avoids repeated preparation with matched current-component posterior/gradient/RNG checks. <strong>Still open:</strong> Live webcam capture, cross-device synchronization and real streaming are not validated. Discussion walkthrough still pending. Custom stochastic/stateful encoders may change call/RNG histories under complete-event scheduling. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Event, masking and timestamp checks</a> · <a href="../runs/token_budget_final_v1/verification.json">87 scoped token-budget, belief, modality and World State checks</a>.</span></p>
-<p><strong>Local / Global Context + optional World State → §5/13 — validated scope:</strong> Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task. Audio/video/text and image packets now pass separate and mixed actual WorldSession/thinker paths after correcting a four-versus-eight categorical-code memory mismatch. The evidence-loop slice additionally checks source supersession, no implicit fallback, exact restart, per-chunk stale-read rejection, explicit unknown recovery and response completion/abort in an EpisodeClient sharing the session. <strong>Still open:</strong> This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision. Real media transport and tiny direct codec fitting do not establish state-conditioned output quality or cross-modal identity. RGB16 detail codes use supplied association and four familiar transforms; population WorldStore serialization and one live-session demonstration are separate evidence scopes. Typed text/audio references and output authorization do not establish dialogue or playback. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Memory bounds, provenance and causal-read checks</a> · <a href="../docs/photo-detail-plan.md">Photo recall limitations</a> · <a href="../runs/world_state_foundation_v1/verification.json">World State: 3293 independent development checks</a> · <a href="../runs/world_state_foundation_v1/focused-tests.xml">81 scoped World State and regression tests</a> · <a href="../docs/world-state-foundation-plan.md">Foundation protocol, failures, repairs and limits</a> · <a href="../runs/modality_foundation_v1/verification.json">Non-image modality audit: 6075 artifact checks; repair gate failed</a> · <a href="../runs/modality_foundation_v1/final-tests.xml">112 scoped modality, World State and regression tests</a> · <a href="../tests/test_episodes.py">Episode, source revision, abort and emission contracts (11 focused tests)</a> · <a href="../runs/evidence_loop_final_s17/result.json">Seed17 bounded detail-code quality and live-session checks</a> · <a href="../runs/evidence_loop_final_s29/result.json">Seed29 bounded detail-code quality and live-session checks</a> · <a href="../docs/evidence-loop-plan.md">Protocol, failed first fit, repair sequence and scope</a>.</span></p>
+<p><strong>Local / Global Context + optional World State → §5/13 — validated scope:</strong> Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task. Audio/video/text and image packets now pass separate and mixed actual WorldSession/thinker paths after correcting a four-versus-eight categorical-code memory mismatch. The evidence-loop slice additionally checks source supersession, no implicit fallback, exact restart, per-chunk stale-read rejection, explicit unknown recovery and response completion/abort in an EpisodeClient sharing the session. The bounded-context continuation validates flat/Local–Global component pins over a live session, owner/version/epoch checks and an optional TaskPolicy ranker. Two seeds reach 100% current-source agreement on held-out two-alias pairings with supplied identity, exact copying and complete 32-key search. <strong>Still open:</strong> This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision. Real media transport and tiny direct codec fitting do not establish state-conditioned output quality or cross-modal identity. RGB16 detail codes use supplied association and four familiar transforms; population WorldStore serialization and one live-session demonstration are separate evidence scopes. Typed text/audio references and output authorization do not establish dialogue or playback. Counted lookup also reaches 100%; context reset/swap leaves answers unchanged, so this adds no evidence of useful learned retention or layout advantage. Source agreement is not truth, language, entity discovery or concept induction. The pending user walkthrough remains separate. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Memory bounds, provenance and causal-read checks</a> · <a href="../docs/photo-detail-plan.md">Photo recall limitations</a> · <a href="../runs/world_state_foundation_v1/verification.json">World State: 3293 independent development checks</a> · <a href="../runs/world_state_foundation_v1/focused-tests.xml">81 scoped World State and regression tests</a> · <a href="../docs/world-state-foundation-plan.md">Foundation protocol, failures, repairs and limits</a> · <a href="../runs/modality_foundation_v1/verification.json">Non-image modality audit: 6075 artifact checks; repair gate failed</a> · <a href="../runs/modality_foundation_v1/final-tests.xml">112 scoped modality, World State and regression tests</a> · <a href="../tests/test_episodes.py">Episode, source revision, abort and emission contracts (11 focused tests)</a> · <a href="../runs/evidence_loop_final_s17/result.json">Seed17 bounded detail-code quality and live-session checks</a> · <a href="../runs/evidence_loop_final_s29/result.json">Seed29 bounded detail-code quality and live-session checks</a> · <a href="../docs/evidence-loop-plan.md">Protocol, failed first fit, repair sequence and scope</a> · <a href="../docs/context-retrieval-plan.md">Registered lexical retrieval protocol, controls and limits</a> · <a href="../runs/context_final_s17_v1/result.json">Seed17 lexical pairings and live-episode checks</a> · <a href="../runs/context_final_s29_v1/result.json">Seed29 lexical pairings and live-episode checks</a> · <a href="../tests/test_working_context.py">Bounded pins, epochs, task ownership and restart contracts</a>.</span></p>
 <p><strong>Optional bounded planner → §11 — validated scope:</strong> Fixed-horizon candidate evaluation, common sampling, caller-state preservation and RNG restoration; supplied key-box search has independent replay. <strong>Still open:</strong> This does not validate learned dynamics, general goal achievement or the proposed action DAG. The linked initial key-box integrated capability screen failed. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_data_and_planning.py">Candidate rejection and state preservation</a> · <a href="../runs/key_box_v1/verification.json">Independent search replay; integrated screen failed</a>.</span></p>
 <p><strong>Generated-content reflection — validated scope:</strong> Re-encoded generated outputs can change workspace while leaving physical belief/history unchanged; generated content cannot enter source evidence. <strong>Still open:</strong> Useful self-reflection and quality of generated content are not established by these routing tests. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Reflection boundary check</a> · <a href="../tests/test_tasks.py">Loopback and provenance checks</a>.</span></p>
 <p class="links"><a href="diagrams/atlas/01-overview.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
@@ -1435,7 +1436,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>The feature controller can propose a bounded feature code for supported reads. It is excluded from categorical source encoding. Reflection uses shared encoder weights but preserves generated ancestry; it is not a new camera event.</p>
 <p>finish is a policy/session operation, not independent proof of task success. The historical-recall experiment has an external verifier based on the delivered event log. General tool execution, open-ended decomposition and calibrated stopping remain incomplete.</p>
 <p>The current Thinker already repeats the same Attend parameters; only working/reasoning tokens change. General answer planning is not established by these named token slices. Atlas14-15 and docs/latent-core.md separate this shared multimodal mechanism from optional modality-specific readout adapters.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskInterpreter:419</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskPolicy:442</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · MetadataEncoder:397</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · emit:508</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · reflect:404</a></li><li><a href="../pathwm/models/recall.py">pathwm/models/recall.py · verify_recall:144</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskInterpreter:419</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskPolicy:467</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · MetadataEncoder:397</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · emit:508</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · reflect:404</a></li><li><a href="../pathwm/models/recall.py">pathwm/models/recall.py · verify_recall:144</a></li></ul></details>
 </div></details>
 <details id="07-decoders">
 <summary><span>7 · How state reaches each output modality</span><small>General multimodal recipe · reference decoders are small learned readouts</small></summary>
@@ -3857,7 +3858,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>CI1: Eingangsslot-Farbprobe100%; neuer Kern-Farbpfad bei fester Wahrnehmung Basis/Farbpaar100%, Positionspaar99,22%, Erhaltung bestanden. Encoderadaption: Positionspaar100%, Form99,32→71,88% und Größe100→95,21%; Erhaltung verfehlt, nicht übernommen. Ein Seed, externe Zeigeposition, synthetische Ansichten; Split nur im Diagnosetraining, keine volle Vortrainings-/Induktionsvalidierung. Berichte runs/core_information_ci1/, Rohdaten unabhängig geprüft.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../docs/integrated-architecture-plan.md">docs/integrated-architecture-plan.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/shared-abstraction-spec.md">docs/shared-abstraction-spec.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeaturePyramid:35</a></li><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:189</a></li><li><a href="../pathwm/models/slots.py">pathwm/models/slots.py · SlotPerception:112</a></li><li><a href="../pathwm/models/latent_core.py">pathwm/models/latent_core.py · LatentCore:46</a></li><li><a href="../pathwm/world_state/concepts.py">pathwm/world_state/concepts.py · ConceptAgent:278</a></li><li><a href="../pathwm/data/rule_world.py">pathwm/data/rule_world.py · TaskContract:486</a></li><li><a href="../pathwm/evaluation/rule_world.py">pathwm/evaluation/rule_world.py · run_life:410</a></li><li><a href="../experiments/latent_agent.py">experiments/latent_agent.py</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:92</a></li><li><a href="../pathwm/world_state/unified.py">pathwm/world_state/unified.py · UnifiedAgent:185</a></li><li><a href="../experiments/unified_session.py">experiments/unified_session.py</a></li><li><a href="../tests/test_unified_session.py">tests/test_unified_session.py</a></li><li><a href="../tests/test_unified_testimony.py">tests/test_unified_testimony.py</a></li><li><a href="../tests/test_unified_claim_provenance.py">tests/test_unified_claim_provenance.py</a></li></ul></details>
 </div></details>
-<footer>Grounded in repository snapshot b2ee017145bdd408e6519d73ec6f8323edeaf119. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
+<footer>Grounded in repository snapshot e442d92 + bounded-context working tree (exact source hashes in run receipts). Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>
 const panels = [...document.querySelectorAll('main > details')];
 document.getElementById('expand').addEventListener('click', () => panels.forEach(p => p.open = true));

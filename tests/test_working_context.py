@@ -74,7 +74,7 @@ def test_stale_retraction_replacement_version_and_tampered_restart():
     snapshot['entries'][0]['component_id'] = cid
     with pytest.raises(ValueError):
         WorkingContext.restore(store, snapshot, representations={'detail': ('fact', 'v1')})
-    tx = store.begin('withdraw', occurred_at=3., available_at=3., kind='correction')
+    tx = store.begin('withdraw', occurred_at=3., available_at=3., kind='correction', payload={'source': 'person'})
     tx.retract_evidence(store.component(current).evidence[0])
     store.commit(tx)
     with pytest.raises(ValueError, match='Stale'):
@@ -94,3 +94,29 @@ def test_budget_omission_is_explicit_and_retention_has_no_world_time():
         context.retain(cid, task='A', scope='external')
     context.reset()
     assert not context.snapshot()['entries']
+
+
+def test_epoch_races_owner_binding_and_corruption():
+    store = WorldStore()
+    cid, _ = put(store, 'first')
+    context = WorkingContext(store, representations={'detail': ('fact', 'v1')}, owner='world/train')
+    context.retain(cid, task='A')
+    epoch = store.revision
+    value = context.read('A', expected_revision=epoch)
+    assert value
+    snap = context.snapshot()
+    with pytest.raises(ValueError):
+        WorkingContext.restore(store, snap, representations={'detail': ('fact', 'v1')}, owner='world/test')
+    with pytest.raises(ValueError):
+        WorkingContext.restore(store, snap, representations={'detail': ('fact', 'v1')}, owner='world/train', layout='local_global')
+    snap['entries'][0]['task'] = 'B'
+    with pytest.raises(ValueError):
+        WorkingContext.restore(store, snap, representations={'detail': ('fact', 'v1')}, owner='world/train')
+    put(store, 'new', value='corrected')
+    with pytest.raises(ValueError, match='Stale'):
+        context.validate('A', expected_revision=epoch)
+    with pytest.raises(ValueError, match='Stale'):
+        context.read('A', expected_revision=epoch)
+    # Null/no-pin decisions still need an epoch check before consumption.
+    with pytest.raises(ValueError, match='Stale'):
+        context.validate('empty', expected_revision=epoch)

@@ -229,6 +229,12 @@ speech timing and learned language grounding are not established by current code
 
 ### First complete demonstration to specify (proposal)
 
+Continuation update: the [bounded context slice](context-retrieval-plan.md) adds versioned
+flat/Local–Global pins and optional TaskPolicy lexical ranking. Two seeds pass held-out
+alias pairings, but counted lookup matches them and context reset/swap changes no answers.
+Useful learned retention and autonomous graph access remain open. This implementation
+does not complete the pending user walkthrough.
+
 Implementation update: the [evidence-loop slice](evidence-loop-plan.md) now passes
 two-seed controlled RGB16 reconstruction/revision gates, with session and reactive
 episode mechanics tested. Learned dialogue, natural-human views and general concept

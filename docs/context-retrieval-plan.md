@@ -101,3 +101,149 @@ Plan/check step: `tests/test_working_context.py` fails collection because the pl
 `ContextSelector` does not yet exist (saved `red-tests.log`, exit 2). These tests
 specify masking/null gradients, bounded eviction, task isolation, exact payload,
 restart, stale/version rejection and explicit budget omission before implementation.
+
+Local contract review added owner-bound/checksummed portable snapshots, strict
+schema/layout checks and explicit epoch validation before synchronous consumption,
+including null decisions. This conservative epoch rejects even unrelated concurrent
+writes; it is not an atomic external emitter. Existing EpisodeClient commit-time
+pins remain the external/session output path. Trusted caller task labels and checksums
+are not security authentication. Restore constructs a new object or fails entirely.
+
+Development reports evaluate train-type (IID) phrases only. No early stopping,
+learned threshold selection or tuning on final two-alias pairings. Fixed 1200-step
+schedule; the final seed-624927 population and source/settings identities are frozen
+before evaluation. Interval uncertainty is descriptive per seed, not pooled evidence.
+Each normal/corrected answer agrees with the current source assertion, not established
+world truth. Unknown and answerable queries draw the same pre-query candidate set.
+
+## Development and local repair record
+
+`runs/context_dev_s17_v1/` passed its IID development gates at 1200 updates:
+learned and counted selection both 100%, canonical lexical baseline 36.17%.
+This is not a final/generalization result. No quality setting was changed afterward.
+Local review tightened the event schedule: delayed queries now reference the first
+eight facts (24–31 later source events); resumed queries revisit those same facts
+after interleaving/correction and restore before the resumed phase.
+
+The first live-session integration check failed because WorldSession atomically
+replaces its WorldStore on commit, while context held the previous object. The
+context now accepts the authoritative session and resolves its current store on
+every use. Preserve `focused-v3.log`; repaired 20-check suite: `focused-v4.log`.
+Added a distinct result-completed/report-failed check. No failed artifact is a pass.
+
+## Completed learning comparison
+
+Both final seeds pass all declared source-agreement gates, separately on IID and
+previously unseen two-alias pairings, in both layouts. Each seed evaluates 64 worlds
+and 2560 queries per split, including 512 unknowns. All five strata reach 100%;
+unknown precision/recall are 100% (Wilson intervals retained in raw results).
+
+| Held-out pairing, flat view | Seed 17 | Seed 29 |
+| --- | ---: | ---: |
+| Learned source agreement | 100% | 100% |
+| Counted-table source agreement | 100% | 100% |
+| Generator-rule reference | 100% | 100% |
+| Canonical-only / no-read | 20% / 20% | 20% / 20% |
+| Learned selection + validated-copy p95 | 227.31 µs | 227.89 µs |
+| Counted-table selection + validated-copy p95 | 229.52 µs | 228.13 µs |
+| Rule selection + validated-copy p95 | 152.32 µs | 152.47 µs |
+
+The latency column is the recipe's `end_to_end` metric: selection, context mutation,
+validation and synchronous payload copying. It excludes offline ingestion, candidate
+metadata preparation, simulated episode protocol and report instrumentation. It is
+not full agent latency. Both seeds satisfy the <=2x rule-reader latency gate here;
+no GPU or general efficiency claim follows. Matrix arithmetic in the neural ranker
+is approximately 8960 multiply-accumulates/query (two 16-wide projections over one
+query and 32 keys, then their dot products), excluding embeddings/masks and Python.
+
+**Negative findings remain visible:** learned-minus-counted agreement =0; Local/
+Global-minus-flat =0. Each split checks 1024 actual reset interventions and 1024
+task-label swaps on resumed queries; answers remain identical. Complete bounded
+search does not depend on retained context. The experiment therefore establishes
+neither useful learned retention nor a layout benefit. Removing supplied identity
+eligibility reduces agreement to39.49% on both splits/seeds; entity association is
+not learned. No ambiguous words, unseen vocabulary or free language are tested.
+
+The selector has705 trained /1213 total parameters; the remainder are frozen
+coarse TaskPolicy heads. Adam tensors occupy5656 bytes; saved autograd tensors
+325636 bytes (not allocator peak). Mean training step is1.39 ms, 1200 updates/seed;
+whole train/evaluation invocation23.20 s. Process peak RSS is711–712 MiB and includes
+Python/PyTorch plus evaluation. Largest serialized per-world store43851 bytes;
+active-context snapshots approximately1.2 KiB. Raw rows meter32 candidate keys,
+<=2 payload reads and <=4 retained references; payload/metadata bytes are saved.
+
+### Correction, episode and reconstruction scope
+
+Each split rejected512 deliberately superseded retained reads. Exact copies,
+store/context restart, and query-budget checks pass. A separate **actual
+WorldSession** demonstration saves session and context, restores both, rejects an
+interrupted output and a stale dependency, rederives the corrected assertion and
+records a checked response. All nine episode checks pass on both trained models.
+Generated responses create no source evidence. Population store/context restart
+and this small neural-session demo are separate scopes, not a claim that every
+population query exercised a trained conversation loop.
+
+Frozen existing codec checkpoints retain bit-identical direct versus recalled-code
+outputs over512 original held-out RGB16 textures and all four familiar views.
+Mean MSE: seed17 **0.00024258**, seed29 **0.00023893**; every pose is below0.003.
+Weights are unchanged, training updates0. This is regression evidence, not an
+improvement in reconstruction or concept learning.
+
+### Artifacts and reproduction
+
+- Learned comparisons: `runs/context_final_s17_v1/`, `runs/context_final_s29_v1/`.
+  Each contains `last.pt`, `run.json`, source snapshot, raw `metrics.jsonl`, per-query
+  `iid-predictions.jsonl`/`pairing-predictions.jsonl`, `result.json`, episode snapshots,
+  `episode-checks.json`, and standalone `report.html`.
+- Frozen reconstruction: `runs/context_codec_regression_s17_v1/` and
+  `runs/context_codec_regression_s29_v1/`; raw predictions/targets, checkpoint and report.
+- Claude: four substantive actual Opus5.5 medium rounds, session
+  `5af6c291-64b3-40fc-b95b-1d9019a806e5`. Exact public briefs, replies, returned model
+  usage and failures remain in the review directory. No private code/results exported.
+  Claude reviewed generic contracts; private implementation was reviewed locally.
+- The initial full-suite attempt was intentionally stopped after38.38 s for a
+  report-completeness repair; exit-15 is retained as `full-suite-attempt1-exit.json`
+  and is not a pass. Reports now embed representative saved predictions for every
+  stratum. Historical run reports were repaired from existing raw rows only by
+  `enrich_reports.py`, with a repair receipt; no metric/model/selection changed.
+  The ordinary recipe now includes these examples without a postprocessing step.
+- Report verification uses the existing unchanged renderer and structural checks;
+  no new browser-QA claim. The tiny exact-resume check compares weights, count buffers,
+  sampler, update count and deterministic metrics. Report failure preserves completed
+  raw results and marks report failure separately.
+
+```bash
+.venv/bin/python -m experiments.context_retrieval --output runs/my_context_s17 --seed 17 --final
+.venv/bin/python -m experiments.context_retrieval --output runs/my_context_s29 --seed 29 --final
+# Tiny workflow; resumption requires identical steps/worlds/seed/final settings and source.
+.venv/bin/python -m experiments.context_retrieval --output runs/my_context_check --steps 6 --worlds 1 --stop-after 3
+.venv/bin/python -m experiments.context_retrieval --output runs/my_context_check --steps 6 --worlds 1 --resume
+.venv/bin/python -m pytest tests/test_working_context.py tests/test_context_recipe.py tests/test_episodes.py
+```
+
+## Remaining architecture work
+
+Keep this selector optional; counting already solves this task. Next context-control
+experiment should separately preregister a workload exceeding the scan budget,
+with a strong indexed baseline, candidate discovery/retention interventions and a
+measurable dependency on retained context. Do not silently turn this complete-search
+result into evidence for that capability. Goal-conditioned allocation, concept/
+instance induction, learned association, noisy correlated evidence, harder visual
+alignment, shared-depth quality/compute, audio dialogue and optional planning remain
+owned by the continuation handoff. The full integrated architecture is not complete.
+
+## Final verification
+
+Full `.venv/bin/python -m pytest`: **848 passed in622.19 seconds**, exit0.
+The durable supervisor independently confirms source unchanged across all model,
+recipe and test files. Log/receipt: `runs/reviews/architecture_continuation_20260924/`
+`full-suite.log` and `full-suite-exit.json`. The earlier stopped attempt is separate.
+The full suite includes10 new focused checks alongside the838 prior tests.
+Independent raw-row audit recomputes both seeds' per-arm agreement and checks
+budgets, delayed-source ages and context-intervention counts (`raw-audit.json`).
+`artifact-audit.json` binds checkpoint, result/report hashes and unchanged shared
+source; saved recipe differences are exclusively the report-example addition.
+YAML/session counts, affected local documentation links, regenerated atlas and
+`git diff --check` pass. Reports remain structurally verified with the unchanged
+renderer; no browser-QA claim. Completed bounded slice; remaining architecture
+questions are explicitly retained above and in the continuation handoff.

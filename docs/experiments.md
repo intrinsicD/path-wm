@@ -1,3 +1,13 @@
+For the **bounded context / lexical retrieval continuation**, run
+`.venv/bin/python -m experiments.context_retrieval --output runs/my_context --seed 17 --final`.
+The [registered protocol and results](context-retrieval-plan.md) cover delayed facts,
+explicit correction, episode restart, exact copies, unknowns, counted/fixed controls
+and flat/Local–Global views. Two seeds pass source agreement; counting matches the
+learned head, and context resets/swaps show no retention dependency. This is not
+natural language or autonomous context learning. Each run owns raw predictions,
+checkpoint, source identities and standalone report; source/settings must match for
+`--resume`. See the plan for a tiny paused/resumed workflow.
+
 For the **integrated latent-agent reference integration (R1, RuleWorld-64)**, run
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage check --output runs/my_r1_check`,
 then the staged `audit/perception/core/symbolic/evaluate/gates` commands in the

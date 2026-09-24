@@ -439,8 +439,34 @@ class TaskInterpreter(nn.Module):
         )
 
 
+class ContextSelector(nn.Module):
+    """Supervised key ranking with an explicit null, not source authentication.
+
+    Query [B,D], candidate metadata [B,N,D], eligibility [B,N] -> [B,N+1].
+    Payloads and correctness labels must stay outside the input features.
+    """
+
+    def __init__(self, width):
+        super().__init__()
+        self.query = nn.Linear(width, width, bias=False)
+        self.key = nn.Linear(width, width, bias=False)
+        self.null = nn.Parameter(torch.zeros(()))
+
+    def forward(self, query, candidates, valid):
+        if (query.ndim != 2 or candidates.ndim != 3 or
+                candidates.shape[0] != query.shape[0] or
+                candidates.shape[2] != query.shape[1] or
+                valid.shape != candidates.shape[:2] or valid.dtype != torch.bool):
+            raise ValueError("Context ranking needs query [B,D], keys [B,N,D], boolean eligibility")
+        scores = torch.einsum('bd,bnd->bn', self.query(query), self.key(candidates))
+        scores = scores / query.shape[-1] ** .5
+        return torch.cat((scores.masked_fill(~valid, -torch.inf),
+                          self.null.expand(len(query), 1)), dim=1)
+
+
 class TaskPolicy(nn.Module):
-    def __init__(self, width, modalities=("image", "audio", "text", "video")):
+    def __init__(self, width, modalities=("image", "audio", "text", "video"), *,
+                 context_selector=None):
         super().__init__()
         if not modalities or len(set(modalities)) != len(modalities):
             raise ValueError("Declare distinct policy output modalities")
@@ -451,6 +477,13 @@ class TaskPolicy(nn.Module):
         self.operation = nn.Linear(width, len(OPERATIONS))
         self.modality = nn.Linear(width, len(modalities))
         self.completion = nn.Linear(width, 1)
+        self.context_selector = context_selector
+
+    def rank_context(self, query, candidates, valid):
+        """Optional fine-grained selection under the existing task owner."""
+        if self.context_selector is None:
+            raise ValueError("No context selector configured")
+        return self.context_selector(query, candidates, valid)
 
     def forward(self, tokens):
         x = self.process(tokens.mean(1))

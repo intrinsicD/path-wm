@@ -7038,3 +7038,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O400
+  timestamp: 2026-09-24T14:36+02:00
+  provenance: ai-suggested
+  content: A small supervised key ranker transfers learned per-slot synonym mappings to unseen pairings under
+    supplied identity and complete bounded candidate search. Matching counted lookup and null context-reset/swap
+    effects give no evidence of useful learned retention, layout advantage or general language.
+  context: Two-seed registered lexical retrieval continuation; actual Claude medium reviewed public generic
+    contracts, private implementation reviewed locally.
+  potential_type: claim
+  bound_to:
+  - N575
+  - N576
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

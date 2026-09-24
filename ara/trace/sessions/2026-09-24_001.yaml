@@ -2,9 +2,9 @@ session:
   id: 2026-09-24_001
   date: '2026-09-24'
   started: 2026-09-24T12:52+02:00
-  last_turn: 2026-09-24T13:34+02:00
-  turn_count: 2
-  summary: Evidence-loop implemented through five Claude Opus5.5 medium rounds and local audits. First fit failed; repaired two-seed RGB16 final gates pass. 838 repository tests pass; natural language/audio and general concepts unproven.
+  last_turn: 2026-09-24T14:36+02:00
+  turn_count: 3
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open."
 events_logged:
 - turn: 1
   type: question
@@ -49,6 +49,31 @@ events_logged:
   provenance: ai-suggested
   summary: Scoped detail-memory interpretation, no general capability promotion.
 
+- turn: 3
+  type: decision
+  id: N574
+  routing: direct
+  provenance: user
+  summary: Continue architecture in measurable slices with actual Claude medium
+- turn: 3
+  type: experiment
+  id: N575
+  routing: direct
+  provenance: ai-executed
+  summary: Bounded lexical context retrieval matches counting; retention benefit absent
+- turn: 3
+  type: experiment
+  id: N576
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen detail codec remains unchanged through context continuation
+- turn: 3
+  type: observation
+  id: O400
+  routing: staged
+  provenance: ai-suggested
+  summary: Narrow lexical transfer; no learned retention or general language inference.
+
 ai_actions:
 - turn: 1
   action: Inspected current plans/source; updated walkthrough, atlas coverage and project-state pointer.
@@ -70,13 +95,31 @@ ai_actions:
   - experiments/evidence_loop.py
   - docs/evidence-loop-plan.md
 
+- turn: 3
+  action: Implemented optional TaskPolicy ranking, bounded session-aware context pins and ordinary retrieval
+    recipe; four actual Claude medium public-only rounds; ran two controlled seeds and frozen codec regression;
+    repaired standalone reports from saved examples.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/tasks.py
+  - pathwm/world_state/context.py
+  - pathwm/data/episode_facts.py
+  - experiments/context_retrieval.py
+  - docs/context-retrieval-plan.md
+
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: User asks what to work on now to complete architecture; prior discussion supplies concept-instance,
     evidence and conversation requirements, not proof of learned capability.
+- turn: 3
+  excerpt: 'User: Continue from docs/architecture-continuation-handoff.md with Claude Opus 5.5 at medium effort.
+    Plan, implement, review and test the remaining work in measurable slices.'
+
 open_threads:
 - 'N569: bounded contracts now implemented; general learned concepts/context/language/audio remain open.'
 - Existing failed transfer/retention and natural language/audio learning remain unresolved.
+- 'N575: preregister scan-limited candidate discovery/retention with a strong indexed baseline; current complete search does not establish retention utility.'
 ai_suggestions_pending:
 - 'O398: proposed design order and visual demonstration, then grounded text and audio.'
+- 'O400: scoped lexical-selection interpretation remains staged; no user empirical endorsement.'
