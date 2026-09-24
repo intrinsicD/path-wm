@@ -80,7 +80,7 @@ def describe(perception_run=None, identity_run=None, learned_keys=False):
 KEY_ARCHITECTURE = f"pathwm.models.latent_core.key_head({WIDTH}, {KEY})"
 
 
-def build(seed, perception_run=None, identity_run=None, *, shared_key=False):
+def build(seed, perception_run=None, identity_run=None, *, shared_key=False, candidate_scope="all"):
     """Fresh modules. The belief's image encoder IS the slot consumer's encoder.
 
     `perception_run`: an R1 perception run directory (read-only) whose `last.pt`
@@ -93,6 +93,10 @@ def build(seed, perception_run=None, identity_run=None, *, shared_key=False):
     """
     if perception_run is not None and identity_run is not None:
         raise ValueError("Load perception from one run: use identity_run alone")
+    if candidate_scope not in ("all", "predicted-machine"):
+        raise ValueError("Unknown candidate scope")
+    if candidate_scope == "predicted-machine" and identity_run is None and not shared_key:
+        raise ValueError("Machine candidate scope requires the exported machine identity key")
     torch.manual_seed(seed)
     perception = SlotPerception(WIDTH, 7, 3)
     core = LatentCore(WIDTH)
@@ -117,6 +121,8 @@ def build(seed, perception_run=None, identity_run=None, *, shared_key=False):
     agent = build_model(width=WIDTH, state_model="belief", memory_recent=2, memory_block=2, memory_blocks=1)
     agent.encoders["image"] = perception.encoder
     candidates = CandidateEncoder(WIDTH, KEY, VALUE, key=core.key_head if shared_key else None)
+    if candidate_scope != "all":
+        source["candidate_scope"] = candidate_scope
     candidates.key_source = source
     actions = ActionEncoder(WIDTH, agent.action_width)
     updater = RecurrentUpdater(VALUE, STATE)
@@ -141,7 +147,8 @@ def load_models(path, seed=0):
     path = Path(path)
     config = path.with_name("models.json")
     source = json.loads(config.read_text())["candidate_key"] if config.exists() else dict(source="own_projection")
-    modules = build(seed, shared_key=source["source"] != "own_projection")
+    modules = build(seed, shared_key=source["source"] != "own_projection",
+                    candidate_scope=source.get("candidate_scope", "all"))
     saved = torch.load(path, weights_only=True)
     for name, module in modules.items():
         module.load_state_dict(saved[name])
@@ -279,17 +286,18 @@ def summary(agent):
 
 @torch.no_grad()
 def life(directory, *, seed=0, scenes=4, per_machine=4, restart_after=2, perception_run=None, fixture=True,
-         identity_run=None):
+         identity_run=None, binding_calibration=None):
     """Persistent machines across `scenes` layouts; restart after `restart_after`.
 
     fixture=True binds with `pixel_candidates` (SOFTWARE); False uses the learned
     (here untrained) slot candidate encoder."""
     directory = Path(directory)
     g = torch.Generator().manual_seed(seed)
-    modules = build(seed, perception_run, identity_run)
+    binder, policy = visual_binding_policy(binding_calibration, identity_run)
+    modules = build(seed, perception_run, identity_run, candidate_scope=policy["candidate_scope"] if policy else "all")
     save_models(modules, directory / "models.pt")
     memory_dir = directory / "memory"
-    agent = new_agent(modules, memory_dir)
+    agent = new_agent(modules, memory_dir, binder=binder)
     keys = pixel_candidates(agent) if fixture else None
     kinds = torch.tensor([list(rw.KIND_SPLIT["train"][:2])])
     train = rw.split_rules()["train"]
@@ -328,7 +336,7 @@ def life(directory, *, seed=0, scenes=4, per_machine=4, restart_after=2, percept
             agent.save(memory_dir)
             before = dict(summary=summary(agent), plan=_plan_snapshot(agent, goal))
             modules = load_models(directory / "models.pt", seed + 1)  # fresh objects, saved weights
-            agent = restore_agent(modules, memory_dir)
+            agent = restore_agent(modules, memory_dir, binder=binder)
             keys = pixel_candidates(agent) if fixture else None
             agent.resume_view()
             after = dict(summary=summary(agent), plan=_plan_snapshot(agent, goal))
@@ -346,6 +354,381 @@ def _plan_snapshot(agent, goal):
                 value=round(decision.value, 6), read=[list(c) for c in read.components])
 
 
+@torch.no_grad()
+def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
+    """Calibrate the existing machine-key policy on training scenes only; no updates.
+
+    Hidden machine pixels supply calibration labels only. Runtime eligibility uses
+    the learned kind head. Every policy is measured in the actual sequential session.
+    """
+    from pathwm.models.slots import pointer
+    if identity_run is None or scenes < 1:
+        raise ValueError('Calibration needs an identity checkpoint and positive scene count')
+    out = Path(output)
+    out.mkdir(parents=True, exist_ok=False)
+    modules = build(seed, identity_run=identity_run, candidate_scope="predicted-machine")
+    before = {k: state_hash(v) for k, v in modules.items()}
+    perception, candidates = modules['perception'], modules['candidates']
+    settings = dict(stage='visual-binding-calibration', purpose='development', seed=seed,
+                    scenes=scenes, device='cpu', precision='fp32', width=WIDTH, updates=0,
+                    checkpoint_sha256=file_hash(Path(identity_run)/'last.pt'),
+                    rule='Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; maximize min acquisition/match under false-match<=.005')
+    atomic_json(out/'status.json', dict(result='running',report='pending',step=0,error=None))
+    atomic_json(out/'run.json',dict(schema='pathwm-run-v1',identity=dict(settings=settings,
+                data=dict(population='train',kinds=list(rw.KIND_SPLIT['train'])),environment=environment('cpu')),
+                source=source_record(__file__,nn.ModuleDict(modules))))
+    (out/'recipe.py').write_text(Path(__file__).read_text())
+    g = torch.Generator().manual_seed(seed)
+    kinds = torch.tensor(rw.KIND_SPLIT['train'])
+    rows, positives, negatives, episodes = [], [], [], []
+    for index in range(scenes):
+        scene = rw.sample_scenes(g,kinds[torch.randperm(len(kinds),generator=g)[:2]][None])
+        lamps = torch.randint(2,(1,2),generator=g)
+        changed = lamps.clone(); changed[0,0] = 1-changed[0,0]
+        other_scene = rw.sample_scenes(g,scene.kind)
+        remaining = kinds[~torch.isin(kinds,scene.kind.flatten())]
+        novel_kind = remaining[torch.randint(len(remaining),(1,),generator=g)].item()
+        novel_scene = rw.sample_scenes(g,[[novel_kind,int(scene.kind[0,1])]])
+        episodes.append((scene,lamps,other_scene,changed,novel_scene))
+        frames = torch.cat((rw.render(scene,lamps)[0],rw.render(other_scene,changed)[0]))
+        percept = perception(frames)
+        keys, _ = candidates(percept.slots)
+        # Same true machine in two views (calibration supervision only).
+        indices = torch.stack([pointer(percept.alpha,torch.cat((scene.machine_xy[:,side],other_scene.machine_xy[:,side])))
+                               for side in range(2)],1)
+        selected = keys[torch.arange(2)[:,None],indices]
+        same = (selected[0]*selected[1]).sum(-1)
+        different = selected[:,0] @ selected[:,1].T
+        positives.extend(same.tolist()); negatives.extend(different.flatten().tolist())
+        predicted = percept.kind.argmax(-1)
+        detection = bool((predicted.gather(1,indices)==1).all() and (indices[:,0]!=indices[:,1]).all())
+        row=dict(step=index,split='calibration',same_min=float(same.min()),
+                 different_max=float(different.max()),detected=detection,
+                 kinds=scene.kind.tolist(),same_scores=same.tolist(),different_scores=different.tolist())
+        rows.append(row)
+        with (out/'metrics.jsonl').open('a') as f: f.write(json.dumps(row,sort_keys=True)+'\n')
+    policies = []
+    for match in (.80,.85,.90,.95):
+        for margin in (.05,.10):
+            thresholds = dict(match_threshold=match,new_threshold=match-.05,margin=margin)
+            binder = AssociationBinder(**thresholds)
+            acquired = matched = false = novel_false = novel_slot_detected = 0
+            policy_index = len(policies)
+            for index,(scene,lamps,other_scene,changed,novel_scene) in enumerate(episodes):
+                agent = new_agent(modules,out/f'policy-{policy_index}'/f'case-{index:03d}',binder=binder)
+                first_rgb,first_labels = rw.render(scene,lamps)
+                first,_ = agent.observe(first_rgb[0])
+                owners = {}
+                for m in first.machines:
+                    x,y = (int(v) for v in m['xy'])
+                    label = int(first_labels[0,y,x])-1
+                    if m['instance'] is not None and label in (0,1):
+                        owners[m['instance']] = int(scene.kind[0,label])
+                acquired += len(set(owners.values()))
+                next_rgb,next_labels = rw.render(other_scene,changed)
+                second,_ = agent.observe(next_rgb[0])
+                for m in second.machines:
+                    x,y = (int(v) for v in m['xy'])
+                    label = int(next_labels[0,y,x])-1
+                    if m['instance'] in owners and label in (0,1):
+                        correct = owners[m['instance']] == int(other_scene.kind[0,label])
+                        matched += int(correct); false += int(not correct)
+                known = {e.id for e in agent.session.store.entities() if e.kind == 'instance'}
+                novel_rgb,novel_labels = rw.render(novel_scene,changed)
+                arrival,_ = agent.observe(novel_rgb[0])
+                novel_hits = [m for m in arrival.machines
+                              if int(novel_labels[0,int(m['xy'][1]),int(m['xy'][0])]) == 1]
+                novel_slot_detected += int(bool(novel_hits))
+                novel_false += int(any(m['instance'] in known for m in novel_hits))
+            result = dict(thresholds=thresholds,acquisition=acquired/(2*scenes),
+                          correct_matching=matched/(2*scenes),false_matches=false/(2*scenes),
+                          novel_false_merge=novel_false/scenes,novel_slot_detection=novel_slot_detected/scenes)
+            policies.append(result)
+            print(json.dumps(result),flush=True)
+    admissible = [p for p in policies if p['false_matches'] <= .005 and p['novel_false_merge'] <= .005 and p['novel_slot_detection'] >= .95]
+    selected = max(admissible,key=lambda p:(min(p['acquisition'],p['correct_matching']),
+                    -max(p['false_matches'],p['novel_false_merge']),p['thresholds']['match_threshold'],p['thresholds']['margin']),default=None)
+    unchanged = before == {k:state_hash(v) for k,v in modules.items()}
+    gate = bool(selected and min(selected['acquisition'],selected['correct_matching']) >= .95 and unchanged)
+    metrics=dict(min_same=min(positives),max_different=max(negatives),
+                 detected=sum(r['detected'] for r in rows)/scenes,weights_unchanged=unchanged,
+                 selected=selected,policies=policies)
+    atomic_json(out/'policies.json',policies)
+    atomic_json(out/'result.json',dict(evaluation_scope='Training-only calibration of existing machine identity policy',
+                gate=gate,metrics=metrics,limitations=['No network updates; bounded two-machine layout/lamp-change task.',
+                'Hidden identity used only for calibration labels; runtime uses learned kind eligibility.',
+                'Thresholds are unqualified until the independent validation screen passes.']))
+    atomic_json(out/'status.json',dict(result='completed',report='pending',step=0,error=None))
+    if gate:
+        atomic_json(out/'binding.json',dict(schema='pathwm-visual-binding-v2',
+                    checkpoint_sha256=settings['checkpoint_sha256'],candidate_scope='predicted-machine',
+                    thresholds=selected['thresholds'],
+                    perception_sha256=state_hash(perception),key_sha256=state_hash(candidates.key),
+                    source_sha256=source_record(__file__,nn.ModuleDict(modules))['sha256'],
+                    result_sha256=file_hash(out/'result.json'),policies_sha256=file_hash(out/'policies.json'),
+                    calibration=dict(seed=seed,scenes=scenes,population='train',method='actual-session-grid-with-novel-arrivals')))
+    write_report(out)
+    print(json.dumps(dict(gate=gate,metrics=metrics),indent=2))
+    return gate
+
+
+def visual_binding_policy(path, identity_run):
+    if path is None:
+        return None, None
+    if identity_run is None:
+        raise ValueError('Binding calibration requires --identity-run')
+    policy = json.loads(Path(path).read_text())
+    if (policy.get('schema')!='pathwm-visual-binding-v2'
+            or policy.get('checkpoint_sha256')!=file_hash(Path(identity_run)/'last.pt')
+            or policy.get('candidate_scope')!='predicted-machine'):
+        raise ValueError('Binding calibration differs from the loaded visual model or candidate scope')
+    directory = Path(path).parent
+    result = json.loads((directory/'result.json').read_text())
+    status = json.loads((directory/'status.json').read_text())
+    policies = json.loads((directory/'policies.json').read_text())
+    model = build(0,identity_run=identity_run,candidate_scope=policy['candidate_scope'])
+    if (not result.get('gate') or status.get('result') != 'completed'
+            or file_hash(directory/'result.json') != policy.get('result_sha256')
+            or file_hash(directory/'policies.json') != policy.get('policies_sha256')
+            or source_record(__file__,nn.ModuleDict(model))['sha256'] != policy.get('source_sha256')
+            or state_hash(model['perception']) != policy.get('perception_sha256')
+            or state_hash(model['candidates'].key) != policy.get('key_sha256')
+            or result['metrics']['selected']['thresholds'] != policy['thresholds']
+            or result['metrics']['selected'] not in policies):
+        raise ValueError('Binding calibration evidence, model or source identity changed')
+    return AssociationBinder(**policy['thresholds']), policy
+
+
+@torch.no_grad()
+def visual_memory_evaluation(output, *, identity_run, seed, scenes, binding_calibration=None):
+    """Native J visual-memory connection; labels are evaluation-only.
+
+    No optimizer, supplied candidate keys, new representation or surrogate decoder.
+    This is a development screen, not fine-detail or full-agent qualification.
+    """
+    import time
+    from pathwm.world_state.concepts import SOURCE
+
+    if identity_run is None or scenes < 1:
+        raise ValueError('Visual-memory evaluation needs --identity-run and positive --scenes')
+    started = time.perf_counter()
+    out = Path(output)
+    out.mkdir(parents=True, exist_ok=False)
+    atomic_json(out / 'status.json', dict(result='running', report='pending', step=0, error=None))
+    binder, policy = visual_binding_policy(binding_calibration, identity_run)
+    modules = build(seed, identity_run=identity_run, candidate_scope=policy["candidate_scope"] if policy else "all")
+    perception = modules['perception']
+    initial = {k: state_hash(v) for k, v in modules.items()}
+    source = source_record(__file__, nn.ModuleDict(modules))
+    settings = dict(stage='actual-visual-memory', purpose='development', device='cpu',
+                    precision='fp32', seed=seed, scenes=scenes, width=WIDTH,
+                    slots=7, iterations=3, decoder_width=32,
+                    identity_run=str(identity_run), checkpoint_sha256=file_hash(Path(identity_run) / 'last.pt'),
+                    screen_threshold=.95, updates=0, binding_policy=policy,
+                    candidate_scope=policy['candidate_scope'] if policy else 'all',
+                    scope='Actual native perception/slot/decoder and R2 memory; other R2 modules untrained',
+                    example_labels={'input': 'Machine pixels (evaluation-only mask)', 'rgb': 'Actual memory render (same evaluation mask; lossy)'})
+    atomic_json(out / 'run.json', dict(schema='pathwm-run-v1', identity=dict(settings=settings,
+                data=dict(population='validation', kinds=list(rw.KIND_SPLIT['validation']),
+                          generator='rule_world_64_v1; independent seeded fresh scenes'),
+                environment=environment('cpu')), source=source, initial_model_sha256=initial))
+    (out / 'recipe.py').write_text(Path(__file__).read_text())
+    save_models(modules, out / 'models.pt')
+    g = torch.Generator().manual_seed(seed)
+    kinds = torch.tensor(rw.KIND_SPLIT['validation'])
+    rows, examples, reconstructions = [], [], []
+    try:
+        for index in range(scenes):
+            scene = rw.sample_scenes(g, kinds[torch.randperm(len(kinds), generator=g)[:2]][None])
+            lamps = torch.randint(2, (1, 2), generator=g)
+            rgb, labels = rw.render(scene, lamps)
+            directory = out / f'case-{index:03d}'
+            agent = new_agent(modules, directory, binder=binder)
+            view, result = agent.observe(rgb[0])  # Actual learned candidates; no label input.
+            row = dict(step=index, split='validation', scene=index,
+                       acquired=0, matched=0, correct_lamps=0, checks_pass=True)
+            old, old_by_side = {}, {}
+            colors, alpha = perception.decoder(view.percept.slots)
+            for side, machine in enumerate(view.machines):
+                instance, slot = machine['instance'], machine['slot']
+                if instance is None:
+                    continue
+                try:
+                    component = agent.visual_memory(instance)
+                except LookupError:
+                    continue
+                if component is None:
+                    continue
+                decoded = agent.render_memory(instance)
+                exact = torch.equal(component.tensor(), view.percept.slots[0, slot].cpu())
+                live_rgb, live_alpha = perception.decoder(view.percept.slots[:, slot:slot+1])
+                exact = exact and torch.equal(decoded['rgb'], live_rgb) and torch.equal(decoded['alpha'], live_alpha)
+                row[f'batch_rgb_difference_{side}'] = float((decoded['rgb'][0,0]-colors[0,slot]).abs().max())
+                row[f'batch_alpha_difference_{side}'] = float((decoded['alpha'][0,0]-alpha[0,slot]).abs().max())
+                retained_source = agent.source_pyramid(instance)
+                live_source = perception.pyramid(rgb)
+                exact = exact and len(retained_source.scales) == len(live_source.scales)
+                for a, b in zip(retained_source.scales, live_source.scales):
+                    exact = exact and all((getattr(a, n) is None and getattr(b, n) is None) or
+                                          (isinstance(getattr(a, n), torch.Tensor) and isinstance(getattr(b, n), torch.Tensor)
+                                           and torch.equal(getattr(a, n), getattr(b, n)))
+                                          for n in ('values', 'times', 'valid', 'ends', 'content_times'))
+                    exact = exact and a.grid == b.grid
+                row['checks_pass'] &= exact
+                x, y = (int(v) for v in machine['xy'])
+                row['acquired'] += int(labels[0, y, x] == side + 1)
+                old[instance] = component
+                old_by_side[side] = instance
+                mask = labels[0] == side + 1
+                row[f'machine_{side}_mse'] = float((decoded['rgb'][0, 0] - rgb[0]).square()[:, mask].mean())
+                row['correct_lamps'] += int(int(labels[0,y,x]) == side+1 and (decoded['lamp'] > 0).long().item() == lamps[0, side].item())
+                if index < 4:
+                    examples.append(rgb[0]*mask[None])
+                    reconstructions.append(decoded['rgb'][0,0]*mask[None])
+                other = view.machines[1-side]['slot'] if len(view.machines) == 2 else slot
+                row[f'wrong_memory_{side}_mse'] = float((colors[0, other] - rgb[0]).square()[:, mask].mean())
+            atomic_json(directory / 'initial-decisions.json', result)
+            row['reconstruction_mse'] = float((view.percept.recon - rgb).square().mean())
+            # Change one source lamp; hidden labels still go only to rendering/evaluation.
+            changed = lamps.clone(); changed[0, 0] = 1 - changed[0, 0]
+            updated, _ = rw.render(scene, changed)
+            newer, correction = agent.observe(updated[0])
+            atomic_json(directory / 'updated-decisions.json', correction)
+            current = {}
+            row['updated_lamps'] = 0
+            for side, machine in enumerate(newer.machines):
+                instance = machine['instance']
+                if instance is None:
+                    continue
+                try:
+                    c = agent.visual_memory(instance)
+                except LookupError:
+                    continue
+                if c is None:
+                    continue
+                decoded = agent.render_memory(instance)
+                current[instance] = (c, decoded['rgb'].clone())
+                row['matched'] += int(instance == old_by_side.get(side))
+                row['updated_lamps'] += int(instance == old_by_side.get(side) and (decoded['lamp'] > 0).long().item() == changed[0, side].item())
+                row['checks_pass'] &= c.data['event'] == newer.event_id
+                row['checks_pass'] &= torch.equal(c.tensor(), newer.percept.slots[0, machine['slot']].cpu())
+            row['checks_pass'] &= all(agent.session.store.component(c.id) == c for c in old.values())
+            swapped = index % 2 == 1
+            next_scene = rw.sample_scenes(g, scene.kind.flip(1) if swapped else scene.kind)
+            next_lamps = changed.flip(1) if swapped else changed
+            moved, moved_labels = rw.render(next_scene, next_lamps)
+            final_view, final_observation = agent.observe(moved[0])
+            atomic_json(directory / 'relocated-decisions.json', final_observation)
+            row['cross_layout_matches'] = 0
+            row['cross_layout_lamps'] = 0
+            current = {}
+            for side, machine in enumerate(final_view.machines):
+                instance = machine['instance']
+                if instance is None:
+                    continue
+                original_side = 1-side if swapped else side
+                x,y = (int(v) for v in machine['xy'])
+                correct = instance == old_by_side.get(original_side) and int(moved_labels[0,y,x]) == side+1
+                row['cross_layout_matches'] += int(correct)
+                try:
+                    c = agent.visual_memory(instance)
+                except LookupError:
+                    continue
+                decoded = agent.render_memory(instance)
+                row['cross_layout_lamps'] += int(correct and (decoded['lamp']>0).long().item()==next_lamps[0,side].item())
+                row['checks_pass'] &= c.data['event'] == final_view.event_id
+                row['checks_pass'] &= torch.equal(c.tensor(),final_view.percept.slots[0,machine['slot']])
+                current[instance] = (c,decoded['rgb'].clone())
+            # Independent source-owned record must survive another observation's withdrawal.
+            agent.save(directory)
+            snapshot_before_novel = agent.session.store.snapshot()
+            known = {e.id for e in agent.session.store.entities() if e.kind == 'instance'}
+            remaining = kinds[~torch.isin(kinds,next_scene.kind.flatten())]
+            novel_kind = remaining[torch.randint(len(remaining),(1,),generator=g)].item()
+            novel_scene = rw.sample_scenes(g,[[novel_kind,int(next_scene.kind[0,1])]])
+            novel_rgb,novel_labels = rw.render(novel_scene,next_lamps)
+            arrival,arrival_result = agent.observe(novel_rgb[0])
+            atomic_json(directory/'novel-decisions.json',arrival_result)
+            row['novel_slot_detected'] = False
+            row['novel_false_merge'] = False
+            row['novel_new'] = False
+            for m in arrival.machines:
+                x,y = (int(v) for v in m['xy'])
+                if int(novel_labels[0,y,x]) == 1:
+                    row['novel_slot_detected'] = True
+                    row['novel_false_merge'] |= m['instance'] in known
+                    row['novel_new'] |= m['instance'] is not None and m['instance'] not in known
+            restored = restore_agent(load_models(out / 'models.pt', seed=seed+1), directory, binder=binder)
+            row['restart_equal'] = snapshot_before_novel == restored.session.store.snapshot()
+            expected_pyramid = perception.pyramid(moved)
+            restored.resume_view()
+            for instance, (component, rendered) in current.items():
+                row['restart_equal'] &= restored.visual_memory(instance) == component
+                row['restart_equal'] &= torch.equal(restored.render_memory(instance)['rgb'], rendered)
+                actual_pyramid = restored.source_pyramid(instance)
+                row['restart_equal'] &= all(torch.equal(a.values, b.values)
+                    for a, b in zip(actual_pyramid.scales, expected_pyramid.scales))
+            frame = final_observation['evidence'][0]
+            tx = restored.session.store.begin(f'withdraw-{index}', occurred_at=restored.session.time,
+                    available_at=restored.session.time + 1, kind='correction', payload=dict(source=SOURCE))
+            tx.retract_evidence(frame)
+            restored.correct(tx)
+            rejected = 0
+            for instance in current:
+                try:
+                    recalled = restored.visual_memory(instance)
+                    rejected += int(recalled is None)
+                except LookupError:
+                    rejected += 1
+            row['retracted_reads_rejected'] = rejected == len(current) and len(current) > 0
+            row['frame_identity_withdrawn'] = all(not restored.session.store.component(c.parents[0]).active
+                                                  for c,_ in current.values())
+            row['checks_pass'] &= row['frame_identity_withdrawn']
+            # Earlier records remain byte-for-byte immutable, but never auto-selected as current.
+            row['old_records_unchanged'] = all(restored.session.store.component(c.id) == c for c in old.values())
+            row['checks_pass'] &= row['restart_equal'] and row['retracted_reads_rejected'] and row['old_records_unchanged']
+            rows.append(row)
+            with (out / 'metrics.jsonl').open('a') as f:
+                f.write(json.dumps(row, sort_keys=True) + '\n')
+            print(f'visual memory {index+1}/{scenes}: acquired={row["acquired"]}, matched={row["matched"]}, checks={row["checks_pass"]}', flush=True)
+        unchanged = initial == {k: state_hash(v) for k, v in modules.items()}
+        count = scenes * 2
+        metrics = dict(acquisition=sum(r['acquired'] for r in rows)/count,
+                       identity_matching=sum(r['matched'] for r in rows)/count,
+                       lamp_accuracy=sum(r['correct_lamps'] for r in rows)/count,
+                       updated_lamp_accuracy=sum(r['updated_lamps'] for r in rows)/count,
+                       cross_layout_matching=sum(r['cross_layout_matches'] for r in rows)/count,
+                       cross_layout_lamp_accuracy=sum(r['cross_layout_lamps'] for r in rows)/count,
+                       novel_slot_detection=sum(r['novel_slot_detected'] for r in rows)/scenes,
+                       novel_false_merge=sum(r['novel_false_merge'] for r in rows)/scenes,
+                       novel_acquisition=sum(r['novel_new'] for r in rows)/scenes,
+                       reconstruction_mse=sum(r['reconstruction_mse'] for r in rows)/scenes,
+                       all_contracts=all(r['checks_pass'] for r in rows), weights_unchanged=unchanged,
+                       seconds=time.perf_counter()-started)
+        gate = metrics['all_contracts'] and unchanged and metrics['novel_false_merge'] <= .005 and min(metrics[k] for k in
+                    ('acquisition','identity_matching','lamp_accuracy','updated_lamp_accuracy','cross_layout_matching','cross_layout_lamp_accuracy','novel_slot_detection')) >= .95
+        atomic_json(out / 'result.json', dict(evaluation_scope=settings['scope'], gate=gate, metrics=metrics,
+                    limitations=['Synthetic validation scenes; development screen, not sealed generalization.',
+                      'Slots are compressed and position-dependent; no fine-detail or pose-transfer claim.',
+                      'Full pyramid access re-encodes retained lossless source; slot recall does not.',
+                      'Other R2 core/belief/action/value modules remain untrained; J is provisional.',
+                      'Novel-slot detection is gated; novel identity acquisition is reported, not gated. Abstention is allowed.',
+                      'After frame withdrawal, affected instances are not re-identified; later sightings create new instances (no replay/reconciliation).',
+                      'Wrong-memory RGB comparison includes position differences and is diagnostic only.',
+                      'The old surrogate MSE0.002 target is not qualified by output parity.']))
+        atomic_json(out / 'status.json', dict(result='completed', report='pending', step=0, error=None))
+    except Exception as error:
+        atomic_json(out / 'status.json', dict(result='failed', report='pending', step=0, error=str(error)))
+        raise
+    try:
+        write_report(out, batch={'rgb':torch.stack(examples)}, outputs={'rgb':torch.stack(reconstructions)})
+    except Exception as error:
+        atomic_json(out / 'status.json', dict(result='completed', report='failed', step=0, error=str(error)))
+        raise
+    print(json.dumps(dict(gate=gate, metrics=metrics), indent=2))
+    return gate
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--output", type=Path, required=True)
@@ -357,8 +740,21 @@ def main():
     parser.add_argument("--identity-run", type=Path,
                         help="S1 run trained with --identity: load its perception and exported key together; "
                              "the session binds with that key (uncalibrated thresholds; no tracking claim)")
+    parser.add_argument("--visual-memory", action="store_true", help="evaluate native J visual memory and restart")
+    parser.add_argument("--calibrate-visual-binding", action="store_true", help="calibrate existing J machine identity policy on train scenes")
+    parser.add_argument("--binding-calibration", type=Path, help="checkpoint-bound binding.json for visual memory")
     args = parser.parse_args()
     torch.set_num_threads(2)
+    if args.calibrate_visual_binding:
+        passed = calibrate_visual_binding(args.output, identity_run=args.identity_run, seed=args.seed, scenes=args.scenes)
+        if not passed:
+            raise SystemExit(1)
+        return
+    if args.visual_memory:
+        passed = visual_memory_evaluation(args.output, identity_run=args.identity_run, seed=args.seed, scenes=args.scenes, binding_calibration=args.binding_calibration)
+        if not passed:
+            raise SystemExit(1)
+        return
     out = args.output
     out.mkdir(parents=True, exist_ok=False)
     (out / "metrics.jsonl").write_text("")
@@ -371,8 +767,10 @@ def main():
                           key="exported S1 identity key = core.key_head = session candidate key; "
                               "full provenance in models.json")
     run = describe(args.perception, args.identity_run, args.learned_keys)
+    _, binding_policy = visual_binding_policy(args.binding_calibration, args.identity_run)
     settings = dict(stage="unified-session-life", purpose="software", device="cpu", seed=args.seed,
                     scenes=args.scenes, width=WIDTH, perception=perception, binding=run["binding"],
+                    binding_policy=binding_policy, candidate_scope=binding_policy["candidate_scope"] if binding_policy else "all",
                     weights="random (seeded) except a supplied perception/key checkpoint", scope=run["scope"])
     atomic_json(out / "run.json", dict(schema="pathwm-run-v1", identity=dict(
         settings=settings, data=dict(kinds=list(rw.KIND_SPLIT["train"][:2]), rules="train split, seeded"),
@@ -381,7 +779,7 @@ def main():
     try:
         rows, restart, final = life(out, seed=args.seed, scenes=args.scenes, perception_run=args.perception,
                                     fixture=not (args.learned_keys or args.identity_run),
-                                    identity_run=args.identity_run)
+                                    identity_run=args.identity_run, binding_calibration=args.binding_calibration)
         with (out / "metrics.jsonl").open("a") as f:
             for row in rows:
                 f.write(json.dumps({k: v for k, v in row.items() if k != "steps"}, sort_keys=True) + "\n")

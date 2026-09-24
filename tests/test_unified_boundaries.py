@@ -169,6 +169,7 @@ def test_identity_key_adapter_uses_the_exported_key_exactly(tmp_path):
     _, percept = agent.percept(world.frame())
     expected = agent.core.key(percept.slots[0])
     view = agent.memory.view()
+    assert result["bindings"], "key adapter check must exercise actual candidates"
     for d in result["bindings"]:
         slot = int(d["candidate"].split("-")[1])
         stored = torch.tensor(view["evidence"][d["evidence"]].data["key"])
@@ -195,6 +196,7 @@ def test_identity_key_choice_survives_save_and_restore_and_changes_are_rejected(
     frame = world.frame()
     k1 = [c.key for c in agent.candidates(agent.percept(frame)[1])]
     k2 = [c.key for c in restored.candidates(restored.percept(frame)[1])]
+    assert len(k1) == len(k2) == 7
     assert all(torch.equal(x, y) for x, y in zip(k1, k2)) and restored.memory.versions == agent.memory.versions
     # Changing only the shared key is a model change for both owners' checks.
     with torch.no_grad():

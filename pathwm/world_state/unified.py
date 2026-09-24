@@ -25,7 +25,7 @@ from torch import nn
 from pathwm.io import digest, state_hash
 from pathwm.models.belief_state import Packet
 from pathwm.models.modalities import Observation
-from pathwm.models.slots import at_time, pointer
+from pathwm.models.slots import ATTRIBUTES, VALUES, at_time, pointer
 from .concepts import SOURCE, BoundedCache, ConceptAgent, SceneView, from_uint8, slot_candidates, to_uint8
 from .records import finite_time, identifier
 from .session import SourceItem
@@ -35,6 +35,10 @@ OPS = ("press",)
 PREDICATES = ("lamp_state",)
 RECEIPTS = ("ok", "miss", "same_object", "budget_exceeded")
 STEP = 1.0  # session-clock units between consecutive observation events
+# Native SlotPerception slot of a recognized instance: the existing decoder's input.
+# It is the declared slot bottleneck, not the full multiscale source; that source is
+# the retained frame, from which `source_pyramid` recomputes the pyramid.
+VISUAL_SPACE = "slot-perception-v1"
 
 
 def _integer(value):
@@ -241,8 +245,14 @@ class UnifiedAgent(ConceptAgent):
 
     def candidates(self, percept, rgb=None):
         """Default candidate source: learned slot keys (`slot-k`)."""
-        return slot_candidates(percept, self.candidate_encoder, source=SOURCE,
-                               model_version=self.memory.versions["candidates"])
+        candidates = slot_candidates(percept, self.candidate_encoder, source=SOURCE,
+                                     model_version=self.memory.versions["candidates"])
+        if getattr(self.candidate_encoder, "key_source", {}).get("candidate_scope", "all") == "predicted-machine":
+            # S1 exported keys are trained only for machines. Background/object
+            # slots must not compete in that space or claim machine identities.
+            machine = percept.kind[0].argmax(-1) == 1
+            candidates = tuple(c for k, c in enumerate(candidates) if bool(machine[k]))
+        return candidates
 
     # observation ----------------------------------------------------------------
     @torch.no_grad()
@@ -329,7 +339,7 @@ class UnifiedAgent(ConceptAgent):
         frame = next((e for e in self.memory.view()["evidence"].values()
                       if e.event_id == event_id and e.source == SOURCE and e.modality == "image"
                       and e.content_ref), None)
-        if frame is None:
+        if frame is None or frame.id in self.memory.view()["retracted"]:
             return None
         rgb = from_uint8(self.memory.get_blob(frame.content_ref, frame.content_hash)[0], self.device)
         sha, percept = self.percept(rgb)
@@ -351,7 +361,8 @@ class UnifiedAgent(ConceptAgent):
         for m in view.machines:
             instance, recognition = self._machine_instance(view, m["slot"])
             m.update(instance=instance, recognition=recognition, concept=None, binding=None)
-            if instance is not None and self._appearance_from(recognition) is None:
+            if instance is not None and (self._appearance_from(recognition) is None
+                                         or self._needs_visual(recognition)):
                 created.append(recognition)
         if created:
             tx = self.memory.begin("internal")
@@ -379,18 +390,119 @@ class UnifiedAgent(ConceptAgent):
         return found[-1] if found else None
 
     def _restore_appearance(self, tx, recognition):
-        """Appearance key derived from the retained frame of the recognition's event."""
+        """Missing appearance key and visual slot of a recognition, derived from one
+        perception pass over the retained frame of the recognition's event."""
         view = self.memory.view()
         candidate = view["evidence"][recognition.evidence[0]]
-        frame = next(e for e in view["evidence"].values()
-                     if e.event_id == candidate.event_id and e.source == SOURCE
-                     and e.modality == "image" and e.content_ref)
+        frame = self._frame_of(view, candidate.event_id)
+        if (not recognition.active or candidate.id in view["retracted"]
+                or frame.id in view["retracted"]):
+            return
         rgb = from_uint8(self.memory.get_blob(frame.content_ref, frame.content_hash)[0], self.device)
         _, percept = self.percept(rgb)
         slot = int(candidate.data["candidate"].split("-")[1])
-        tx.put_component(recognition.entity_id, "appearance", self._key(percept.slots[0, slot]).detach().cpu(),
-                         space="machine-key", model_version=self.core_version, role="inferred",
-                         evidence=(frame.id,), parents=(recognition.id,))
+        if self._appearance_from(recognition.id) is None:
+            tx.put_component(recognition.entity_id, "appearance", self._key(percept.slots[0, slot]).detach().cpu(),
+                             space="machine-key", model_version=self.core_version, role="inferred",
+                             evidence=(frame.id,), parents=(recognition.id,))
+        if self._needs_visual(recognition.id, view):
+            tx.put_component(recognition.entity_id, "visual_slot", percept.slots[0, slot].detach().cpu(),
+                             space=VISUAL_SPACE, model_version=self.memory.versions["perception"],
+                             role="inferred", evidence=(frame.id,), parents=(recognition.id,),
+                             data=dict(slot=slot, event=candidate.event_id))
+
+    @staticmethod
+    def _frame_of(view, event_id):
+        """The retained camera frame of an observation event (never a slot candidate)."""
+        return next(e for e in view["evidence"].values()
+                    if e.event_id == event_id and e.source == SOURCE and e.modality == "image"
+                    and e.content_ref and "candidate" not in e.data)
+
+    def _needs_visual(self, recognition, view=None):
+        """An active recognition from unwithdrawn candidate/frame evidence that has an
+        appearance (or is getting one) but no active visual slot. Invalidated records
+        are never recreated from withdrawn sources."""
+        view = self.memory.view() if view is None else view
+        r = view["components"].get(recognition)
+        if r is None or not r.active or r.name != "recognition" or any(
+                c.name == "visual_slot" and c.active and c.parents == (recognition,)
+                for c in view["components"].values()):
+            return False
+        candidate = view["evidence"].get(r.evidence[0])
+        if candidate is None or candidate.id in view["retracted"]:
+            return False
+        try:
+            frame = self._frame_of(view, candidate.event_id)
+        except StopIteration:
+            return False
+        return frame.id not in view["retracted"]
+
+    # visual memory: stored slot -> existing decoder/heads; frame -> full pyramid ----
+    def visual_memory(self, instance):
+        """The instance's newest sighting, ordered by source time, not derivation time.
+        If that record is inactive (or none exists) the memory is unknown
+        (`LookupError`); an older sighting is never substituted. Malformed records or
+        sources raise `ValueError`. Never re-encodes pixels."""
+        self.check()
+        view = self.memory.view()
+        records = [c for c in view["components"].values()
+                   if c.entity_id == instance and c.name == "visual_slot"]
+        if not records:
+            raise LookupError(f"No visual memory for {instance!r}")
+        def sighting(record):
+            parent = view["components"].get(record.parents[0]) if len(record.parents) == 1 else None
+            source = view["evidence"].get(parent.evidence[0]) if parent and parent.evidence else None
+            # Malformed records are not silently skipped; the chosen record is
+            # validated below. Recognition source, not mutable record metadata,
+            # defines chronology even when an old sighting is re-derived now.
+            occurred = source.occurred_at if source else record.valid_from
+            available = source.available_at if source else record.available_at
+            return occurred, available, record.revision, int(record.id.rsplit("/", 1)[-1])
+        record = max(records, key=sighting)
+        if not record.active:
+            raise LookupError(f"Current visual memory of {instance!r} was invalidated")
+        if (record.space != VISUAL_SPACE or record.shape != (self.perception.width,)
+                or record.model_version != self.memory.versions["perception"]):
+            raise ValueError("Visual memory space/shape/model version differs from this perception")
+        parent = view["components"].get(record.parents[0]) if len(record.parents) == 1 else None
+        if (parent is None or parent.name != "recognition" or not parent.active
+                or parent.entity_id != instance):
+            raise ValueError("Visual memory must derive from one active recognition of this instance")
+        candidate = view["evidence"].get(parent.evidence[0]) if parent.evidence else None
+        frame = view["evidence"].get(record.evidence[0]) if len(record.evidence) == 1 else None
+        if (candidate is None or frame is None or candidate.id in view["retracted"]
+                or frame.id in view["retracted"] or frame.source != SOURCE or frame.modality != "image"
+                or not frame.content_ref or "candidate" in frame.data
+                or frame.event_id != candidate.event_id
+                or record.data.get("event") != candidate.event_id
+                or record.data.get("slot") != int(candidate.data["candidate"].split("-")[1])):
+            raise ValueError("Visual memory source is not its recognition's retained frame and slot")
+        return record
+
+    @torch.no_grad()
+    def render_memory(self, instance):
+        """Stored slot [1,1,D] through the actual broadcast decoder and slot heads.
+
+        `rgb` [1,1,3,H,W] is this slot's own colour layer; `alpha` [1,1,H,W] its
+        UNNORMALISED mixture logit, not a scene mask (that needs the softmax over all
+        slots of one frame)."""
+        record = self.visual_memory(instance)
+        slot = record.tensor(device=self.device)[None, None]
+        rgb, alpha = self.perception.decoder(slot)
+        heads = self.perception.heads
+        return dict(record=record, slot=slot, rgb=rgb, alpha=alpha,
+                    attributes=heads["attributes"](slot).reshape(1, 1, ATTRIBUTES, VALUES),
+                    lamp=heads["lamp"](slot).squeeze(-1), kind=heads["kind"](slot))
+
+    @torch.no_grad()
+    def source_pyramid(self, instance):
+        """Full native pyramid of the current visual memory's source, RECOMPUTED from
+        the retained hash-verified frame under the fixed perception (shared cache;
+        consumers must not mutate it). No pyramid is stored."""
+        record = self.visual_memory(instance)
+        frame = self.memory.view()["evidence"][record.evidence[0]]
+        return self.encode(from_uint8(self.memory.get_blob(frame.content_ref, frame.content_hash)[0],
+                                      self.device))[1]
 
     # attribution: a pure function of one transition's own source item -----------------
     def _target(self, evidence_id):
@@ -408,6 +520,8 @@ class UnifiedAgent(ConceptAgent):
         live = self._event_view(e.data.get("perceived_in", e.event_id))
         if live is None:
             return None
+        if live is None:
+            return None
         xy = torch.tensor([list(e.data["action"]["machine_xy"])], device=self.device, dtype=torch.float32)
         instance, recognition = self._machine_instance(live, int(pointer(live.percept.alpha, xy)))
         return None if instance is None else (instance, recognition)
@@ -419,7 +533,8 @@ class UnifiedAgent(ConceptAgent):
         tx = self.memory.begin("internal")
         restored = set()
         for e, instance, recognition in rows:
-            if self._appearance_from(recognition) is None and recognition not in restored:
+            if (self._appearance_from(recognition) is None or self._needs_visual(recognition)) \
+                    and recognition not in restored:
                 self._restore_appearance(tx, self.memory.view()["components"][recognition])
                 restored.add(recognition)
             tx.put_component(instance, "attribution", torch.ones(1), space="attribution",
@@ -476,6 +591,22 @@ class UnifiedAgent(ConceptAgent):
     def correct(self, transaction):
         """Publish a caller's identity/source correction, then repair dependents."""
         self.check()
+        # R2 emits slot-candidate evidence from this camera frame in the same
+        # observation. Withdraw those derived identity claims atomically too;
+        # otherwise a later frame could match keys computed from withdrawn pixels.
+        view = self.memory.view()
+        withdrawn = {op["value"]["id"] for op in transaction.operations
+                     if op["op"] == "retract_evidence"}
+        frame_events = {e.event_id for e in view["evidence"].values()
+                        if e.id in withdrawn and e.source == SOURCE and e.modality == "image"
+                        and e.content_ref and "candidate" not in e.data}
+        for evidence in view["evidence"].values():
+            if (evidence.event_id in frame_events and evidence.source == SOURCE
+                    and evidence.modality == "image" and "candidate" in evidence.data
+                    and evidence.id not in withdrawn
+                    and (evidence.id not in view["retracted"]
+                         or view["retracted"][evidence.id]["event"] == transaction.event.id)):
+                transaction.retract_evidence(evidence.id)
         receipt = self.session.commit(transaction)
         return receipt, self.repair_identity()
 
@@ -504,6 +635,12 @@ class UnifiedAgent(ConceptAgent):
         """
         view = self.view if view is None else view
         if view is not None:
+            frame = self._frame_of(self.memory.view(), view.event_id)
+            if frame.id in self.memory.view()["retracted"]:
+                # A withdrawn current observation cannot ground actions or regenerate
+                # derived appearance. Do not implicitly resume an older sighting.
+                self.view = None
+                return None
             self._memberships(view)
         return view
 
@@ -549,8 +686,22 @@ class UnifiedAgent(ConceptAgent):
                           if e.modality == "transition" and e.id not in seen),
                          key=lambda e: (e.available_at, e.id))
         repaired = self._attribute([e.id for e in pending]) | self._repair()
+        self._backfill_visual()
         self._refresh()
         return repaired
+
+    def _backfill_visual(self):
+        """Visual slots missing beside active appearances (stores saved before visual
+        memory existed); only from active recognitions and unwithdrawn sources."""
+        view = self.memory.view()
+        missing = sorted({c.parents[0] for c in view["components"].values()
+                          if c.name == "appearance" and c.active and len(c.parents) == 1
+                          and self._needs_visual(c.parents[0], view)})
+        if missing:
+            tx = self.memory.begin("internal")
+            for recognition in missing:
+                self._restore_appearance(tx, view["components"][recognition])
+            self.memory.commit(tx)
 
     def repair(self):
         """Legacy name, R2 meaning (R1 `repair` assumes the standalone record layout)."""
@@ -957,4 +1108,10 @@ class UnifiedAgent(ConceptAgent):
                 self._memberships(live)
                 self.view = live
                 return live
+            try:
+                self._frame_of(self.memory.view(), event.id)
+            except StopIteration:
+                continue  # Frameless testimony/transition events do not replace sight.
+            self.view = None
+            return None  # Latest camera source was withdrawn; never fall back.
         return None

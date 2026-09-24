@@ -25,6 +25,21 @@ memory, encode-once, structured goals) runs as
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.unified_session --output runs/my_r2_life [--perception RUN]`;
 it is a labelled software check ([plan §18](integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag)).
 
+The [native visual-memory slice](real-visual-memory-plan.md) uses that same recipe,
+the existing J perception/key checkpoint and the existing slot decoder. Calibrate
+the existing identity policy on training scenes, then evaluate fresh validation scenes:
+
+```bash
+.venv/bin/python -m experiments.unified_session --calibrate-visual-binding --identity-run runs/latent_agent_r1/identity_joint_20260923 --seed 3403 --scenes 64 --output runs/my_visual_calibration
+.venv/bin/python -m experiments.unified_session --visual-memory --identity-run runs/latent_agent_r1/identity_joint_20260923 --binding-calibration runs/my_visual_calibration/binding.json --seed 2403 --scenes 32 --output runs/my_visual_memory
+```
+
+Use fresh output directories. The calibration must pass before its manifest exists;
+loading refuses changed source, checkpoint, policy or evidence. The same
+`--identity-run` and `--binding-calibration` arguments also work for the regular R2
+life command. Native visual-slot recall is distinct from fine-detail reconstruction
+and full-agent learning. Other R2 components remain untrained.
+
 The validated **known-rule application curriculum** is available through the same recipe:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.
 Resume a paused/interrupted run with `--stage symbolic --resume runs/my_oracle_curriculum`.
