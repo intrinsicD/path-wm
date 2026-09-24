@@ -66,12 +66,17 @@ The current calibration sequence includes lamp changes, new layouts, alternating
 side swaps and novel arrivals, with labels confined to evaluation/calibration.
 
 The optional `--confusable-twins 0.25` on perception identity training creates
-same-color/period, different-pattern machine pairs before the existing paired-view
-step. Each proposed texture passes the existing held-out exclusion; rejected
-proposals keep original data. Default `0` preserves old batches and RNG draws.
-The run records proposed/applied/rejected counts and effective rate. This is a
-training-data option in the same model, not an established quality improvement;
-its current retention and identity evidence is in the native-memory plan.
+pairs with different body patterns and matched visible color means. Rule version 2
+shifts both proposed colors equally, preserving contrast and period. It accepts
+only colors in the generator's uniform range and checks every target against the
+held-out exclusion; rejected proposals keep original data. The rate is a proposal
+probability, and the run reports the lower effective rate and rejection counts.
+Default `0` preserves old batches and RNG draws.
+
+Training resume remains source-locked: older runs require their saved source; new
+runs support exact pause/resume under this recipe. Earlier version-1 runs and
+failures are preserved. This data option has not yet qualified identity quality;
+see the native-memory plan for retention, calibration and runtime gates.
 
 The validated **known-rule application curriculum** is available through the same recipe:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.

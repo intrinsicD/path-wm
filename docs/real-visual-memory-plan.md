@@ -57,13 +57,19 @@ the first new quality evaluation after tracing the existing task and checkpoint.
 
 ## Current status
 
-Native memory and training support are committed through54117d7;942 CPU tests pass.
-Software contracts pass on actual native runs. Learned relocation is not yet
-qualified: W100 fails one population; joint3000 fails both2407/2408 at60/64.
-Existing identity-weight repair is in progress; see the final protocol below.
-No architecture replacement or surrogate is used. Actual Claude Opus5.5 medium
-has planned, implemented, reviewed and diagnosed each slice; exact receipts:
-`runs/reviews/real_visual_memory_20260924/`.
+Native memory and optional training support are committed through `65f4380`;
+956 CPU tests pass on that version. Persistence, correction and restart contracts
+pass on actual native runs. Learned relocation is not yet qualified.
+
+The first confusable-pair construction also failed calibration. Its corrected
+mean-matched construction targets the observed border-pattern coverage gap without
+changing the model or losses. Sixteen focused and 73 adjacent checks pass; the
+full suite and the registered 1,000-update native fit are running. Acceptance still
+requires retention, calibration and all fixed runtime populations below.
+
+No architecture replacement or surrogate is used. Actual Claude Opus 5.5 at medium
+effort is the planning, implementation and review partner. Exact receipts and
+preserved failures: `runs/reviews/real_visual_memory_20260924/`.
 
 ## Reconciled implementation and evaluation protocol
 
@@ -516,7 +522,8 @@ a selected scene's second body shares the first's ordered colours and period,
 but uses a different pattern among0–3. Check every proposed twin against the
 existing held-out-texture exclusion; rejected twins retain original data and
 are counted. Base scenes/lamps/labels remain identical; default0 consumes no
-additional randomness and keeps existing behavior/settings/resume compatible.
+additional randomness and keeps existing default batches and settings. New-code pause/resume is exact;
+old source-locked training runs still require their retained original source.
 No model, decoder, trainer or runtime labels are added.
 
 Native-full red checks cover default equivalence, rendered distinctness, held-out
@@ -591,3 +598,90 @@ gates/knownregressions/fixedfreshscenes remain unchanged.
 
 Full CPU suite: 956tests, 0failures, 0errors, 0skipped, 834.253s. Source unchanged throughout.
 Native training-data option is software-verified; learned identity remains open.
+
+Twin3000 completed521.89s,source unchanged,C1passes; all first1000training rows
+exactly match twin1000. Retention3506 passesall12: RGBMSE .009126→.008415,
+pixelaccuracy .984057→.989279; attribute1 .992188→.994141, others/lamps/pointers1.
+TRAINpattern diagnostic continues modestly: same-palette negatives>.90
+.483(J)→.452(twins1000)→.425(twins3000); no broad pattern-discrimination claim.
+Actual calibration3405 is running; no candidate runtime qualification yet.
+
+Twin3000 calibration completed425.06s,source unchanged: FAILED. At.95 there
+are no novelmerges but only116/128=.90625 relocatedmatches; at.90 two novel
+merges remain despite127/128matching. TRAIN replay identifies33→17(.92596)
+and11→6(.91761). No candidate validation is launched. Duration did not fix the
+tradeoff; stop duration fits. Next diagnosis checks whether same-palette patterns
+actually remove the rendered-mean shortcut (finite body/panel changes proportions).
+No new representation or training run is selected by that diagnostic.
+
+## Repair the confusable-pair construction (round26)
+
+Actual renderer measurements partly refute the broad finite-mean hypothesis:
+most existing twins already have close means (median RGB distance .022), but
+border/dots versus other patterns form a separated-mean tail. Both actual false
+merges are border versus checker/diagonal across different palettes. The helper
+excluded border targets and did not match visible means for those pairs. That is
+the concrete coverage gap selected for repair, not an encoder redesign.
+
+Replace the existing helper, keep the same rate flag and default0. Generate a
+different feasible pattern from all six; shift both proposed colors equally to
+match the source's visible-body mean, preserving contrast and period. Obtain
+visible pattern fractions once from the actual renderer's white/black body pixels
+(excluding nonbinary panel/lamp pixels); cache immutable values. No duplicated
+renderer equations, no clipping: require new colors within [.2,.95], the existing
+uniform sampler branch, and pass heldout_like. Choose among feasible targets;
+reject/count when none. Disclose per-scene versus per-target counters. Version
+the rule in run settings; preserve all v1 source snapshots and failed results.
+Rendered means must agree within1/255 per channel (quantization bound), with
+visibly distinct bodies, at every valid machine position. Default batches/RNG,
+pairing/masks, native gradient and exact native resume checks remain mandatory.
+
+Codex also measured current hard-negative gradient norms on the actual full
+model: a Euclidean penalty at the same violation boundary could amplify them.
+That alternative is NOT adopted; changing loss simultaneously would confound
+this targeted data correction. No substitute model or new objective is added.
+
+Native J,seed3501,1000updates,lr3e-4,procedural1,identityweight.2,cosine margins
+.95/.5/W100,rate.25; only pair construction changes. Output
+`real_visual_joint_twins_meanmatched_3501_v1`,<=20min/6GiB,lastcheckpointonly.
+Require retention3506,calibration3405,ALLknown2405–2408 and fixed2409/2410,
+unchanged gates. First red/full-native tests, independent review, frozen source
+for full CPU suite and GPU fit; commit only on suite pass. No automatic sweep.
+
+Implementation review note: white/black palettes are renderer instrumentation
+used only to count visible pattern pixels. They are never neural training or
+model-test inputs. Actual new neural inputs retain the generator's scene bounds
+and accepted color/contrast/texture exclusions. A 40-batch data audit finds
+228accepted/336proposed pairs across1280scenes (17.81%effective), including31
+border targets. This acceptance loss is disclosed; the registered rate is not
+changed after seeing it. All16focused tests pass; adjacent regressions pending.
+
+Mean-matched v2 fit completed175.11s,source unchanged,C1pass. Applied5255/32000
+scenes (16.422%);7933proposals,2678scene rejections;21097out-of-range andone
+heldout-like candidate-pattern rejection. Retention3506 passesall12: RGBMSE
+.009126→.008941,pixel .984057→.984556; attribute1 .992188→.999023,
+attribute3 1→.999023, otherheads/pointers1. Calibration3405 is running; full
+CPU suite is also still running. No new identity qualification yet.
+
+Mean-matched v2 calibration3405 completed457.47s, source unchanged: FAILED.
+At.90 relocated125/128 with1/64 novel merge; at.95 relocated115/128 with
+the same merge count. No candidate validation. Full native CPU suite958passes,
+0skips,769.68s wall;16focused and73adjacent checks also pass. This verifies
+the corrected data construction, not learned identity qualification.
+
+## Calibration resolution correction (round29–30)
+
+The hardcoded match grid .80/.85/.90/.95 can miss feasible policies. A failed
+grid does not establish that the representation cannot separate identities.
+Add an explicit optional threshold list to the existing calibrator, preserving
+the default grid, margins, new=match-.05, selection and acceptance gates. Reject
+invalid values before output creation; record the grid and selected policy with
+checkpoint/source integrity. Source changes invalidate old manifests for new
+runs; historical results remain valid as recorded. No new architecture or fit.
+
+TRAIN replay is diagnostic only: threshold-dependent memory histories require
+actual sequential calibration. A narrow estimated TRAIN interval is not proof
+of poor transfer and introduces no new robustness gate. Threshold fitting on
+TRAIN is legitimate; all six fixed development populations2405–2410 still
+decide qualification. Claude is implementing and testing this gap; the next
+TRAIN-only checkpoint/search protocol will be fixed before running it.

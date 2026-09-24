@@ -7,7 +7,7 @@ Task plans own current work; older decisions remain in the
 
 - **Active:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
-- **Latest evidence:** Native memory/training committed54117d7;942 CPU tests pass. Persistence contracts pass. Joint3,000-update repair preserves perception and passes calibration, but relocation60/64 on both2407/2408 misses the95% gate. Identity-weight repair also fails calibration; confusable training-pair repair is being implemented within the same model. [Plan](real-visual-memory-plan.md) owns failures and corrected pose diagnostics.
+- **Latest evidence:** Native memory/training committed65f4380;958 CPU tests pass. Persistence contracts pass. Existing-model identity repairs remain unqualified: joint3000 relocation60/64 on both2407/2408; higher weight fails novel-merge calibration. First confusable-pair construction fails calibration at1,000/3,000updates. Corrected mean-matched pairs pass software/retention checks but fail coarse calibration. Repairing the calibrator’s missing threshold resolution before further training. [Plan](real-visual-memory-plan.md) owns exact evidence and unchanged gates.
 
 - **Earlier screens:** [Affine transfer](representation-transfer-plan.md) passes surrogate gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Actual-model counterparts remain subject to the rerun audit.
 

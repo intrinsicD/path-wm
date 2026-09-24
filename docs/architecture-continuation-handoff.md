@@ -1,33 +1,36 @@
 # Architecture continuation with Claude Opus 5.5 medium
 
-Updated 24 September 2026 for a new Codex session in
+Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
 **Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
 Actual Claude Opus 5.5 at medium effort is the planning, implementation, review and
-test partner. Native memory/training support is committed through `54117d7`; the
-latest complete CPU suite passes 942 tests in 790.60 seconds with unchanged source.
+test partner. Native memory/training support is committed through `430f57d`; the
+latest complete CPU suite passes958 tests (769.68 seconds wall), no skips and
+unchanged source. No architecture or alternate codec was introduced.
 
-Native memory contracts pass. Learned identity remains open: the fixed W100 key
-candidate scored 59/64 and 63/64 on fresh cross-layout populations, failing the
-requirement that both pass. Its stricter cosine diagnostic also remains failed;
-the prospective stop-rule correction is fully disclosed. Joint perception/key
-continuation passed matched retention but failed calibration on a similar-palette,
-different-pattern new machine. No richer representation or alternate codec is used.
+Native memory contracts pass. Learned identity remains open. Joint3000 preserves
+perception and passes calibration but fails both2407/2408 at60/64 relocated matches.
+Increasing identity weight preserves perception but still merges a novel machine.
+The jointly planned optional confusable-pair training is implemented and verified;
+its1,000-update fit passes retention but calibration is one relocation short:
+121/128 (requires122), with no novel merges at the strict policy. Failures preserved.
 
-The duration-only continuation completed3,000 updates and passed retention and
-calibration3405, but failed both primary2407/2408 at60/64 relocated matches.
-All persistence contracts pass; J control scores57/64 and56/64. The separately
-registered next intervention increases existing identity-loss weight .2→1 at
-1,000 updates from J, with unchanged architecture/data. Its run
-`runs/real_visual_joint_repair_3501_iw1_v1` passes retention but fails calibration:
-even .95 still merges1/64 novel arrivals. Claude is implementing the jointly planned
-optional confusable training pairs in the existing recipe. Architecture unchanged;
-retention and all known/fixed-fresh populations remain required. See the owning plan.
-Earlier failed comparison: `runs/real_visual_memory_comparison_v1/report.html`.
-Other rerun families remain open. Original pose diagnostics included out-of-domain
-positions; corrected actual-domain evidence and Claude's interpretation correction
-are preserved in `runs/reviews/real_visual_memory_20260924/`.
+The first confusable-pair construction fails calibration at both1,000 and3,000
+updates. Longer training worsens strict-policy relocation to116/128; no candidate
+validation follows. Actual failures are border versus checker/diagonal at similar
+visible means. Claude and Codex jointly corrected that same helper (no new flag,
+model or loss): mean-matched colors, all feasible patterns, range and held-out
+exclusions.16 focused checks,73 adjacent regressions and958full CPU tests pass.
+The native1,000-update fit passes retention but still fails coarse calibration:
+.90 gives125/128matches and1novelmerge; .95 gives115/128 and1merge.
+No candidate validation follows. Next: fix the calibrator's hardcoded coarse grid,
+then preregister a TRAIN-only search using existing checkpoints before more fits.
+No gate changes; all known2405–2408 plus fixed2409/2410 remain required.
+Review directory contains29 completed actual Claude rounds; round30 implements
+configurable calibration. Diagnostic corrections and source snapshots are retained.
+Other rerun families remain open. Alex authorized Claude as a same-permission
+implementation partner; the older public-only boundary is overridden for this task.
 
 **Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
 owns the audit. Prefer the real model; any downscaled check must be followed by the
