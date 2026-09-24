@@ -852,3 +852,12 @@ and predeclared gates are in CI1 of `integrated-architecture-plan.md`. Each arm
 owns its report, raw predictions and checkpoint. The dataset contains exact shared
 training batches plus held-out panels. This trains a new pointed property query,
 not temporal tracking or the original lamp policy; no text input is required.
+
+The native visual-binding calibrator accepts `--binding-match-thresholds` with
+strictly increasing finite thresholds (for example `.90 .925 .93 .935 .94 .95`).
+This option requires `--calibrate-visual-binding`; the omitted default remains
+`.80 .85 .90 .95`. New-instance thresholds remain match minus.05, with the
+existing margin grid and selection rule. Calibrate on TRAIN, then evaluate the
+fixed task populations; a finer grid does not change acceptance gates. Custom
+grids are recorded in the run and source-bound binding manifest. Recipe source
+changes require fresh calibration before a manifest can be used again.

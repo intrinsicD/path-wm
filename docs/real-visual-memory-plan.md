@@ -685,3 +685,40 @@ of poor transfer and introduces no new robustness gate. Threshold fitting on
 TRAIN is legitimate; all six fixed development populations2405–2410 still
 decide qualification. Claude is implementing and testing this gap; the next
 TRAIN-only checkpoint/search protocol will be fixed before running it.
+
+Round30 selects only the existing joint3000 checkpoint for the next calibration
+repair, from its TRAIN pass at.95 versus novel merges at.90. Other checkpoints
+remain nonselectable; J is a recorded control. Before running, use a bounded
+TRAIN3405 score replay only to place additional grid points between.90 and.95;
+then actual sequential calibration, original policy selection/gates, all six
+fixed development populations. Replay histories are approximate and cannot
+prove infeasibility. No validation score determines the threshold or checkpoint.
+Budget: replay<=2min, calibration<=25min/6GiB; full CPU suite and read-only
+calibration may overlap after source review/freeze. No timing comparison claim.
+
+TRAIN replay of fixed joint3000 completed54.51s, frozen source. Highest known
+novel score .924886; low true scores .881076,.912729,.936687,.939693,.948219.
+These are policy-history-dependent diagnostics, not task predictions. Freeze
+actual calibration grid now: [.80,.85,.90,.925,.93,.935,.94,.95], margins
+[.05,.10], TRAIN3405/64episodes, original selection, output
+`real_visual_binding_calibration_3405_joint_fine_v1`,25min cap. Retained original
+J control runs keep their original source/policy labels; no control checkpoint
+selection. Default native two-episode parity is byte-identical for policies,
+results, metrics and settings versus saved pre-change recipe.
+
+Fine calibration completed877.43s, source unchanged: PASS. Selected
+match.935/new.885/margin.10 by the original rule; acquisition/same-layout1,
+relocation126/128=.984375, false matches/novel merges0. All eight legacy
+policies exactly reproduce the earlier coarse run. Full suite972passes,0skips,
+845.66s; code committed2449864. Source snapshot101files verified; all256TRAIN
+frames match every prior3405calibration; ten actual-model manifest/fault checks
+pass without altering originals. All six fixed task populations now follow.
+
+All six fine-policy task runs completed on frozen source: relocatedmatches
+2405=60/64 FAIL,2406=64/64,2407=61/64,2408=62/64,2409=61/64,2410=62/64.
+Other task metrics are1, novelmerges0, contracts/frozenweights allpass. Thus
+five pass but required six-population qualification FAILS. Independent raw-row
+audits and101-file source snapshots pass. Aggregate report:
+`runs/real_visual_memory_comparison_joint_fine_v1/report.html`. No conditional
+cleanup or promotion is activated. Next review considers actual TRAIN decision
+margins and the existing highest-threshold tie-break; no new rule adopted yet.

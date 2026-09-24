@@ -5,32 +5,30 @@ Updated 25 September 2026 for a new Codex session in
 
 **Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
 Actual Claude Opus 5.5 at medium effort is the planning, implementation, review and
-test partner. Native memory/training support is committed through `430f57d`; the
-latest complete CPU suite passes958 tests (769.68 seconds wall), no skips and
-unchanged source. No architecture or alternate codec was introduced.
+test partner. Native memory/training/calibration is committed through2449864;
+972 CPU tests pass (845.66s, no skips, unchanged source). No alternate codec or
+representation was introduced. Native memory contracts pass; task qualification
+remains open.
 
-Native memory contracts pass. Learned identity remains open. Joint3000 preserves
-perception and passes calibration but fails both2407/2408 at60/64 relocated matches.
-Increasing identity weight preserves perception but still merges a novel machine.
-The jointly planned optional confusable-pair training is implemented and verified;
-its1,000-update fit passes retention but calibration is one relocation short:
-121/128 (requires122), with no novel merges at the strict policy. Failures preserved.
+Coarse-grid training repairs failed; all results and frozen sources remain.
+The calibrator now accepts explicit TRAIN thresholds, with source-bound policies.
+For the fixed joint3000 checkpoint, TRAIN3405 selects.935/.885/.10 with126/128
+relocated matches and zero merges. Its six task runs give60,64,61,62,61,62/64
+on2405–2410: five pass,2405 FAILS by one match. Other task metrics1,novelmerges0,
+all persistence/restart/correction contracts pass. Aggregate:
+`runs/real_visual_memory_comparison_joint_fine_v1/report.html`.
 
-The first confusable-pair construction fails calibration at both1,000 and3,000
-updates. Longer training worsens strict-policy relocation to116/128; no candidate
-validation follows. Actual failures are border versus checker/diagonal at similar
-visible means. Claude and Codex jointly corrected that same helper (no new flag,
-model or loss): mean-matched colors, all feasible patterns, range and held-out
-exclusions.16 focused checks,73 adjacent regressions and958full CPU tests pass.
-The native1,000-update fit passes retention but still fails coarse calibration:
-.90 gives125/128matches and1novelmerge; .95 gives115/128 and1merge.
-No candidate validation follows. Next: fix the calibrator's hardcoded coarse grid,
-then preregister a TRAIN-only search using existing checkpoints before more fits.
-No gate changes; all known2405–2408 plus fixed2409/2410 remain required.
-Review directory contains29 completed actual Claude rounds; round30 implements
-configurable calibration. Diagnostic corrections and source snapshots are retained.
-Other rerun families remain open. Alex authorized Claude as a same-permission
-implementation partner; the older public-only boundary is overridden for this task.
+Next: Claude round33 independently diagnoses actual misses and reviews whether
+TRAIN decision margins justify replacing the highest-threshold tie-break. No
+new selection rule or fit is adopted yet. Do not pick thresholds from validation.
+No conditional cleanup is activated: removing the unused twins augmentation was
+planned only after full qualification. All six populations remain required;
+all are development/regression data now. No sealed/new-kind claim.
+
+Actual Claude sessionf06c55a5-52cd-4530-8d0f-42cb9ac6ee42, CLI modelclaude-opus-5-5,
+explicit medium effort. Reviews/receipts in `runs/reviews/real_visual_memory_20260924/`.
+Alex authorized Claude as a same-permission implementation partner; the older
+public-only boundary is overridden for this task. Other rerun families remain open.
 
 **Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
 owns the audit. Prefer the real model; any downscaled check must be followed by the

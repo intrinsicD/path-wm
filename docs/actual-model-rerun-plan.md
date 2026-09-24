@@ -83,11 +83,13 @@ planning questions for this selected composition, not still-unanswered blockers.
 
 The existing RGB64 multiscale encoder, SlotPerception and broadcast decoder now
 connect through source-validated persistent visual slots. Native persistence,
-source withdrawal, restart and direct decoder parity pass; 942 CPU tests pass.
+source withdrawal, restart and direct decoder parity pass; 958 CPU tests pass.
 The W100 key repair failed the required two-population identity screen. Joint
-training preserved measured perception abilities but failed calibration; a
-registered duration-only continuation is running. Learned identity qualification
-is still open. No new codec or representation has been introduced.
+training preserved measured perception abilities; the3,000-update model passes
+coarse calibration but fails relocation qualification. Confusable-pair training
+also remains unqualified. A finer TRAIN-only calibration of the fixed joint3000
+checkpoint is running after repairing the hardcoded search grid. No new codec
+or representation has been introduced.
 
 This closes the missing connection for those specific software contracts. It does
 not close fine-detail fidelity, part-wise correction, pose/operator transfer,
