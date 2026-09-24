@@ -117,3 +117,78 @@ a conservative1e-8 numerical margin before comparing the minimum with the unchan
 proof. Record code norms and native-dtype discrepancy. Repeat development once in
 v2, preserve v1, then freeze. These additional numerical checks precede final exposure;
 no scientific repair, training or gate relaxation is authorized.
+
+## Final result: concrete decoder-output blocker
+
+Implementation `04650b8`; registration/red checks `f751a69`. Two codecs17/29 ×
+fresh populations926117/926129 × two threshold operators completed, with no
+scientific changes after development. All eight cells fail the0.002 decoder-output
+fidelity gate. Results, raw arrays, frozen checkpoints and structurally verified
+standalone reports remain in `runs/nonlinear_fidelity_final_s{17,29}_{926117,926129}_v1/`.
+
+| Route/reference | Final pixel MSE range | Interpretation |
+| --- | --- | --- |
+| Optimal affine-range projection (target oracle) | 0.03078835–0.03444457 | 15.4–17.2× above output gate |
+| Target encode/decode | 0.04250526–0.04746876 | Encoder adds error; not a lower bound |
+| Support-only latent affine ridge | 0.08366437–0.08939971 | Inference also remains inadequate |
+| Whole-image nearest remembered raw output | 0.32615153–0.35709635 | Copying does not solve fresh instances |
+| Support-fitted raw pixel threshold | 0.00002035–0.00008138 | All identifiability controls pass |
+| Threshold after input reconstruction | 0.01556396–0.01989746 | Outside decoder range, still misses fidelity |
+
+Full column rank256 in both768-output decoders; no singular direction was dropped.
+All numerical cross-checks pass. Native FP32 optimal-code outputs differ from
+float64 projections by at most1.80e-6 per pixel. Old outputs and neural weights
+remain bit-exact; every familiar-pose MSE is below0.001; fitted map/threshold reload
+is exact. These establish non-mutation and replay, not learned retention.
+
+Independent NumPy least-squares/metric audit verifies3,584 prediction images over
+eight relation cells. Four separate-process target-poisoning replays preserve
+fitted state/predictions exactly, reject evaluator access and pass query permutation
+equivariance. The auditor's first attempt loaded an inherited GPU checkpoint without
+a CPU map; it failed before producing an audit result. `audit.log` preserves that
+software-audit failure; the corrected auditor uses explicit CPU loading and passes
+in `audit2.log`. No model, experiment or final array changed for this repair.
+
+Four complete final invocations total5.118s, including imports/reporting, with peak
+RSS678–697MiB. Three development/smoke invocation receipts also remain. Four actual
+Claude Opus5.5 medium public-only rounds took133.16s; cumulative CLI API-equivalent
+estimate$0.3733 is not subscription billing. Existing codec pretraining is a sunk
+cost (3000 mean+600 variance updates per seed); new neural updates0. Review receipts
+and source freeze live in `runs/reviews/nonlinear_fidelity_20260924/`. Reports use
+the unchanged renderer; the saved contact sheet was visually inspected, showing
+smooth optimal decoder outputs against sharp target boundaries. No browser-QA claim.
+
+Claude's final reconciliation accepts the corrected scope: a cross-checked numerical
+minimum, not a rigorous interval-arithmetic bound. Pixel scale[0,1] and RGB16 layout
+fix numeric tolerances. Native/extracted affine equality is required by integrity
+checks and passed in every cell. The mean-MSE margin does not apply to balanced
+classification error, which is descriptive and pooled across each relation population.
+
+**Stop decision:** no inducer restricted to this fixed affine output decoder can
+plausibly meet the declared mean-MSE gate on these populations. Do not spend a new
+induction budget on this blocked output contract. Multiple limits coexist: encoding
+and affine inference add error too. This does not block all nonlinear concept tasks,
+other output heads, pixel routes, changed decoders or natural-data methods.
+
+**Next priority, not an executed repair:** preregister one output-path repair with
+old-detail/behavior preservation before returning to inferred non-affine concepts.
+Compare a decoder-only repair or an explicit fine-detail residual route against this
+fixed reference; choose one after design review. No encoder adaptation, architecture
+sweep or new training budget is silently selected. Final seeds926117/926129 are now
+consumed. The larger latent-agent architecture remains unproven.
+
+## Reproduction and completion
+
+Inspect existing final artifacts rather than rerunning consumed populations. For a
+software-only development check in a fresh directory:
+
+```bash
+.venv/bin/python -m experiments.nonlinear_fidelity --checkpoint runs/evidence_loop_final_s17/last.pt --output runs/my_fidelity_check --count 4 --support 4
+.venv/bin/python -m pytest tests/test_nonlinear_fidelity.py tests/test_representation_transfer.py
+```
+
+This is evaluation only, so there is no training/resume CLI. `last.pt` owns the frozen
+codec and fitted support state; it is not a training checkpoint. The full CPU suite
+completed: **866 tests passed in 647.72 seconds, exit0; source unchanged.** Log and exit/source-freeze receipts are in the review
+directory. Four focused new checks and six existing transfer checks also pass.
+Portable evidence: [four-cell results and audits](../ara/evidence/tables/nonlinear_fidelity_2026-09-24.json).

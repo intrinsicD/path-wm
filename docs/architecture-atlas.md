@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-23, repository snapshot `5925311 frozen representation transfer; exact final source hashes in run receipts`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-24, repository snapshot `04650b8 nonlinear fidelity diagnostic; frozen source hashes and final arrays in run receipts`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 

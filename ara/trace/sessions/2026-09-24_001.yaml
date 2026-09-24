@@ -2,9 +2,9 @@ session:
   id: 2026-09-24_001
   date: '2026-09-24'
   started: 2026-09-24T12:52+02:00
-  last_turn: 2026-09-24T15:55+02:00
-  turn_count: 5
-  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains. Frozen affine-transfer screen passes four cells; pixel prior stronger, nonlinear fidelity remains open."
+  last_turn: 2026-09-24T18:32+02:00
+  turn_count: 6
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains. Frozen affine-transfer screen passes four cells; pixel prior stronger, nonlinear fidelity remains open. Nonlinear fidelity: fixed decoder range fails; output repair next, old behavior preserved."
 events_logged:
 - turn: 1
   type: question
@@ -100,6 +100,20 @@ events_logged:
   provenance: ai-suggested
   summary: Scoped affine representation utility; learned induction and non-affine output fidelity remain open.
 
+- turn: 6
+  type: experiment
+  id: N579
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen nonlinear output diagnostic stops at fixed-decoder numerical blocker; controls/integrity
+    pass.
+- turn: 6
+  type: observation
+  id: O403
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped output-range limitation; bounded output repair before further decoder-output induction.
+
 ai_actions:
 - turn: 1
   action: Inspected current plans/source; updated walkthrough, atlas coverage and project-state pointer.
@@ -152,6 +166,16 @@ ai_actions:
   - tests/test_representation_transfer.py
   - docs/representation-transfer-plan.md
 
+- turn: 6
+  action: Registered, implemented and numerically repaired output-fidelity diagnostic with actual Claude medium;
+    froze source, evaluated two codecs/two populations, independently audited raw arrays and target isolation,
+    preserved reports and failures.
+  provenance: ai-executed
+  files_changed:
+  - experiments/nonlinear_fidelity.py
+  - tests/test_nonlinear_fidelity.py
+  - docs/nonlinear-fidelity-plan.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -165,12 +189,17 @@ key_context:
   excerpt: 'User: Continue from docs/architecture-continuation-handoff.md together with actual Claude Opus
     5.5 at medium effort. Plan, implement, review and test the remaining work in measurable slices.'
 
+- turn: 6
+  excerpt: User requests continuing architecture handoff with actual Claude Opus5.5 medium in measurable plan/implement/review/test
+    slices; selected output path stops at preregistered concrete blocker.
+
 open_threads:
 - 'N569: bounded contracts now implemented; general learned concepts/context/language/audio remain open.'
 - Existing failed transfer/retention and natural language/audio learning remain unresolved.
-- 'N578: affine feasibility screen complete; predeclare non-affine/output-fidelity question with old-task preservation. Learned induction and useful retention remain open.'
+- 'N579: fixed decoder output range fails threshold fidelity; select one bounded output-path repair with old-detail preservation. Learned induction and useful retention remain open.'
 ai_suggestions_pending:
 - 'O398: proposed design order and visual demonstration, then grounded text and audio.'
 - 'O400: scoped lexical-selection interpretation remains staged; no user empirical endorsement.'
 - 'O401: narrow index sufficiency interpretation staged; no user empirical endorsement.'
 - 'O402: affine-only interpretation staged; no user empirical endorsement or general capability promotion.'
+- 'O403: numerical decoder-range interpretation staged; no user empirical endorsement or general capability promotion.'

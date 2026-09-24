@@ -36,6 +36,13 @@ See [plan §16](integrated-architecture-plan.md#16-lernfolge-und-nächster-nachw
 
 # Running and editing experiments
 
+The **nonlinear output-fidelity diagnostic** isolates the frozen affine decoder's
+best numerical output error from encoding and support inference:
+`.venv/bin/python -m experiments.nonlinear_fidelity --checkpoint runs/evidence_loop_final_s17/last.pt --output runs/my_fidelity --count 4 --support 4`.
+Read the [protocol and blocked final result](nonlinear-fidelity-plan.md). No training;
+query-target projection is evaluator-only. Each run owns raw arrays, frozen/fitted
+state and a standalone report. A successful process can record a failed quality gate.
+
 The **frozen representation transfer screen** compares inferred affine maps with
 copied examples and channel-shared pixel ridge:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.representation_transfer --checkpoint runs/evidence_loop_final_s17/last.pt --output runs/my_transfer`.

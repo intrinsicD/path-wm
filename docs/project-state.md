@@ -5,9 +5,9 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Active slice:** [Nonlinear output fidelity](nonlinear-fidelity-plan.md): implemented frozen decoder-range diagnostic with numeric checks; development identifies a candidate output-range blocker. Actual Claude Opus5.5 medium review repaired numerical validation; fresh final evaluation and CPU suite pending. No new neural training.
+- **Latest slice:** [Nonlinear output fidelity](nonlinear-fidelity-plan.md): Claude Opus5.5 medium; two codecs × two populations expose a decoder-range blocker. Optimal MSE0.0308–0.0344 exceeds0.002; pixel-threshold control passes. Old outputs/weights unchanged, independent raw/target-isolation audits pass. 866 CPU tests pass; source unchanged. Next: one bounded output-path repair with old-task preservation; no training selected. [Handoff](architecture-continuation-handoff.md) owns the wider agenda.
 
-- **Latest slice:** [Frozen representation transfer](representation-transfer-plan.md): actual Claude Opus5.5 medium, two frozen codecs × two fresh populations pass affine transfer gates. Latent MSE0.00021–0.00026; pixel ridge is stronger. Nonlinear threshold reconstruction remains poor. 862 CPU tests pass; source unchanged. [Handoff](architecture-continuation-handoff.md) owns the broader agenda; indexed lookup is complete.
+- **Earlier completed screens:** [Affine transfer](representation-transfer-plan.md) passes its gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Reuse their evidence, do not repeat them.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent computation, shared depth and runtime
@@ -29,9 +29,6 @@ Task plans own current work; older decisions and run receipts remain in the
   not a universal prerequisite; joint learning, staged learning and pretrained
   features remain alternatives. Concept-code search is distinct from weight
   retraining. No mechanism, experiment budget or new capability is adopted.
-  A [proposed transfer objective](latent-concept-learning-review.md#bekannte-konzepte-als-transfersignal)
-  uses known relations to supervise new-case outcomes; new-rule generalization and
-  informative target representations remain to be established.
   The [concept/understanding discussion](latent-concept-learning-review.md#konzept-objektverständnis-und-latente-aktionen)
   now relates object identity/state, latent actions and conditional effects; raw
   action differences alone do not establish semantics or causal understanding.

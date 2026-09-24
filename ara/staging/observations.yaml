@@ -7085,3 +7085,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O403
+  timestamp: 2026-09-24T18:32+02:00
+  provenance: ai-suggested
+  content: For the declared synthetic threshold populations and mean-MSE gate, the fixed unclipped affine decoder
+    output space is a concrete numerical blocker even with unrestricted latent codes. Encoding and affine inference
+    add error too. Select one bounded output-path repair preserving old detail before further induction through
+    this decoder. This is not a rigorous interval bound, universal representation failure, or general concept-learning
+    result.
+  context: User requested continuation with actual Claude medium; preregistered output diagnostic, one numerical-validation
+    software repair, frozen final populations and independent audits. docs/nonlinear-fidelity-plan.md
+  potential_type: claim
+  bound_to:
+  - N579
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

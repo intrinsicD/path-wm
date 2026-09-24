@@ -3,20 +3,45 @@
 Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-- Latest completed result/evidence commit: **`b6c359b`**.
-- Latest implementation: **`5925311`**, frozen affine transfer; plan/red: `8b24950`.
+- Previous completed result/evidence commit: **`b6c359b`** (affine transfer).
+- Latest implementation: **`04650b8`**, nonlinear fidelity; plan/red: `f751a69`.
+- Previous implementation: **`5925311`**, frozen affine transfer; plan/red: `8b24950`.
 - Previous indexed result/evidence commit: **`f63dfa9`**.
 - Indexed discovery implementation: **`00abd78`**; plan/red checks: `014cc40`.
 - Earlier bounded context implementation: `98b379a`; evidence loop: `b51d949`.
-- Latest full suite: **862 passed in 620.35 seconds**, exit 0; source unchanged throughout.
+- Latest full suite: **866 passed in 647.72 seconds**, exit0; source unchanged throughout.
 - All selected runs and checks finished. No job from this continuation remains to
-  resume. Final evidence is recorded in the representation-transfer plan.
+  resume. Final evidence is recorded in the nonlinear-fidelity plan.
 
-**Start with useful non-affine structure and output fidelity, preserving old
-detail and behavior.** Both the indexed and frozen affine feasibility screens are
-complete. Do not restart either or add learned machinery to their solved baseline
+**Start with a bounded output-path repair, preserving old detail and behavior.**
+The nonlinear fidelity diagnostic below now identifies a fixed-decoder blocker.
+Both the indexed and frozen affine feasibility screens are complete. Do not restart either or add learned machinery to their solved baseline
 workloads. The complete architecture is still unproven; the remaining agenda and
 next slices are below. This handoff starts no new job or training budget.
+
+## Latest continuation: nonlinear fidelity blocker (24 September)
+
+[Registered diagnostic and results](nonlinear-fidelity-plan.md), implementation
+`04650b8`, registration/red checks `f751a69`. Two codecs × two fresh populations
+show optimal numerical affine-decoder MSE0.0308–0.0344 against gate0.002. Raw
+support-fitted pixel threshold passes; target encode/decode and latent inference
+add error. Old outputs/weights and exact map/threshold reload are preserved.
+No neural training; the overall architecture remains unproven.
+
+The selected path stops at this concrete blocker. Next choose **one bounded
+output-path repair with old-detail preservation**, before spending on induction
+through this fixed decoder. Do not repeat this diagnostic or the earlier screens.
+The previous target encode/decode “floor” is a reference, not a general lower bound.
+The new range conclusion requires full rank and independent QR/SVD/least-squares
+agreement; it is numerical evidence, not an interval-arithmetic proof.
+
+- Final artifacts: `runs/nonlinear_fidelity_final_s{17,29}_{926117,926129}_v1/`.
+- Audits/reviews: `runs/reviews/nonlinear_fidelity_20260924/`;3,584 prediction
+  images independently audited, separate-process target poisoning/order checks pass.
+- Portable results: `ara/evidence/tables/nonlinear_fidelity_2026-09-24.json`.
+- Four actual Claude Opus5.5 medium rounds preserve the public-only boundary.
+- Final populations926117/926129 are consumed;926101 is development.
+- Full CPU suite: **866 tests passed in 647.72 seconds, exit0; source unchanged.** Review directory owns log/exit receipt.
 
 ## Continuation result: frozen affine transfer (24 September)
 
@@ -24,8 +49,8 @@ The [representation transfer screen](representation-transfer-plan.md) now passes
 its registered affine gates for two frozen codecs and two fresh populations.
 Pixel-channel ridge is stronger; this is not learned induction or completion of
 the architecture. The nonlinear diagnostic has poor output reconstruction.
-Continue next with a newly declared non-affine/output-fidelity question, preserving
-old detail and behavior. Do not repeat the completed affine or indexed screens.
+The later nonlinear-fidelity diagnostic above localizes an output-range blocker;
+continue from that result while preserving old detail and behavior. Do not repeat the completed affine or indexed screens.
 Earlier component results below are historical evidence to reuse, not work to
 repeat. Final seeds925117/925129 are consumed. The frozen full suite passed
 862 tests in620.35s, exit0; source hashes unchanged.
@@ -85,7 +110,9 @@ using them; if absent, report the missing prerequisites rather than invent resul
 > review and repair rounds. Preserve the public-only external review boundary.
 > The indexed discovery and frozen affine-transfer screens are complete. Do not
 > repeat them or add learned complexity to their solved baseline workloads.
-> Two frozen codecs × two fresh populations passed the affine gates, but pixel
+> Read the latest nonlinear-fidelity blocker first; select one output-path repair
+> with old-detail preservation before further induction work. Earlier,
+> two frozen codecs × two fresh populations passed the affine gates, but pixel
 > ridge is stronger and nonlinear threshold output reconstruction remains poor.
 > Use the transfer plan's audits and earlier R1/CI1 failures to choose a smallest
 > falsifiable non-affine/output-fidelity question with old-task preservation.
@@ -109,7 +136,8 @@ is not authorized by this document.
 
 1. [Current work](project-state.md) and applicable sections of
    [experiment workflow](experiment-workflow.md).
-2. [Representation transfer](representation-transfer-plan.md): completed affine
+2. [Nonlinear output fidelity](nonlinear-fidelity-plan.md): completed decoder-range
+   diagnostic and concrete blocker. Then [representation transfer](representation-transfer-plan.md): completed affine
    screen, nonlinear floor, controls, consumed populations and exact audit receipts.
    Read [indexed discovery](scan-discovery-plan.md) only if revisiting retrieval.
    Then the relevant portions of
@@ -150,6 +178,8 @@ is not authorized by this document.
 | `pathwm/models/detail_memory.py` | Shared part encoder, learned finite-pose decoder, variance, explicit code replacement and validated stored-code consumption. |
 | `pathwm/data/detail_views.py` | Procedural RGB16 textures, four RGB8 parts; target geometry only in the data generator. |
 | `pathwm/world_state/episodes.py` | EpisodeClient over existing WorldSession/WorldStore: evidence, inferred state, bounded reads, utterance boundaries, interruption, checked emissions, explicit unknown/abort recovery. |
+| `experiments/nonlinear_fidelity.py` | Frozen affine decoder-range oracle, support-only threshold/nearest/ridge controls, numeric cross-checks, exact reload and reports; completed negative fidelity diagnostic. |
+| `tests/test_nonlinear_fidelity.py` | Four numeric, support-dependence, frozen-state and report-failure checks. |
 | `experiments/representation_transfer.py` | Frozen-codec analytic map, copying/displacement/pixel controls, affine/nonlinear evaluation, separate live map correction/restart and report. No neural training. |
 | `tests/test_representation_transfer.py` | Six numerical, query-isolation and source/context integrity checks. |
 | `experiments/evidence_loop.py` | Ordinary train/calibrate/evaluate/resume recipe, persistence demonstration, controls and standalone report. |
@@ -364,21 +394,16 @@ training/data strategy; do not promise them from a tiny synthetic fit.
 
 ## Concrete starting slices for the next session
 
-1. **Choose a falsifiable representation/transfer question with Claude.** Inspect
-   current transfer raw arrays/audits, model/data/recipe paths and the relevant
-   R1/CI1 failure evidence first. The threshold target-code floor is already poor:
-   separate observation/representation and reconstruction limits from inference
-   error before adding an inducer. Reconstruction is a requirement for a chosen
-   output task, not a universal prerequisite for every concept task.
-   Public hypothetical briefs should compare the smallest remembered-example,
-   shared-structure/code and fixed/oracle controls. Select one task/objective rather
-   than another module catalog. Declare precisely what is learned initially, what
-   runtime evidence changes without weight updates, and what transfer would falsify
-   the hypothesis. Keep source-supplied identity/geometry visible as oracle controls.
-   Compare a target-code reconstruction reference, support-only inference and a
-   strong task-specific baseline where relevant. A decoder-only, representation,
-   or learned-inference repair has not yet been selected; let the evidence and
-   Claude criticism choose one bounded next slice, not several simultaneous fixes.
+1. **Choose one output-path repair with Claude.** The numerical decoder-range
+   diagnostic is complete: even unrestricted latent codes cannot meet the selected
+   threshold-output gate through the current fixed affine decoder. Read its plan,
+   raw arrays and audits; do not repeat it. Compare a decoder-only repair or a
+   fine-detail residual route while preserving existing detail and behavior. Select
+   one objective, data split and bounded local budget before training. Frozen input
+   encoding may also limit inference; the range diagnosis does not prove otherwise.
+   Keep original checkpoints immutable and explicitly version any changed decoder.
+   Reconstruction is required for this output task, not every concept task. Use
+   public hypothetical briefs and inspect implementation/measurements locally.
 2. **Register the slice, then add essential red checks.** Record a concrete user
    path, training signal, train/dev/final populations, held-out instances and relation
    splits, negative/shortcut controls, numeric reconstruction/task/retention gates,
@@ -410,8 +435,8 @@ Useful regression commands, only when relevant (new output directories):
 ```
 
 Do not rerun completed experiments as a startup ritual. Their final populations
-are consumed: transfer925117/925129; indexed924317/924329; lexical624927 (`--final`);
-RGB16 textures240927. Development transfer925101, indexed924301 and tiny924300
+are consumed: nonlinear fidelity926117/926129; transfer925117/925129; indexed924317/924329; lexical624927 (`--final`);
+RGB16 textures240927. Development fidelity926101, transfer925101, indexed924301 and tiny924300
 are also known. A changed method needs
 fresh preregistered populations. Exact resume requires compatible source/settings;
 old runs are not permission to resume training under changed code. Register the

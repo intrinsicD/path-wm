@@ -214,3 +214,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Indexed discovery screen,24 September](tables/scan_discovery_2026-09-24.json): two fresh populations100% exact index agreement; no cache-reset effect; no training; validation remains linear in source history. Independent causal audit and four actual Opus5.5 medium public-contract reviews.
 
 - [Frozen representation transfer,24 September](tables/representation_transfer_2026-09-24.json): two codecs × two populations pass affine-map gates; pixel-channel ridge is stronger. Nonlinear threshold output fidelity remains poor. Four actual Opus5.5 medium rounds, raw and target-isolation audits; no neural updates or learned-induction claim.
+
+- [Nonlinear output fidelity,24 September](tables/nonlinear_fidelity_2026-09-24.json): two codecs × two populations identify a fixed affine decoder-range blocker; optimal numerical MSE0.0308–0.0344 versus0.002 gate. Raw threshold control passes; weights/old outputs unchanged. Independent raw/poison audits and actual Opus5.5 medium review; no neural training or learned-induction claim.

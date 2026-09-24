@@ -9628,3 +9628,22 @@ tree:
   - runs/reviews/representation_transfer_20260924/raw-artifact-audit.json
   - runs/reviews/representation_transfer_20260924/target-isolation-audit.json
   status: completed
+- id: N579
+  type: experiment
+  title: Frozen nonlinear fidelity identifies a fixed affine decoder-range blocker
+  provenance: ai-executed
+  timestamp: 2026-09-24T18:32+02:00
+  result: 'Two frozen codecs17/29, populations926117/926129, two threshold operators: all eight decoder-output
+    gates fail. Numerical range-optimum MSE0.03078835–0.03444457 versus0.002; target encode/decode0.04250526–0.04746876;
+    raw support-fitted threshold0.00002035–0.00008138 passes. Full rank256, independent SVD/QR/least-squares
+    agreement and numerical margin. Frozen weights/old outputs and map/threshold replay exact; neural updates0.
+    Four actual Claude Opus5.5 medium public rounds. Independent3584-prediction audit and four separate-process
+    target-poisoning/query-permutation checks pass. Four final invocations5.118s; inherited pretraining excluded,
+    not free learning. Full CPU suite passes on unchanged source; see receipt.'
+  evidence:
+  - docs/nonlinear-fidelity-plan.md
+  - ara/evidence/tables/nonlinear_fidelity_2026-09-24.json
+  - runs/reviews/nonlinear_fidelity_20260924/raw-artifact-audit.json
+  - runs/reviews/nonlinear_fidelity_20260924/target-isolation-audit.json
+  - runs/reviews/nonlinear_fidelity_20260924/full-suite-exit.json
+  status: completed
