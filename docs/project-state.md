@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Current direction:** trace the existing multiscale → memory → consumer path; fix demonstrated defects or gaps. Stop extending the separate `DetailCodec` demonstration. [Handoff](architecture-continuation-handoff.md).
+- **Active:** [Actual-model reruns](actual-model-rerun-plan.md): audit prior surrogate/reduced tests and rerun existing real paths. Any preliminary downscale requires a full-configuration rerun. Plan missing functionality with Alex before adding it.
 - **Latest evidence:** [Nonlinear fidelity](nonlinear-fidelity-plan.md) finds a blocker in the surrogate `DetailCodec`, which bypasses the main multiscale representation. It does not justify redesigning that representation. 866 CPU tests passed; original scoped results remain preserved.
 
 - **Earlier completed screens:** [Affine transfer](representation-transfer-plan.md) passes its gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Reuse their evidence, do not repeat them.

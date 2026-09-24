@@ -4,6 +4,34 @@ The user-facing entry point is a readable file in `experiments/`. Shared code is
 in `pathwm/`. This workflow replaces the retired dated scripts and aggregate
 report wrapper while preserving scientific integrity and the four-step process.
 
+## Test the actual model
+
+User requirements (24 September 2026), mandatory for planning, implementation,
+scientific evaluation and completion:
+
+1. Prefer testing the actual model, existing modules and real configured path.
+   Record the builder, modules, dimensions, checkpoint (when relevant), inputs and
+   exercised consumer. A passing substitute-model test is not model validation.
+2. If a smaller preliminary test is useful, use a downscaled configuration of the
+   same architecture. Preserve the relevant modules, connections and semantics;
+   declare every reduction. Do not introduce an unrelated toy codec/model to make
+   the test easier.
+3. After every downscaled preliminary check, rerun the corresponding check on the
+   actual full configuration before claiming completion. Record both receipts and
+   their differences. Unit tests of helpers may isolate arithmetic/contracts, but
+   do not discharge the real-model rerun requirement. Do not call an arbitrary
+   default or a random untrained fixture the full trained model. Missing reference
+   settings, weights, resources or paths are explicit unresolved items.
+4. If the desired behavior is missing, identify the exact gap and prepare a concrete
+   implementation plan for Alex to discuss before implementing it. Do not invent a
+   surrogate, silently add a new component, or count a test of missing behavior as
+   evidence. Await agreement for that implementation while continuing independent
+   checks of existing behavior. Alex explicitly requested this joint planning step.
+5. When correcting previous substitute tests, inventory each affected test/claim,
+   identify its real-model counterpart, rerun what exists, and separately list
+   missing implementations requiring discussion. Preserve previous runs and failed
+   results. A broad pytest pass alone does not close outstanding real-model reruns.
+
 ## Work in small complete slices
 
 1. **Plan.** Update the active plan linked from project-state.md: concrete problem,
