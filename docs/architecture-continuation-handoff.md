@@ -1,43 +1,41 @@
 # Architecture continuation with Claude Opus 5.5 medium
 
 Updated 24 September 2026 for a new Codex session in
-`/home/alex/Documents/path-wm`, branch `main`. Latest completed implementation:
-**`98b379a`**, bounded context/retrieval; its plan/red-test commit is `e442d92`.
-Earlier evidence-loop implementation: `b51d949` (plan/red checks `3371600`).
-The working tree was clean before this documentation update. All selected runs and
-the full suite finished; no job from this continuation remains to resume.
+`/home/alex/Documents/path-wm`, branch `main`.
 
+- Latest completed result/evidence commit: **`f63dfa9`**.
+- Indexed discovery implementation: **`00abd78`**; plan/red checks: `014cc40`.
+- Earlier bounded context implementation: `98b379a`; evidence loop: `b51d949`.
+- Full suite: **856 passed in 662.14 seconds**, exit 0; source unchanged throughout.
+- All selected runs and checks finished. No job from this continuation remains to
+  resume. The working tree was clean before this handoff-only update.
 
-## Latest continuation: indexed screen completed
-
-The [scan-discovery plan](scan-discovery-plan.md) supersedes the starting experiment
-below: implementation `00abd78`, two fresh populations924317/924329 pass all gates.
-Four actual Opus5.5 medium public-contract reviews. Strong index, cached index and
-reset index answer100%; cache reset changes no answers. No learned selector was
-trained. Head validation remains O(history); full scan is physically feasible at
-this scale. Next prioritize useful representations/concept-instance transfer,
-consulting the earlier failed transfer/retention results; do not rerun these consumed
-seeds as a fresh test. Full regression:856 tests pass in662.14s with unchanged source. Detailed
-artifacts, costs, limitations and the separate engineering follow-up are in the plan.
-The historical startup text below explains the now-completed screen's motivation.
+**Start with useful representations and concept/instance transfer.** The exact-key
+indexed feasibility screen is complete. Do not restart it or add a learned selector
+to a workload already solved by the strong baseline. The complete architecture is
+still unproven; the remaining agenda and next slices are below.
 
 ## Paste into the new Codex session
 
 > Continue PATH-WM from `docs/architecture-continuation-handoff.md`. Read CLAUDE.md
-> and the current project state. Work with actual Claude Opus 5.5 at medium effort
-> through multiple substantive design, implementation and review rounds. Preserve
-> the public-only external review boundary. Inspect the existing implementation,
-> plan the remaining points in small measurable slices, implement and test each
-> selected slice, review and repair it, and continue until its declared gates pass
-> or evidence identifies a concrete blocker. Preserve failed results. Do not claim
-> the overall architecture is complete from the bounded RGB16 or lexical experiments.
-> The latest slice passed two seeds and 848 tests, but counting matched learned
-> retrieval and context reset/swap changed no answers. Start with Claude by designing
-> a falsifiable scan-limited candidate-discovery/retention experiment against a strong
-> indexed baseline. Reuse the implemented contracts, predeclare fresh test populations,
-> gates and local compute budgets, then implement, review and test measurable slices.
-> Keep reconstruction, evidence correction, useful representations and actual total
-> compute cost explicit. Use each result to select the next remaining priority.
+> and the current project state. Collaborate with actual Claude Opus 5.5 using
+> `claude-opus-5-5` at medium effort through substantive design, implementation,
+> review and repair rounds. Preserve the public-only external review boundary.
+> The indexed discovery screen is complete: two fresh populations reached 100%
+> exact answers, cache reset changed no answers, and 856 tests passed. Do not redo
+> that screen or claim learned retention. Start by inspecting earlier R1 transfer
+> and CI1 retention failures, then have Claude challenge a smallest falsifiable
+> useful-representation/concept-instance transfer experiment. Compare remembered
+> examples with inferred shared structure; separate supplied identities, familiar
+> transformations and genuinely held-out instances/relations. Reuse the existing
+> store, episode, context and model contracts. Plan, implement, review and test
+> the remaining work in small measurable slices. Predeclare fresh populations,
+> numeric quality/retention/reconstruction gates, local compute budgets and repair
+> limits before running. Preserve failed results; freeze and verify each selected
+> slice, then use its result to choose the next remaining priority. Continue until
+> the selected gates pass or evidence identifies a concrete blocker. Keep runtime
+> acquisition/correction without weight retraining and actual total compute cost
+> explicit. Do not claim the overall architecture is complete from narrow tests.
 
 This handoff records the existing continuation authorization. Do not start a new
 architecture from scratch or ask again whether ordinary implementation/review is
@@ -48,17 +46,20 @@ is not authorized by this document.
 
 1. [Current work](project-state.md) and applicable sections of
    [experiment workflow](experiment-workflow.md).
-2. [Context/retrieval plan and results](context-retrieval-plan.md): latest implementation,
-   registered gates, controls, negative findings, commands and verification. Then
-   [evidence-loop results](evidence-loop-plan.md) for the frozen visual baseline.
+2. [Indexed discovery results](scan-discovery-plan.md): completed screen, null cache
+   result, costs and consumed populations. Then the relevant portions of
+   [context retrieval](context-retrieval-plan.md) and
+   [evidence loop](evidence-loop-plan.md) for implemented contracts and visual limits.
 3. [Architecture walkthrough](architecture-walkthrough.md), especially “Completion
    priorities after the concept and conversation discussion” and context ownership.
 4. [Integrated latent-agent goal](integrated-latent-agent-goal.md) and
    [Claude collaboration workflow](claude-collaboration-workflow.md).
 5. [Model guide](models.md), [experiment guide](experiments.md), and current source.
-   Consult [integrated architecture plan](integrated-architecture-plan.md) and
-   [concept-learning review](latent-concept-learning-review.md) before claiming a
-   concept-learning solution; the earlier transfer/retention failures still stand.
+6. Before selecting the next experiment, read the relevant failure/decision sections
+   of the [integrated architecture plan](integrated-architecture-plan.md), especially
+   R1 transfer and CI1 (§22), and the [concept-learning review](latent-concept-learning-review.md).
+   Consult [shared-abstraction specification](shared-abstraction-spec.md) if proposing
+   concept codes. These are prior designs/failures, not a proven concept solution.
 
 ## What the user wants
 
@@ -91,6 +92,8 @@ is not authorized by this document.
 | `pathwm/data/episode_facts.py` | Controlled two-slot synonym task with supplied entity matching; no answer payload in ranker inputs. |
 | `experiments/context_retrieval.py` | One ordinary train/evaluate/resume recipe; counted, canonical, rule, random and no-read controls; context interventions and separate live-episode integration. |
 | `tests/test_working_context.py`, `tests/test_context_recipe.py` | 10 new checks; includes exact training resume, source races, context budgets and preserving result completion when rendering fails. |
+| `experiments/scan_discovery.py` | Recipe-local exact index over existing store/context contracts; causal corrections, logical restart, scan/cache controls and explicit cost accounting. No trained model or library default change. |
+| `tests/test_scan_discovery.py` | Eight checks: discovery, poisoned/stale references, inactive-head behavior, byte-exact keys, independent metering, replay/permutation equivalence and report-failure preservation. |
 
 State reads pin sources, component heads and model versions. Invalidated or
 budget-omitted details cannot silently become unknown priors. Superseded evidence
@@ -104,9 +107,51 @@ familiar quarter-turns, not an analytic rotation inside the model. Part identiti
 visibility and canonical input alignment are supplied. Independent hidden textures
 use a learned population estimate; this is not relational concept induction.
 
-## Latest results: context/retrieval
+## Latest result: indexed discovery screen
 
-- **848 tests passed in622.19 s**, exit0, source unchanged throughout the suite.
+[Registered plan and results](scan-discovery-plan.md). Fresh final seeds924317 and
+924329 each have128 queries ×5 arms,256 initial records plus64 distractors,
+32 source corrections and16 logical restarts.
+
+- Index, cached index and reset index:100% exact status/text/source agreement.
+  Every stale cached reference is rejected; all logical restart checks pass.
+- Resetting cache changes0/128 answers per seed. No model was trained. This result
+  supports stopping learned complexity for this exact-descriptor workload only.
+- Full scan also answers100% and remains physically feasible. The first16 scan
+  omits all queries in this deliberately tail-targeted diagnostic. Neither control
+  establishes a learned advantage or the physical necessity of the candidate cap.
+- Indexed p95 about0.950ms; cached1.340/1.293ms. Complete invocations7.884/7.845s,
+  including report rendering. Peak RSS about523MiB; serialized index about20KiB.
+- Candidate probes <=1 (index/reset) or2 (stale cache recovery), but authoritative
+  validation scans **2H or3H historical headers**. This is not globally bounded or
+  sublinear storage work. Internal transaction/replay loops are included in CPU/
+  wall time, not public-read API counters. A head-index optimization is an optional
+  engineering follow-up if larger workloads demonstrate a need.
+- No reconstruction, concept induction, entity association, learned retention,
+  language or natural-data capability is established by this screen.
+
+Artifacts:
+
+- `runs/scan_discovery_final_924317_v1/` and
+  `runs/scan_discovery_final_924329_v1/`: raw rows, causal `last.json`, restart
+  snapshots, source identities/snapshot, metrics, timing and standalone `report.html`.
+- `runs/scan_discovery_dev_924301_v1/` and `_v2/`: preserved development/recheck;
+  v2 namespaces source IDs by population too. No gate changed after test exposure.
+- `runs/reviews/scan_discovery_20260924/`: public Claude rounds/receipts,
+  `raw-artifact-audit.json`, independent causal replay auditor, focused/full test
+  logs, `full-suite-exit.json`, source freeze receipt and documentation checks.
+- Committed portable evidence: `ara/evidence/tables/scan_discovery_2026-09-24.json`.
+  N577 records the experiment; O401 is staged, not a promoted general claim.
+
+All1,280 final raw rows were independently audited against source-event replay;
+seed populations are disjoint. Final source hashes stayed unchanged during the
+856-test suite. Reports use the unchanged renderer with structural verification;
+there is no new browser-QA claim. `last.json` is store/context state, not a model
+checkpoint; this index-only recipe has no training/resume CLI.
+
+## Earlier results: context/retrieval
+
+- **848 tests passed in622.19 s**, exit 0, source unchanged throughout the suite.
   Log/receipt: `runs/reviews/architecture_continuation_20260924/full-suite.log` and
   `full-suite-exit.json`. An earlier attempt was stopped after38.38 s for report
   completion; `full-suite-attempt1-exit.json` records exit-15, not a pass.
@@ -197,26 +242,25 @@ files copied explicitly for result inspection. Do not invent missing results.
 This is a continuation agenda, not an assertion that every item needs a new module.
 First inspect what already exists and have Claude challenge the next experiment.
 
-1. **Useful retrieval, retention and context control.** The fixed/learned lexical
-   baseline and pin lifecycle contracts now exist. Keep the learned head optional:
-   counting solves that task. Next, exceed the candidate scan budget and make later
-   queries genuinely depend on discovering or retaining earlier evidence. Include a
-   strong indexed/count-based baseline rather than deliberately handicapping fixed
-   retrieval. Compare discovery, retention and readout separately, with missed-candidate
-   recovery, delayed queries, distractors, corrections, interruptions and restart.
-   Keep exact strings/numbers accessible. Test one learned decision under TaskPolicy
-   at a time; do not add allocation, summaries and routing simultaneously. Flat and
-   Local/Global views need matched storage/scan/read budgets, measured compute and
-   causal reset/swap/eviction interventions. A useful-context claim requires a
-   measurable dependency on retained context, absent from the previous task.
-   Grounded learned responses remain a separate step beyond template copying.
-2. **Concept/instance/state learning.** Establish reusable structure beyond four
-   familiar transforms, with held-out instances and a separately declared novel
-   relation/concept test. Distinguish recognition/association from oracle identities.
-   Compare remembered examples with inferred concept codes before adding machinery.
-   Test correction, counterexamples, transfer to another use and frozen-weight runtime
-   acquisition. Earlier R1 transfer failures must guide task selection. This is a
-   separate scientific question from successful graph writes or pose reconstruction.
+1. **Useful representations and concept/instance/state learning — next priority.**
+   Establish reusable structure beyond four familiar transforms, with held-out
+   instances and a separately declared novel relation/concept test. Distinguish
+   recognition/association from supplied identities and exact descriptors. Compare
+   remembered examples with inferred concept codes before adding machinery. Test
+   counterexamples, correction, transfer to another use and frozen-weight runtime
+   acquisition. Earlier R1 transfer and CI1 retention failures must guide task
+   selection; successful graph writes or familiar-pose reconstruction do not solve it.
+2. **Useful retrieval, retention and context control — still open beyond exact keys.**
+   Counting solves the earlier lexical task; indexing solves the new exact-key
+   screen. Keep the learned head optional. Reopen this question only for a declared
+   workload requiring non-exact representations or a measurable dependency on
+   retained context. Include strong indexed/count-based controls and separately
+   assess discovery, retention and readout. Preserve exact strings/numbers,
+   correction, delayed queries, interruption and restart. Test one learned decision
+   under TaskPolicy at a time. Flat and Local/Global comparisons need matched
+   storage/scan/read budgets and causal reset/swap/eviction interventions. Count
+   preparation, validation, index construction, recovery and training costs.
+   Grounded learned responses remain separate from validated template copying.
 3. **Evidence and uncertainty beyond independent clean parts.** Test noisy and
    correlated observations, uncertain association, contradiction versus real state
    change, and detail-specific uncertainty. Duplicate evidence must not spuriously
@@ -252,56 +296,68 @@ training/data strategy; do not promise them from a tiny synthetic fit.
 
 ## Concrete starting slices for the next session
 
-1. **Select and register the experiment with Claude.** Inspect current code and the
-   negative context-intervention result first. Compare a strong exact/indexed reader,
-   counted reader and one learned selector/retention decision. Establish why full
-   search is unavailable in the proposed task and account for index construction,
-   key preparation, initial search and recovery. If a simple index already solves
-   it cheaply, keep that result and reconsider the next scientific priority.
-2. **Implement one end-to-end path and its essential red checks.** Fix the external
-   store and episode owner; specify query/candidate eligibility, read and retention
-   budgets, reset/suspend/resume, stale and omitted-detail behavior. Extend existing
-   modules/recipe where practical. Test causal inputs, source correction, true context
-   dependence and exact restart before claiming a learned result.
-3. **Run a bounded development comparison, review and repair.** Before execution,
-   register seeds, new train/dev/test populations, numeric quality/retention/latency
-   gates, local wall-time budget and allowed repair count. Use independent criticism
-   from Claude on public abstractions; inspect private source/results locally.
-4. **Freeze and verify the selected path.** Tiny train/report/resume, controlled
-   multi-seed final evaluation, saved failures, full repository tests on unchanged
-   source, standalone reports and scoped docs/atlas/evidence updates. A null result
-   is not a reason to invent a learned benefit. Choose the next item above from the
-   evidence; do not declare the entire architecture complete.
+1. **Choose a falsifiable representation/transfer question with Claude.** Inspect
+   current model/data/recipe paths and the relevant R1/CI1 failure evidence first.
+   Public hypothetical briefs should compare the smallest remembered-example,
+   shared-structure/code and fixed/oracle controls. Select one task/objective rather
+   than another module catalog. Declare precisely what is learned initially, what
+   runtime evidence changes without weight updates, and what transfer would falsify
+   the hypothesis. Keep source-supplied identity/geometry visible as oracle controls.
+2. **Register the slice, then add essential red checks.** Record a concrete user
+   path, training signal, train/dev/final populations, held-out instances and relation
+   splits, negative/shortcut controls, numeric reconstruction/task/retention gates,
+   local wall/CPU/GPU budget and repair limit. Freeze final populations before
+   exposure. Do not invent thresholds after seeing results. Extend existing recipes
+   and ordinary modules; preserve one authoritative store and episode/clock owner.
+3. **Implement and review the smallest complete path.** Test causal support use,
+   source correction, representation/version compatibility, unchanged frozen
+   parameters/buffers, retention and exact restart where applicable. Run tiny
+   train/report/resume checks for trained paths, then a bounded development
+   comparison. Obtain actual Claude criticism of public generic contracts; inspect
+   private implementation and measurements locally. Reconcile withdrawn claims
+   explicitly. Preserve failures and stop at the preregistered repair/budget limit.
+4. **Freeze, evaluate and select the next priority.** Run untouched multi-seed
+   evaluation and the relevant full suite on unchanged source; independently audit
+   raw metrics and source identities. Every completed run owns its report. Record
+   what passed and failed, update scoped evidence/atlas, commit completed work,
+   and use the result to select the next remaining item. A null result is useful;
+   it is not permission to manufacture benefit or call the whole architecture done.
 
-Useful existing commands (use fresh output directories; full settings must match
-for resume):
+Useful regression commands, only when relevant (new output directories):
 
 ```bash
+.venv/bin/python -m experiments.scan_discovery --output runs/my_scan_check --seed 924300 --records 32 --queries 16
+.venv/bin/python -m pytest tests/test_scan_discovery.py tests/test_working_context.py
 .venv/bin/python -m experiments.context_retrieval --output runs/my_context_check --steps 6 --worlds 1 --stop-after 3
 .venv/bin/python -m experiments.context_retrieval --output runs/my_context_check --steps 6 --worlds 1 --resume
-.venv/bin/python -m pytest tests/test_working_context.py tests/test_context_recipe.py tests/test_episodes.py
 .venv/bin/python -m pytest
 ```
 
-Existing final runs are regression evidence; do not rerun them unnecessarily before
-selecting the next experiment. `--final` in the old recipe uses consumed seed624927,
-so it does not automatically create a fresh final test for a changed method.
+Do not rerun completed experiments as a startup ritual. Their final populations
+are consumed: indexed924317/924329; lexical624927 (`--final`); RGB16 textures240927.
+Development indexed924301 and tiny924300 are also known. A changed method needs
+fresh preregistered populations. Exact resume requires compatible source/settings;
+old runs are not permission to resume training under changed code. Register the
+new slice's local compute budget; no future training run or mechanism was selected
+by the completed index screen.
 
 ## Actual Claude collaboration
 
 Use **`claude-opus-5-5` with `--effort medium`**, not the default model or a Codex
-subagent renamed Claude. The previous installed CLI was `/home/alex/.local/bin/claude`
-(version2.1.280). Verify availability and record the actual returned model usage.
+subagent renamed Claude. The last successful runner used `/home/alex/.local/bin/claude`.
+Verify current availability and record the actual returned model usage.
 If unavailable, report the specific problem rather than silently substituting.
 
 Latest collaboration: **four actual Opus5.5 medium rounds**, session
-`5af6c291-64b3-40fc-b95b-1d9019a806e5`. Exact briefs, replies, `invoke.py`, per-round
+`65ffe535-c0ac-49ce-9cd1-7fbc89abfca3`. Exact briefs, replies, `invoke.py`, per-round
 receipts and aggregate `claude-receipt.json` are in
-`runs/reviews/architecture_continuation_20260924/`. Earlier evidence-loop work used
-five calls in session `3827870d-78ce-4c88-be5d-ebf8b1c8cf26`, under
-`runs/reviews/architecture_completion_20260924/`. Use the latest runner as a pattern,
-not permission to send this private handoff externally. Retain returned usage fields
-verbatim; resumed-session totals may overlap, so do not blindly sum them.
+`runs/reviews/scan_discovery_20260924/`. Earlier lexical continuation used session
+`5af6c291-64b3-40fc-b95b-1d9019a806e5` in
+`runs/reviews/architecture_continuation_20260924/`; the evidence-loop rounds are
+under `runs/reviews/architecture_completion_20260924/`.
+Use the latest runner as an isolation pattern, not permission to send this private
+handoff externally. Retain returned usage fields verbatim; resumed-session totals
+may overlap, so do not blindly sum them.
 
 Start a fresh review directory and preferably a fresh Claude session with a public,
 hypothetical brief. Keep subsequent rounds in that session. The existing runner
@@ -328,7 +384,7 @@ is not experimental evidence. API-equivalent cost fields are not subscription bi
 - Run focused meaningful checks, tiny train/report/resume, then controlled comparisons.
   Preserve raw metrics, checkpoint, settings/source identities and each run's report.
 - Freeze source while the full test suite runs. Required before shared-code commits:
-  `.venv/bin/python -m pytest`; the last complete run passed848 tests in10m22s. Use a durable job
+  `.venv/bin/python -m pytest`; the last complete run passed 856 tests in 662.14s. Use a durable job
   with saved exit status if a tool session can terminate long processes. Do not count
   partial logs or a dead process as a pass; do not run duplicate suites unnecessarily.
 - Update the owning plan, compact project state and scoped architecture atlas.
