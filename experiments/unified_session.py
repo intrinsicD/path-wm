@@ -15,6 +15,7 @@ and plans carry no capability claim. R1 C1/C2 must pass before any learned R2 ru
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 import torch
@@ -369,16 +370,36 @@ def visual_training_context(identity_run):
                          'original actual-task gates are unchanged. See docs/real-visual-memory-plan.md.')
 
 
+LEGACY_MATCH_THRESHOLDS = (.80, .85, .90, .95)
+LEGACY_RULE = ('Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; '
+               'maximize min acquisition/same-layout/relocated matching under false-match<=.005')
+
+
+def checked_match_thresholds(values):
+    """Calibration match grid: non-empty, finite, strictly increasing numbers, each valid
+    for AssociationBinder with new = match - .05 (-1 <= new < match <= 1)."""
+    values = tuple(values)
+    if (not values or any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in values)
+            or any(not math.isfinite(v) or not -1 <= v - .05 or v > 1 for v in values)
+            or any(b <= a for a, b in zip(values, values[1:]))):
+        raise ValueError('Binding match thresholds must be finite, strictly increasing, in [-0.95, 1]')
+    return tuple(float(v) for v in values)
+
+
 @torch.no_grad()
-def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
+def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128, match_thresholds=LEGACY_MATCH_THRESHOLDS):
     """Calibrate the existing machine-key policy on training scenes only; no updates.
 
     Hidden machine pixels supply calibration labels only. Runtime eligibility uses
     the learned kind head. Every policy is measured in the actual sequential session.
+    `match_thresholds` is the searched match grid (new = match - .05, margins .05/.1);
+    the default is the legacy grid and leaves settings unchanged.
     """
     from pathwm.models.slots import pointer
     if identity_run is None or scenes < 1:
         raise ValueError('Calibration needs an identity checkpoint and positive scene count')
+    grid = checked_match_thresholds(match_thresholds)
+    legacy = grid == LEGACY_MATCH_THRESHOLDS
     out = Path(output)
     out.mkdir(parents=True, exist_ok=False)
     modules = build(seed, identity_run=identity_run, candidate_scope="predicted-machine")
@@ -389,7 +410,9 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
                     training_context=visual_training_context(identity_run),
                     episode='initial, same-layout lamp change, relocated with alternate side swaps, novel arrival',
                     checkpoint_sha256=file_hash(Path(identity_run)/'last.pt'),
-                    rule='Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; maximize min acquisition/same-layout/relocated matching under false-match<=.005')
+                    rule=LEGACY_RULE if legacy else LEGACY_RULE.replace('[.8,.85,.9,.95]', str(list(grid))))
+    if not legacy:
+        settings['match_thresholds'] = list(grid)
     atomic_json(out/'status.json', dict(result='running',report='pending',step=0,error=None))
     atomic_json(out/'run.json',dict(schema='pathwm-run-v1',identity=dict(settings=settings,
                 data=dict(population='train',kinds=list(rw.KIND_SPLIT['train'])),environment=environment('cpu')),
@@ -429,7 +452,7 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
         rows.append(row)
         with (out/'metrics.jsonl').open('a') as f: f.write(json.dumps(row,sort_keys=True)+'\n')
     policies = []
-    for match in (.80,.85,.90,.95):
+    for match in grid:
         for margin in (.05,.10):
             thresholds = dict(match_threshold=match,new_threshold=match-.05,margin=margin)
             binder = AssociationBinder(**thresholds)
@@ -500,7 +523,8 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
                     perception_sha256=state_hash(perception),key_sha256=state_hash(candidates.key),
                     source_sha256=source_record(__file__,nn.ModuleDict(modules))['sha256'],
                     result_sha256=file_hash(out/'result.json'),policies_sha256=file_hash(out/'policies.json'),
-                    calibration=dict(seed=seed,scenes=scenes,population='train',method='actual-session-grid-with-novel-arrivals')))
+                    calibration=dict(seed=seed,scenes=scenes,population='train',method='actual-session-grid-with-novel-arrivals',
+                                     **({} if legacy else dict(match_thresholds=list(grid))))))
     write_report(out)
     print(json.dumps(dict(gate=gate,metrics=metrics),indent=2))
     return gate
@@ -530,6 +554,10 @@ def visual_binding_policy(path, identity_run):
             or result['metrics']['selected']['thresholds'] != policy['thresholds']
             or result['metrics']['selected'] not in policies):
         raise ValueError('Binding calibration evidence, model or source identity changed')
+    grid = policy['calibration'].get('match_thresholds')
+    if grid is not None and (sorted({p['thresholds']['match_threshold'] for p in policies}) != grid
+                             or policy['thresholds']['match_threshold'] not in grid):
+        raise ValueError('Binding calibration grid changed')
     return AssociationBinder(**policy['thresholds']), policy
 
 
@@ -779,10 +807,22 @@ def main():
     parser.add_argument("--visual-memory", action="store_true", help="evaluate native J visual memory and restart")
     parser.add_argument("--calibrate-visual-binding", action="store_true", help="calibrate existing J machine identity policy on train scenes")
     parser.add_argument("--binding-calibration", type=Path, help="checkpoint-bound binding.json for visual memory")
+    parser.add_argument("--binding-match-thresholds", type=float, nargs="+",
+                        help="with --calibrate-visual-binding: searched match grid (strictly increasing; "
+                             "default legacy .80 .85 .90 .95; new = match - .05; margins .05/.10)")
     args = parser.parse_args()
+    if args.binding_match_thresholds is not None:
+        if not args.calibrate_visual_binding:
+            parser.error("--binding-match-thresholds requires --calibrate-visual-binding")
+        try:
+            checked_match_thresholds(args.binding_match_thresholds)
+        except ValueError as error:
+            parser.error(str(error))
     torch.set_num_threads(2)
     if args.calibrate_visual_binding:
-        passed = calibrate_visual_binding(args.output, identity_run=args.identity_run, seed=args.seed, scenes=args.scenes)
+        grid = args.binding_match_thresholds or LEGACY_MATCH_THRESHOLDS
+        passed = calibrate_visual_binding(args.output, identity_run=args.identity_run, seed=args.seed, scenes=args.scenes,
+                                          match_thresholds=grid)
         if not passed:
             raise SystemExit(1)
         return
