@@ -5,6 +5,8 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
+- **Active slice:** [Frozen representation transfer](representation-transfer-plan.md): preregistered affine baseline over existing frozen detail codes, with actual Claude Opus5.5 medium review. Plan and red numeric/integrity checks recorded; no new result yet.
+
 - **Continue:** [Handoff](architecture-continuation-handoff.md): Claude Opus5.5 medium; next representation/instance transfer. [Indexed screen](scan-discovery-plan.md): two populations100%, no cache benefit; 856 tests pass.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
