@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Continue:** [Claude medium handoff](architecture-continuation-handoff.md). [Evidence-loop results](evidence-loop-plan.md): two seeds and838 tests pass.
+- **Continue:** [Bounded context/retrieval slices](context-retrieval-plan.md) from the [Claude medium handoff](architecture-continuation-handoff.md). Planning with verified Claude Opus 5.5 medium; no new learned result yet. [Evidence-loop results](evidence-loop-plan.md): two seeds and838 tests pass.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
