@@ -1,5 +1,7 @@
 # PATH-WM — new-session handoff
 
+**Current continuation (24 September):** [architecture handoff with Claude Opus 5.5 medium](architecture-continuation-handoff.md). Start there; the sections below preserve the earlier input-architecture handoff.
+
 Updated 18 September 2026. Repository `/home/alex/Documents/path-wm`, branch `main`.
 Read `CLAUDE.md`, `docs/experiment-workflow.md`, this handoff and the current plan.
 Preserve completed experiments; do not restart the research from scratch.
