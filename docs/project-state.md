@@ -7,7 +7,7 @@ Task plans own current work; older decisions remain in the
 
 - **Active:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
-- **Latest evidence:** Native visual-memory software committed9146f21;925 CPU tests pass. All memory contracts pass on2403/2404;2404 identity fails (57/64 cross-layout). Existing key-head repair underway with frozen J perception; [plan](real-visual-memory-plan.md).
+- **Latest evidence:** Native memory/training committedfab8296;942 CPU tests pass.2404 identity fails57/64; key repair keeps J perception fixed. Proxy failures preserved; W100 actual cross-layout59/64 and63/64: two-population gate fails. Next repair planned; [plan](real-visual-memory-plan.md).
 
 - **Earlier screens:** [Affine transfer](representation-transfer-plan.md) passes surrogate gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Actual-model counterparts remain subject to the rerun audit.
 

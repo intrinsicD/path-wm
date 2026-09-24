@@ -354,6 +354,21 @@ def _plan_snapshot(agent, goal):
                 value=round(decision.value, 6), read=[list(c) for c in read.components])
 
 
+def visual_training_context(identity_run):
+    """Disclose parent diagnostics separately from the actual runtime task gates."""
+    parent = Path(identity_run)
+    record = json.loads((parent / 'run.json').read_text())
+    frozen = record['identity']['settings'].get('freeze_perception', False)
+    result = json.loads((parent / 'result.json').read_text()) if frozen else None
+    return dict(parent=str(parent), frozen_perception_key_repair=frozen,
+                parent_result_sha256=file_hash(parent / 'result.json') if frozen else None,
+                training_monitor_gate=result.get('gate') if result else None,
+                protocol='The added cosine-quantile training screen is a reported diagnostic, not a runtime-task prerequisite. '
+                         'This prospective amendment was recorded before calibration3404 and validation2405/2406 because '
+                         'the proxy cutoffs were not derived from the binder. Failed parent screens remain failed; '
+                         'original actual-task gates are unchanged. See docs/real-visual-memory-plan.md.')
+
+
 @torch.no_grad()
 def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
     """Calibrate the existing machine-key policy on training scenes only; no updates.
@@ -371,6 +386,7 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
     perception, candidates = modules['perception'], modules['candidates']
     settings = dict(stage='visual-binding-calibration', purpose='development', seed=seed,
                     scenes=scenes, device='cpu', precision='fp32', width=WIDTH, updates=0,
+                    training_context=visual_training_context(identity_run),
                     episode='initial, same-layout lamp change, relocated with alternate side swaps, novel arrival',
                     checkpoint_sha256=file_hash(Path(identity_run)/'last.pt'),
                     rule='Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; maximize min acquisition/same-layout/relocated matching under false-match<=.005')
@@ -472,7 +488,8 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
                  selected=selected,policies=policies)
     atomic_json(out/'policies.json',policies)
     atomic_json(out/'result.json',dict(evaluation_scope='Training-only calibration of existing machine identity policy',
-                gate=gate,metrics=metrics,limitations=['No network updates; bounded two-machine layout/lamp-change task.',
+                gate=gate,metrics=metrics,training_context=settings['training_context'],
+                limitations=['No network updates; bounded two-machine layout/lamp-change task.',
                 'Hidden identity used only for calibration labels; runtime uses learned kind eligibility.',
                 'Thresholds are unqualified until the independent validation screen passes.']))
     atomic_json(out/'status.json',dict(result='completed',report='pending',step=0,error=None))
@@ -540,7 +557,8 @@ def visual_memory_evaluation(output, *, identity_run, seed, scenes, binding_cali
     settings = dict(stage='actual-visual-memory', purpose='development', device='cpu',
                     precision='fp32', seed=seed, scenes=scenes, width=WIDTH,
                     slots=7, iterations=3, decoder_width=32,
-                    identity_run=str(identity_run), checkpoint_sha256=file_hash(Path(identity_run) / 'last.pt'),
+                    identity_run=str(identity_run), training_context=visual_training_context(identity_run),
+                    checkpoint_sha256=file_hash(Path(identity_run) / 'last.pt'),
                     screen_threshold=.95, updates=0, binding_policy=policy,
                     candidate_scope=policy['candidate_scope'] if policy else 'all',
                     scope='Actual native perception/slot/decoder and R2 memory; other R2 modules untrained',
@@ -725,6 +743,7 @@ def visual_memory_evaluation(output, *, identity_run, seed, scenes, binding_cali
         gate = metrics['all_contracts'] and unchanged and metrics['novel_false_merge'] <= .005 and min(metrics[k] for k in
                     ('acquisition','identity_matching','lamp_accuracy','updated_lamp_accuracy','cross_layout_matching','cross_layout_lamp_accuracy','novel_slot_detection')) >= .95
         atomic_json(out / 'result.json', dict(evaluation_scope=settings['scope'], gate=gate, metrics=metrics,
+                    training_context=settings['training_context'],
                     limitations=['Synthetic validation scenes; development screen, not sealed generalization.',
                       'Slots are compressed and position-dependent; no fine-detail or pose-transfer claim.',
                       'Full pyramid access re-encodes retained lossless source; slot recall does not.',

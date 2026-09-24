@@ -4,14 +4,16 @@ Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
 **Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
-Actual Claude Opus5.5 medium is the implementation/review partner. Native memory
-software is committed at `9146f21`; all925 CPU tests pass (689.17s, unchanged
+Actual Claude Opus5.5 medium is the implementation/review partner. Native memory/training
+software is committed at `fab8296`; all942 CPU tests pass (812.70s, unchanged
 source). Calibration3403_v2 passes; fresh validation2403 passes,2404 fails
 cross-layout identity (57/64), while all memory contracts pass in both. These
 are development results, not full-agent or fine-detail qualification.
 
-A bounded repair of the existing identity key is being implemented in the
-existing perception recipe, with J perception/decoder frozen. See the owning
+Two bounded existing-key fits finished with J perception/decoder frozen; both
+failed the added cosine diagnostic. A prospective protocol correction keeps
+those failures visible while testing W100 versus J under the original actual-task
+gates. Matched training calibration3404 is underway, then fresh2405/2406. See the owning
 plan and `runs/reviews/real_visual_memory_20260924/claude-identity-repair-plan.md`.
 No alternate codec or representation is adopted. Historical866-test results
 and surrogate fidelity experiments remain preserved below and in their plans.

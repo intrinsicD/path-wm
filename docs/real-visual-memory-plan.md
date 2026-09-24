@@ -325,3 +325,29 @@ The key-training and calibration-parity implementation passes the complete CPU
 suite:942 tests,812.70s, zero failures/skips, source unchanged. The two completed
 key-training runs retain failed diagnostic screens. Actual-task comparison is
 next under the prospective amendment; no trained-task success claimed yet.
+
+## Actual-task comparison result (candidate not qualified)
+
+Matched calibration3404 passes: W100 selects(.85,.80,.10), acquisition/same-layout/
+relocated matching100%; Jselects(.90,.85,.10), acquisition100%, bothmatching99.22%.
+All256 inputframes are byte-identical acrossarms. Reports include parent diagnostic
+failure/amendment. Frozen-source snapshots retained for both calibrations and all
+four evaluations. Raw-row audit independently reproduces all published metrics.
+
+| Fixed arm | Seed2405 cross-layout | Seed2406 cross-layout | Overall requirement |
+| --- | --- | --- | --- |
+| W100 candidate |59/64 (92.19%), FAIL|63/64 (98.44%), pass|FAILED: both required|
+| Jcontrol |55/64 (85.94%), FAIL|61/64 (95.31%), pass|not selectable|
+
+All memory contracts, weight freezing and novel detection pass; falsemerges0.
+W100 same-layout/acquisition/lamp metrics100%. Original gate95% unchanged.
+Reports: `runs/real_visual_memory_comparison_v1/report.html` and individualrun
+reports; existingrenderer, structuralQAonly. Improvement does not close the
+slice. Round14 diagnoses the actualmisses and plans the next necessary bounded
+training repair. No thresholds, checkpoints or seeds are reselected for this
+failed comparison. No extra datasetmode/representation is adopted.
+
+Final source including diagnostic disclosure passes942 CPU tests again
+(790.60s, unchanged source). Metadata-only change reviewed clean by Claude
+round13; calibration manifests and allreports retain exact parent hashes.
+This software pass does not change the failed W100 two-population task result.
