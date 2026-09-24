@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Active implementation:** [evidence/episode loop](evidence-loop-plan.md), with Claude Opus5.5 medium. Plan and red checks in progress; no result yet.
+- **Evidence/episode loop:** [plan and results](evidence-loop-plan.md). Five Claude Opus5.5 medium rounds; two-seed RGB16 gates pass. 838 tests pass.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth

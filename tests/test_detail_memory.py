@@ -4,14 +4,20 @@ import torch
 from pathwm.models.detail_memory import DetailCodec, to_parts, from_parts, detail_loss, replace_details
 
 
-def test_rearrangement_is_exact_and_encoder_cannot_read_missing_pixels():
+@pytest.mark.parametrize("variant", ["film", "linear"])
+def test_rearrangement_is_exact_and_encoder_cannot_read_missing_pixels(variant):
     x=torch.rand(2,3,16,16)
     assert torch.equal(from_parts(to_parts(x)),x)
-    model=DetailCodec(width=16,hidden=32)
+    model=DetailCodec(width=16,hidden=32,variant=variant)
     visible=torch.tensor([[True,False,True,False],[False,True,False,True]])
     parts=to_parts(x); contaminated=parts.clone(); contaminated[~visible]=float('nan')
     a=model.encode(parts,visible); b=model.encode(contaminated,visible)
     assert torch.equal(a,b) and torch.equal(a[~visible],torch.zeros_like(a[~visible]))
+    pose=torch.tensor([0,2])
+    clean=model(parts,visible,pose); dirty=model(contaminated,visible,pose)
+    assert all(torch.equal(x,y) for x,y in zip(clean,dirty))
+    detail_loss(*dirty,torch.rand_like(dirty[0])).backward()
+    assert all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None)
     with pytest.raises(ValueError): model.encode(parts,visible.float())
 
 
@@ -37,3 +43,20 @@ def test_missing_codes_do_not_influence_output_and_requests_are_checked():
     for bad in [torch.tensor([0,4]),torch.tensor([0.,1.]),torch.tensor([0])]:
         with pytest.raises(ValueError): model.decode(z,present,bad)
     with pytest.raises(ValueError): model.decode(z[:,:,:15],present,pose)
+
+
+def test_actual_codec_change_rejects_persisted_read_before_decoding():
+    from experiments.evidence_loop import session_modules
+    from pathwm.world_state.session import WorldSession
+    from pathwm.world_state.episodes import EpisodeClient
+    from pathwm.io import state_hash
+    from pathwm.models.detail_memory import decode_read
+    model=DetailCodec(width=16,hidden=32,variant="linear").eval()
+    version=state_hash(model); modules,contracts=session_modules(16,version)
+    client=EpisodeClient(WorldSession(**modules),representations=contracts)
+    client.create("create","tile",kind="instance")
+    read=client.load("tile",[f"part{i}" for i in range(4)])
+    decode_read(model,client,read,0,version=version)  # explicitly never observed -> prior
+    with torch.no_grad(): next(model.parameters()).add_(.01)
+    with pytest.raises(ValueError,match="Codec"):
+        decode_read(model,client,read,0,version=version)

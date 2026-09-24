@@ -2,10 +2,9 @@ session:
   id: 2026-09-24_001
   date: '2026-09-24'
   started: 2026-09-24T12:52+02:00
-  last_turn: 2026-09-24T12:52+02:00
-  turn_count: 1
-  summary: Architecture completion proposal grounded in current owners and concept/conversation discussion;
-    no implementation or run.
+  last_turn: 2026-09-24T13:34+02:00
+  turn_count: 2
+  summary: Evidence-loop implemented through five Claude Opus5.5 medium rounds and local audits. First fit failed; repaired two-seed RGB16 final gates pass. 838 repository tests pass; natural language/audio and general concepts unproven.
 events_logged:
 - turn: 1
   type: question
@@ -19,6 +18,37 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Close four runtime interfaces plus learning/evaluation; bounded integrated demonstration proposed.
+- turn: 2
+  type: decision
+  id: N570
+  routing: direct
+  provenance: user
+  summary: Implement evidence-loop architecture contracts with Claude medium
+- turn: 2
+  type: experiment
+  id: N571
+  routing: direct
+  provenance: ai-executed
+  summary: First FiLM detail codec misses quality gates
+- turn: 2
+  type: experiment
+  id: N572
+  routing: direct
+  provenance: ai-executed
+  summary: Linear view maps and variance-only repair
+- turn: 2
+  type: experiment
+  id: N573
+  routing: direct
+  provenance: ai-executed
+  summary: Two-seed held-out detail memory and episode contract result
+- turn: 2
+  type: observation
+  id: O399
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped detail-memory interpretation, no general capability promotion.
+
 ai_actions:
 - turn: 1
   action: Inspected current plans/source; updated walkthrough, atlas coverage and project-state pointer.
@@ -28,13 +58,25 @@ ai_actions:
   - docs/architecture-discussion.md
   - docs/diagrams/architecture-atlas.json
   - docs/project-state.md
+- turn: 2
+  action: Implemented codec, episode client, recipe and negative tests; completed five actual Claude medium
+    public-only rounds; locally reviewed/repaired emission and checkpoint boundaries; saved failed/development/final
+    reports.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/detail_memory.py
+  - pathwm/data/detail_views.py
+  - pathwm/world_state/episodes.py
+  - experiments/evidence_loop.py
+  - docs/evidence-loop-plan.md
+
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: User asks what to work on now to complete architecture; prior discussion supplies concept-instance,
     evidence and conversation requirements, not proof of learned capability.
 open_threads:
-- 'N569: select concrete representation/update/access/response interfaces and demonstration gates.'
+- 'N569: bounded contracts now implemented; general learned concepts/context/language/audio remain open.'
 - Existing failed transfer/retention and natural language/audio learning remain unresolved.
 ai_suggestions_pending:
 - 'O398: proposed design order and visual demonstration, then grounded text and audio.'

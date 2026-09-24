@@ -19,6 +19,21 @@ See [plan §16](integrated-architecture-plan.md#16-lernfolge-und-nächster-nachw
 
 # Running and editing experiments
 
+For the **learned detail/evidence loop**, use
+`python -m experiments.evidence_loop --output runs/my_evidence_loop --variant linear --calibration-steps 600 --seed 17`.
+The default evaluation population is development-only. The registered final
+comparison adds `--final-eval` and runs seeds17 and29 separately; it fixes batch64,
+3000 mean updates, 600 variance updates and 512 held-out instances. Supplied part
+association, procedural texture and familiar quarter turns are explicit limits.
+See the [plan, failures, results and commands](evidence-loop-plan.md).
+
+A CPU workflow check uses `--device cpu --steps 4 --batch 2 --hidden 16
+--eval-count 2 --variant linear --calibration-steps 3`. For resumability, add
+`--stop-after 2`, then run into a fresh output directory with the same settings and
+`--resume PREVIOUS/last.pt`, omitting `--stop-after`. Matching source/settings are
+required. Reports are self-contained `report.html`; checkpoints include both
+optimizers, calibration progress and RNG. A smoke check proves no quality claim.
+
 For the **remaining encoder scaling bottleneck**, run
 `python -m experiments.token_budget --device cuda --encoder-window 4 --output runs/my_encoder_budget`.
 It compares dense attention, physically packed merges, and packed fine windows

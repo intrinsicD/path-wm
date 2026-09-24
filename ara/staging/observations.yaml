@@ -7022,3 +7022,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O399
+  timestamp: 2026-09-24T13:34+02:00
+  provenance: ai-suggested
+  content: For the controlled independent-part texture family, a smaller learned finite-view decoder with externally
+    stored instance codes supports high-fidelity reconstruction and evidence revision; conditional variance
+    fitting improves hidden population coverage without changing reconstruction. This does not establish new
+    concept induction or natural conversation.
+  context: Two trained seeds, familiar quarter turns, supplied part association; docs/evidence-loop-plan.md
+  potential_type: claim
+  bound_to:
+  - N572
+  - N573
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

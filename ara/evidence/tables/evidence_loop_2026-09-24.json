@@ -1,0 +1,529 @@
+{
+  "claude_receipt": "runs/reviews/architecture_completion_20260924/claude-receipt.json",
+  "focused_tests": {
+    "log": "runs/reviews/architecture_completion_20260924/final-focused.log",
+    "passed": 18
+  },
+  "full_suite": {
+    "exit_code": 0,
+    "log": "runs/reviews/architecture_completion_20260924/full-suite-detached.log",
+    "log_sha256": "caf58712eb34c711296d3c22302a861eed4a8bee91f1380b02f063c746fff223",
+    "passed": 838,
+    "pytest_seconds": 660.49,
+    "receipt": "runs/reviews/architecture_completion_20260924/full-suite-exit.json"
+  },
+  "independent_audit": "runs/reviews/architecture_completion_20260924/independent-raw-audit.json",
+  "profile": {
+    "activation_shapes": {
+      "encoder": {
+        "inputs": [
+          [
+            64,
+            4,
+            192
+          ]
+        ],
+        "output": [
+          64,
+          4,
+          64
+        ]
+      },
+      "logvar": {
+        "inputs": [
+          [
+            64,
+            4
+          ]
+        ],
+        "output": [
+          64,
+          3072
+        ]
+      },
+      "mean": {
+        "inputs": [
+          [
+            64,
+            256
+          ]
+        ],
+        "output": [
+          64,
+          3072
+        ]
+      }
+    },
+    "batch": 64,
+    "device": "NVIDIA GeForce RTX 3050",
+    "diagnostic_forward_cuda_ms": {
+      "encoder": 0.2703999876976013,
+      "logvar": 0.08908800035715103,
+      "mean": 0.1093439981341362
+    },
+    "limits": "Separate diagnostic after warmup, lr=0; CUDA step excludes generator/retrieval/I/O. Module times one diagnostic sample, not additive inclusive timings. Profiler FLOPs cover supported operators, not every operation. All-four pose heads computed, one selected. Decoder-state persistence costs reported separately.",
+    "parameters_by_module": {
+      "encoder": 131648,
+      "logvar": 15360,
+      "mean": 789504
+    },
+    "peak_training_bytes": 99063808,
+    "precision": "FP32",
+    "profiled_supported_flops": 482001152,
+    "steady_step_p50_ms": 2.6275839805603027,
+    "steady_step_p90_ms": 3.334144115447998
+  },
+  "runs": {
+    "evidence_loop_calibrated_s17_dev": {
+      "checkpoint_sha256": "b900e013887afc64945ecbe2fdbf21b12dbbe1260038725a1dfac0b90b13d777",
+      "raw_sha256": "9e04d016ec7f5e01e30b0d34339c3f140b44ca322838118cfd72bb3ebe474fe3",
+      "result": {
+        "calibration_preserves_mean_weights": true,
+        "calibration_step": 600,
+        "evaluation_seed": 240925,
+        "final_evaluation": false,
+        "gates": {
+          "fidelity": true,
+          "hidden_calibration": true,
+          "memory": true,
+          "pose": true,
+          "retention": true,
+          "revision": true,
+          "uncertainty": true
+        },
+        "metric_route": "All evaluation codes serialized through WorldStore; live WorldSession parity checked separately",
+        "metrics": {
+          "by_pose_mse": [
+            0.0002449422318022698,
+            0.00023775605950504541,
+            0.00024291634326800704,
+            0.00023976554803084582
+          ],
+          "by_pose_old_mse_increase": [
+            3.0157083529047668e-05,
+            3.0500232242047787e-05,
+            3.1674178899265826e-05,
+            2.852165198419243e-05
+          ],
+          "by_pose_revision_ratio": [
+            0.007586505283456572,
+            0.00727710568687091,
+            0.007438968900374131,
+            0.007402535208712128
+          ],
+          "copy_mse": 0.06396535784006119,
+          "full_90_coverage": 0.9239763021469116,
+          "full_mse": 0.00024134505656547844,
+          "known_variance": 0.00023674422118347138,
+          "latest_only_mse": 0.01609649881720543,
+          "lossless_geometry_reference_mse": 0.0,
+          "new_after_mse": 0.00023874861653894186,
+          "new_before_mse": 0.03214910253882408,
+          "no_update_mse": 0.01618141494691372,
+          "nonidentity_mse": 0.00024014597875066102,
+          "old_after_mse": 0.0002439414820400998,
+          "old_before_mse": 0.00021372816991060972,
+          "old_output_drift": 3.10411342070438e-05,
+          "population_prior_unknown_mse": 0.03213287889957428,
+          "pose_ignored_mse": 0.06379935890436172,
+          "psnr": 36.17361592342789,
+          "unknown_90_coverage": 0.9169082641601562,
+          "unknown_variance": 0.033259302377700806,
+          "wrong_instance_mse": 0.06405120342969894
+        },
+        "optimizer_bytes": 7494188,
+        "parameter_bytes": 3747072,
+        "parameters": 936768,
+        "passed": true,
+        "peak_allocated_bytes": 215716352,
+        "peak_reserved_bytes": 247463936,
+        "samples_per_second": 18574.930101719354,
+        "scope": "Controlled RGB16 textures; supplied part identity, familiar quarter turns; no natural language/audio learning",
+        "seconds": 12.4038151819841,
+        "software": {
+          "cancellation_waits": true,
+          "completed_request_ready": true,
+          "rederived_exact": true,
+          "response_completed_once": true,
+          "restart_exact": true,
+          "stale_rejected": true,
+          "stored_direct_exact": true,
+          "unrelated_detail_retained": true,
+          "wait_for_complete": true,
+          "weights_unchanged": true,
+          "withdrawn_detail_unavailable": true
+        },
+        "timing_scope": "This invocation training segment including periodic validation; not isolated GPU kernel time",
+        "training_complete": true
+      },
+      "result_sha256": "ed56b2bdcf7fce72dc83508ab23698e947cf060f5449b0aba7cc46f958807a29",
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    "evidence_loop_film_s17_v1": {
+      "checkpoint_sha256": "50a68c882099f432ef03badff98586b7a24fd539eda6b4dbe39f395a5f01a2ed",
+      "raw_sha256": "cbb701e9c13411828df0996162b99eba9a0a740ef103caddac32dc1f26281556",
+      "result": {
+        "gates": {
+          "fidelity": false,
+          "memory": false,
+          "pose": false,
+          "retention": false,
+          "revision": true,
+          "uncertainty": false
+        },
+        "metrics": {
+          "by_pose_mse": [
+            0.018160421401262283,
+            0.018218165263533592,
+            0.018171604722738266,
+            0.018311887979507446
+          ],
+          "copy_mse": 0.06479321420192719,
+          "full_90_coverage": 0.9004046320915222,
+          "full_mse": 0.018215520307421684,
+          "known_variance": 0.018080202862620354,
+          "latest_only_mse": 0.025305449962615967,
+          "new_after_mse": 0.01824597828090191,
+          "new_before_mse": 0.03728698194026947,
+          "no_update_mse": 0.025277327746152878,
+          "nonidentity_mse": 0.0182338859885931,
+          "old_after_mse": 0.01818506233394146,
+          "old_before_mse": 0.013267668895423412,
+          "old_output_drift": 0.004854235798120499,
+          "pose_ignored_mse": 0.03520292043685913,
+          "psnr": 17.395584190740088,
+          "unknown_90_coverage": 0.7987086176872253,
+          "unknown_variance": 0.02449275553226471,
+          "wrong_instance_mse": 0.046159833669662476
+        },
+        "optimizer_bytes": 14871152,
+        "parameter_bytes": 7435520,
+        "parameters": 1858880,
+        "passed": false,
+        "peak_allocated_bytes": 226164736,
+        "peak_reserved_bytes": 262144000,
+        "samples_per_second": 11315.828243042884,
+        "scope": "Controlled RGB16 textures; supplied part identity, familiar quarter turns; no natural language/audio learning",
+        "seconds": 16.967383728013374,
+        "software": {
+          "cancellation_waits": true,
+          "completed_request_ready": true,
+          "rederived_exact": true,
+          "restart_exact": true,
+          "stale_rejected": true,
+          "unrelated_detail_retained": true,
+          "wait_for_complete": true,
+          "weights_unchanged": true,
+          "withdrawn_detail_unavailable": true
+        },
+        "training_complete": true
+      },
+      "result_sha256": "87eefb4384062ec6d78cd2641158556d28614bf2520b8a4d2e74f5d091f35f90",
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    "evidence_loop_final_s17": {
+      "checkpoint_sha256": "cc5486e6fe6244e8091e41a709ea393339c2c6f662832f307be0634f9c7c990e",
+      "raw_sha256": "3b5bce8f8afc65d2bdad7c5f7bd610d36b1d0e06ac4df827bcd18626d1111227",
+      "result": {
+        "calibration_preserves_mean_weights": true,
+        "calibration_step": 600,
+        "evaluation_seed": 240927,
+        "final_evaluation": true,
+        "gates": {
+          "fidelity": true,
+          "hidden_calibration": true,
+          "memory": true,
+          "pose": true,
+          "retention": true,
+          "revision": true,
+          "uncertainty": true
+        },
+        "metric_route": "All evaluation codes serialized through WorldStore; live WorldSession parity checked separately",
+        "metrics": {
+          "by_pose_mse": [
+            0.0002458722156006843,
+            0.00023879407672211528,
+            0.0002443173434585333,
+            0.00024132888938765973
+          ],
+          "by_pose_old_mse_increase": [
+            3.06627043755725e-05,
+            2.996361581608653e-05,
+            3.20122780976817e-05,
+            2.9272196115925908e-05
+          ],
+          "by_pose_revision_ratio": [
+            0.007763956040348714,
+            0.007463767112833991,
+            0.007691692628810685,
+            0.007606239112943886
+          ],
+          "by_pose_unknown_90_coverage": [
+            0.9183604121208191,
+            0.9197540283203125,
+            0.9146474599838257,
+            0.9211883544921875
+          ],
+          "copy_mse": 0.06388638913631439,
+          "full_90_coverage": 0.9240767359733582,
+          "full_mse": 0.00024257814220618457,
+          "known_variance": 0.00023674422118347138,
+          "known_variance_near_floor_fraction": 0.013671875,
+          "known_variance_to_empirical_mse": 0.9772433417126253,
+          "latest_only_mse": 0.016112525016069412,
+          "lossless_geometry_reference_mse": 0.0,
+          "new_after_mse": 0.0002422571851639077,
+          "new_before_mse": 0.031744711101055145,
+          "no_update_mse": 0.01597856730222702,
+          "nonidentity_mse": 0.0002414800983387977,
+          "old_after_mse": 0.00024289905559271574,
+          "old_before_mse": 0.00021242137881927192,
+          "old_output_drift": 3.071324681513943e-05,
+          "population_prior_unknown_mse": 0.03173188865184784,
+          "pose_ignored_mse": 0.06370968371629715,
+          "psnr": 36.151483343305514,
+          "unknown_90_coverage": 0.918487548828125,
+          "unknown_90_coverage_instance_bootstrap_ci": [
+            0.9159784913063049,
+            0.9207184314727783
+          ],
+          "unknown_variance": 0.033259302377700806,
+          "unknown_variance_to_empirical_mse": 1.0477116100324289,
+          "wrong_instance_mse": 0.06390561163425446
+        },
+        "optimizer_bytes": 7617076,
+        "parameter_bytes": 3747072,
+        "parameters": 936768,
+        "passed": true,
+        "peak_allocated_bytes": 217815552,
+        "peak_reserved_bytes": 247463936,
+        "samples_per_second": 14379.261349423949,
+        "scope": "Controlled RGB16 textures; supplied part identity, familiar quarter turns; no natural language/audio learning",
+        "seconds": 16.023076179029886,
+        "software": {
+          "cancellation_waits": true,
+          "completed_request_ready": true,
+          "rederived_exact": true,
+          "response_completed_once": true,
+          "restart_exact": true,
+          "stale_rejected": true,
+          "stored_direct_exact": true,
+          "unrelated_detail_retained": true,
+          "wait_for_complete": true,
+          "weights_unchanged": true,
+          "withdrawn_detail_unavailable": true
+        },
+        "timing_scope": "This invocation training segment including periodic validation; not isolated GPU kernel time",
+        "training_complete": true
+      },
+      "result_sha256": "99170c3905ed09114f82ef7eca2cfa31af79b9eddda2c1292883b682ddd4b836",
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    "evidence_loop_final_s29": {
+      "checkpoint_sha256": "1969d6cd47469f031d2254a49e3ecc4c10a48e9b14f66adf3f5cabb539a825e4",
+      "raw_sha256": "d1a1f40c50a710267e0c874470a9044fdf8eb63b4cb0fc0666ef51aa0202160a",
+      "result": {
+        "calibration_preserves_mean_weights": true,
+        "calibration_step": 600,
+        "evaluation_seed": 240927,
+        "final_evaluation": true,
+        "gates": {
+          "fidelity": true,
+          "hidden_calibration": true,
+          "memory": true,
+          "pose": true,
+          "retention": true,
+          "revision": true,
+          "uncertainty": true
+        },
+        "metric_route": "All evaluation codes serialized through WorldStore; live WorldSession parity checked separately",
+        "metrics": {
+          "by_pose_mse": [
+            0.00024112679238896817,
+            0.0002398068318143487,
+            0.0002382952079642564,
+            0.00023648682690691203
+          ],
+          "by_pose_old_mse_increase": [
+            3.0806928407400846e-05,
+            3.0291004804894328e-05,
+            2.9492948669940233e-05,
+            2.492821658961475e-05
+          ],
+          "by_pose_revision_ratio": [
+            0.007687084427844361,
+            0.007599237107505538,
+            0.007451498958839934,
+            0.00744100930137981
+          ],
+          "by_pose_unknown_90_coverage": [
+            0.9155629873275757,
+            0.9205474853515625,
+            0.9205119013786316,
+            0.9192708730697632
+          ],
+          "copy_mse": 0.06388638913631439,
+          "full_90_coverage": 0.9245853424072266,
+          "full_mse": 0.00023892892932053655,
+          "known_variance": 0.00023760611657053232,
+          "known_variance_near_floor_fraction": 0.005859375,
+          "known_variance_to_empirical_mse": 0.991490201483941,
+          "latest_only_mse": 0.016111766919493675,
+          "lossless_geometry_reference_mse": 0.0,
+          "new_after_mse": 0.0002396454510744661,
+          "new_before_mse": 0.031763408333063126,
+          "no_update_mse": 0.015986371785402298,
+          "nonidentity_mse": 0.0002381962985964492,
+          "old_after_mse": 0.00023821239301469177,
+          "old_before_mse": 0.00020933261839672923,
+          "old_output_drift": 3.4107280953321606e-05,
+          "population_prior_unknown_mse": 0.03173188865184784,
+          "pose_ignored_mse": 0.06366147100925446,
+          "psnr": 36.2173126304362,
+          "unknown_90_coverage": 0.9189733266830444,
+          "unknown_90_coverage_instance_bootstrap_ci": [
+            0.9164619445800781,
+            0.9213746190071106
+          ],
+          "unknown_variance": 0.03299544379115105,
+          "unknown_variance_to_empirical_mse": 1.0387878858959059,
+          "wrong_instance_mse": 0.0638730376958847
+        },
+        "optimizer_bytes": 7617076,
+        "parameter_bytes": 3747072,
+        "parameters": 936768,
+        "passed": true,
+        "peak_allocated_bytes": 217815552,
+        "peak_reserved_bytes": 247463936,
+        "samples_per_second": 14063.683525389415,
+        "scope": "Controlled RGB16 textures; supplied part identity, familiar quarter turns; no natural language/audio learning",
+        "seconds": 16.382621209020726,
+        "software": {
+          "cancellation_waits": true,
+          "completed_request_ready": true,
+          "rederived_exact": true,
+          "response_completed_once": true,
+          "restart_exact": true,
+          "stale_rejected": true,
+          "stored_direct_exact": true,
+          "unrelated_detail_retained": true,
+          "wait_for_complete": true,
+          "weights_unchanged": true,
+          "withdrawn_detail_unavailable": true
+        },
+        "timing_scope": "This invocation training segment including periodic validation; not isolated GPU kernel time",
+        "training_complete": true
+      },
+      "result_sha256": "203f8facbfc6c9e7e491d60727ed37cf6af7c59b0f5ecc00df5c45f24894e728",
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    },
+    "evidence_loop_linear_s17_dev": {
+      "checkpoint_sha256": "3d06584b19d57178d4ec9cfd743463a5d81c1ffe973c14b53e22f97c1ecdd666",
+      "raw_sha256": "ea72e8ecd574377f7adf10ff9a8d3e9d96fb706fbfde214b967b70a61a28bad4",
+      "result": {
+        "evaluation_seed": 240925,
+        "final_evaluation": false,
+        "gates": {
+          "fidelity": true,
+          "memory": true,
+          "pose": true,
+          "retention": true,
+          "revision": true,
+          "uncertainty": true
+        },
+        "metric_route": "All evaluation codes serialized through WorldStore; live WorldSession parity checked separately",
+        "metrics": {
+          "by_pose_mse": [
+            0.0002449422318022698,
+            0.00023775605950504541,
+            0.00024291634326800704,
+            0.00023976554803084582
+          ],
+          "by_pose_old_mse_increase": [
+            3.0157083529047668e-05,
+            3.0500232242047787e-05,
+            3.1674178899265826e-05,
+            2.852165198419243e-05
+          ],
+          "by_pose_revision_ratio": [
+            0.007586505283456572,
+            0.00727710568687091,
+            0.007438968900374131,
+            0.007402535208712128
+          ],
+          "copy_mse": 0.06396535784006119,
+          "full_90_coverage": 0.9923102259635925,
+          "full_mse": 0.00024134505656547844,
+          "known_variance": 0.0023567790631204844,
+          "latest_only_mse": 0.01609649881720543,
+          "lossless_geometry_reference_mse": 0.0,
+          "new_after_mse": 0.00023874861653894186,
+          "new_before_mse": 0.03214910253882408,
+          "no_update_mse": 0.01618141494691372,
+          "nonidentity_mse": 0.00024014597875066102,
+          "old_after_mse": 0.0002439414820400998,
+          "old_before_mse": 0.00021372816991060972,
+          "old_output_drift": 3.10411342070438e-05,
+          "population_prior_unknown_mse": 0.03213287889957428,
+          "pose_ignored_mse": 0.06379935890436172,
+          "psnr": 36.17361592342789,
+          "unknown_90_coverage": 0.7393798828125,
+          "unknown_variance": 0.01812351867556572,
+          "wrong_instance_mse": 0.06405120342969894
+        },
+        "optimizer_bytes": 7494188,
+        "parameter_bytes": 3747072,
+        "parameters": 936768,
+        "passed": true,
+        "peak_allocated_bytes": 212431872,
+        "peak_reserved_bytes": 247463936,
+        "samples_per_second": 17442.510883142546,
+        "scope": "Controlled RGB16 textures; supplied part identity, familiar quarter turns; no natural language/audio learning",
+        "seconds": 11.007589520013425,
+        "software": {
+          "cancellation_waits": true,
+          "completed_request_ready": true,
+          "rederived_exact": true,
+          "response_completed_once": true,
+          "restart_exact": true,
+          "stale_rejected": true,
+          "stored_direct_exact": true,
+          "unrelated_detail_retained": true,
+          "wait_for_complete": true,
+          "weights_unchanged": true,
+          "withdrawn_detail_unavailable": true
+        },
+        "timing_scope": "This invocation training segment including periodic validation; not isolated GPU kernel time",
+        "training_complete": true
+      },
+      "result_sha256": "512d134b0d43431553252f407e9074abb7c65ed2ec3226fc4adb518895f6a8da",
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 3000
+      }
+    }
+  },
+  "scope": "Controlled RGB16 textures with supplied part association; four familiar learned quarter turns. Not general concept induction, natural images or learned language/audio."
+}

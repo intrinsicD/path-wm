@@ -2973,3 +2973,13 @@ entries:
     rather than being replayed as new decisions.
   - No empirical result, capability promotion or unrelated closure signal. O396/O397 remain unresolved; no
     abandonment inferred. Local/Global terminology restored to documented ownership.
+- turn: 2026-09-24_001#2
+  notes:
+  - N570 records explicit collaboration/implementation authorization; N571 retains failed reference and exposed
+    development split; N572/N573 bind actual repairs/results. O399 remains staged, no user empirical affirmation
+    yet.
+  - O398 is broader than this bounded slice; do not promote the entire architecture from finite view maps or
+    protocol tests. Earlier R1 failures remain. No unrelated closure or abandonment inferred.
+  - Five receipts verify actual claude-opus-5-5 medium, with public-only briefs; local source audited separately.
+    Full-suite interrupted/terminated receipts retained; final detached job passed838 tests in660.49 seconds.
+    Independent raw-metric/source/hash audit passed; no change to general capability limits.

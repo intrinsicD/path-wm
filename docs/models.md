@@ -1,5 +1,24 @@
 # Models and tensor flow
 
+[Evidence-loop detail codec](evidence-loop-plan.md): `DetailCodec` learns familiar
+quarter-turn maps for controlled RGB16 textures. `to_parts` rearranges
+`[B,3,16,16]` into `[B,4,192]`; a shared encoder produces `[B,4,64]`. A supplied
+presence mask selects remembered codes or a learned prior; the selected linear
+decoder predicts RGB mean and variance. Geometry exists only in the target
+generator. This is an optional bounded consumer, not a replacement for the
+multiscale encoder or proof of natural-image/new-concept capability.
+
+`EpisodeClient` uses the existing `WorldSession` for instance detail and conversation
+episodes. Source utterances remain evidence of what was said; detached working
+state is inferred. `load` returns values and pinned source/head versions with
+explicit omission reasons. `decode_read` checks actual codec identity; `emit`
+revalidates before recording each derived output chunk. Neither performs external
+playback. Correction invalidates derived records; explicit rederivation or
+`publish_unknown` is required before using an invalidated detail again. Abort and
+completion are distinct, and retry is explicit. The client has no second mutable
+conversation store. Text/audio references share one episode; learned dialogue and
+speech quality remain open.
+
 [Local encoder access](encoder-token-budget-plan.md): opt-in
 `MultiScaleImageEncoder(..., window_size=4, packed_merges=True)` physically packs
 fine image/video windows and pooling footprints. Every detail position remains

@@ -229,6 +229,12 @@ speech timing and learned language grounding are not established by current code
 
 ### First complete demonstration to specify (proposal)
 
+Implementation update: the [evidence-loop slice](evidence-loop-plan.md) now passes
+two-seed controlled RGB16 reconstruction/revision gates, with session and reactive
+episode mechanics tested. Learned dialogue, natural-human views and general concept
+induction remain open; this does not complete the entire agent.
+
+
 Use a controlled visual entity with an observable hidden detail: observe a partial
 view, store instance evidence, recall it after interruption, request another state
 or view using learned shared structure, then reveal the detail and revise only

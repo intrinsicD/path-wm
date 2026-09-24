@@ -9496,3 +9496,59 @@ tree:
   evidence:
   - docs/architecture-walkthrough.md#completion-priorities-after-the-concept-and-conversation-discussion
   status: open
+- id: N570
+  type: decision
+  title: Implement evidence-loop architecture contracts with Claude medium
+  provenance: user
+  timestamp: 2026-09-24T13:34+02:00
+  choice: User authorizes multi-turn discussion, implementation, review and repair with actual Claude Opus5.5
+    medium, iterating until the bounded implementation works.
+  alternatives:
+  - Continue discussion only
+  evidence:
+  - docs/evidence-loop-plan.md
+  - runs/reviews/architecture_completion_20260924/claude-receipt.json
+  status: resolved
+- id: N571
+  type: experiment
+  title: First FiLM detail codec misses quality gates
+  provenance: ai-executed
+  timestamp: 2026-09-24T13:34+02:00
+  result: Seed17, 3000 steps, 1,858,880 parameters; development MSE0.0182155. Fidelity/retention/memory/pose/uncertainty
+    gates fail; software and revision pass. Smoke exposed original reserved seed; reclassified development
+    and registered untouched final seed240927 before selection.
+  evidence:
+  - docs/evidence-loop-plan.md
+  - ara/evidence/tables/evidence_loop_2026-09-24.json
+  - runs/evidence_loop_film_s17_v1/result.json
+  status: completed
+- id: N572
+  type: experiment
+  title: Linear view maps and variance-only repair
+  provenance: ai-executed
+  timestamp: 2026-09-24T13:34+02:00
+  result: 'Same encoder and 3000-step mean budget,936,768 parameters: development MSE0.000241345, primary gates
+    pass. Hidden90% coverage73.94% motivates600 fresh-train variance-only steps; coverage91.69%, nonvariance
+    weights bitwise unchanged. No isolated attribution to linearity alone; variance parameterization also changed.'
+  evidence:
+  - docs/evidence-loop-plan.md
+  - ara/evidence/tables/evidence_loop_2026-09-24.json
+  - runs/evidence_loop_linear_s17_dev/result.json
+  - runs/evidence_loop_calibrated_s17_dev/result.json
+  status: completed
+- id: N573
+  type: experiment
+  title: Two-seed held-out detail memory and episode contract result
+  provenance: ai-executed
+  timestamp: 2026-09-24T13:34+02:00
+  result: 'Train seeds17/29, same512 untouched RGB16 instances at seed240927: all7 registered quality gates
+    and11 live-session checks pass. MSE0.000242578/0.000238929, PSNR36.151/36.217, hidden90% coverage91.849/91.897%.18
+    focused tests and838 full-suite tests pass. Finite known poses, supplied identity, portable-store population
+    evaluation plus distinct live-session demonstration; no language or natural-image claim.'
+  evidence:
+  - docs/evidence-loop-plan.md
+  - ara/evidence/tables/evidence_loop_2026-09-24.json
+  - runs/evidence_loop_final_s17/result.json
+  - runs/evidence_loop_final_s29/result.json
+  - runs/reviews/architecture_completion_20260924/final-focused.log
+  status: completed
