@@ -16,11 +16,13 @@ agent. Hidden rules/kinds/labels are generator, loss and evaluator knowledge.
 """
 
 import argparse
+import functools
 import json
 import math
 from pathlib import Path
 import sys
 import time
+import types
 
 import numpy as np
 import torch
@@ -257,30 +259,68 @@ def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmenta
     return scenes, lamps, rgb, entity, stats
 
 
-# Patterns that split a body's two colours in roughly equal proportion. Twins stay inside
-# this set: dots/border already change the mean colour, border ignores the period, and a
-# colour swap of a stripe/checker body is a translation of the same texture.
-TWIN_PATTERNS = (0, 1, 2, 3)
+TWIN_COLOUR_RANGE = (0.2, 0.95)  # TextureSampler's uniform colour branch; twins are never clamped
+
+
+@functools.lru_cache(maxsize=1)
+def visible_fractions():
+    """Share of colour 0 in the VISIBLE machine body for each (pattern, period), measured
+    once from the actual renderer: machine 0 gets a white/black body and the visible body
+    is its entity pixels that are exactly white or black (panel and lamps have other
+    colours). Fixed scene, no random draws; returns an immutable mapping."""
+    keys = [(p, t) for p in range(6) for t in (2, 3, 4)]
+    n = len(keys)
+    scenes = rw.Scenes(torch.tensor([[0, 1]] * n), torch.tensor([[[16., 13.], [48., 13.]]] * n),
+                       torch.zeros(n, 4, 4, dtype=torch.long),
+                       torch.tensor([[[8., 46.], [24., 46.], [40., 46.], [56., 46.]]] * n))
+    white_black = torch.tensor([[1., 1., 1.], [0., 0., 0.]])
+    textures = rw.Textures(white_black.expand(n, 2, 2, 3).clone(), torch.tensor([[p, p] for p, _ in keys]),
+                           torch.tensor([[t, t] for _, t in keys]))
+    rgb, entity = rw.render(scenes, torch.zeros(n, 2, dtype=torch.long), textures)
+    white = (rgb == 1).all(1) & (entity == 1)
+    black = (rgb == 0).all(1) & (entity == 1)
+    shares = white.flatten(1).sum(-1) / (white | black).flatten(1).sum(-1)
+    return types.MappingProxyType({key: float(v) for key, v in zip(keys, shares)})
 
 
 def confusable_twins(textures, rate, generator):
-    """Loss-only confusable negatives: with probability `rate` per scene, propose that
-    machine 1 shows machine 0's exact colours (same order) and period with a different
-    equal-proportion pattern. Every proposal is checked with `TextureSampler.heldout_like`;
-    a rejected proposal keeps the original body. Draws come only from `generator`."""
+    """Loss-only confusable negatives (rule version 2, mean-matched).
+
+    With probability `rate` per scene, machine 1 becomes a twin of machine 0: the same
+    period, a different pattern (any of 0-5), and machine 0's two colours shifted by one
+    common offset so the twin's visible body mean equals machine 0's (contrast kept).
+    A candidate pattern is infeasible if a shifted colour leaves TWIN_COLOUR_RANGE or the
+    texture is `TextureSampler.heldout_like`; the twin is drawn uniformly among feasible
+    candidates, and a scene with none keeps its original body. Draws come only from
+    `generator`. Per-scene counts: twin_attempts, twins, twin_rejected. Per-candidate
+    counts (up to five per attempt): twin_target_range_rejections,
+    twin_target_heldout_rejections."""
     count = len(textures.pattern)
     propose = torch.rand(count, generator=generator) < rate
     choice = torch.rand(count, generator=generator)
     colors, pattern, period = textures.colors.clone(), textures.pattern.clone(), textures.period.clone()
-    sampler, stats = rw.TextureSampler(), dict(twin_attempts=0, twins=0, twin_heldout_rejections=0)
+    fraction, sampler, (low, high) = visible_fractions(), rw.TextureSampler(), TWIN_COLOUR_RANGE
+    stats = dict(twin_attempts=0, twins=0, twin_rejected=0,
+                 twin_target_range_rejections=0, twin_target_heldout_rejections=0)
     for b in torch.nonzero(propose).flatten().tolist():
         stats["twin_attempts"] += 1
-        options = [p for p in TWIN_PATTERNS if p != int(pattern[b, 0])]
-        new = options[min(int(float(choice[b]) * len(options)), len(options) - 1)]
-        if sampler.heldout_like(colors[b, 0], new, int(period[b, 0])):
-            stats["twin_heldout_rejections"] += 1
+        source, p0, t = colors[b, 0], int(pattern[b, 0]), int(period[b, 0])
+        feasible = []
+        for p1 in range(6):
+            if p1 == p0:
+                continue
+            shifted = source + (fraction[p0, t] - fraction[p1, t]) * (source[0] - source[1])
+            if (shifted < low).any() or (shifted > high).any():
+                stats["twin_target_range_rejections"] += 1
+            elif sampler.heldout_like(shifted, p1, t):
+                stats["twin_target_heldout_rejections"] += 1
+            else:
+                feasible.append((p1, shifted))
+        if not feasible:
+            stats["twin_rejected"] += 1
             continue
-        colors[b, 1], pattern[b, 1], period[b, 1] = colors[b, 0], new, period[b, 0]
+        p1, shifted = feasible[min(int(float(choice[b]) * len(feasible)), len(feasible) - 1)]
+        colors[b, 1], pattern[b, 1], period[b, 1] = shifted, p1, t
         stats["twins"] += 1
     stats["twin_rate"] = stats["twins"] / count
     return rw.Textures(colors, pattern, period), stats
@@ -290,7 +330,7 @@ def paired_perception_batch(generator, kinds, count, device, *, randomize, augme
     """View A (the unchanged default batch) followed by its paired view B (`rw.paired_view`).
 
     Returns the concatenated 2*count batch plus loss-only (textures, source) pairing.
-    `twins > 0` adds confusable same-palette bodies to view A (drawn from `augmentation`
+    `twins > 0` adds mean-matched confusable twin bodies to view A (drawn from `augmentation`
     after its existing draws); 0 leaves batches and RNG consumption unchanged.
     """
     scenes, lamps, textures, stats = perception_scenes(generator, kinds, count, randomize=randomize, augmentation=augmentation)
@@ -510,10 +550,13 @@ def train_perception(args, s):
         settings["init_key_source"] = key_source
     if args.confusable_twins:
         settings["confusable_twins"] = args.confusable_twins
+        settings["confusable_twin_rule_version"] = 2
         settings["confusable_twin_rule"] = (
-            "per view-A scene with this probability: machine 1 := machine 0's exact colours/period with a "
-            "different pattern from (0,1,2,3); TextureSampler.heldout_like checked, rejected proposals keep "
-            "the original body; augmentation stream after its existing draws; loss-only identity negatives")
+            "per view-A scene with this probability: machine 1 := same period, a different pattern (0-5), "
+            "machine 0's two colours shifted by one offset so the rendered visible body mean matches (contrast "
+            "kept); candidates outside colour range [0.2, 0.95] or heldout_like are infeasible; uniform over "
+            "feasible candidates, none -> original body; augmentation stream after its existing draws; "
+            "loss-only identity negatives. Texture sampler stats count draws before twin replacement.")
     if margin:
         settings["identity_margin_positive"], settings["identity_margin_negative"] = margin[:2]
         settings["identity_margin_weight"] = margin[2]
@@ -579,7 +622,8 @@ def train_perception(args, s):
                 metrics.update(texture_replaced=stats["replaced"], texture_near_lamp=stats["near_lamp"],
                                texture_heldout_rejections=stats["heldout_rejections"], texture_draws=stats["draws"])
             if stats and "twin_attempts" in stats:
-                metrics.update({k: stats[k] for k in ("twin_attempts", "twins", "twin_heldout_rejections", "twin_rate")})
+                metrics.update({k: stats[k] for k in ("twin_attempts", "twins", "twin_rejected", "twin_rate",
+                                                      "twin_target_range_rejections", "twin_target_heldout_rejections")})
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad], 1.0)

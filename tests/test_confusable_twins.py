@@ -84,55 +84,114 @@ def test_default_is_byte_identical_to_the_frozen_legacy_recipe(legacy, randomize
         assert torch.equal(s, u) and torch.equal(t, u)
 
 
-def test_twins_share_palette_and_period_differ_in_equal_proportion_pattern_and_pixels():
+LOW, HIGH = 0.2, 0.95
+POSITIONS = [(x, y) for x in range(14, 19) for y in range(12, 16)]  # sample_scenes machine-0 domain
+
+
+def twin_scenes(tex, base_tex, n):
+    """Scenes whose machine-1 body was replaced (compared with the rate-0 batch)."""
+    return [b for b in range(n) if not (torch.equal(tex.colors[b, 1], base_tex.colors[b, 1])
+                                        and int(tex.pattern[b, 1]) == int(base_tex.pattern[b, 1])
+                                        and int(tex.period[b, 1]) == int(base_tex.period[b, 1]))]
+
+
+def visible_mean(colors, pattern, period):
+    """Independent measurement: mean rendered colour of machine 0's visible body at all 20
+    valid positions, using the independent geometric body mask (not colour filtering)."""
+    n = len(POSITIONS)
+    xy = torch.tensor([[[x, y], [48, 13]] for x, y in POSITIONS], dtype=torch.float32)
+    scenes = rw.Scenes(torch.tensor([[0, 1]] * n), xy, torch.zeros(n, 4, 4, dtype=torch.long),
+                       torch.tensor([[[8., 46.], [24., 46.], [40., 46.], [56., 46.]]] * n))
+    tex = rw.Textures(torch.stack((colors, colors)).expand(n, 2, 2, 3).clone(),
+                      torch.tensor([[pattern, pattern]] * n), torch.tensor([[period, period]] * n))
+    rgb, entity = rw.render(scenes, torch.zeros(n, 2, dtype=torch.long), tex)
+    # A legal texture can quantize to a lamp/panel colour. Exclude their geometry,
+    # never all pixels of that colour, or the body mean would be biased.
+    return torch.stack([body_pixels(rgb[i], scenes.machine_xy[i, 0]).mean(-1) for i in range(n)])
+
+
+def test_visible_fractions_are_measured_once_from_the_renderer_without_rng():
+    la.visible_fractions.cache_clear()
+    state = torch.get_rng_state()
+    first = la.visible_fractions()
+    assert torch.equal(state, torch.get_rng_state())  # no global RNG consumption
+    assert la.visible_fractions() is first and set(first) == {(p, t) for p in range(6) for t in (2, 3, 4)}
+    assert abs(first[5, 4] - 0.605) < 1e-3 and abs(first[0, 4] - 0.5016) < 1e-3 and first[4, 4] < 0.1
+    with pytest.raises(TypeError):
+        first[0, 2] = 0.0  # immutable
+
+
+def test_mean_matched_twins_keep_contrast_period_range_and_rendered_visible_mean():
     (scenes, lamps, rgb, entity, stats, (tex, source)), _ = batch(la.paired_perception_batch, rate=1.0)
     (base_scenes, base_lamps, _, _, _, (base_tex, base_source)), _ = batch(la.paired_perception_batch, rate=0.0)
     n = 16
-    # Base scenes, lamps, pairing and machine-0 bodies are untouched by the option.
     for x, y in zip(vars(scenes).values(), vars(base_scenes).values()):
         assert torch.equal(x, y)
     assert torch.equal(lamps, base_lamps) and torch.equal(source, base_source)
     assert torch.equal(tex.colors[:n, 0], base_tex.colors[:n, 0])
-    assert stats["twin_attempts"] == n and stats["twins"] + stats["twin_heldout_rejections"] == n
+    assert stats["twin_attempts"] == n and stats["twins"] + stats["twin_rejected"] == n
     assert stats["twin_rate"] == stats["twins"] / n and stats["twins"] > 0
     sampler = rw.TextureSampler()
-    for b in range(n):
-        twin = torch.equal(tex.colors[b, 1], tex.colors[b, 0]) and int(tex.period[b, 1]) == int(tex.period[b, 0])
-        if not twin:  # a rejected proposal keeps its original texture
-            assert torch.equal(tex.colors[b, 1], base_tex.colors[b, 1])
+    twins = twin_scenes(tex, base_tex, n)
+    assert len(twins) == stats["twins"]
+    for b in twins:
+        src, new = tex.colors[b, 0], tex.colors[b, 1]
+        p0, p1, period = int(tex.pattern[b, 0]), int(tex.pattern[b, 1]), int(tex.period[b, 0])
+        assert p1 != p0 and 0 <= p1 <= 5 and int(tex.period[b, 1]) == period
+        assert torch.allclose(new[0] - new[1], src[0] - src[1], atol=1e-6)  # contrast preserved
+        assert (new >= LOW).all() and (new <= HIGH).all()  # no clamping needed or applied
+        assert not sampler.heldout_like(new, p1, period)
+        a, c = visible_mean(src, p0, period), visible_mean(new, p1, period)
+        assert (a - c).abs().max() <= 1 / 255 + 1e-6  # 8-bit quantization tolerance, all 20 positions
+        assert not torch.equal(body_pixels(rgb[b], scenes.machine_xy[b, 0]), body_pixels(rgb[b], scenes.machine_xy[b, 1]))
+
+
+def test_border_targets_occur_and_infeasible_candidates_are_counted():
+    patterns, totals = [], dict(twin_attempts=0, twins=0, twin_rejected=0,
+                                twin_target_range_rejections=0, twin_target_heldout_rejections=0)
+    for seed in range(60, 68):
+        (_, _, _, _, stats, (tex, _)), _ = batch(la.paired_perception_batch, rate=1.0, seed=seed)
+        (_, _, _, _, _, (base, _)), _ = batch(la.paired_perception_batch, rate=0.0, seed=seed)
+        patterns += [int(tex.pattern[b, 1]) for b in twin_scenes(tex, base, 16)]
+        for k in totals:
+            totals[k] += stats[k]
+    assert 5 in patterns and totals["twin_target_range_rejections"] > 0
+    # Per scene: attempts = applied + rejected; per candidate: at most five targets each.
+    assert totals["twin_attempts"] == totals["twins"] + totals["twin_rejected"]
+    assert totals["twin_target_range_rejections"] + totals["twin_target_heldout_rejections"] <= 5 * totals["twin_attempts"]
+
+
+def test_heldout_like_targets_are_rejected_and_counted():
+    # FAULT INJECTION: a source body whose mean-matched twin for the held-out kind's pattern
+    # lands exactly on that kind's colours; that candidate must be rejected and counted.
+    frac, sampler = la.visible_fractions(), rw.TextureSampler()
+    for held in rw.KIND_SPLIT["validation"]:
+        ph, period, ch = int(rw.KIND_PATTERN[held]), int(rw.KIND_PERIOD[held]), rw.KIND_COLORS[held]
+        for ps in range(6):
+            if ps == ph:
+                continue
+            source = ch - (frac[ps, period] - frac[ph, period]) * (ch[0] - ch[1])
+            if (source >= LOW).all() and (source <= HIGH).all() and not sampler.heldout_like(source, ps, period):
+                break
+        else:
             continue
-        p0, p1 = int(tex.pattern[b, 0]), int(tex.pattern[b, 1])
-        assert p1 in (0, 1, 2, 3) and p1 != p0
-        assert not sampler.heldout_like(tex.colors[b, 1], p1, int(tex.period[b, 1]))
-        a = body_pixels(rgb[b], scenes.machine_xy[b, 0])
-        c = body_pixels(rgb[b], scenes.machine_xy[b, 1])
-        assert not torch.equal(a, c)  # same palette, visibly different pattern
-
-
-def test_every_proposal_is_heldout_checked_and_rejections_are_counted():
-    # FAULT INJECTION: machine-0 bodies copy a held-out kind's colours and period with a
-    # different equal-proportion pattern, so a proposal of that kind's pattern must be rejected.
-    held = rw.KIND_SPLIT["validation"][0]
-    pattern, period = int(rw.KIND_PATTERN[held]), int(rw.KIND_PERIOD[held])
-    assert pattern in (0, 1, 2, 3)
-    count = 24
-    colors = rw.KIND_COLORS[held].expand(count, 2, 2, 3).clone()
-    other = (pattern + 1) % 4
-    tex = rw.Textures(colors, torch.tensor([[other, other]] * count), torch.tensor([[period, period]] * count))
+        break
+    count = 12
+    tex = rw.Textures(source.expand(count, 2, 2, 3).clone(), torch.tensor([[ps, ps]] * count),
+                      torch.tensor([[period, period]] * count))
     out, stats = la.confusable_twins(tex, 1.0, torch.Generator().manual_seed(5))
-    rejected = [b for b in range(count) if int(out.pattern[b, 1]) == other and torch.equal(out.colors[b, 1], colors[b, 1])]
-    assert stats["twin_attempts"] == count and stats["twin_heldout_rejections"] == len(rejected) > 0
-    assert stats["twins"] == count - len(rejected)
-    assert all(int(out.pattern[b, 1]) != pattern for b in range(count))
+    assert stats["twin_attempts"] == count and stats["twin_target_heldout_rejections"] >= count
+    assert all(int(out.pattern[b, 1]) != ph or not torch.allclose(out.colors[b, 1], ch) for b in range(count))
+    assert stats["twins"] + stats["twin_rejected"] == count
 
 
 def test_twins_are_negatives_across_and_within_frames_and_positives_are_unchanged():
     (scenes, _, rgb, _, _, (tex, source)), _ = batch(la.paired_perception_batch, rate=1.0)
+    (_, _, _, _, _, (base_tex, _)), _ = batch(la.paired_perception_batch, rate=0.0)
     n = 32
     target = torch.argsort(source.flatten())
     false_negative = la.texture_matches(tex, n)
-    twins = [b for b in range(16) if torch.equal(tex.colors[b, 1], tex.colors[b, 0])
-             and int(tex.pattern[b, 1]) != int(tex.pattern[b, 0])]
+    twins = twin_scenes(tex, base_tex, 16)
     assert twins
     for b in twins:
         a0, a1 = 2 * b, 2 * b + 1
@@ -185,7 +244,9 @@ def test_joint_run_records_twins_and_resumes_exactly(tmp_path, monkeypatch):
     assert settings["confusable_twins"] == 0.25
     rows = [json.loads(line) for line in (whole / "metrics.jsonl").read_text().splitlines()]
     train = [r for r in rows if r["split"] == "train"]
-    assert train and all({"twin_attempts", "twins", "twin_heldout_rejections", "twin_rate"} <= set(r) for r in train)
+    assert train and all({"twin_attempts", "twins", "twin_rejected", "twin_target_range_rejections",
+                          "twin_target_heldout_rejections", "twin_rate"} <= set(r) for r in train)
+    assert settings["confusable_twin_rule_version"] == 2
     run_main(monkeypatch, *joint_args(paused, "--stop-after", "1"))
     run_main(monkeypatch, "--stage", "perception", "--resume", paused, "--device", "cpu")
     fresh = {"perception": lambda: SlotPerception(64, 7, 3, decoder_width=32), "key": lambda: key_head(64, 32)}
