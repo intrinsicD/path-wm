@@ -13,13 +13,20 @@ Updated 24 September 2026 for a new Codex session in
 - All selected runs and checks finished. No job from this continuation remains to
   resume. Final evidence is recorded in the nonlinear-fidelity plan.
 
-**Start with a bounded output-path repair, preserving old detail and behavior.**
-The nonlinear fidelity diagnostic below now identifies a fixed-decoder blocker.
-Both the indexed and frozen affine feasibility screens are complete. Do not restart either or add learned machinery to their solved baseline
-workloads. The complete architecture is still unproven; the remaining agenda and
-next slices are below. This handoff starts no new job or training budget.
+**User correction: work on the existing architecture.** The separate `DetailCodec`
+was introduced for a small memory demonstration and then reused for transfer and
+fidelity screens. It bypasses the main multiscale representation. Continuing to
+repair that surrogate is not the selected architecture agenda.
 
-## Latest continuation: nonlinear fidelity blocker (24 September)
+First trace the existing multiscale representation, persistent memory, active
+context and intended output consumers. Identify a concrete defect, missing
+connection or unimplemented contract in that actual path. Reuse existing modules;
+add code only where the identified gap requires it. The prior suggestion to choose
+a new decoder or residual path for `DetailCodec` is withdrawn as the default next
+step. Preserve its scoped evidence; do not repeat or expand those screens. No new
+training or alternate architecture is selected by this handoff.
+
+## Completed surrogate diagnostic: nonlinear fidelity (24 September)
 
 [Registered diagnostic and results](nonlinear-fidelity-plan.md), implementation
 `04650b8`, registration/red checks `f751a69`. Two codecs × two fresh populations
@@ -28,9 +35,9 @@ support-fitted pixel threshold passes; target encode/decode and latent inference
 add error. Old outputs/weights and exact map/threshold reload are preserved.
 No neural training; the overall architecture remains unproven.
 
-The selected path stops at this concrete blocker. Next choose **one bounded
-output-path repair with old-detail preservation**, before spending on induction
-through this fixed decoder. Do not repeat this diagnostic or the earlier screens.
+The surrogate path stops at this concrete blocker. It does not diagnose the main
+multiscale architecture: that representation was not used. Do not repair or expand
+the surrogate by default; follow the user correction above.
 The previous target encode/decode “floor” is a reference, not a general lower bound.
 The new range conclusion requires full rank and independent QR/SVD/least-squares
 agreement; it is numerical evidence, not an interval-arithmetic proof.
@@ -110,8 +117,9 @@ using them; if absent, report the missing prerequisites rather than invent resul
 > review and repair rounds. Preserve the public-only external review boundary.
 > The indexed discovery and frozen affine-transfer screens are complete. Do not
 > repeat them or add learned complexity to their solved baseline workloads.
-> Read the latest nonlinear-fidelity blocker first; select one output-path repair
-> with old-detail preservation before further induction work. Earlier,
+> Work on the existing architecture. Trace its actual representation/memory/output
+> path and identify a necessary fix or implementation gap before adding components.
+> Do not continue developing the separate DetailCodec surrogate. Earlier,
 > two frozen codecs × two fresh populations passed the affine gates, but pixel
 > ridge is stronger and nonlinear threshold output reconstruction remains poor.
 > Use the transfer plan's audits and earlier R1/CI1 failures to choose a smallest
@@ -394,16 +402,15 @@ training/data strategy; do not promise them from a tiny synthetic fit.
 
 ## Concrete starting slices for the next session
 
-1. **Choose one output-path repair with Claude.** The numerical decoder-range
-   diagnostic is complete: even unrestricted latent codes cannot meet the selected
-   threshold-output gate through the current fixed affine decoder. Read its plan,
-   raw arrays and audits; do not repeat it. Compare a decoder-only repair or a
-   fine-detail residual route while preserving existing detail and behavior. Select
-   one objective, data split and bounded local budget before training. Frozen input
-   encoding may also limit inference; the range diagnosis does not prove otherwise.
-   Keep original checkpoints immutable and explicitly version any changed decoder.
-   Reconstruction is required for this output task, not every concept task. Use
-   public hypothetical briefs and inspect implementation/measurements locally.
+1. **Locate a concrete gap in the existing implementation with Claude.** Trace
+   actual modules and tensor paths for multiscale features, memory and consumers.
+   Separate implemented-but-unwired components from missing behavior and measured
+   defects. Choose a smallest end-to-end check of the intended architecture, then
+   repair only what it demonstrates is needed. The `DetailCodec` screen bypassed
+   that architecture; its output failure is not evidence to replace or enrich the
+   existing multiscale representation. Public review uses hypothetical contracts;
+   private code and measurements remain local. No replacement toy model is needed
+   merely to make a small measurable experiment.
 2. **Register the slice, then add essential red checks.** Record a concrete user
    path, training signal, train/dev/final populations, held-out instances and relation
    splits, negative/shortcut controls, numeric reconstruction/task/retention gates,

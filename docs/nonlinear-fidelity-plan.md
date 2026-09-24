@@ -170,12 +170,15 @@ induction budget on this blocked output contract. Multiple limits coexist: encod
 and affine inference add error too. This does not block all nonlinear concept tasks,
 other output heads, pixel routes, changed decoders or natural-data methods.
 
-**Next priority, not an executed repair:** preregister one output-path repair with
-old-detail/behavior preservation before returning to inferred non-affine concepts.
-Compare a decoder-only repair or an explicit fine-detail residual route against this
-fixed reference; choose one after design review. No encoder adaptation, architecture
-sweep or new training budget is silently selected. Final seeds926117/926129 are now
-consumed. The larger latent-agent architecture remains unproven.
+**User correction after completion:** this study used the separate `DetailCodec`,
+not the main multiscale representation. Its scoped numerical result remains valid,
+but it does not establish a blocker in the intended architecture. The suggestion
+to choose a decoder-only or residual repair of this surrogate is withdrawn as the
+default next step. Work must return to the existing implementation: trace the
+actual multiscale/memory/consumer path and identify a demonstrated defect or missing
+connection before adding anything. Keep these experiments as historical scoped
+evidence, without growing the surrogate further. Final seeds926117/926129 remain
+consumed. No new training or architecture change is selected.
 
 ## Reproduction and completion
 

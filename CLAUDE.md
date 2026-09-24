@@ -35,6 +35,14 @@ and limits; remove or revise it when relevant changes invalidate that evidence.
 An assistant-only diagram does not mark a topic discussed. Keep discussion coverage
 separate from validation, including for green parts still awaiting a walkthrough.
 
+Work on the existing architecture and implementation. Before adding a module or
+alternative model path, identify a concrete defect or missing interface in the
+actual user path and explain why existing components cannot cover it. Prefer
+wiring, testing and repairing those components. A simpler surrogate experiment
+must not become a substitute architecture or justify repairing itself indefinitely.
+Its failures do not establish failures in components it did not exercise. Keep
+new work tied to the intended integrated path; preserve existing evidence and runs.
+
 The product is a small Python library plus readable experiment recipes that Alex
 can operate himself. Preserve this boundary throughout implementation. A new
 experiment normally edits a recipe; it does not create another trainer, CLI,

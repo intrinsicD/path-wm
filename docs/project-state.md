@@ -5,7 +5,8 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Latest slice:** [Nonlinear output fidelity](nonlinear-fidelity-plan.md): Claude Opus5.5 medium; two codecs × two populations expose a decoder-range blocker. Optimal MSE0.0308–0.0344 exceeds0.002; pixel-threshold control passes. Old outputs/weights unchanged, independent raw/target-isolation audits pass. 866 CPU tests pass; source unchanged. Next: one bounded output-path repair with old-task preservation; no training selected. [Handoff](architecture-continuation-handoff.md) owns the wider agenda.
+- **Current direction:** trace the existing multiscale → memory → consumer path; fix demonstrated defects or gaps. Stop extending the separate `DetailCodec` demonstration. [Handoff](architecture-continuation-handoff.md).
+- **Latest evidence:** [Nonlinear fidelity](nonlinear-fidelity-plan.md) finds a blocker in the surrogate `DetailCodec`, which bypasses the main multiscale representation. It does not justify redesigning that representation. 866 CPU tests passed; original scoped results remain preserved.
 
 - **Earlier completed screens:** [Affine transfer](representation-transfer-plan.md) passes its gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Reuse their evidence, do not repeat them.
 
