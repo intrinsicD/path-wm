@@ -65,6 +65,14 @@ The recorded W1/W100 key-only attempts did not qualify the full task.
 The current calibration sequence includes lamp changes, new layouts, alternating
 side swaps and novel arrivals, with labels confined to evaluation/calibration.
 
+The optional `--confusable-twins 0.25` on perception identity training creates
+same-color/period, different-pattern machine pairs before the existing paired-view
+step. Each proposed texture passes the existing held-out exclusion; rejected
+proposals keep original data. Default `0` preserves old batches and RNG draws.
+The run records proposed/applied/rejected counts and effective rate. This is a
+training-data option in the same model, not an established quality improvement;
+its current retention and identity evidence is in the native-memory plan.
+
 The validated **known-rule application curriculum** is available through the same recipe:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.
 Resume a paused/interrupted run with `--stage symbolic --resume runs/my_oracle_curriculum`.

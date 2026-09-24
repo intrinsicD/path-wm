@@ -540,3 +540,54 @@ IW1calibration completed404.79s, source unchanged: FAILED. Every policy has at
 least one false novel merge/64; .95matching122/128=.953125 stillmerges1/64.
 No manifest exported, no candidate validation launched. The conditional data
 repair is now adopted; paired native training examples are the only new behavior.
+
+25September: Claude implemented the optional data repair;14focused native checks
+and73adjacent regressions pass. Codex independently reviewed the diff: no blocker.
+Only latent_agent recipe changes (57added/3removed lines) and one testfile; runtime
+source hash is unaffected, existing manifests still validate. To avoid idle compute,
+freeze this reviewed source now and run the full CPU suite alongside the registered
+GPU fit; no source edits until both finish. Commit only after the suite passes.
+This scheduling change does not alter scientific settings/gates; concurrent-load
+wall times are descriptive, not a performance comparison.
+
+Independent actual-runtime replay of iw1calibration at .95 reproduces exactly one
+falsemerge: episode20, novel33→stored17, cosine.952681 (otherknown45:.348918).
+This confirms the same confusable-pair failure after higher identityweight.
+`diag_novel_iw1/novel_merges.json` records the actual novelkind from each episode,
+correcting the stale-variable field in the earlier historical replay.
+
+Twin1000 training completed170.01s,3.416GiB reserved,source unchanged,C1pass.
+Applied7931/32000 scene proposals (24.784%);7933attempts,twoheldoutrejections.
+Retention passesall12: J→twin RGBMSE .009126→.009051,pixel .984057→.982681;
+allattributes/detection/lamps/pointers1. Corrected TRAINpalette diagnostic shows
+position-positive q01 .933→.967 but pattern-only negative share>.90 only
+.483→.452. No strong pattern discrimination claim follows. Calibration3405
+and whole CPU suite are still running; no qualified identity result yet.
+
+Round24 actual-native diagnostic (TRAIN32pairs,seed3510,unchangedweights) finds
+weighted identity/perception gradient norms1.308/1.412 and globalcosine+.208 at
+twins1000. Twinned-anchor ranks9/12 versusJ8/12; too few for an improvement claim.
+Full objective delivers a nonzero gradient; this does not isolate each twin's
+gradient or prove no conflict in other batches/parameters. Clipping is measured
+at these diagnostic points only, not every historical training step.
+Claude withdraws a proposed linear-probe prerequisite: no substitute readout or
+proxy gate is added, and a failed probe would not establish absent information.
+
+If the current twin1000 actual calibration/qualification fails, preregister one
+duration-only repeat `real_visual_joint_twins_3501_u3000_v1`: sameJinit,seed3501,
+all twin1000 settings, updates3000 onlychange,<=20min/6GiB,lastcheckpointonly.
+Motivation: actual training curves still improve and retention has headroom;
+no architectural inference follows from number of failed attempts. Compare exact
+first1000metric rows to twin1000. Same retention3506,calibration3405,ALLknown
+2405–2408 and fixed2409/2410 runtime gates. No seed/threshold changes or automatic
+sweep. If curves flatten and actualconfusions persist, reassess that concrete
+limitation with Claude before any further repair; no speculativearchitecture.
+
+Twin1000 calibration completed487.78s,source unchanged: FAILED. Strict .95/.90/.10
+has zero falsemerges but only121/128=.9453125 relocatedmatches (requires122).
+Lower .90 retains one falsemerge. No manifest or candidate validation is produced.
+Adopt the already registered3000-update duration-only follow-up; all original
+gates/knownregressions/fixedfreshscenes remain unchanged.
+
+Full CPU suite: 956tests, 0failures, 0errors, 0skipped, 834.253s. Source unchanged throughout.
+Native training-data option is software-verified; learned identity remains open.
