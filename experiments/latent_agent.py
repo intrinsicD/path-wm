@@ -19,6 +19,7 @@ import argparse
 import json
 import math
 from pathlib import Path
+import sys
 import time
 
 import numpy as np
@@ -47,6 +48,9 @@ from pathwm.models.latent_core import LatentCore, cross_entropy, episode_loss, k
 from pathwm.models.slots import SlotPerception, SymbolicSlots, perception_loss, pointer
 
 IDENTITY_TEMPERATURE, IDENTITY_WEIGHT = 0.1, 0.2  # the S2 key InfoNCE temperature and weight
+# Frozen-perception key repair (predeclared): train-kind monitor stream and screen.
+MONITOR_SEED, MONITOR_PAIRS = 3502, 64
+KEY_SCREEN = dict(positive_q01=0.93, negative_q99=0.60, within_q99=0.60)
 
 SIZES = dict(
     full=dict(width=64, heads=4, slots=7, iterations=3, decoder_width=32, loops=2, code_tokens=4, key_width=32,
@@ -94,13 +98,17 @@ class ResourceCeiling(RuntimeError):
     pass
 
 
-def enforce_ceiling(args, runner=None):
-    """Cheap stage/update-boundary check of the declared reserved-memory ceiling."""
+def enforce_ceiling(args, runner=None, guard=None):
+    """Cheap stage/update-boundary check of the declared reserved-memory ceiling.
+
+    `guard` runs before the preserving save (frozen-perception hash check)."""
     if torch.device(args.device).type != "cuda":
         return
     reserved = torch.cuda.max_memory_reserved(args.device) / 2**30
     if reserved > args.max_reserved_gib:
         if runner is not None:
+            if guard is not None:
+                guard()
             runner.save()  # preserve the checkpoint for inspection/resume
         raise ResourceCeiling(f"torch reserved {reserved:.2f} GiB exceeds declared {args.max_reserved_gib} GiB")
 
@@ -277,12 +285,18 @@ def texture_matches(textures, n):
             & (pattern[:n, None] == pattern[None, n:]) & (period[:n, None] == period[None, n:]))
 
 
-def identity_loss(key, percept, scenes, textures, source, *, detached, temperature=IDENTITY_TEMPERATURE):
+def identity_loss(key, percept, scenes, textures, source, *, detached, temperature=IDENTITY_TEMPERATURE,
+                  margin=None):
     """InfoNCE from view-A machine keys to view-B machine keys (S2 form, tau 0.1).
 
     Positive = the place showing the same sampled texture; other exactly equal textures
     are masked as false negatives. Machine tokens use the runtime pointer. `detached`
     trains the key on sg(slot): no identity gradient reaches perception.
+
+    `margin=(positive, negative, weight)` optionally adds squared hinges on absolute
+    cosine: same-machine pairs below `positive`, and different-texture pairs above
+    `negative` (all cross-view pairs plus the two machines of each frame, equal textures
+    masked). None keeps the original objective exactly.
     """
     device = percept.slots.device
     rows = torch.arange(len(scenes), device=device)
@@ -300,7 +314,39 @@ def identity_loss(key, percept, scenes, textures, source, *, detached, temperatu
     with torch.no_grad():
         metrics = dict(identity_nce=float(loss), identity_accuracy=float((similarity.argmax(-1) == target).float().mean()),
                        identity_false_negatives=int(false_negative.sum()))
+    if margin is not None:
+        positive, negative, weight = margin
+        same, different, within = pair_cosines(keys, textures, target, false_negative)
+        negatives = torch.cat((different, within))
+        # A legal batch can hold only equal textures: no negatives, a zero (not NaN) term.
+        hinge = (F.relu(positive - same).square().mean()
+                 + F.relu(negatives - negative).square().sum() / max(len(negatives), 1))
+        loss = loss + weight * hinge
+        metrics.update(identity_margin=float(hinge.detach()),
+                       margin_positive_violation=float((same < positive).float().mean()),
+                       margin_negative_violation=float((negatives > negative).float().sum() / max(len(negatives), 1)),
+                       margin_negative_pairs=len(negatives))
     return loss, metrics
+
+
+def pair_cosines(keys, textures, target, false_negative):
+    """Normalized machine keys [2n,D] (view A then B, flat scene*2+side) -> cosines of
+    same-texture pairs, different-texture cross-view pairs and same-frame pairs.
+    Equal textures are never negatives (cross-view mask; within-frame texture test)."""
+    n = len(keys) // 2
+    cosine = keys[:n] @ keys[n:].T
+    rows = torch.arange(n, device=keys.device)
+    same = cosine[rows, target]
+    negative = torch.ones_like(cosine, dtype=torch.bool)
+    negative[rows, target] = False
+    different = cosine[negative & ~false_negative]
+    frames = keys.reshape(-1, 2, keys.shape[-1])
+    colors = textures.colors.reshape(-1, 2, 2, 3)
+    distinct = ~((colors[:, 0] == colors[:, 1]).flatten(1).all(-1)
+                 & (textures.pattern.reshape(-1, 2)[:, 0] == textures.pattern.reshape(-1, 2)[:, 1])
+                 & (textures.period.reshape(-1, 2)[:, 0] == textures.period.reshape(-1, 2)[:, 1]))
+    within = (frames[:, 0] * frames[:, 1]).sum(-1)[distinct.to(keys.device)]
+    return same, different, within
 
 
 def augmentation_stream(seed, step):
@@ -317,14 +363,84 @@ def warm_start(module, path):
                 init_perception_state_sha256=state_hash(module))
 
 
+@torch.no_grad()
+def key_monitor(model, device, randomize, margin=None):
+    """Fixed TRAIN-kind paired-view cosines of the key on frozen perception.
+
+    Two populations from one fixed stream (seed MONITOR_SEED, MONITOR_PAIRS scene pairs,
+    rw.paired_view with swaps/inverted lamps): procedural bodies at the recorded
+    randomization, and kind-table bodies. Never validation kinds; never used to select.
+    With `margin=(positive, negative, ...)` the configured hinge violation rates are added.
+    """
+    out = {}
+    for name, rate in (("procedural", randomize), ("kind_table", 0.0)):
+        scenes, _, rgb, _, _, (textures, source) = paired_perception_batch(
+            torch.Generator().manual_seed(MONITOR_SEED), rw.KIND_SPLIT["train"], MONITOR_PAIRS, device,
+            randomize=rate, augmentation=torch.Generator().manual_seed(MONITOR_SEED + 1),
+            pairing=torch.Generator().manual_seed(MONITOR_SEED + 2))
+        percept = model["perception"](rgb)
+        rows = torch.arange(len(scenes), device=device)
+        slots = torch.stack([percept.slots[rows, pointer(percept.alpha, scenes.machine_xy[:, m].to(device))]
+                             for m in (0, 1)], 1).flatten(0, 1)
+        keys = F.normalize(model["key"](slots), dim=-1)
+        n = len(keys) // 2
+        target = torch.argsort(source.flatten()).to(device)
+        false_negative = texture_matches(textures, n).to(device)
+        false_negative[torch.arange(n, device=device), target] = False
+        same, different, within = (v.cpu() for v in pair_cosines(keys, textures, target, false_negative))
+        q = lambda v, p: float(torch.quantile(v, p))
+        out[name] = dict(positive_min=float(same.min()), positive_q01=q(same, .01),
+                         negative_q99=q(different, .99), negative_max=float(different.max()),
+                         within_q99=q(within, .99), within_max=float(within.max()),
+                         positive_count=len(same), negative_count=len(different), within_count=len(within))
+        if margin is not None:
+            rate = lambda hit: float(hit.float().sum() / max(len(hit), 1))
+            out[name].update(positive_violation=rate(same < margin[0]), negative_violation=rate(different > margin[1]),
+                             within_violation=rate(within > margin[1]))
+    return out
+
+
+def monitor_row(monitor):
+    return {f"{name}_{k}": float(v) for name, values in monitor.items() for k, v in values.items()}
+
+
+def key_screen(monitor, perception_unchanged):
+    passed = perception_unchanged and all(
+        m["positive_q01"] >= KEY_SCREEN["positive_q01"] and m["negative_q99"] <= KEY_SCREEN["negative_q99"]
+        and m["within_q99"] <= KEY_SCREEN["within_q99"] for m in monitor.values())
+    return dict(passed=bool(passed), thresholds=KEY_SCREEN, perception_unchanged=bool(perception_unchanged))
+
+
+def parent_texture_randomization(path):
+    """The warm-start parent's recorded S1 texture randomization (read, never assumed)."""
+    path = Path(path)
+    run = path if path.is_dir() else path.parent
+    settings = json.loads((run / "run.json").read_text())["identity"]["settings"]
+    return float(settings.get("texture_randomization", 0.0))
+
+
 def train_perception(args, s):
     seed_everything(args.seed)
     model = nn.ModuleDict(dict(perception=SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])))
     if args.identity:
         model["key"] = key_head(s["width"], s["key_width"])  # exported for S2 (`--init-key`)
     parent = warm_start(model["perception"], args.init_perception) if args.init_perception else {}
+    key_source = None
+    if args.init_key:  # explicit: the key exported by the same --init-perception S1 run
+        checkpoint = Path(args.init_perception)
+        checkpoint = checkpoint / "last.pt" if checkpoint.is_dir() else checkpoint
+        load_component(model["key"], checkpoint, "key")
+        key_source = dict(checkpoint=str(checkpoint), file_sha256=file_hash(checkpoint),
+                          state_sha256=state_hash(model["key"]))
+    frozen = None
+    if args.freeze_perception:
+        model["perception"].requires_grad_(False)
+        frozen = state_hash(model["perception"])
     model = model.to(args.device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
+    optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr)
+    margin = None
+    if args.identity_margin_weight is not None:
+        margin = (args.identity_margin_positive, args.identity_margin_negative, args.identity_margin_weight)
     settings = dict(stage="perception", seed=args.seed, updates=args.updates, lr=args.lr, device=args.device,
                     size=args.size, sizes=s, purpose="development", precision="fp32",
                     max_reserved_gib=args.max_reserved_gib,
@@ -353,10 +469,40 @@ def train_perception(args, s):
     if parent:
         settings["init_perception"] = str(args.init_perception)
         settings["warm_start"] = dict(parent, optimizer="fresh AdamW; not a resume of the parent run")
+    if key_source:
+        settings["init_key"] = True
+        settings["init_key_source"] = key_source
+    if margin:
+        settings["identity_margin_positive"], settings["identity_margin_negative"] = margin[:2]
+        settings["identity_margin_weight"] = margin[2]
+        settings["identity_objective"]["margin"] = (
+            "+ weight * [mean relu(positive - cos(same))^2 + mean relu(cos(different) - negative)^2]; "
+            "different = cross-view non-matching pairs + both machines of each frame; equal textures masked")
+    if frozen:
+        settings["freeze_perception"] = True
+        settings["frozen_perception_state_sha256"] = frozen
+        settings["objective"] = ("identity_weight * identity loss (InfoNCE" + (" + absolute margins" if margin else "")
+                                 + ") on the key only; perception frozen, no perception loss")
+        settings["identity_objective"]["loss"] = "identity_weight * identity loss only (perception frozen; no perception loss)"
+        settings["identity_objective"]["gradient"] = "key only; perception frozen (no gradient, eval mode, hash-guarded)"
+        settings["key_monitor"] = dict(
+            seed=MONITOR_SEED, pairs=MONITOR_PAIRS, kinds="train", populations=["procedural", "kind_table"],
+            view="rw.paired_view (new layouts, permuted textures incl. side swaps, inverted lamps)",
+            statistics="positive q01/min, different q99/max, within-frame q99/max, counts",
+            use="monitor and predeclared screen only; no validation kinds; no checkpoint selection",
+            screen=KEY_SCREEN,
+            violation_margins=None if margin is None else dict(positive=margin[0], negative=margin[1]))
     runner = Run(args.resume or args.output, settings=settings, data=rw.manifest(), recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
     started = time.perf_counter()
     try:
+        if frozen:
+            guard_frozen(model, frozen)
+            if runner.step == 0 and not any(r.get("split") == "monitor_initial" for r in runner.rows):
+                with evaluation_mode(model):  # the parent key before any update
+                    runner.log(dict(step=0, split="monitor_initial",
+                                    **monitor_row(key_monitor(model, args.device, args.texture_randomization, margin))))
+                enforce_ceiling(args, runner, guard=lambda: guard_frozen(model, frozen))
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
             augmentation = augmentation_stream(args.seed, runner.step)
@@ -371,11 +517,19 @@ def train_perception(args, s):
                     runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
                     randomize=args.texture_randomization, augmentation=augmentation,
                 )
-            percept = model["perception"](rgb)
-            loss, metrics = perception_loss(percept, rgb, entity, scenes.attrs.to(args.device), lamps.to(args.device))
-            if args.identity:
+            if frozen:
+                with torch.no_grad():
+                    percept = model["perception"](rgb)
+                identity, metrics = identity_loss(model["key"], percept, scenes, textures, source,
+                                                  detached=True, margin=margin)
+                loss = args.identity_weight * identity
+                metrics["loss"] = float(loss.detach())
+            else:
+                percept = model["perception"](rgb)
+                loss, metrics = perception_loss(percept, rgb, entity, scenes.attrs.to(args.device), lamps.to(args.device))
+            if args.identity and not frozen:
                 identity, identity_metrics = identity_loss(model["key"], percept, scenes, textures, source,
-                                                           detached=args.identity == "detached")
+                                                           detached=args.identity == "detached", margin=margin)
                 metrics.update(identity_metrics, perception_loss=metrics["loss"])
                 loss = loss + args.identity_weight * identity
                 metrics["loss"] = float(loss.detach())
@@ -384,16 +538,27 @@ def train_perception(args, s):
                                texture_heldout_rejections=stats["heldout_rejections"], texture_draws=stats["draws"])
             optimizer.zero_grad()
             loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+            torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad], 1.0)
             optimizer.step()
             runner.step += 1
             runner.log(dict(step=runner.step, split="train", **metrics))
-            enforce_ceiling(args, runner)
+            enforce_ceiling(args, runner, guard=(lambda: guard_frozen(model, frozen)) if frozen else None)
             if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
-                runner.log(validate_perception(model["perception"], runner.step, args, s))
+                if frozen:
+                    guard_frozen(model, frozen)
+                    with evaluation_mode(model):
+                        runner.log(dict(step=runner.step, split="monitor",
+                                        **monitor_row(key_monitor(model, args.device, args.texture_randomization, margin))))
+                    enforce_ceiling(args, runner, guard=lambda: guard_frozen(model, frozen))
+                else:
+                    runner.log(validate_perception(model["perception"], runner.step, args, s))
                 runner.save()
                 print(f"perception: saved step {runner.step}", flush=True)
+        if frozen:
+            guard_frozen(model, frozen)
         runner.save()
+        if frozen:
+            return finish_frozen_key(runner, model, args, s, settings, started, key_source, margin, frozen)
         with evaluation_mode(model):
             metrics = ev.perception_metrics(model["perception"], torch.Generator().manual_seed(args.seed + 17), "validation", s["validation_scenes"], args.device)
             _, _, rgb, _, _ = perception_batch(torch.Generator().manual_seed(args.seed + 18), rw.KIND_SPLIT["validation"], 8, args.device)
@@ -421,6 +586,43 @@ def train_perception(args, s):
     except Exception as error:
         runner.status("failed", "incomplete", str(error))
         raise
+    return runner.path
+
+
+def guard_frozen(model, expected):
+    if state_hash(model["perception"]) != expected:
+        raise RuntimeError("Frozen perception changed; refusing to save or report this run")
+
+
+def finish_frozen_key(runner, model, args, s, settings, started, key_source, margin, frozen):
+    """Frozen-key result: train-kind monitor, predeclared screen, report; no validation kinds."""
+    with evaluation_mode(model):
+        monitor = key_monitor(model, args.device, args.texture_randomization, margin)
+        _, _, rgb, _, _ = perception_batch(torch.Generator().manual_seed(MONITOR_SEED), rw.KIND_SPLIT["train"], 8,
+                                           args.device, randomize=args.texture_randomization,
+                                           augmentation=torch.Generator().manual_seed(MONITOR_SEED + 1))
+        recon = model["perception"](rgb).recon
+    enforce_ceiling(args, runner, guard=lambda: guard_frozen(model, frozen))  # monitors can be the peak
+    unchanged = state_hash(model["perception"]) == frozen
+    initial = next((r for r in runner.rows if r.get("split") == "monitor_initial"), None)
+    elapsed = time.perf_counter() - started
+    screen = key_screen(monitor, unchanged)
+    result = dict(
+        evaluation_scope="Training-kind monitor only (seed %d, %d pairs); frozen J perception; no validation kinds"
+                         % (MONITOR_SEED, MONITOR_PAIRS),
+        gate=screen["passed"], screen=screen,
+        metrics=dict(monitor=monitor, initial_monitor=initial,
+                     resources=dict(**resources(args.device), updates=runner.step, seconds=elapsed,
+                                    updates_per_second=runner.step / max(elapsed, 1e-9), **parameters(model))),
+        perception_unchanged=unchanged, init_key=key_source, stop_reason=stop_reason(runner, args, started),
+        key_export=dict(component="key", architecture=settings["identity_objective"]["key"], width=s["width"],
+                        key_width=s["key_width"], mode=args.identity, state_sha256=state_hash(model["key"])),
+        limitations=["Screen uses training kinds only; held-out identity is decided by later calibration/evaluation.",
+                     "Identity pairs are disclosed generator knowledge (same sampled texture); no natural-image claim.",
+                     "Perception, decoder and heads are the frozen parent weights; only the key head was trained.",
+                     "The absolute-margin term is a candidate repair supported by the diagnosis, not proven necessary."],
+    )
+    finish(runner, result, complete=runner.step >= args.updates, images=(rgb.cpu(), recon.cpu()))
     return runner.path
 
 
@@ -1106,7 +1308,17 @@ def main():
                         help="symbolic only: ORACLE diagnostic, R relation-only updates then all training rules "
                              "until --updates (historical: 8000 of 16000)")
     parser.add_argument("--init-key", action="store_true",
-                        help="core only: initialize core.key_head from the --perception run's exported identity key")
+                        help="core: initialize core.key_head from the --perception run's exported identity key; "
+                             "perception (with --identity): load the key exported by the --init-perception run")
+    parser.add_argument("--freeze-perception", action="store_true",
+                        help="perception only: train only the loaded key on frozen --init-perception weights "
+                             "(requires --init-key and --identity detached; perception hash-guarded)")
+    parser.add_argument("--identity-margin-positive", type=float,
+                        help="perception identity: absolute cosine target for same-machine pairs")
+    parser.add_argument("--identity-margin-negative", type=float,
+                        help="perception identity: absolute cosine ceiling for different-machine pairs")
+    parser.add_argument("--identity-margin-weight", type=float,
+                        help="perception identity: weight of the squared absolute-margin hinges (> 0)")
     args = resume_arguments(parser, parser.parse_args())
     if args.stage == "check":
         args.device = "cpu"
@@ -1127,8 +1339,30 @@ def main():
         parser.error("--identity-weight requires --identity")
     if args.identity and args.identity_weight is None:
         args.identity_weight = IDENTITY_WEIGHT
-    if args.init_key and args.stage != "core":
-        parser.error("--init-key applies to the core stage only")
+    if args.init_key and args.stage not in ("core", "perception"):
+        parser.error("--init-key applies to the core or perception stage only")
+    if args.stage == "perception" and args.resume is None:
+        if args.init_key and not (args.identity and args.init_perception):
+            parser.error("perception --init-key requires --identity and --init-perception (the key's source run)")
+        if args.freeze_perception:
+            if not (args.init_key and args.init_perception and args.identity == "detached"):
+                parser.error("--freeze-perception requires --init-perception, --init-key and --identity detached")
+            recorded = parent_texture_randomization(args.init_perception)
+            supplied = {a.split("=", 1)[0] for a in sys.argv[1:]}
+            if "--texture-randomization" in supplied and args.texture_randomization != recorded:
+                parser.error(f"--freeze-perception uses the parent's recorded texture randomization {recorded}")
+            args.texture_randomization = recorded
+    if args.freeze_perception and args.stage != "perception":
+        parser.error("--freeze-perception applies to the perception stage only")
+    margin = (args.identity_margin_positive, args.identity_margin_negative, args.identity_margin_weight)
+    if any(v is not None for v in margin):
+        if any(v is None for v in margin):
+            parser.error("--identity-margin-positive/-negative/-weight must be given together")
+        if args.stage != "perception" or not args.identity:
+            parser.error("identity margins apply to the perception stage with --identity")
+        positive, negative, weight = margin
+        if not (-1.0 <= negative < positive <= 1.0) or not (math.isfinite(weight) and weight > 0):
+            parser.error("identity margins need -1 <= negative < positive <= 1 and a positive finite weight")
     if args.oracle_curriculum is not None and (args.stage != "symbolic" or not 0 < args.oracle_curriculum < args.updates):
         parser.error("--oracle-curriculum R applies to the symbolic stage with 0 < R < --updates")
     if args.stage == "audit":

@@ -40,6 +40,26 @@ loading refuses changed source, checkpoint, policy or evidence. The same
 life command. Native visual-slot recall is distinct from fine-detail reconstruction
 and full-agent learning. Other R2 components remain untrained.
 
+The optional **frozen-perception identity repair** trains the existing key only,
+using the parent's recorded texture randomization (J:1.0). Its train-kind screen
+must pass before calibration; training completion alone is not qualification:
+
+```bash
+OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage perception \
+  --size full --device cuda --seed 3501 --updates 1000 --max-minutes 20 \
+  --max-reserved-gib 6 --init-perception runs/latent_agent_r1/identity_joint_20260923 \
+  --init-key --identity detached --freeze-perception \
+  --identity-margin-positive .95 --identity-margin-negative .50 \
+  --identity-margin-weight 1 --output runs/my_key_repair
+```
+
+Resume with `--stage perception --resume runs/my_key_repair`. The run records
+parent hashes, train-kind cosine diagnostics, a checkpoint and standalone report.
+Perception/decoder/heads are hash-guarded. Use this run as `--identity-run` for a
+new calibration (seed3404), then fresh visual-memory evaluations (2405/2406).
+The current calibration sequence includes lamp changes, new layouts, alternating
+side swaps and novel arrivals, with labels confined to evaluation/calibration.
+
 The validated **known-rule application curriculum** is available through the same recipe:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.
 Resume a paused/interrupted run with `--stage symbolic --resume runs/my_oracle_curriculum`.

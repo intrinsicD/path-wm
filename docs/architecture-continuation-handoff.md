@@ -3,15 +3,18 @@
 Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-- Previous completed result/evidence commit: **`b6c359b`** (affine transfer).
-- Latest implementation: **`04650b8`**, nonlinear fidelity; plan/red: `f751a69`.
-- Previous implementation: **`5925311`**, frozen affine transfer; plan/red: `8b24950`.
-- Previous indexed result/evidence commit: **`f63dfa9`**.
-- Indexed discovery implementation: **`00abd78`**; plan/red checks: `014cc40`.
-- Earlier bounded context implementation: `98b379a`; evidence loop: `b51d949`.
-- Latest full suite: **866 passed in 647.72 seconds**, exit0; source unchanged throughout.
-- All selected runs and checks finished. No job from this continuation remains to
-  resume. Final evidence is recorded in the nonlinear-fidelity plan.
+**Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
+Actual Claude Opus5.5 medium is the implementation/review partner. Native memory
+software is committed at `9146f21`; all925 CPU tests pass (689.17s, unchanged
+source). Calibration3403_v2 passes; fresh validation2403 passes,2404 fails
+cross-layout identity (57/64), while all memory contracts pass in both. These
+are development results, not full-agent or fine-detail qualification.
+
+A bounded repair of the existing identity key is being implemented in the
+existing perception recipe, with J perception/decoder frozen. See the owning
+plan and `runs/reviews/real_visual_memory_20260924/claude-identity-repair-plan.md`.
+No alternate codec or representation is adopted. Historical866-test results
+and surrogate fidelity experiments remain preserved below and in their plans.
 
 **Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
 owns the audit. Prefer the real model; any downscaled check must be followed by the
@@ -28,8 +31,8 @@ context and intended output consumers. Identify a concrete defect, missing
 connection or unimplemented contract in that actual path. Reuse existing modules;
 add code only where the identified gap requires it. The prior suggestion to choose
 a new decoder or residual path for `DetailCodec` is withdrawn as the default next
-step. Preserve its scoped evidence; do not repeat or expand those screens. No new
-training or alternate architecture is selected by this handoff.
+step. Preserve its scoped evidence; do not repeat or expand those screens. Only the bounded existing-key training in the current owning plan is selected;
+no alternate architecture is selected by this handoff.
 
 ## Completed surrogate diagnostic: nonlinear fidelity (24 September)
 

@@ -253,3 +253,75 @@ Fresh acceptance seeds2405/2406,32 scenes each, unchanged gates. Diagnosed
 2403/2404 are secondary checks only. Claude owns recipe implementation/tests;
 Codex owns calibration parity and independent review. Every downscaled new
 check must also run with the actual full configuration.
+
+Round8 pre-training review:72 native-training/adjacent regression checks pass.
+Untrained J monitor fails both declared populations (positive q01 .888/.893;
+negative q99 .712/.763). No new checkpoint is selected. Calibration now also
+scores its same-layout lamp-change frame: selection maximizes the minimum of
+acquisition, same-layout and relocated matching, with unchanged8 settings and
+false-match/novel-merge constraints. This is fixed before calibration3404; hidden
+labels remain evaluator-only. Round9 fixes empty-negative margin loss, monitor
+violation metrics, objective disclosure and monitor resource checks before training.
+
+Key repair3501_v1 completed1000 updates in79.44s, reserved1.3125GiB; perception
+is bit-identical, source unchanged, report structurally verified. Its training
+screen FAILED: procedural positive q01 .92468 / negative q99 .65804 / within
+q99 .52226; kind-table .90057 / .69952 / .61469. No calibration or validation
+was launched. This is evidence about one fit, not proof that the existing key
+or representation cannot learn the task. Claude round10 reviews loss balance
+and proposes the next bounded repair; full CPU suite remains source-frozen.
+
+Round10 training-only gradient diagnostic (fresh seeds7777+, no updates) found
+NCE key-gradient norms53–94 times larger than the W=1 hinge gradient. This
+corrects the earlier claim that NCE gradients were negligible: hard negatives
+keep them substantial. Preregister a matched single-factor W=100 run from J,
+same seed3501/batches/1000 updates/lr/margins/monitor/ceilings, new output
+`runs/real_visual_key_repair_3501_w100_v1`. No source or representation change,
+no checkpoint selection, no gate changes. The W=1 run is a failed weakly
+weighted intervention, not proof of impossibility. Claude's full diagnostic and
+conditional next steps are in `claude-key-replan.md`; procedural-only training
+versus kind-table evaluation is a separate hypothesis if W=100 fails.
+
+W100 matched run completed105.39s, reserved1.3125GiB, unchanged perception/source;
+training screen still FAILED: procedural(.92771,.66483,.47281), kind-table
+(.90175,.72127,.62084), ordered positive q01/negative q99/within q99. Report
+structurally verified. No calibration/evaluation. Weight-only repair is insufficient
+in this budget. Joint round11 plans the next existing-key training-data repair,
+separating procedural/fixed-kind distribution mismatch from optimization limits.
+
+Round11 fresh train-only diagnostics show broader positive tails than the fixed
+128-pair monitor, and weight100 took effect without solving that screen. No
+fixed-texture-pool option, new holdout mode or further training is adopted. Codex
+challenged whether the newly imposed cosine quantile cutoffs are prerequisites
+for the original runtime task: they are not the binder thresholds or original
+acceptance criteria, and optimizing them may add unnecessary work. Round12
+reviews that distinction before any further run. Original failed screens remain
+failed; original real-task acceptance thresholds are unchanged.
+
+## Prospective protocol amendment: measure the actual task
+
+Before any3404 calibration or2405/2406 measurement, Codex and Claude round12
+agree that the added train-monitor cutoff is an unvalidated proxy, neither a
+necessary nor sufficient condition for the binder's real task. The negative
+cutoff.60 differs materially from actual match/new thresholds. Keeping it as a
+prerequisite would encourage unnecessary training to satisfy an invented target.
+The W1/W100 training screens remain FAILED and unchanged. Prospectively the
+monitor is disclosed diagnostic evidence, not a prerequisite. This departure
+from the earlier stop rule is explicit; it is not based on unmeasured runtime
+success and does not lower any original real-task gate. No extra data mode or
+model is added.
+
+Fixed candidate: W100 final checkpoint; matched control: original J (not a
+selectable alternative). Calibrate each once on identical seed3404,64 TRAIN
+episodes, same8 policies/selection/false-match constraints. Only calibration
+passes export a usable manifest. Evaluate passing arms on untouched2405/2406,
+32 scenes each, unchanged runtime gates; W100 needs BOTH populations to pass.
+No seed, checkpoint or policy shopping after measurement. If J also passes,
+these populations do not establish that retraining was needed. If W100 fails,
+its actual decisions guide the next bounded repair. Every result must disclose
+the failed parent monitor and this amendment; do not say all gates passed.
+
+The key-training and calibration-parity implementation passes the complete CPU
+suite:942 tests,812.70s, zero failures/skips, source unchanged. The two completed
+key-training runs retain failed diagnostic screens. Actual-task comparison is
+next under the prospective amendment; no trained-task success claimed yet.

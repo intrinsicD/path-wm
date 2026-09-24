@@ -371,8 +371,9 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
     perception, candidates = modules['perception'], modules['candidates']
     settings = dict(stage='visual-binding-calibration', purpose='development', seed=seed,
                     scenes=scenes, device='cpu', precision='fp32', width=WIDTH, updates=0,
+                    episode='initial, same-layout lamp change, relocated with alternate side swaps, novel arrival',
                     checkpoint_sha256=file_hash(Path(identity_run)/'last.pt'),
-                    rule='Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; maximize min acquisition/match under false-match<=.005')
+                    rule='Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; maximize min acquisition/same-layout/relocated matching under false-match<=.005')
     atomic_json(out/'status.json', dict(result='running',report='pending',step=0,error=None))
     atomic_json(out/'run.json',dict(schema='pathwm-run-v1',identity=dict(settings=settings,
                 data=dict(population='train',kinds=list(rw.KIND_SPLIT['train'])),environment=environment('cpu')),
@@ -385,18 +386,22 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
         scene = rw.sample_scenes(g,kinds[torch.randperm(len(kinds),generator=g)[:2]][None])
         lamps = torch.randint(2,(1,2),generator=g)
         changed = lamps.clone(); changed[0,0] = 1-changed[0,0]
-        other_scene = rw.sample_scenes(g,scene.kind)
+        swapped = index % 2 == 1
+        other_scene = rw.sample_scenes(g,scene.kind.flip(1) if swapped else scene.kind)
+        moved_lamps = changed.flip(1) if swapped else changed
         remaining = kinds[~torch.isin(kinds,scene.kind.flatten())]
         novel_kind = remaining[torch.randint(len(remaining),(1,),generator=g)].item()
-        novel_scene = rw.sample_scenes(g,[[novel_kind,int(scene.kind[0,1])]])
-        episodes.append((scene,lamps,other_scene,changed,novel_scene))
-        frames = torch.cat((rw.render(scene,lamps)[0],rw.render(other_scene,changed)[0]))
+        novel_scene = rw.sample_scenes(g,[[novel_kind,int(other_scene.kind[0,1])]])
+        episodes.append((scene,lamps,other_scene,changed,moved_lamps,novel_scene))
+        frames = torch.cat((rw.render(scene,lamps)[0],rw.render(other_scene,moved_lamps)[0]))
         percept = perception(frames)
         keys, _ = candidates(percept.slots)
         # Same true machine in two views (calibration supervision only).
         indices = torch.stack([pointer(percept.alpha,torch.cat((scene.machine_xy[:,side],other_scene.machine_xy[:,side])))
                                for side in range(2)],1)
         selected = keys[torch.arange(2)[:,None],indices]
+        if swapped:
+            selected = torch.stack((selected[0], selected[1].flip(0)))
         same = (selected[0]*selected[1]).sum(-1)
         different = selected[:,0] @ selected[:,1].T
         positives.extend(same.tolist()); negatives.extend(different.flatten().tolist())
@@ -404,7 +409,7 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
         detection = bool((predicted.gather(1,indices)==1).all() and (indices[:,0]!=indices[:,1]).all())
         row=dict(step=index,split='calibration',same_min=float(same.min()),
                  different_max=float(different.max()),detected=detection,
-                 kinds=scene.kind.tolist(),same_scores=same.tolist(),different_scores=different.tolist())
+                 kinds=scene.kind.tolist(),swapped=swapped,same_scores=same.tolist(),different_scores=different.tolist())
         rows.append(row)
         with (out/'metrics.jsonl').open('a') as f: f.write(json.dumps(row,sort_keys=True)+'\n')
     policies = []
@@ -412,9 +417,9 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
         for margin in (.05,.10):
             thresholds = dict(match_threshold=match,new_threshold=match-.05,margin=margin)
             binder = AssociationBinder(**thresholds)
-            acquired = matched = false = novel_false = novel_slot_detected = 0
+            acquired = matched = same_matched = same_false = false = novel_false = novel_slot_detected = 0
             policy_index = len(policies)
-            for index,(scene,lamps,other_scene,changed,novel_scene) in enumerate(episodes):
+            for index,(scene,lamps,other_scene,changed,moved_lamps,novel_scene) in enumerate(episodes):
                 agent = new_agent(modules,out/f'policy-{policy_index}'/f'case-{index:03d}',binder=binder)
                 first_rgb,first_labels = rw.render(scene,lamps)
                 first,_ = agent.observe(first_rgb[0])
@@ -425,7 +430,16 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
                     if m['instance'] is not None and label in (0,1):
                         owners[m['instance']] = int(scene.kind[0,label])
                 acquired += len(set(owners.values()))
-                next_rgb,next_labels = rw.render(other_scene,changed)
+                # Match evaluation's observation history before relocation.
+                changed_rgb,changed_labels = rw.render(scene,changed)
+                same_view,_ = agent.observe(changed_rgb[0])
+                for m in same_view.machines:
+                    x,y = (int(v) for v in m['xy'])
+                    label = int(changed_labels[0,y,x])-1
+                    if m['instance'] in owners and label in (0,1):
+                        correct = owners[m['instance']] == int(scene.kind[0,label])
+                        same_matched += int(correct); same_false += int(not correct)
+                next_rgb,next_labels = rw.render(other_scene,moved_lamps)
                 second,_ = agent.observe(next_rgb[0])
                 for m in second.machines:
                     x,y = (int(v) for v in m['xy'])
@@ -434,22 +448,25 @@ def calibrate_visual_binding(output, *, identity_run, seed=3401, scenes=128):
                         correct = owners[m['instance']] == int(other_scene.kind[0,label])
                         matched += int(correct); false += int(not correct)
                 known = {e.id for e in agent.session.store.entities() if e.kind == 'instance'}
-                novel_rgb,novel_labels = rw.render(novel_scene,changed)
+                novel_rgb,novel_labels = rw.render(novel_scene,moved_lamps)
                 arrival,_ = agent.observe(novel_rgb[0])
                 novel_hits = [m for m in arrival.machines
                               if int(novel_labels[0,int(m['xy'][1]),int(m['xy'][0])]) == 1]
                 novel_slot_detected += int(bool(novel_hits))
                 novel_false += int(any(m['instance'] in known for m in novel_hits))
             result = dict(thresholds=thresholds,acquisition=acquired/(2*scenes),
-                          correct_matching=matched/(2*scenes),false_matches=false/(2*scenes),
+                          correct_matching=matched/(2*scenes),same_layout_matching=same_matched/(2*scenes),
+                          false_matches=max(false,same_false)/(2*scenes),
+                          same_layout_false_matches=same_false/(2*scenes),
+                          relocated_false_matches=false/(2*scenes),
                           novel_false_merge=novel_false/scenes,novel_slot_detection=novel_slot_detected/scenes)
             policies.append(result)
             print(json.dumps(result),flush=True)
     admissible = [p for p in policies if p['false_matches'] <= .005 and p['novel_false_merge'] <= .005 and p['novel_slot_detection'] >= .95]
-    selected = max(admissible,key=lambda p:(min(p['acquisition'],p['correct_matching']),
+    selected = max(admissible,key=lambda p:(min(p['acquisition'],p['same_layout_matching'],p['correct_matching']),
                     -max(p['false_matches'],p['novel_false_merge']),p['thresholds']['match_threshold'],p['thresholds']['margin']),default=None)
     unchanged = before == {k:state_hash(v) for k,v in modules.items()}
-    gate = bool(selected and min(selected['acquisition'],selected['correct_matching']) >= .95 and unchanged)
+    gate = bool(selected and min(selected['acquisition'],selected['same_layout_matching'],selected['correct_matching']) >= .95 and unchanged)
     metrics=dict(min_same=min(positives),max_different=max(negatives),
                  detected=sum(r['detected'] for r in rows)/scenes,weights_unchanged=unchanged,
                  selected=selected,policies=policies)
