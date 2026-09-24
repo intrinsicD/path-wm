@@ -351,8 +351,8 @@ sessions:
   open_threads: 17
 - id: 2026-09-24_001
   date: '2026-09-24'
-  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains."
-  turn_count: 4
-  events_count: 13
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains. Frozen affine-transfer screen passes four cells; pixel prior stronger, nonlinear fidelity remains open."
+  turn_count: 5
+  events_count: 15
   claims_touched: []
   open_threads: 3

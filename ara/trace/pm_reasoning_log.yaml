@@ -2999,3 +2999,14 @@ entries:
   - No broader closure for O398, semantic retrieval, concept induction or prior R1/CI1 failures. No topic abandonment
     inferred. Four actual Opus5.5 medium public-only receipts preserve raw overlapping usage rather than summing.
   - Final full suite856 passed in662.14s; supervisor source hashes unchanged. Independent audit, local links and YAML/session counts pass.
+- turn: 2026-09-24_001#5
+  notes:
+  - N578 records measured analytic-baseline results; O402 staged because no researcher endorsement/resolution
+    of the interpretation. No broad capability claim promoted.
+  - "O398\u2013O401 and prior R1/CI1 failures remain compatible with this narrow frozen-code diagnostic. No\
+    \ topic abandonment or idle period inferred from missing maintenance records; older unknown last-reference\
+    \ times do not establish stale status."
+  - Four actual Opus5.5 medium receipts preserved. Sum per-round usage, not cumulative modelUsage; session
+    API-equivalent estimate is not subscription billing. Separate population inference, live memory mechanics,
+    old-output integrity and learned retention.
+  - Final frozen-source CPU suite862 passed in620.35s, exit0; source hashes unchanged.

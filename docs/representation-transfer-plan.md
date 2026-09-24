@@ -98,3 +98,110 @@ the recipe does not yet exist (red-tests.log, exit2). Claude round2 withdrew bot
 categorical stopping rules and the five-seed minimum; adopted channel-shared
 pixel reference, fixed derangement, logged rank/shrinkage and unclipped excess MSE.
 Its generic centered-ridge code is adapted locally and independently checked.
+
+
+## Completed screen and decision
+
+The development run passed. One allowed implementation repair moved the shuffle
+from part rows to whole images, added explicit candidate-order/finite-value checks,
+and exposed the capability gate in the unchanged report renderer. Development v1
+and the tiny smoke remain preserved; the smoke's quality failure is not a learning
+result. Development v2 passed. Numeric thresholds and model settings did not change.
+No final population was used to tune the implementation.
+
+All four final cells passed every affine gate:
+
+| Codec seed | Population | Reverse MSE | Mix MSE | Discrimination, both |
+| --- | --- | ---: | ---: | ---: |
+| 17 | 925117 | 0.000256037 | 0.000211428 | 100% |
+| 17 | 925129 | 0.000251141 | 0.000215578 | 100% |
+| 29 | 925117 | 0.000250782 | 0.000209716 | 100% |
+| 29 | 925129 | 0.000246985 | 0.000212748 | 100% |
+
+The latent map's error is 18.4–116.3× lower than the better copying/displacement
+baseline. Most error is already present in true-output reconstruction. Channel
+ridge reaches roughly 1e-13 MSE: the stronger channel-sharing prior solves this
+photometric problem more accurately, so there is no learned-representation
+advantage. Each source split has 64 whole images; 256 parts and 16384 pixel rows
+are not independent population samples. All candidate degeneracy counts are zero.
+The fixed full denominator and strict tie rule remain unchanged.
+
+The nonlinear threshold diagnostic has latent MSE0.08308–0.08375, output-codec
+floor0.05093–0.05189 and pixel-ridge MSE0.07596–0.07598. Discrimination still reaches
+100%, demonstrating why easy outcome separation must not substitute for faithful
+reconstruction. This is a diagnostic limitation, not a secretly failed affine gate
+or evidence of arbitrary concept learning. Binary threshold outputs differ from
+the smooth training distribution. These measurements do not isolate a unique
+architectural cause.
+
+All four familiar-pose reconstruction gates, frozen-weight/old-output integrity,
+source correction, stale-read rejection, unrelated-state preservation and exact
+float64 map/restart checks pass. Integrity is mechanically expected with frozen
+weights and tested source contracts; it is not learned retention. Population
+predictions use tensors; one live episode/context demonstration per invocation
+uses supplied feature observations. The entire population does not run through a
+learned autonomous session, and the generated predictions do not become evidence.
+
+**Decision:** stop this affine feasibility screen at its passing gates. Do not add
+a learned inducer to a task solved by the strong baseline. The next representation
+priority is useful non-affine structure and novel output fidelity with preservation
+of prior detail/behavior; diagnose the target-reconstruction floor before proposing
+an inference repair. A new task/family and budget must be declared first. Existing
+R1/CI1 failures and general learned induction remain unresolved. These final
+populations are now consumed.
+
+## Evidence, cost and reproduction
+
+Raw arrays, maps, unchanged codec checkpoint, source snapshot, standalone report,
+and a live memory/session snapshot are in
+`runs/representation_transfer_final_s{17,29}_{925117,925129}_v1/`.
+Run `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.representation_transfer
+--checkpoint runs/evidence_loop_final_s17/last.pt --output runs/my_transfer`
+for the development screen. Add `--final --seed 925117` to reproduce an already
+consumed final population. Tiny software smoke: `--support 2 --count 2`. There is
+no training/resume CLI; `last.pt` is an audit artifact, while the checked live
+restart uses `memory/session.pt` and `memory/context.json`.
+
+Independent augmented-normal-equation fits and raw-target/prediction/distance
+recomputation audited all 9,216 prediction/choice rows. A separate process replaced
+query targets/candidates with NaNs: all 12 relation cells retained bitwise-identical
+maps/predictions. Image derangements, split disjointness, fixed denominators, source
+hashes, checkpoint equality, gates and report status were checked. The initial
+standalone poison-audit launch lacked PYTHONPATH; it failed import, then passed
+with the project root explicitly supplied. Both logs remain. No result was rerun
+or changed for that audit repair.
+
+Final complete process invocations took 2.62–2.97s each (10.98s total, imports and
+report rendering included). Internal CPU time1.81–1.84s each; peak RSS579–582MiB.
+All declared resource limits passed. A float64 map uses33,280 bytes versus131,072
+bytes for paired FP32 support codes; retained source evidence and model storage
+are additional, so this is not a total-memory compression claim. Per-stage timing,
+parameter bytes and raw storage remain in each run. No neural weights were updated.
+Inherited training cost is 3000 mean +600 variance updates per checkpoint and is
+explicitly excluded from these new runtime times, not treated as free learning.
+
+Four public-only Claude rounds took202.40s total wall time. The CLI reports a
+cumulative API-equivalent estimate of$0.5413478, not subscription billing; per-round
+usage and cumulative cost are distinguished in `claude-summary.json`.
+
+Four public-only Claude rounds at requested medium effort are verified by
+`modelUsage` naming `claude-opus-5-5`. Claude supplied the generic ridge reference,
+challenged the design, and reviewed the public implementation contract; private
+implementation and measurement review stayed local. Round4 acknowledged the
+repairs and withdrew candidate exclusion. Requested extra isolation/derangement
+checks passed locally. No additional population or training was authorized by
+review agreement. Exact briefs, responses, model receipts, frozen source manifest,
+auditors and logs are in `runs/reviews/representation_transfer_20260924/`.
+
+Reports use the unchanged renderer and have structural verification; no new
+browser-QA claim. A saved three-relation contact sheet was visually inspected:
+affine outputs track their targets, while the threshold examples visibly lose
+sharp binary detail even at the target-code reconstruction floor. Full frozen-source CPU suite: **862 passed**, exit0 in620.35s, source hashes
+unchanged. Six focused numeric/integrity checks passed before the final runs.
+Final receipts: `full-suite-exit.json`, `source-freeze.json`, `doc-checks.json` and
+`raw-artifact-audit.json` in the review directory. All seven evaluation invocations
+are costed in `all-run-costs.json`; complete development/failed-check process
+overhead was not instrumented and is not presented as zero.
+
+Plan/red commit: `8b24950`; tested implementation: `5925311`. Research event N578
+and staged interpretation O402 bind the portable evidence; no broad claim promoted.

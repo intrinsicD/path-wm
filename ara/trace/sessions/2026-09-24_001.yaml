@@ -2,9 +2,9 @@ session:
   id: 2026-09-24_001
   date: '2026-09-24'
   started: 2026-09-24T12:52+02:00
-  last_turn: 2026-09-24T15:25+02:00
-  turn_count: 4
-  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains."
+  last_turn: 2026-09-24T15:55+02:00
+  turn_count: 5
+  summary: "Evidence-loop and bounded context continuation: two-seed lexical pairing gates pass, counting matches, no retention/layout advantage; frozen RGB16 regression unchanged. Broader concepts/dialogue remain open. Indexed screen100%; no cache gain; linear head validation remains. Frozen affine-transfer screen passes four cells; pixel prior stronger, nonlinear fidelity remains open."
 events_logged:
 - turn: 1
   type: question
@@ -87,6 +87,19 @@ events_logged:
   provenance: ai-suggested
   summary: Stop learned complexity on exact descriptors only; representation/transfer question remains open.
 
+- turn: 5
+  type: experiment
+  id: N578
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen affine transfer passes; stronger pixel baseline and poor nonlinear reconstruction retained.
+- turn: 5
+  type: observation
+  id: O402
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped affine representation utility; learned induction and non-affine output fidelity remain open.
+
 ai_actions:
 - turn: 1
   action: Inspected current plans/source; updated walkthrough, atlas coverage and project-state pointer.
@@ -130,6 +143,15 @@ ai_actions:
   - tests/test_scan_discovery.py
   - docs/scan-discovery-plan.md
 
+- turn: 5
+  action: Preregistered, implemented, reviewed and tested frozen affine recipe; four actual Claude medium public-only
+    rounds, raw audits, source-isolation check, portable evidence and unchanged-renderer reports.
+  provenance: ai-executed
+  files_changed:
+  - experiments/representation_transfer.py
+  - tests/test_representation_transfer.py
+  - docs/representation-transfer-plan.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -139,11 +161,16 @@ key_context:
   excerpt: 'User: Continue from docs/architecture-continuation-handoff.md with Claude Opus 5.5 at medium effort.
     Plan, implement, review and test the remaining work in measurable slices.'
 
+- turn: 5
+  excerpt: 'User: Continue from docs/architecture-continuation-handoff.md together with actual Claude Opus
+    5.5 at medium effort. Plan, implement, review and test the remaining work in measurable slices.'
+
 open_threads:
 - 'N569: bounded contracts now implemented; general learned concepts/context/language/audio remain open.'
 - Existing failed transfer/retention and natural language/audio learning remain unresolved.
-- 'N577: indexed screen complete; choose useful representations/concept-instance transfer with fresh gates. General learned retention remains open.'
+- 'N578: affine feasibility screen complete; predeclare non-affine/output-fidelity question with old-task preservation. Learned induction and useful retention remain open.'
 ai_suggestions_pending:
 - 'O398: proposed design order and visual demonstration, then grounded text and audio.'
 - 'O400: scoped lexical-selection interpretation remains staged; no user empirical endorsement.'
 - 'O401: narrow index sufficiency interpretation staged; no user empirical endorsement.'
+- 'O402: affine-only interpretation staged; no user empirical endorsement or general capability promotion.'

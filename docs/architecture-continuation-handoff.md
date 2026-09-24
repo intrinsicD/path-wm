@@ -3,17 +3,30 @@
 Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-- Latest completed result/evidence commit: **`f63dfa9`**.
+- Latest completed implementation: **`5925311`**, frozen affine transfer.
+- Previous indexed result/evidence commit: **`f63dfa9`**.
 - Indexed discovery implementation: **`00abd78`**; plan/red checks: `014cc40`.
 - Earlier bounded context implementation: `98b379a`; evidence loop: `b51d949`.
-- Full suite: **856 passed in 662.14 seconds**, exit 0; source unchanged throughout.
+- Latest full suite: **862 passed in 620.35 seconds**, exit 0; source unchanged throughout.
 - All selected runs and checks finished. No job from this continuation remains to
-  resume. The working tree was clean before this handoff-only update.
+  resume. Final evidence is recorded in the representation-transfer plan.
 
 **Start with useful representations and concept/instance transfer.** The exact-key
 indexed feasibility screen is complete. Do not restart it or add a learned selector
 to a workload already solved by the strong baseline. The complete architecture is
 still unproven; the remaining agenda and next slices are below.
+
+## Continuation result: frozen affine transfer (24 September)
+
+The [representation transfer screen](representation-transfer-plan.md) now passes
+its registered affine gates for two frozen codecs and two fresh populations.
+Pixel-channel ridge is stronger; this is not learned induction or completion of
+the architecture. The nonlinear diagnostic has poor output reconstruction.
+Continue next with a newly declared non-affine/output-fidelity question, preserving
+old detail and behavior. Do not repeat the completed affine or indexed screens.
+The earlier handoff below remains historical context; its initial next slice is
+now complete. Final seeds925117/925129 are consumed. The frozen full suite passed
+862 tests in620.35s, exit0; source hashes unchanged.
 
 ## Paste into the new Codex session
 
@@ -21,14 +34,16 @@ still unproven; the remaining agenda and next slices are below.
 > and the current project state. Collaborate with actual Claude Opus 5.5 using
 > `claude-opus-5-5` at medium effort through substantive design, implementation,
 > review and repair rounds. Preserve the public-only external review boundary.
-> The indexed discovery screen is complete: two fresh populations reached 100%
-> exact answers, cache reset changed no answers, and 856 tests passed. Do not redo
-> that screen or claim learned retention. Start by inspecting earlier R1 transfer
-> and CI1 retention failures, then have Claude challenge a smallest falsifiable
-> useful-representation/concept-instance transfer experiment. Compare remembered
-> examples with inferred shared structure; separate supplied identities, familiar
-> transformations and genuinely held-out instances/relations. Reuse the existing
-> store, episode, context and model contracts. Plan, implement, review and test
+> The indexed discovery and frozen affine-transfer screens are complete. Do not
+> repeat them or add learned complexity to their solved baseline workloads.
+> Two frozen codecs × two fresh populations passed the affine gates, but pixel
+> ridge is stronger and nonlinear threshold output reconstruction remains poor.
+> Use the transfer plan's audits and earlier R1/CI1 failures to choose a smallest
+> falsifiable non-affine/output-fidelity question with old-task preservation.
+> Compare remembered examples with inferred shared structure; separate supplied
+> identities, familiar transformations and genuinely new instances/relations.
+> Reuse existing store, episode, context and model contracts. Plan, implement,
+> review and test
 > the remaining work in small measurable slices. Predeclare fresh populations,
 > numeric quality/retention/reconstruction gates, local compute budgets and repair
 > limits before running. Preserve failed results; freeze and verify each selected

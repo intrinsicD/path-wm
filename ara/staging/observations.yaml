@@ -7069,3 +7069,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O402
+  timestamp: 2026-09-24T15:55+02:00
+  provenance: ai-suggested
+  content: 'Existing frozen detail codes support analytic shared affine maps across fresh instances in the
+    declared photometric hypothesis class. This does not establish learned induction, new mathematical relation
+    families or a latent advantage: channel-pixel ridge is stronger. Nonlinear target reconstruction floor
+    motivates a separate output-fidelity/retention diagnostic before an inference repair.'
+  context: User authorized architecture continuation with actual Claude medium; four fixed final cells, unchanged
+    gates, public-only design/implementation contracts and private local audit. docs/representation-transfer-plan.md
+  potential_type: claim
+  bound_to:
+  - N578
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

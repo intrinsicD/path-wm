@@ -5,9 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- **Active slice:** [Frozen representation transfer](representation-transfer-plan.md): preregistered affine baseline over existing frozen detail codes, with actual Claude Opus5.5 medium review. Plan and red numeric/integrity checks recorded; no new result yet.
-
-- **Continue:** [Handoff](architecture-continuation-handoff.md): Claude Opus5.5 medium; next representation/instance transfer. [Indexed screen](scan-discovery-plan.md): two populations100%, no cache benefit; 856 tests pass.
+- **Latest slice:** [Frozen representation transfer](representation-transfer-plan.md): actual Claude Opus5.5 medium, two frozen codecs × two fresh populations pass affine transfer gates. Latent MSE0.00021–0.00026; pixel ridge is stronger. Nonlinear threshold reconstruction remains poor. 862 CPU tests pass; source unchanged. [Handoff](architecture-continuation-handoff.md) owns the broader agenda; indexed lookup is complete.
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent computation, shared depth and runtime
@@ -29,9 +27,6 @@ Task plans own current work; older decisions and run receipts remain in the
   not a universal prerequisite; joint learning, staged learning and pretrained
   features remain alternatives. Concept-code search is distinct from weight
   retraining. No mechanism, experiment budget or new capability is adopted.
-  The [next discussion](latent-concept-learning-review.md#nächste-besprechung-fünf-latente-operationen)
-  describes comparing, binding, generalizing, applying and correcting as functional
-  requirements; separate modules and a concrete learning path remain unselected.
   A [proposed transfer objective](latent-concept-learning-review.md#bekannte-konzepte-als-transfersignal)
   uses known relations to supervise new-case outcomes; new-rule generalization and
   informative target representations remain to be established.

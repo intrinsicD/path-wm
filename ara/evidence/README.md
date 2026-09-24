@@ -212,3 +212,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Integrated latent architecture,23 September](tables/integrated_architecture_2026-09-23.json): actual Opus5.5 high design/implementation and independent review;816 CPU tests;known-rule application passes, eight induction paths fail. Copied recall0.997→0.044 during failed transfer curriculum; full learned R1/R2 not qualified. Scoped reports structurally verified.
 
 - [Indexed discovery screen,24 September](tables/scan_discovery_2026-09-24.json): two fresh populations100% exact index agreement; no cache-reset effect; no training; validation remains linear in source history. Independent causal audit and four actual Opus5.5 medium public-contract reviews.
+
+- [Frozen representation transfer,24 September](tables/representation_transfer_2026-09-24.json): two codecs × two populations pass affine-map gates; pixel-channel ridge is stronger. Nonlinear threshold output fidelity remains poor. Four actual Opus5.5 medium rounds, raw and target-isolation audits; no neural updates or learned-induction claim.

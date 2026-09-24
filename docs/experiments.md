@@ -36,6 +36,14 @@ See [plan §16](integrated-architecture-plan.md#16-lernfolge-und-nächster-nachw
 
 # Running and editing experiments
 
+The **frozen representation transfer screen** compares inferred affine maps with
+copied examples and channel-shared pixel ridge:
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.representation_transfer --checkpoint runs/evidence_loop_final_s17/last.pt --output runs/my_transfer`.
+It uses existing frozen weights, supplied part/group association and smooth RGB16
+instances. See the [protocol, four-cell results and limits](representation-transfer-plan.md).
+No new training occurs; `--support 2 --count 2` checks only the software path.
+
+
 For the **learned detail/evidence loop**, use
 `python -m experiments.evidence_loop --output runs/my_evidence_loop --variant linear --calibration-steps 600 --seed 17`.
 The default evaluation population is development-only. The registered final

@@ -9610,3 +9610,21 @@ tree:
   - ara/evidence/tables/scan_discovery_2026-09-24.json
   - runs/reviews/scan_discovery_20260924/raw-artifact-audit.json
   status: completed
+- id: N578
+  type: experiment
+  title: Frozen detail-code affine transfer passes; pixel prior stronger and nonlinear fidelity poor
+  provenance: ai-executed
+  timestamp: 2026-09-24T15:55+02:00
+  result: 'Two frozen DetailCodec checkpoints, populations925117/925129: all eight affine operator cells pass
+    preregistered gates, MSE0.000209716–0.000256037, discrimination100%, 18.4–116.3x lower error than better
+    copying/displacement. Channel-shared pixel ridge~1e-13. Threshold diagnostic MSE0.08308–0.08375; target-code
+    floor0.05093–0.05189. Neural updates0; source-issued correction, exact float64 map/session restart and
+    old reconstruction integrity pass. Four actual Claude Opus5.5 medium public-only rounds. Independent 9216-row
+    audit and separate-process target poisoning pass. Complete final invocations10.98s total; inherited pretraining
+    excluded, not free learning.'
+  evidence:
+  - docs/representation-transfer-plan.md
+  - ara/evidence/tables/representation_transfer_2026-09-24.json
+  - runs/reviews/representation_transfer_20260924/raw-artifact-audit.json
+  - runs/reviews/representation_transfer_20260924/target-isolation-audit.json
+  status: completed
