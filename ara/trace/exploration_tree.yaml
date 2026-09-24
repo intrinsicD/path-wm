@@ -9486,3 +9486,13 @@ tree:
   evidence:
   - docs/compact-compute-assessment.md#reconstruction-preference
   status: resolved
+- id: N569
+  type: question
+  title: What should complete the architecture next?
+  provenance: user
+  timestamp: 2026-09-24T12:52+02:00
+  description: Select next design work in light of concept-plus-instance knowledge, evidence revision and conversation
+    context discussion.
+  evidence:
+  - docs/architecture-walkthrough.md#completion-priorities-after-the-concept-and-conversation-discussion
+  status: open

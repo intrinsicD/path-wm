@@ -5,7 +5,7 @@ Task plans own current work; older decisions and run receipts remain in the
 
 ## Current priorities
 
-- [Compact-compute assessment](compact-compute-assessment.md).
+- [Next architecture interfaces](architecture-walkthrough.md#completion-priorities-after-the-concept-and-conversation-discussion).
 
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
@@ -90,9 +90,8 @@ Task plans own current work; older decisions and run receipts remain in the
 | Speech, human perception and video understanding | [Voice](agent-voice-design.md), [human perception](human-perception-discussion.md), [video test map](video-understanding-test-map.md): model selection, integration and natural-data quality remain open. |
 | Demand-driven inference | [Neural Engine](neural-engine-inference.md): bounded residency, feature/state ownership and loading policy remain proposals. |
 
-Use the [architecture discussion checklist](architecture-discussion.md) and atlas
-for discussion coverage separately from evidence-backed validation. Green applies
-only to its named scope; these summaries do not change colors or promote results.
+Use the [discussion checklist](architecture-discussion.md) and atlas. Discussion
+coverage is separate from validation; green applies only to its named scope.
 The [experiment workflow](experiment-workflow.md) retains the standing design
 principles, public-only external-review boundary and run/report obligations.
 The [coding-agent efficiency plan](agent-token-efficiency-plan.md) is complete;

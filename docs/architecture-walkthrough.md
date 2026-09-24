@@ -172,6 +172,87 @@ Belegtreue. Scope gegenüber reiner Priorität bleibt eine empirische Frage. Rec
 `runs/reviews/context-scopes-20260918-205320/`. Keine Implementierung oder neue
 empirische Validierung durch diese Diskussion.
 
+## Completion priorities after the concept and conversation discussion
+
+24 September 2026. Alex asks what to work on next to complete the architecture.
+This is a proposed order for closing the design, not authorization of a new
+training budget or evidence that the complete agent works.
+
+The conversation clarifies the intended use: reusable knowledge of how a class
+varies should combine with details of a new instance and its requested/current
+state. Human pose/view synthesis is an example, not the sole application or a
+selected first dataset. Evidence should accumulate and revise uncertain estimates;
+use the best available estimate when needed without relabelling it as observation.
+Better reconstruction remains an explicit objective. Conversation should maintain
+continuity in text/audio; ordinary replies need not invoke multi-step planning.
+
+Terminology correction: **Local and Global Context are both internal context** as
+defined above. Persistent knowledge belongs to the external World State/store.
+Earlier assistant wording in the conversation blurred this boundary. A proposed
+conversation episode stores events and versioned state; active contexts load
+selected working values with references, not just an unusable graph pointer.
+This does not require a third peer context system. Conversation-specific state,
+speech timing and learned language grounding are not established by current code.
+
+### Close these interfaces before choosing more mechanisms
+
+1. **Concept, instance and current state.** Define what reusable structure supplies,
+   what instance detail must survive and what changes with time/view/pose. Keep
+   source evidence and uncertainty attributable to the affected details. These are
+   functional roles, not a requirement for three networks or perfectly disentangled
+   tensors. Some reusable knowledge can live in weights; acquired concept codes and
+   examples can live in memory. Their concrete representation remains open.
+2. **Evidence to memory.** Declare association, update, contradiction, source
+   correction and actual state-change behavior. Preserve previous evidence while
+   revising estimates and invalidating derived state. Generated completions can be
+   useful hypotheses, never independent confirmation. Extend existing session/store
+   ownership instead of introducing another authoritative memory. Confidence fields
+   and revision mechanics alone do not establish calibrated learned uncertainty.
+3. **Memory to active context.** Specify selection, capacity, source/version
+   references, eviction, reset and resumption. A conversation is a persistent
+   episode with utterance events and revisable derived working state. Exact wording
+   and numerical facts remain retrievable. Referenced state must be compatible with
+   its model version. Existing TaskPolicy ownership of context decisions stands;
+   detailed learned retrieval and retention are still unproven.
+4. **Active context to response.** Start with receive → update → select/retrieve →
+   optional refinement → respond or wait. Keep world time and refinement iterations
+   separate. Clarification, interruption and response completion need contracts;
+   bounded multi-step planning remains optional for tasks requiring it. Text and
+   audio should use the same conversational state while retaining modality-specific
+   generation and streaming buffers. Direct latent speech remains a candidate;
+   this discussion does not mandate a text bridge.
+5. **Learning and evaluation.** Specify how each operation receives supervision:
+   identity/detail retention across views, reconstruction, transformation/next-state
+   prediction, evidence revision and conversation continuity. Do not add all losses
+   at once. Common tensor width is not evidence of semantic compatibility. Define
+   splits, baselines, quality gates, seeds and compute budgets before any run.
+
+### First complete demonstration to specify (proposal)
+
+Use a controlled visual entity with an observable hidden detail: observe a partial
+view, store instance evidence, recall it after interruption, request another state
+or view using learned shared structure, then reveal the detail and revise only
+the relevant estimate. Hold test instances out of training. A requested
+transformation is distinct from predicting which motion will actually occur.
+The posterior must not be scored as confidently wrong for initially unknowable
+detail; evaluate uncertainty and its revision separately from visible-detail
+reconstruction. Compare against retrieval/copy and no-update controls so a demo
+cannot pass solely by storing frames or substituting a supplied identity.
+
+Measure identity/detail retention, requested-output quality, evidence-dependent
+correction, unrelated-knowledge retention, restart behavior, latency and memory.
+No numerical thresholds or budget are selected here. Text conversations about the
+same entities can follow, including corrections and references across turns, then
+streaming audio; success on the visual test alone establishes neither capability.
+This proposal does not erase failed concept transfer or adaptive-retention results.
+
+Prepare source features once, retain accessible detail separately from compact
+state, give writes explicit provenance, and measure useful progress per real cost.
+Those standing principles motivate reusing the current library and recipes.
+The cost of retained detail, retrieval and repeated computation must be included;
+latent operation is not intrinsically faster. Consequential method adoption still
+requires the existing independent review and predeclared experiment workflow.
+
 ## Spätere Zuordnung der Techniken
 
 Der [Aktionsdurchgang](action-semantics-design.md) behandelt inzwischen die

@@ -7006,3 +7006,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O398
+  timestamp: 2026-09-24T12:52+02:00
+  provenance: ai-suggested
+  content: Close concept/instance/state, evidence update, context access and reactive response interfaces before
+    additional mechanisms; specify one observe-store-recall-transform-correct demonstration, then grounded
+    text and audio.
+  context: 'docs/architecture-walkthrough.md#completion-priorities-after-the-concept-and-conversation-discussion;
+    proposal only. Corrects assistant wording: both Local and Global Context are internal, persistent World
+    State is separate.'
+  potential_type: architecture
+  bound_to:
+  - N569
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

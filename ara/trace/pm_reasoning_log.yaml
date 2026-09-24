@@ -2967,3 +2967,9 @@ entries:
   notes:
   - N568 directly records user priority, not a claim of benefit or endorsement of O397 mechanisms. No experiment
     or unrelated closure.
+- turn: 2026-09-24_001#1
+  notes:
+  - N569 records current question; O398 is a proposal, not user adoption. Earlier conversation resolves scope
+    rather than being replayed as new decisions.
+  - No empirical result, capability promotion or unrelated closure signal. O396/O397 remain unresolved; no
+    abandonment inferred. Local/Global terminology restored to documented ownership.

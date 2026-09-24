@@ -349,3 +349,11 @@ sessions:
   events_count: 45
   claims_touched: []
   open_threads: 17
+- id: 2026-09-24_001
+  date: '2026-09-24'
+  summary: Architecture completion proposal grounded in current owners and concept/conversation discussion;
+    no implementation or run.
+  turn_count: 1
+  events_count: 2
+  claims_touched: []
+  open_threads: 2
