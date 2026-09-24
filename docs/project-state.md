@@ -5,7 +5,8 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Active:** [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with adjacent regression); resource and J-backed R2 recipes rerun. Full audit remains open; plan missing paths with Alex before implementation.
+- **Active:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
+- [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
 - **Latest evidence:** [Nonlinear fidelity](nonlinear-fidelity-plan.md) finds a blocker in the surrogate `DetailCodec`, which bypasses the main multiscale representation. It does not justify redesigning that representation. 866 CPU tests passed; original scoped results remain preserved.
 
 - **Earlier screens:** [Affine transfer](representation-transfer-plan.md) passes surrogate gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Actual-model counterparts remain subject to the rerun audit.
