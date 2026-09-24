@@ -83,3 +83,54 @@ Public Claude briefs/responses/usage receipts:
 `runs/reviews/scan_discovery_20260924/`. Initial review recommends the index screen
 before training. Numerical scale and limits above are this local preregistration,
 not Claude's larger suggested experiment. No architecture-wide capability claim.
+
+## Review reconciliation before development
+
+Four public-contract rounds requested from actual Opus 5.5 medium. Round two
+withdraws the million-record and crash-kill proposals for this narrow screen.
+Round three explicitly corrects the earlier suggestion that skipped invalidation
+must emit stale text: mandatory validation must instead fail closed, separately
+from ABSENT. Wrong valid source IDs are rejected by exact descriptor readout.
+
+All source mutations and reads are synchronous under one writer. H is **all**
+historical component headers at query start; indexed validation must visit <=4H.
+This is a sanity bound, not constant-time access. Record actual H and visit/H.
+Version ties follow existing WorldStore `(valid_from, revision, id)` ordering.
+Duplicate descriptors reject the entire narrow index explicitly; scalable per-key
+conflict handling is outside this input contract. Unknown and budget-omitted
+outcomes are separate and correctness checks their status, text and source ID.
+No silent scan fallback. Returned payload count excludes internal materialization,
+which is measured separately in serialized bytes through authoritative read APIs.
+
+Added adversarial checks compare exact 2H/3H lookup/correction visits, reject
+poisoned IDs and stale epochs, preserve inactive-head semantics, reject byte-near
+and reversed keys, and compare future answers of an uninterrupted store with a
+snapshot-resumed store under reversed component enumeration. Both sources receive
+the same subsequent corrections; deterministic answers, contexts and stores match.
+The population repeatedly corrects one slot (32 corrections in128 queries), while
+saved rows expose cost versus history. Logical restarts compare cache/index snapshots
+and answers; they do not establish crash durability. No training/checkpoint-resume
+path is applicable: `last.json` holds store/index/context state instead of weights.
+
+Red collection failed because the recipe did not exist (saved log). First green
+attempt exposed a test-fixture retraction lacking source authorization; fixed to
+use the original `person` source. No scientific data/gate changed. Fourteen focused
+checks now pass, including eight new screen checks. No development result had been
+inspected when these contract checks and accounting amendments were made.
+
+## Development decision and source freeze
+
+Development v1 passes every gate: indexed exact agreement100%, p95<1.3ms,
+32 stale cached references rejected, all16 logical restarts equal. Full scan also
+answers100% but visits up to320 candidates. First-16 scan omits every query in
+this deliberately tail-targeted population; it is only a diagnostic, not evidence
+of a learned advantage. Source validation still scans history (index2H, stale
+cached recovery3H). No query expects OMITTED; it never counts as ABSENT.
+
+Local pre-freeze review namespaces source event/component IDs by population too
+(the descriptor/entity/payload namespaces were already disjoint), adds explicit
+stale-context restore refusal, and mechanically asserts unique descriptors.
+This uses the first allowed development repair/recheck; v1 is preserved. No final
+population has been inspected. Final Claude round acknowledges the declared tie
+and duplicate-error semantics, accepts the corrected fail-closed contract, and
+requires no additional mechanism before this narrow screen.
