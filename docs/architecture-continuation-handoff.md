@@ -3,7 +3,8 @@
 Updated 24 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-- Latest completed implementation: **`5925311`**, frozen affine transfer.
+- Latest completed result/evidence commit: **`b6c359b`**.
+- Latest implementation: **`5925311`**, frozen affine transfer; plan/red: `8b24950`.
 - Previous indexed result/evidence commit: **`f63dfa9`**.
 - Indexed discovery implementation: **`00abd78`**; plan/red checks: `014cc40`.
 - Earlier bounded context implementation: `98b379a`; evidence loop: `b51d949`.
@@ -11,10 +12,11 @@ Updated 24 September 2026 for a new Codex session in
 - All selected runs and checks finished. No job from this continuation remains to
   resume. Final evidence is recorded in the representation-transfer plan.
 
-**Start with useful representations and concept/instance transfer.** The exact-key
-indexed feasibility screen is complete. Do not restart it or add a learned selector
-to a workload already solved by the strong baseline. The complete architecture is
-still unproven; the remaining agenda and next slices are below.
+**Start with useful non-affine structure and output fidelity, preserving old
+detail and behavior.** Both the indexed and frozen affine feasibility screens are
+complete. Do not restart either or add learned machinery to their solved baseline
+workloads. The complete architecture is still unproven; the remaining agenda and
+next slices are below. This handoff starts no new job or training budget.
 
 ## Continuation result: frozen affine transfer (24 September)
 
@@ -24,9 +26,56 @@ Pixel-channel ridge is stronger; this is not learned induction or completion of
 the architecture. The nonlinear diagnostic has poor output reconstruction.
 Continue next with a newly declared non-affine/output-fidelity question, preserving
 old detail and behavior. Do not repeat the completed affine or indexed screens.
-The earlier handoff below remains historical context; its initial next slice is
-now complete. Final seeds925117/925129 are consumed. The frozen full suite passed
+Earlier component results below are historical evidence to reuse, not work to
+repeat. Final seeds925117/925129 are consumed. The frozen full suite passed
 862 tests in620.35s, exit0; source hashes unchanged.
+
+### What the new session can rely on
+
+- Two frozen codec seeds17/29 × fresh populations925117/925129 passed both affine
+  operator gates. Latent MSE0.000209716–0.000256037; discrimination100%; error
+  18.4–116.3× lower than the better copying/displacement baseline.
+- Channel-shared pixel ridge reaches about1e-13 MSE and has a stronger task-matched
+  prior. No latent advantage or learned induction is established. The operators
+  are unseen within an affine hypothesis class, not unseen mathematical families.
+- Nonlinear threshold diagnostic: latent MSE0.08308–0.08375, true-output codec
+  reconstruction floor0.05093–0.05189, pixel ridge0.07596–0.07598. Discrimination
+  nevertheless reaches100%; do not use it as a substitute for faithful outputs.
+  Binary outputs differ from the smooth training distribution. No unique cause
+  of the failure was isolated, and no nonlinear gate was declared or passed.
+- Neural weights unchanged; familiar-pose reconstruction, correction, stale-source
+  rejection, unrelated state and exact float64 map/session/context restart pass.
+  These are integrity checks, not learned retention. Population tensor inference
+  and one live-session demonstration per invocation have separate scopes.
+- Independent audit:9,216 prediction/choice rows; separate-process target poisoning
+  left all12 relation cells' maps/predictions unchanged. Four final invocations
+  took10.98s total including imports/reporting; peak RSS579–582MiB. Existing codec
+  training is a sunk cost, not free learning. Reports are structurally verified
+  using the unchanged renderer; a contact sheet was inspected, no browser-QA claim.
+
+### Artifacts to inspect, not rerun
+
+- Protocol and exact results: [representation transfer plan](representation-transfer-plan.md).
+- Four run directories: `runs/representation_transfer_final_s{17,29}_{925117,925129}_v1/`.
+  Each owns `raw.pt`, `result.json`, frozen `last.pt`, source snapshot, `report.html`,
+  timings and `memory/session.pt` plus `memory/context.json`.
+- Existing codec inputs: `runs/evidence_loop_final_s17/last.pt` and
+  `runs/evidence_loop_final_s29/last.pt`. Neither was updated in this slice.
+- Review/audit directory: `runs/reviews/representation_transfer_20260924/`.
+  Start with `raw-artifact-audit.json`, `target-isolation-audit.json`,
+  `full-suite-exit.json`, `source-freeze.json`, `final-invocations.json` and
+  `claude-summary.json`. Exact briefs, replies and runnable audit scripts remain.
+- Preserved development: `runs/representation_transfer_smoke_v1/`,
+  `runs/representation_transfer_dev_v1/`, `runs/representation_transfer_dev_v2/`.
+  The single development repair changed the shuffle to whole-image derangement
+  and added validation/report checks; thresholds and model settings stayed fixed.
+- Portable evidence: `ara/evidence/tables/representation_transfer_2026-09-24.json`.
+  N578 records the experiment; O402 is staged. Do not duplicate or promote them
+  into a general capability claim. Broader O398 and earlier failures remain open.
+
+`runs/` is ignored/local. A different checkout needs these artifacts copied before
+using them; if absent, report the missing prerequisites rather than invent results.
+`last.pt` here is an evaluation audit artifact, not a training-resume interface.
 
 ## Paste into the new Codex session
 
@@ -43,8 +92,7 @@ now complete. Final seeds925117/925129 are consumed. The frozen full suite passe
 > Compare remembered examples with inferred shared structure; separate supplied
 > identities, familiar transformations and genuinely new instances/relations.
 > Reuse existing store, episode, context and model contracts. Plan, implement,
-> review and test
-> the remaining work in small measurable slices. Predeclare fresh populations,
+> review and test the remaining work in small measurable slices. Predeclare fresh populations,
 > numeric quality/retention/reconstruction gates, local compute budgets and repair
 > limits before running. Preserve failed results; freeze and verify each selected
 > slice, then use its result to choose the next remaining priority. Continue until
@@ -61,8 +109,10 @@ is not authorized by this document.
 
 1. [Current work](project-state.md) and applicable sections of
    [experiment workflow](experiment-workflow.md).
-2. [Indexed discovery results](scan-discovery-plan.md): completed screen, null cache
-   result, costs and consumed populations. Then the relevant portions of
+2. [Representation transfer](representation-transfer-plan.md): completed affine
+   screen, nonlinear floor, controls, consumed populations and exact audit receipts.
+   Read [indexed discovery](scan-discovery-plan.md) only if revisiting retrieval.
+   Then the relevant portions of
    [context retrieval](context-retrieval-plan.md) and
    [evidence loop](evidence-loop-plan.md) for implemented contracts and visual limits.
 3. [Architecture walkthrough](architecture-walkthrough.md), especially “Completion
@@ -100,6 +150,8 @@ is not authorized by this document.
 | `pathwm/models/detail_memory.py` | Shared part encoder, learned finite-pose decoder, variance, explicit code replacement and validated stored-code consumption. |
 | `pathwm/data/detail_views.py` | Procedural RGB16 textures, four RGB8 parts; target geometry only in the data generator. |
 | `pathwm/world_state/episodes.py` | EpisodeClient over existing WorldSession/WorldStore: evidence, inferred state, bounded reads, utterance boundaries, interruption, checked emissions, explicit unknown/abort recovery. |
+| `experiments/representation_transfer.py` | Frozen-codec analytic map, copying/displacement/pixel controls, affine/nonlinear evaluation, separate live map correction/restart and report. No neural training. |
+| `tests/test_representation_transfer.py` | Six numerical, query-isolation and source/context integrity checks. |
 | `experiments/evidence_loop.py` | Ordinary train/calibrate/evaluate/resume recipe, persistence demonstration, controls and standalone report. |
 | `tests/test_detail_memory.py`, `tests/test_episodes.py`, `tests/test_evidence_recipe.py` | 18 focused checks, including exact resume and stale/interrupted output rejection. |
 | `pathwm/models/tasks.py` | Optional `ContextSelector` under TaskPolicy: supervised metadata ranking with explicit null; existing defaults unchanged. |
@@ -258,8 +310,9 @@ This is a continuation agenda, not an assertion that every item needs a new modu
 First inspect what already exists and have Claude challenge the next experiment.
 
 1. **Useful representations and concept/instance/state learning — next priority.**
-   Establish reusable structure beyond four familiar transforms, with held-out
-   instances and a separately declared novel relation/concept test. Distinguish
+   Go beyond the completed analytic affine screen. Diagnose novel-output fidelity
+   and preservation, then test useful shared non-affine structure with held-out
+   instances and a separately declared novel relation/concept family. Distinguish
    recognition/association from supplied identities and exact descriptors. Compare
    remembered examples with inferred concept codes before adding machinery. Test
    counterexamples, correction, transfer to another use and frozen-weight runtime
@@ -312,12 +365,20 @@ training/data strategy; do not promise them from a tiny synthetic fit.
 ## Concrete starting slices for the next session
 
 1. **Choose a falsifiable representation/transfer question with Claude.** Inspect
-   current model/data/recipe paths and the relevant R1/CI1 failure evidence first.
+   current transfer raw arrays/audits, model/data/recipe paths and the relevant
+   R1/CI1 failure evidence first. The threshold target-code floor is already poor:
+   separate observation/representation and reconstruction limits from inference
+   error before adding an inducer. Reconstruction is a requirement for a chosen
+   output task, not a universal prerequisite for every concept task.
    Public hypothetical briefs should compare the smallest remembered-example,
    shared-structure/code and fixed/oracle controls. Select one task/objective rather
    than another module catalog. Declare precisely what is learned initially, what
    runtime evidence changes without weight updates, and what transfer would falsify
    the hypothesis. Keep source-supplied identity/geometry visible as oracle controls.
+   Compare a target-code reconstruction reference, support-only inference and a
+   strong task-specific baseline where relevant. A decoder-only, representation,
+   or learned-inference repair has not yet been selected; let the evidence and
+   Claude criticism choose one bounded next slice, not several simultaneous fixes.
 2. **Register the slice, then add essential red checks.** Record a concrete user
    path, training signal, train/dev/final populations, held-out instances and relation
    splits, negative/shortcut controls, numeric reconstruction/task/retention gates,
@@ -349,12 +410,14 @@ Useful regression commands, only when relevant (new output directories):
 ```
 
 Do not rerun completed experiments as a startup ritual. Their final populations
-are consumed: indexed924317/924329; lexical624927 (`--final`); RGB16 textures240927.
-Development indexed924301 and tiny924300 are also known. A changed method needs
+are consumed: transfer925117/925129; indexed924317/924329; lexical624927 (`--final`);
+RGB16 textures240927. Development transfer925101, indexed924301 and tiny924300
+are also known. A changed method needs
 fresh preregistered populations. Exact resume requires compatible source/settings;
 old runs are not permission to resume training under changed code. Register the
 new slice's local compute budget; no future training run or mechanism was selected
-by the completed index screen.
+by the completed screens. The previous transfer budget is exhausted as a study,
+not a standing authorization to sweep new variants.
 
 ## Actual Claude collaboration
 
@@ -364,12 +427,14 @@ Verify current availability and record the actual returned model usage.
 If unavailable, report the specific problem rather than silently substituting.
 
 Latest collaboration: **four actual Opus5.5 medium rounds**, session
-`65ffe535-c0ac-49ce-9cd1-7fbc89abfca3`. Exact briefs, replies, `invoke.py`, per-round
-receipts and aggregate `claude-receipt.json` are in
-`runs/reviews/scan_discovery_20260924/`. Earlier lexical continuation used session
-`5af6c291-64b3-40fc-b95b-1d9019a806e5` in
-`runs/reviews/architecture_continuation_20260924/`; the evidence-loop rounds are
-under `runs/reviews/architecture_completion_20260924/`.
+`17aacb48-425e-40e7-8cc6-ce3abfde95f2`. Exact briefs, replies, `invoke.py`, per-round
+receipts and `claude-summary.json` are in
+`runs/reviews/representation_transfer_20260924/`. Actual returned `modelUsage`
+names `claude-opus-5-5`; each request explicitly sets medium effort. Total wall
+202.40s; cumulative API-equivalent estimate$0.5413478, not subscription billing.
+Earlier index reviews are under `runs/reviews/scan_discovery_20260924/`, lexical
+reviews under `runs/reviews/architecture_continuation_20260924/`, and evidence-loop
+reviews under `runs/reviews/architecture_completion_20260924/`.
 Use the latest runner as an isolation pattern, not permission to send this private
 handoff externally. Retain returned usage fields verbatim; resumed-session totals
 may overlap, so do not blindly sum them.
@@ -399,7 +464,7 @@ is not experimental evidence. API-equivalent cost fields are not subscription bi
 - Run focused meaningful checks, tiny train/report/resume, then controlled comparisons.
   Preserve raw metrics, checkpoint, settings/source identities and each run's report.
 - Freeze source while the full test suite runs. Required before shared-code commits:
-  `.venv/bin/python -m pytest`; the last complete run passed 856 tests in 662.14s. Use a durable job
+  `.venv/bin/python -m pytest`; the last complete run passed 862 tests in620.35s. Use a durable job
   with saved exit status if a tool session can terminate long processes. Do not count
   partial logs or a dead process as a pass; do not run duplicate suites unnecessarily.
 - Update the owning plan, compact project state and scoped architecture atlas.
