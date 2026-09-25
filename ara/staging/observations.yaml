@@ -7203,3 +7203,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O410
+  timestamp: 2026-09-25T10:05+02:00
+  provenance: ai-suggested
+  content: Use a hard branch that never invokes sampling for faithfulcodeinspection; residualcodeediting
+    and sourcefreecreation share existingcanonicalfine and decoder. Bypass preserves code but decoderfidelity
+    remainsseparatelyrequired. Residualaddition doesnotguarantee pixelpreservation. Reuseconditionaltransformer
+    machinery onlyafter explicitnativeinterface and diffusion/flowchoice.
+  context: UserDiTdirection refined with actualClaude; no newimplementation or qualityevidence.
+  potential_type: architecture
+  bound_to:
+  - N592
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2,13 +2,14 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T09:57+02:00
-  turn_count: 4
+  last_turn: 2026-09-25T10:05+02:00
+  turn_count: 5
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
     inversion recovers32images/twostarts; decoder-training comparison proposed only. Complete image-code
-    contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.'
+    contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.
+    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.'
 events_logged:
 - turn: 1
   type: pivot
@@ -132,6 +133,21 @@ events_logged:
     observed/generated codes one self-contained decode contract, avoiding inconsistent independently generated
     summaries. Reuse current trained nativepyramiddecoder; add only demonstrated continuation/persistence/producer
     interfaces after jointagreement. Fidelity and generation quality remain unqualified.
+- turn: 5
+  type: decision
+  id: N592
+  routing: direct
+  provenance: user
+  summary: Accept first image-code slice in general and propose model-controlled DiT branch
+- turn: 5
+  type: observation
+  id: O410
+  routing: staged
+  provenance: ai-suggested
+  summary: Use a hard branch that never invokes sampling for faithfulcodeinspection; residualcodeediting
+    and sourcefreecreation share existingcanonicalfine and decoder. Bypass preserves code but decoderfidelity
+    remainsseparatelyrequired. Residualaddition doesnotguarantee pixelpreservation. Reuseconditionaltransformer
+    machinery onlyafter explicitnativeinterface and diffusion/flowchoice.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -164,6 +180,13 @@ ai_actions:
   files_changed:
   - docs/image-code-contract-plan.md
   - ara/evidence/tables/image_code_contract_2026-09-25.json
+- turn: 5
+  action: Reviewed existingflowtransformer and primaryDiT/flowpapers with actualClaude; amendedplan with
+    hardbypass/edit/create contract and recordedcorrections. No modelruns/changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/dit_code_direction_2026-09-25.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -178,10 +201,13 @@ key_context:
 - turn: 4
   excerpt: 'Alex: model receives needed features; faithful latent reconstruction for debugging and good
     generation. Yes please to framing complete path jointly with Claude.'
+- turn: 5
+  excerpt: 'Alex: In general yes, but proposes DiT controlled bymodel for latentcreation/editing, maybe
+    residual and bypassforreconstruction.'
 open_threads:
 - Other actual-model rerun families, including lexical context and operator transfer.
-- Agree first image-code continuation/save-load/decode slice; then fidelity, neededconsumeraccess and
-  compatiblegeneration. Broaderdata/memoryquality remainopen.
+- Implement generallyapprovedcode replay/continuation slice without askingagain; thenfaithfuldecoding,
+  modelcontrolleddiffuser training/objective and consumeraccess. Broaderquality remainsopen.
 - Full-agent learning; other R2 modules remain untrained.
 ai_suggestions_pending:
 - O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.
@@ -189,3 +215,5 @@ ai_suggestions_pending:
 - O407/O408 scoped interpretation and nextslice remainstaged; no useradoption inferred.
 - O409 contractproposal awaits agreement; Yesplease endorsedplanning, not the later-specific interface
   choice.
+- O410 precisehardbypass/residualarchitecture is a proposal. O409 firstslice approvedinprinciple, not
+  blanket adoption of futureproducer choices.

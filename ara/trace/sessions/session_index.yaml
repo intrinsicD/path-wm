@@ -362,8 +362,9 @@ sessions:
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
     inversion recovers32images/twostarts; decoder-training comparison proposed only. Complete image-code
-    contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.'
-  turn_count: 4
-  events_count: 18
+    contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.
+    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.'
+  turn_count: 5
+  events_count: 20
   claims_touched: []
   open_threads: 3

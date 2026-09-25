@@ -3,8 +3,9 @@
 25 September2026. Alex requires the model to receive the features it needs and
 faithful reconstruction from actual latent codes for debugging and image generation.
 He asks Codex and actual Claude Opus5.5 medium to frame the complete path and plan.
-This adopts the goal; the concrete missing interfaces below are proposed for joint
-agreement before implementation. No new representation or model change is made.
+This adopts the goal. Alex subsequently approves slice1 in general and adds a
+model-controlled DiT/editing direction; see the final amendment. Detailed generator
+choices remain proposed. No new representation or model change is made.
 
 ## Recommended contract
 
@@ -165,7 +166,7 @@ jointly; procedural64×64 tests do not establish that broader goal.
 
 ## Boundaries and next decision
 
-The first implementation decision is slice1: a self-contained save/load/decode
+Alex now approves slice1 in general: a self-contained save/load/decode
 path around the existing fine code, with derived coarse features and slots and no hidden image
 inputs. Slice2 then makes its trained decoding faithful. Slices3–4 identify real
 consumer/producer/persistence gaps but do not pre-authorize speculative components.
@@ -184,3 +185,106 @@ the misclassification of the objective comparison as summary-only, the erroneous
 “doubled targets” count, and an overly restrictive ban on pre-image conditioning.
 The final review agrees with this reuse-first proposal. No quality result or user
 adoption of the precise contract is inferred from that agreement.
+
+## Model-controlled diffusion transformer with direct bypass
+
+Alex's follow-up accepts the first slice in general and proposes a DiT controlled
+by the model to modify latent codes for its own needs or the user's request, possibly
+as a residual path that can be bypassed for direct reconstruction. This is the new
+generation direction; residual parameterization is tentative. Slice1 remains useful
+and approved in principle. It need not wait for generator training or gain another
+codec. The following is the concrete proposed branch contract, not implemented.
+
+Let `z` be the existing canonical fine code, `C` the model/user conditioning tokens,
+and `D` the shared continuation→slots→native decoder:
+
+| Operation | Code passed to D | Allowed generation inputs |
+| --- | --- | --- |
+| Reconstruct/inspect | Original `z`, unchanged | No sampler invocation |
+| Edit | `z + delta_theta(noise, z, C)` as a residual candidate | Source code, request/model context, explicit noise/sample ID |
+| Create | `z_theta(noise, C)` | Request/model context and noise; no source required |
+
+The residual is the **final generated code correction**, not a single denoising
+velocity/noise prediction added to the source. Its training target would be
+`z_target - z_source` in a declared coordinate/normalization convention. Multiple
+sampling steps produce it. Ordinary residual connections inside transformer blocks
+are a separate architectural property.
+
+Use a **hard reconstruct branch** before generator validation, normalization,
+sampling or RNG use. Do not implement bypass as `z + 0 * sampled_delta`: that still
+runs the sampler and can propagate nonfinite values. Bypass must preserve code,
+metadata and decoder output exactly under the established same-device replay
+contract, consume no sampler RNG, and work with the generator absent or raising an
+error if called. It guarantees unchanged input to D, not a perfect D.
+
+For an edit, residual addition encourages an explicit source reference but cannot
+guarantee preservation of unchanged pixels: the code and decoder are learned and
+may be spatially entangled. Verify requested changes and unchanged-region fidelity.
+A learned gate or zero initialization is not a substitute for exact bypass. Any
+edit-strength slider must be trained/evaluated; multiplying a residual does not
+prove smooth semantic strength. A no-op request through the learned branch is its
+own quality test, separate from the software bypass.
+
+After either edit/create, derive coarse features and slots from the resulting fine
+code with the same frozen modules. Do not mix edited fine features with stale
+coarse features or slots. Never publish generated code as observed evidence.
+
+### Model control and training
+
+The model supplies an explicit operation plus conditioning tokens representing its
+current goal/request and allowed context, with masks and provenance. The sampling
+budget/seed is explicit. Diffusion/flow progress is solver time, not world/event
+time. A function accepting request tokens does not establish learned instruction
+following: the upstream model and conditioning interface need task supervision.
+
+First freeze the actual encoder and a fidelity-qualified decoder. Train the
+producer/editor on actual native codes and aligned source/request/target examples;
+use target codes/pixels only in training losses or independent scoring. Keep
+reconstruction outside that stochastic path. Do not make the encoder Gaussian or
+adopt a VAE simply because the sampler starts from Gaussian noise. Statistics for
+feature/residual normalization come from training data and remain checkpoint-bound;
+subtract in one consistent space, never mix normalized residuals with raw codes.
+
+Start with the already planned conditional edit whose request has unambiguous
+meaning. Include copy-source, request-erased/shuffled and action-shuffled controls,
+changed-region correctness, unchanged-region error, no-op cases and valid-code
+checks. Separately test source-free generation and later genuine user-language
+conditioning. Arbitrary natural-language requests and model-originated goals need
+aligned training; the current R2/core is not a trained image-request controller.
+Register seeds, data, parameterization, optimizer, steps, gates and resource bounds
+before the generator implementation/training slice. No model quality is implied by
+this architecture choice.
+
+### Existing machinery and the remaining choice
+
+`ConditionalFeatureGenerator` already has spatial tokens, transformer self/cross
+attention, progress conditioning and a noise-to-feature flow sampler. It currently
+belongs to another output-head path. Native fine-code output, explicit source-aware
+editing, residual-target training and model/request conditioning remain missing.
+Reuse its compatible machinery; do not substitute its old codec or claim that it is
+already a trained native DiT.
+
+The [original DiT paper](https://arxiv.org/abs/2212.09748) uses a transformer as the
+latent diffusion backbone. [Flow matching](https://arxiv.org/abs/2210.02747) trains
+vector fields along probability paths; it is a distinct training formulation.
+The existing implementation is the latter. A DiT-style transformer can be used
+with either direction, but choosing the existing flow objective rather than a
+noise-denoising diffusion objective must be explicit. Recommendation: evaluate
+reuse of the existing flow-transformer for this branch before implementing another
+sampler; do not silently treat that recommendation as Alex choosing flow matching.
+
+Ordering: approved-in-principle code replay/continuation → faithful direct decoder
+→ bounded model-conditioned edit → source-free/request-driven generation. The
+optional branch does not block or alter the first slice. No new code/training or
+fidelity result in this design amendment.
+
+
+Review reconciliation: a lamp-local pixel edit need not yield a sparse/local latent
+residual because the encoder mixes information. Changed/unchanged regions are pixel
+metrics; code errors are measured without assuming pixel-to-token locality. The
+primary generative test must exercise the agreed diffuser/flow-transformer, not
+replace it with one-pass regression; regression can be a declared control. Pixel
+metrics before decoder qualification remain descriptive with the decoder limitation
+explicit. They cannot establish qualified end-to-end generation. Seeds/sample IDs
+may remain caller-owned; model control does not require a learned random-seed policy.
+Exact diffusion versus flow training remains to be chosen explicitly.

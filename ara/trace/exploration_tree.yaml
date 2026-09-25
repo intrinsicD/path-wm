@@ -9811,3 +9811,17 @@ tree:
   - docs/image-code-contract-plan.md
   - ara/evidence/tables/image_code_contract_2026-09-25.json
   status: completed
+- id: N592
+  type: decision
+  title: Accept first image-code slice in general and propose model-controlled DiT branch
+  provenance: user
+  timestamp: 2026-09-25T10:05+02:00
+  choice: Alex answers In general yes to canonicalcode replay/continuation slice, and proposes a model-controlled
+    DiT tocreate/modify latentcodes for modelneeds/userrequests. Residualpath and bypass are suggested;
+    exactgenerativeobjective/architecture details remainunselected.
+  alternatives:
+  - Reconstruction through a mandatory generative path.
+  evidence:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/dit_code_direction_2026-09-25.json
+  status: completed

@@ -8,8 +8,10 @@ Alex requires appropriate feature access, faithful latent-code inspection and go
 image generation. Proposed canonical existing fine export → derived coarse/slots →
 same native decoder, with code-only persistence and no target leakage. Missing
 hierarchy continuation/persistence and native producer are identified; no new
-implementation authorized by the planning turn. First agree slice1, then implement
-and verify it. Decoder loss comparison remains one diagnostic, not the whole goal.
+implementation performed by the planning turn. Alex subsequently approves slice1
+in general and proposes a model-controlled DiT editor/producer with hard direct
+reconstruction bypass. Slice1 can proceed without another permission request;
+diffusion-versus-flow and residual training details remain explicit next choices. Decoder loss comparison remains one diagnostic, not the whole goal.
 
 **Latest diagnosis:** [Actual encoder retention](reconstruction-diagnosis-plan.md).
 With actual Claude Opus5.5 medium, frozen full encoder input inversion recovers32

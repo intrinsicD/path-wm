@@ -5,7 +5,7 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Joint plan:** [Image-code contract](image-code-contract-plan.md): needed feature access, faithful decoding and compatible generation. Existing fine code with derived coarse/slots proposed; no implementation yet.
+- **Image-code work:** [Plan](image-code-contract-plan.md): Alex approves first replay slice in general; adds model-controlled DiT editing/creation with hard reconstruction bypass. Generator details unselected; no implementation yet.
 
 - **Completed experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md): two-seed decoder-only retraining gains1.09–1.71% MSE, missing the20% target. Optional path; encoder frozen.966 CPU tests pass.
 

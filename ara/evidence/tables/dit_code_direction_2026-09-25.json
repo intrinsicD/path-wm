@@ -1,0 +1,64 @@
+{
+  "scope": "Design amendment only; no model changes or experiments.",
+  "user_direction": "Firstcode replay slice approved in general; modelcontrolledDiT tocreate/editcodes proposed, residual path tentative.",
+  "proposed_contract": "Hardreconstruct bypass, sourceplusgenerateddelta for editing, sourcefreeconditionalnoisegeneration, existingcanonicalfine and sharednativedecoder.",
+  "claude": {
+    "response.json": {
+      "sha256": "8afd0497fff7052c8d2db6bc667b9c8c0f659a2a82977538cb628fe7026d0681",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3653,
+          "outputTokens": 642319,
+          "thinkingTokens": 214943,
+          "cacheReadInputTokens": 198064390,
+          "cacheCreationInputTokens": 2136044,
+          "webSearchRequests": 0,
+          "costUSD": 69.56170599999993,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium"
+    },
+    "reconcile-response.json": {
+      "sha256": "ad6d9056fb345634bf59c116f972523af2221fa42693dcff1b1ec191292cfd4e",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3657,
+          "outputTokens": 644093,
+          "thinkingTokens": 214943,
+          "cacheReadInputTokens": 198652538,
+          "cacheCreationInputTokens": 2139512,
+          "webSearchRequests": 0,
+          "costUSD": 69.74257559999994,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium"
+    }
+  },
+  "reviews": {
+    "/home/alex/Documents/path-wm/runs/reviews/dit_code_plan_20260925/reconcile.txt": "47bd4c0675b8db9d66d8505b822e79b480bcc4050936a99cf558432c059c6814",
+    "/home/alex/Documents/path-wm/runs/reviews/dit_code_plan_20260925/reconciliation.md": "2fae8e4ba1ec9085b7aa10acbfb4397a0726b3b55c82c7461d95076c24bf9547",
+    "/home/alex/Documents/path-wm/runs/reviews/dit_code_plan_20260925/prompt.txt": "e8286e577f2e68eee99cd944a3a133d33c9c998e67138a76b5e9e431f4dfab3f",
+    "/home/alex/Documents/path-wm/runs/reviews/dit_code_plan_20260925/claude.md": "309cd0a40a311ebdc8cb9d0d295c0afc540fab99d422e2093edd7c6bb0ddd9f7"
+  },
+  "sources": [
+    "https://arxiv.org/abs/2212.09748",
+    "https://arxiv.org/abs/2210.02747"
+  ],
+  "corrections": [
+    "Localpixelchange neednot produce locallatentdelta.",
+    "Directregression is a possiblecontrol, not replacement for requested diffuser.",
+    "Flowversusdiffusion training remainsunselected.",
+    "Reproducibilityseedneednot belearned by model."
+  ],
+  "implementation_status": "Previouslyapprovedslice1 remains nextaction without re-approval; generatorplan downstream."
+}
