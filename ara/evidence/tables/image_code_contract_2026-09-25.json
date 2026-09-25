@@ -1,0 +1,69 @@
+{
+  "scope": "Source-audited proposal only; no implementation, experiment, model change or quality qualification.",
+  "user_goal": "Needed features for model computation, faithful latent decoding for debugging, compatible high-quality generation.",
+  "proposal": "Existing fine FeatureScale canonical; explicitzero16condition and metadata; existinghierarchy derivescoarse; existing slotattention derives summaries; same trained nativepyramiddecoder. Exact continuation/persistence missing; nativegenerator missing.",
+  "claude": {
+    "response.json": {
+      "sha256": "f204c68e232a3d1553ac13711a146eb5ac3bedf53de56039391c890c0fe6071e",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3641,
+          "outputTokens": 629535,
+          "thinkingTokens": 211164,
+          "cacheReadInputTokens": 196389389,
+          "cacheCreationInputTokens": 2112728,
+          "webSearchRequests": 0,
+          "costUSD": 68.78444979999995,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium",
+      "session_id": "f06c55a5-52cd-4530-8d0f-42cb9ac6ee42"
+    },
+    "reconcile-response.json": {
+      "sha256": "74beb8b5e5f325562703c774ffa62ee0fe5b89008b0257adc2ebb707036f57ec",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3645,
+          "outputTokens": 634569,
+          "thinkingTokens": 212628,
+          "cacheReadInputTokens": 196931217,
+          "cacheCreationInputTokens": 2119408,
+          "webSearchRequests": 0,
+          "costUSD": 69.04695139999994,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium",
+      "session_id": "f06c55a5-52cd-4530-8d0f-42cb9ac6ee42"
+    }
+  },
+  "review_files": {
+    "/home/alex/Documents/path-wm/runs/reviews/image_code_contract_20260925/reconcile.txt": "564bdce159668427eb89064c7e7aa01d4a76197fb6f42edff48a885badb22359",
+    "/home/alex/Documents/path-wm/runs/reviews/image_code_contract_20260925/reconciliation.md": "d0fb657b8ab0e7f203469b5fb5511d03098cd02c6dd4e9bd8d93e15f4cb93932",
+    "/home/alex/Documents/path-wm/runs/reviews/image_code_contract_20260925/prompt.txt": "85729e6d754873b441f40a82c56a45e2c391248886067db1db7dd1aa00b73d99",
+    "/home/alex/Documents/path-wm/runs/reviews/image_code_contract_20260925/claude.md": "32c1010b484c70ee6b6ca36b3012abf861a75db6aca9f9670a4ab2b30cb2ffe8"
+  },
+  "source_files": {
+    "pathwm/models/slots.py": "c6a009f965790b211fa2047ab880caae1b8749b2c3fc0367cabf17e96e2071ce",
+    "pathwm/models/multiscale.py": "10d30ad6488217d1add19ae9dce41c3eccd16330f7e807e11f693a58def4a466",
+    "pathwm/models/latent_core.py": "8faa52a40b1a716800c7c5ee00df534e8f7dc6b8771a5da05b9f653a8cc49ede",
+    "pathwm/models/conditional_image.py": "0edc793a2dc7114674b55253224b019eeb23af8d39efa5e30f001e5e69958c8d",
+    "pathwm/world_state/unified.py": "0abc0bc20e795b67587c3613b317abb0aaac3acaa4e4c64d47e1a7bae773ceb3"
+  },
+  "corrections": [
+    "Nativepyramiddecoder was trained; poorquality is not missingdecoder.",
+    "Objectivecomparison concerns fullpyramidconnected decoder.",
+    "No standalonehead adopted merelybecause moduleexists.",
+    "Coarse adds25%values, not doubles.",
+    "Allowed preimageconditioning differs from targetleakage."
+  ]
+}

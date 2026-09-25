@@ -148,6 +148,11 @@ Preserve all outputs. Corrected `invert_long_v2.py` uses10001 loop evaluations,
 
 ## Proposed next model slice — joint plan, not implemented
 
+Alex subsequently clarified the end-to-end goal: model feature access, faithful
+latent-code inspection and image generation. The [image-code contract plan](image-code-contract-plan.md)
+owns that broader path. This objective comparison remains a decoder diagnostic
+within it, not the complete solution.
+
 Keep the encoder, slots, representation, feature connections and decoder width
 fixed. Before changing capacity or synthesis, compare the existing reconstruction
 objective against RGB-only training. This tests one candidate cause: interference

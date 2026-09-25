@@ -3,6 +3,14 @@
 Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
+**Latest user goal / joint plan:** [Image-code contract](image-code-contract-plan.md).
+Alex requires appropriate feature access, faithful latent-code inspection and good
+image generation. Proposed canonical existing fine export → derived coarse/slots →
+same native decoder, with code-only persistence and no target leakage. Missing
+hierarchy continuation/persistence and native producer are identified; no new
+implementation authorized by the planning turn. First agree slice1, then implement
+and verify it. Decoder loss comparison remains one diagnostic, not the whole goal.
+
 **Latest diagnosis:** [Actual encoder retention](reconstruction-diagnosis-plan.md).
 With actual Claude Opus5.5 medium, frozen full encoder input inversion recovers32
 known images from2starts, worst MSE1.15e-10. All64 final checks pass; independent

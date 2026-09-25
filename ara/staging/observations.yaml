@@ -7187,3 +7187,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O409
+  timestamp: 2026-09-25T09:57+02:00
+  provenance: ai-suggested
+  content: Proposed canonical existing fine FeatureScale with exact existing coarse/slot derivation gives
+    observed/generated codes one self-contained decode contract, avoiding inconsistent independently generated
+    summaries. Reuse current trained nativepyramiddecoder; add only demonstrated continuation/persistence/producer
+    interfaces after jointagreement. Fidelity and generation quality remain unqualified.
+  context: Codex/Claude sourceaudit and reconciledplan; no implementation or new experiment. User approved
+    end-to-endplanning, not exactcontract.
+  potential_type: architecture
+  bound_to:
+  - N591
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

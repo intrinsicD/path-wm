@@ -9798,3 +9798,16 @@ tree:
   - ara/evidence/tables/reconstruction_diagnosis_2026-09-25.json
   - runs/reviews/reconstruction_diagnosis_20260925/audit.json
   status: completed
+- id: N591
+  type: decision
+  title: Frame complete image-code path around feature access faithful inspection and generation
+  provenance: user
+  timestamp: 2026-09-25T09:57+02:00
+  choice: Alex clarifies the three requirements and approves joint planning with Claude. This endorses
+    the complete-path goal, not a particular canonical representation/interface or missing implementation.
+  alternatives:
+  - Treating a decoder-loss improvement as the whole goal.
+  evidence:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/image_code_contract_2026-09-25.json
+  status: completed

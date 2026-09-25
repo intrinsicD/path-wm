@@ -2,12 +2,13 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T09:43+02:00
-  turn_count: 3
+  last_turn: 2026-09-25T09:57+02:00
+  turn_count: 4
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
-    inversion recovers32images/twostarts; decoder-training comparison proposed only.'
+    inversion recovers32images/twostarts; decoder-training comparison proposed only. Complete image-code
+    contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.'
 events_logged:
 - turn: 1
   type: pivot
@@ -116,6 +117,21 @@ events_logged:
     RGB+.5maskCE with fixed evaluations,20%MSE target and mask/pointerpreservation guards. Missing recipebehavior
     must be discussed with Alex beforeimplementation. Nullcomparison cannot rule out optimization effects;
     flatcurves cannot prove capacitylimit.
+- turn: 4
+  type: decision
+  id: N591
+  routing: direct
+  provenance: user
+  summary: Frame complete image-code path around feature access faithful inspection and generation
+- turn: 4
+  type: observation
+  id: O409
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed canonical existing fine FeatureScale with exact existing coarse/slot derivation gives
+    observed/generated codes one self-contained decode contract, avoiding inconsistent independently generated
+    summaries. Reuse current trained nativepyramiddecoder; add only demonstrated continuation/persistence/producer
+    interfaces after jointagreement. Fidelity and generation quality remain unqualified.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -141,6 +157,13 @@ ai_actions:
   files_changed:
   - docs/reconstruction-diagnosis-plan.md
   - ara/evidence/tables/reconstruction_diagnosis_2026-09-25.json
+- turn: 4
+  action: Audited native and separate generation paths with actualClaudeOpus5.5medium; reconcilederrors
+    and wrote measurablecontract/reconstruction/generationplan. No modelruns or codechanges.
+  provenance: ai-executed
+  files_changed:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/image_code_contract_2026-09-25.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -152,12 +175,17 @@ key_context:
 - turn: 3
   excerpt: 'Alex: Ok then figure that out. Together with Claude. Refers to locating the reconstruction
     shortfall before adding machinery.'
+- turn: 4
+  excerpt: 'Alex: model receives needed features; faithful latent reconstruction for debugging and good
+    generation. Yes please to framing complete path jointly with Claude.'
 open_threads:
 - Other actual-model rerun families, including lexical context and operator transfer.
-- 'Learned decoder fidelity: objectivecomparison proposed, missingrecipebehavior requires jointplan; generalization
-  and memory detail remainopen.'
+- Agree first image-code continuation/save-load/decode slice; then fidelity, neededconsumeraccess and
+  compatiblegeneration. Broaderdata/memoryquality remainopen.
 - Full-agent learning; other R2 modules remain untrained.
 ai_suggestions_pending:
 - O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.
 - O406 remains staged; no user affirmation of the empirical interpretation is inferred.
 - O407/O408 scoped interpretation and nextslice remainstaged; no useradoption inferred.
+- O409 contractproposal awaits agreement; Yesplease endorsedplanning, not the later-specific interface
+  choice.
