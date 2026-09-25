@@ -3116,3 +3116,9 @@ entries:
   - 'Relevant prior photo-retention interpretation remains open: feedback failure does not contradict
     retained information. No new closure or abandonment inferred for existing observations; no unrelated
     maturity changes.'
+- turn: 2026-09-25_001#12
+  notes:
+  - N605/O418 record dataset inquiry and proposed quality framework. Viewer confirms de-DE train11514/validation2033/train_115115;
+    test is in separate repository per card.
+  - No speech run, codec adoption or empirical quality claim. Existing staged speech proposal remains
+    open; no closure inferred.

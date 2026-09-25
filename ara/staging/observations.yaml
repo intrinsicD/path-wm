@@ -7330,3 +7330,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O418
+  timestamp: 2026-09-25T13:44+02:00
+  provenance: ai-suggested
+  content: Propose Speech-MASSIVE German for intent/argument grounding, separate scene/dialogue pairs
+    and acoustic/output data as needed. Acceptance must separate semantics, multi-turn correctness, listening
+    quality and interaction timing on held-out real speech; no single loss establishes conversational
+    quality.
+  context: Source-backed shortlist; recommendation not dataset adoption or trained capability.
+  potential_type: heuristic
+  bound_to:
+  - N605
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

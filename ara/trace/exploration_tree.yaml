@@ -9985,3 +9985,13 @@ tree:
   - docs/grounded-speech-plan.md
   - ara/evidence/tables/grounded_speech_plan_2026-09-25.json
   status: open
+- id: N605
+  type: question
+  title: Available German speech data and conversational quality acceptance
+  provenance: user
+  timestamp: 2026-09-25T13:44+02:00
+  description: Alex asks which datasets exist and how to establish adequate language/speech quality. Primary
+    sources and Speech-MASSIVE viewer metadata inspected; no audio download or model run.
+  evidence:
+  - docs/speech-data-quality.md
+  status: open

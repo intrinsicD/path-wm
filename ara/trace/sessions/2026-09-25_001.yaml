@@ -2,8 +2,8 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T13:25+02:00
-  turn_count: 11
+  last_turn: 2026-09-25T13:44+02:00
+  turn_count: 12
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
@@ -12,7 +12,8 @@ session:
     Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.
     Memory/KG-routed generation and editable scene factors required; learnedbindings remainplanned. P5 feedback:
     feature error improves but pixels worsen5.5–6.0% in two seeds;990tests pass. Actual Claude reviewed
-    grounded-speech/command plan; no speech runs.'
+    grounded-speech/command plan; no speech runs. German speech-data shortlist and multi-axis quality acceptance
+    reviewed; no audio downloaded.'
 events_logged:
 - turn: 1
   type: pivot
@@ -286,6 +287,21 @@ events_logged:
     first, while speech output is prepared independently. Acoustic retention is not semantic proof; direct
     latent speech needs compatible learned interfaces, causal access and playback/text alignment. Free
     conversation additionally needs language competence.
+- turn: 12
+  type: question
+  id: N605
+  routing: direct
+  provenance: user
+  summary: Available German speech data and conversational quality acceptance
+- turn: 12
+  type: heuristic
+  id: O418
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose Speech-MASSIVE German for intent/argument grounding, separate scene/dialogue pairs
+    and acoustic/output data as needed. Acceptance must separate semantics, multi-turn correctness, listening
+    quality and interaction timing on held-out real speech; no single loss establishes conversational
+    quality.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -342,6 +358,12 @@ ai_actions:
   - docs/grounded-speech-plan.md
   - ara/evidence/tables/decoder_code_feedback_2026-09-25.json
   - ara/evidence/tables/grounded_speech_plan_2026-09-25.json
+- turn: 12
+  action: Checked primary dataset cards and de-DE viewer splits/size; documented separate semantic, speech
+    and dialogue quality checks. No audio downloaded or model trained.
+  provenance: ai-executed
+  files_changed:
+  - docs/speech-data-quality.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -383,3 +405,4 @@ ai_suggestions_pending:
 - O411 structuredcontrol/learnedbinding proposal is staged; user requirescapabilities but hasnotadopted
   preciseimplementation.
 - O416/O417 remain staged; no user affirmation of negative-result interpretation or specific speech architecture inferred.
+- O418 dataset shortlist and acceptance framework remain proposed; no implementation authorization inferred.

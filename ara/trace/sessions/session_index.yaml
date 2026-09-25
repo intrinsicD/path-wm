@@ -366,8 +366,9 @@ sessions:
     Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.
     Memory/KG-routed generation and editable scene factors required; learnedbindings remainplanned. P5
     feedback: feature error improves but pixels worsen5.5–6.0% in two seeds;990tests pass. Actual Claude
-    reviewed grounded-speech/command plan; no speech runs.'
-  turn_count: 11
-  events_count: 40
+    reviewed grounded-speech/command plan; no speech runs. German speech-data shortlist and multi-axis
+    quality acceptance reviewed; no audio downloaded.'
+  turn_count: 12
+  events_count: 42
   claims_touched: []
   open_threads: 4
