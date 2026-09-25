@@ -13,6 +13,37 @@ from pathwm.models.slots import SlotPerception
 PARENT = Path(__file__).resolve().parents[1] / 'runs/real_visual_joint_repair_3501_u6000_v1/last.pt'
 
 
+def test_code_feedback_reaches_decoder_but_not_frozen_encoder(native):
+    from experiments.latent_agent import decoder_code_loss
+    model, pyramid, _ = native
+    model.decoder.enable_pyramid_connections()
+    model.decoder.enable_fine_subpixels()
+    model.requires_grad_(False)
+    model.decoder.requires_grad_(True)
+    frozen = state_hash(model.encoder)
+    target = pyramid.scales[0].values.detach().clone().requires_grad_(True)
+    recon = model.from_pyramid(pyramid).recon
+    recon.retain_grad()
+    loss = decoder_code_loss(model, recon, target)
+    expected = (model.pyramid(recon).scales[0].values - target.detach()).square().mean()
+    torch.testing.assert_close(loss, expected, rtol=0, atol=0)
+    loss.backward()
+    assert recon.grad is not None and recon.grad.abs().sum() > 0
+    assert model.decoder.fine_subpixel.weight.grad.abs().sum() > 0
+    assert target.grad is None
+    assert all(p.grad is None for p in model.encoder.parameters())
+    optimizer = torch.optim.AdamW(model.decoder.parameters(), lr=3e-4)
+    optimizer.step()
+    assert state_hash(model.encoder) == frozen
+
+
+def test_code_feedback_detects_misaligned_targets(native):
+    from experiments.latent_agent import decoder_code_loss
+    model, pyramid, percept = native
+    with pytest.raises(ValueError, match="shape"):
+        decoder_code_loss(model, percept.recon, pyramid.scales[0].values[:1])
+
+
 @pytest.fixture
 def native():
     model = SlotPerception().eval()

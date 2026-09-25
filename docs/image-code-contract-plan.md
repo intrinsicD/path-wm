@@ -762,3 +762,45 @@ checks pass. Four64px crops show retained photo detail, not broad natural-image
 qualification, useful photo slots, high-resolution reconstruction or generation.
 Protocol, recipe, source/data/checkpoint bindings, raw results and image panels are
 saved in the run; existing renderer structurally verified. No model changes.
+
+## P5: decoder training with frozen-encoder feedback (approved 25 September)
+
+Alex authorized testing additional code consistency together with actual Claude.
+Compare existing RGB-only P1E training with RGB MSE + lambda times fine-code MSE.
+Only decoder weights learn; encoder, slot attention and heads remain frozen. The
+candidate reconstruction passes through the differentiable frozen encoder; target
+fine features are detached and reused from the source forward. Inference remains
+one decoder call. This is amortized inversion with a feature loss, not teacher-image
+distillation. No architecture, teacher, new representation or iterative inference.
+
+Before quality runs, calibrate lambda once on 32 training-kind images (seed3617),
+at the shared initial full native model: lambda = 0.5 times RGB gradient norm divided
+by raw fine-code gradient norm, both over decoder parameters. Preserve the raw
+feature metric used by slow refinement; do not additionally normalize channels.
+Calibration must be finite/nonzero, consume no training/validation stream, and be
+saved with hashes and exact lambda. Freeze that scalar for all runs and resumes.
+This tests one scale; no search or later weight adjustment is authorized here.
+
+Paired seeds3601/3604, same u6000 parent, full native pyramid+subpixel decoder,
+batch32, AdamW3e-4, clip1, 2000 updates, RGB-only mask weight0, existing randomization.
+Four new runs: two controls and two feedback candidates. Fixed256+256 kind-table
+evaluations at0/500/1000/1500/2000; final checkpoint only. Budget15min/6GiB per run,
+sequential GPU runs; stop and preserve failures. Software checks use the same full
+configuration with three updates and eight evaluation images, not a smaller model.
+
+Success: >=20% RGB-MSE reduction on both populations for both seeds, no worse mean
+body/gradient error, mask accuracy decline<=0.005 and pointer agreement decline<=0.01
+against matched controls. Separately report every-image MSE<=1e-4 and meanbody/gradient
+<=1e-4 fidelity gates. Report fine-code loss independently; it cannot establish
+pixel fidelity. Save representative images, batch/source/frozen hashes, clipping,
+resource costs and raw per-image values. Controls must reproduce P1E final records.
+No best-checkpoint selection or automatic longer training after a failed screen.
+
+Essential checks: code-only loss reaches pixels and decoder but not encoder/targets;
+reject misaligned targets; zero weight preserves the control path; frozen model
+state, optimizer ownership, native CPU/CUDA exact interrupted resume. Use existing
+report renderer with structural QA, clearly labelled. Review receipts live under
+`runs/reviews/decoder_code_feedback_20260925/`; external review is abstract/public-only.
+Standing principles: reuse target preparation, separate generation from verification,
+and train the actual inference decoder. Extra encoder backward adds training compute
+and activation memory, with no new parameters or inference operations.
