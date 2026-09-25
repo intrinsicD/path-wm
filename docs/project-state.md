@@ -5,7 +5,7 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Image-code work:** [Plan](image-code-contract-plan.md): Alex approves first replay slice in general; adds model-controlled DiT editing/creation with hard reconstruction bypass. Generator details unselected; no implementation yet.
+- **Image-code work:** [Plan](image-code-contract-plan.md): replay slice approved in general; model-controlled DiT with memory/KG routing and scene-factor editing required. Decomposition/conditioning remain unimplemented.
 
 - **Completed experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md): two-seed decoder-only retraining gains1.09–1.71% MSE, missing the20% target. Optional path; encoder frozen.966 CPU tests pass.
 

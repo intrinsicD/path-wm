@@ -363,8 +363,9 @@ sessions:
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
     inversion recovers32images/twostarts; decoder-training comparison proposed only. Complete image-code
     contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.
-    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.'
-  turn_count: 5
-  events_count: 20
+    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.
+    Memory/KG-routed generation and editable scene factors required; learnedbindings remainplanned.'
+  turn_count: 6
+  events_count: 22
   claims_touched: []
   open_threads: 3

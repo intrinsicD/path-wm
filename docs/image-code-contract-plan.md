@@ -288,3 +288,136 @@ metrics before decoder qualification remain descriptive with the decoder limitat
 explicit. They cannot establish qualified end-to-end generation. Seeds/sample IDs
 may remain caller-owned; model control does not require a learned random-seed policy.
 Exact diffusion versus flow training remains to be chosen explicitly.
+
+## Memory-routed scene understanding and controllable factors
+
+Alex extends the requirement: the model must use memory and knowledge-graph entities
+and their components to route relevant data to the DiT. Image representations must
+support modifying entities, scene composition, style, camera, lighting, overlays
+and further aspects needed for complex understanding and editing. These are required
+capabilities, not evidence that current codes already expose those controls.
+
+### Proposed ownership and information path
+
+`goal/request + current scene → model query/selection → memory/KG components and
+relations → bound control/context tokens plus selected spatial detail → conditional
+DiT → canonical fine code → derived coarse/slots → same decoder`.
+
+Keep the faithful fine code as visual evidence, and add only the justified
+**interpretable and addressable scene/component interfaces** alongside it. The
+network needs learned mappings between those components and the spatial code. A
+large prompt, named fields, or a graph with labels does not establish that mapping.
+The goal is operational factor control and composition, not arbitrarily reserving
+channels and assuming they become independently meaningful.
+
+| Aspect | Required control and binding |
+| --- | --- |
+| Entities and parts | Persistent identity, instance/part ownership, appearance/shape/state, visible support, occlusion and relations; distinguish same-class instances |
+| Scene composition | Placement, relative scale/pose, background, containment/support and front/back ordering; track dependencies |
+| Camera | Intrinsics/viewpoint/projection where represented; coordinate frame, units and confidence must be explicit |
+| Lighting and material | Separate requested illumination from object material/appearance where evidence permits; include coupled shadow/reflection effects |
+| Style | Global or entity-scoped rendering appearance with explicit preservation of requested identity/content |
+| Overlays | Image-space versus world-space placement, text/graphics payload, opacity and composition order |
+
+These are scope families, not a requirement for a giant fixed component catalogue.
+Start with components for which there is a concrete task and training evidence;
+permit learned residual/unexplained detail instead of discarding pixels that do not
+fit named factors. Unknown geometry, hidden surfaces or ambiguous lighting/material
+must remain uncertain, inferred or requested—not falsely recorded as observations.
+
+The graph owns persistent entities, component versions, relationships and evidence.
+A generation/edit request is a task-local desired scene state, separate from the
+observed graph. It says which entity/part/aspect to change, what to preserve, and
+which coupled effects may change. For example, changing lighting should preserve
+identity/material, but may change shadows across several objects; changing a camera
+may alter visibility. A user-requested edit never silently rewrites remembered facts.
+
+### Reuse and concrete missing interfaces
+
+`ExactRetriever`, `Query`, `RetrievedContext`, `WorkingContext`, `ContextEncoder`
+and `RelationEncoder` already provide bounded retrieval, component identities,
+version/time restrictions, tokenization and relation endpoints. `WorldSession.think`
+can pass retrieved context to its agent. Those software paths are **not a trained
+memory→native DiT controller**, and the native `LatentCore.apply` still uses summaries.
+
+The standard retrieval value budget is1024 scalars and `ContextEncoder` normally
+reduces a component to one token. A full fine code contains16,384 scalars. Do not
+silently squeeze the whole image through that path, increase every budget blindly,
+or declare detail available merely because an entity was retrieved. Use existing
+compact components for identity/state/control and explicit compatible spatial-token
+reads for needed visual detail, preserving position, masks and ownership. Register
+actual selected tokens/bytes, omissions and the request for additional detail.
+
+The missing learned pieces are: task-relevant queries/selection, model/request
+conditioning, mappings from component spaces into generator context, binding of
+entity/part/factor controls to visual support, and the native producer/editor itself.
+Reuse existing modules where compatible; learn a projection only where representation
+spaces actually differ. Retrieval may be discrete; do not claim its selection is
+trained merely because downstream context projections have gradients.
+
+Each generator context needs a traceable binding from tokens to entity/component
+IDs, role (source/reference/desired/preserve), representation/version, provenance,
+availability and uncertainty. Unsupported/missing components and truncated reads
+stay explicit. Empty retrieval is not proof of absence. Generated hypotheses do not
+become observation evidence; storing a requested scene is distinct from observing it.
+
+### How the latent representation becomes editable
+
+Pixel retention is necessary for faithful inspection, but does not establish factor
+separation. [Slot Attention](https://arxiv.org/abs/2006.15055) supplies task-dependent
+object-centric representations, not automatic camera/style/light decomposition.
+Unsupervised disentanglement cannot be assumed without appropriate model/data
+biases or supervision ([Locatello et al.](https://arxiv.org/abs/1811.12359)).
+
+Train the control-to-code mappings on paired changes, multiple views or temporal
+identity evidence, component/property supervision where available, and preservation
+objectives. Evaluate requested changes, identity consistency, unrelated-factor
+preservation and combinations unseen in training. A latent axis need not correspond
+to one factor, but a requested factor must have a reliable bound read/write operation.
+Pure reconstruction or diffusion loss alone is not sufficient evidence of that.
+
+Keep the frozen encoder as the initial baseline. If measured controls cannot read
+or modify the needed factors, jointly plan representation-training changes with
+reconstruction/identity retention checks. Do not assume the encoder must stay frozen
+forever, and do not revise it before identifying that concrete gap. This refinement
+preserves the native-code contract while allowing necessary learned structure.
+
+### Measurable next increments
+
+1. Complete the already approved code-only replay/continuation and qualify direct
+   decoding. Neither requires inventing scene-factor fields in advance.
+2. Choose one **existing native entity/component** and one observed property edit.
+   Wire retrieved context to the agreed DiT branch and exercise the actual full
+   model. Explicit-ID retrieval can verify wiring but must be labelled supplied
+   selection; it does not validate learned query/selection.
+3. Establish memory dependence: hide the required reference from other inputs;
+   compare correct, absent, irrelevant and swapped entity/component retrieval;
+   change the stored component while holding the request fixed. Verify which item
+   was selected and that only the intended entity/aspect responds, allowing declared
+   physical dependencies. Test stale/retracted components and source withdrawal.
+4. Add learned selection with distractors and multiple same-kind entities. Measure
+   retrieval precision/coverage/bytes separately from generator fidelity and factor
+   correctness. Require correct reference use, not plausible imagery alone.
+5. Expand independently to spatial/part controls and then camera/light/style/layers
+   with appropriate data and fresh compositions. Current RuleWorld data cannot
+   qualify general3D cameras, physical relighting or arbitrary overlays. Declare
+   each actual counterpart, metrics, gates and budgets before adding/testing it.
+
+The first generation test remains the actual requested diffusion/flow-transformer;
+no substitute toy codec or one-pass generator. Low-level latent error, visual
+plausibility, memory use, factor control and faithful reconstruction remain separate
+measurements. The user's factor list guides the capability roadmap; it does not
+assert that every factor is observable from one image or that a minimal factorization
+has already been found. No new modules, training or capability result in this amendment.
+
+
+Scene-control review clarifications: hard bypass preserves codes, not perfect pixels.
+Source-derived masks/positions are inferred bindings, not observed ground truth.
+Overlay rendering through existing RGB codes has not been proven impossible; do not
+add a compositor/new decoder solely from the list of required factors. If an explicit
+compositor later proves necessary, its controls belong to the complete image contract.
+Desired-state editing (“lamp on”) and physical action prediction (“press”) require
+different supervision/conditioning; pick one explicitly. Re-encoded heads/keys are
+diagnostic checks, supplemented by independent target/property evidence. General
+entity decomposition may need variable counts and part hierarchies; the present
+seven-slot configuration is a baseline, not a permanent limit or general capability.

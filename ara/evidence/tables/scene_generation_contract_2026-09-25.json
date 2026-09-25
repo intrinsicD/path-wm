@@ -1,0 +1,73 @@
+{
+  "scope": "Source-reviewed design amendment only. No implementation, training or capability qualification.",
+  "user_requirement": "Memory/KG entity/component routing to DiT; editable entity/scene/style/camera/light/overlay factors for complexunderstanding/editing.",
+  "proposal": "Bound task-local desired/preserve scenecontrols and referenced spatialdetail, learnedfactor-to-code mappings, nativecanonicalcode/shareddecoder. Reuse versionedrecords/boundedretrieval; no blanketontology or automaticfactorization claim.",
+  "claude": {
+    "response.json": {
+      "sha256": "a16e3d6e53239da422065ff73552ab07015de31d3db6a543ee0a60addb7b0f1e",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3667,
+          "outputTokens": 653057,
+          "thinkingTokens": 217309,
+          "cacheReadInputTokens": 200170496,
+          "cacheCreationInputTokens": 2153956,
+          "webSearchRequests": 0,
+          "costUSD": 70.34103919999993,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium"
+    },
+    "reconcile-response.json": {
+      "sha256": "a53239e278118e8311b200ad47bfe30237f6dbd68e3827ddf5e4871496c6d1d0",
+      "model_usage": {
+        "claude-opus-5-5": {
+          "inputTokens": 3671,
+          "outputTokens": 654404,
+          "thinkingTokens": 217309,
+          "cacheReadInputTokens": 200794642,
+          "cacheCreationInputTokens": 2157348,
+          "webSearchRequests": 0,
+          "costUSD": 70.51996039999992,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 128000,
+          "canonicalModel": "claude-opus-5-5",
+          "provider": "firstParty",
+          "costBasis": "list"
+        }
+      },
+      "requested_effort": "medium"
+    }
+  },
+  "reviews": {
+    "/home/alex/Documents/path-wm/runs/reviews/scene_generation_contract_20260925/reconcile.txt": "3f87396fcd87d96cd745267b3449ddcf7b226ca975f38397cdbf1e1a9a51552a",
+    "/home/alex/Documents/path-wm/runs/reviews/scene_generation_contract_20260925/reconciliation.md": "c752ba157f72dc0d4c62716cec5781a05fc0493f7da5f27b3a52c9e2fa0be2c0",
+    "/home/alex/Documents/path-wm/runs/reviews/scene_generation_contract_20260925/prompt.txt": "170a1f1c1bb16e627d414f3f236e3df7bbd23f715f70501916ce49702caae4aa",
+    "/home/alex/Documents/path-wm/runs/reviews/scene_generation_contract_20260925/claude.md": "6b31042b3f606499eced4f346eca5f33283eb008e96f99df3838b7c6697b502d"
+  },
+  "sources": [
+    "https://arxiv.org/abs/2006.15055",
+    "https://arxiv.org/abs/1811.12359"
+  ],
+  "source_files": {
+    "pathwm/world_state/retrieval.py": "21e95da21a515d59d1e092575fdc02705acc5263deb0ae273f8e227a78dad283",
+    "pathwm/world_state/modules.py": "c6cdd3ff09760618592ce9e45c0cca81c4e49dbb4189754b72d3394dcbb72da1",
+    "pathwm/world_state/session.py": "1bb04e5ada79aaab4a5e8b99871a7802009aa28e974a3a1279f8df0254970eeb",
+    "pathwm/world_state/records.py": "f2e1ee9a6341b11306e14a6ec18df060a7e719574d62b8cab4ce6adc77e44e29",
+    "pathwm/models/slots.py": "c6a009f965790b211fa2047ab880caae1b8749b2c3fc0367cabf17e96e2071ce"
+  },
+  "corrections": [
+    "Hardbypass preservescode notperfectpixels.",
+    "Derivedmasks are inferred.",
+    "Overlaydoesnotprove newdecoder/compositor necessary.",
+    "Desiredstateedit distinctfromphysicalactionforecast.",
+    "Modelheads/keys notsolequalityevaluator.",
+    "Sevennative slots not permanentgeneralrepresentationlimit.",
+    "Existingfinecode notforeverfrozen ifnewfactoraccessrequires training."
+  ]
+}

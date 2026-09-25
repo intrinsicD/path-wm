@@ -3,6 +3,13 @@
 Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
+**New scene-control requirement:** memory/KG entities, components and relations must
+route relevant detail/control to the DiT. Addressable entity/part, composition, camera,
+light/material, style and overlay controls require learned bindings and factor tests;
+current seven slots do not establish this. Reuse records/retrieval and preserve the
+fine-code reconstruction path. Missing controller/conditioning/decomposition are
+planned in the final sections below; no new implementation or quality claim.
+
 **Latest user goal / joint plan:** [Image-code contract](image-code-contract-plan.md).
 Alex requires appropriate feature access, faithful latent-code inspection and good
 image generation. Proposed canonical existing fine export → derived coarse/slots →

@@ -9825,3 +9825,17 @@ tree:
   - docs/image-code-contract-plan.md
   - ara/evidence/tables/dit_code_direction_2026-09-25.json
   status: completed
+- id: N593
+  type: decision
+  title: Require memory-routed image generation and addressable scene aspects
+  provenance: user
+  timestamp: 2026-09-25T10:27+02:00
+  choice: Alex requires model-selected memory/KG entities and components to conditionDiT, plus imagecodes
+    supporting entity/scene decomposition, style,camera,lighting,overlays and complexediting. This is
+    a capabilityrequirement, not assertionofexistingfactorization or adoptionofaspecificnewontology.
+  alternatives:
+  - Conditioning only on a request without relevantmemory/componentrouting.
+  evidence:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/scene_generation_contract_2026-09-25.json
+  status: completed

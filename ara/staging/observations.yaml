@@ -7218,3 +7218,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O411
+  timestamp: 2026-09-25T10:27+02:00
+  provenance: ai-suggested
+  content: Preserve faithfulvisualevidence and add justified addressable entity/factor control interfaces
+    with learnedspatialbindings. Reuse memoryrecords/retrieval, distinguish requested/preserve/context
+    roles, test counterfactualreference routing and isolatedfactorchanges. Reconstructionretention and
+    sevenRuleWorldslots do not establish generaldecomposition; encodertrainingmayneedrevision after demonstratedgap.
+  context: JointClaude/Codex sourceaudit following newuserrequirement; no empiricaltests, implementation
+    or generaldisentanglementclaim.
+  potential_type: architecture
+  bound_to:
+  - N593
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2,14 +2,15 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T10:05+02:00
-  turn_count: 5
+  last_turn: 2026-09-25T10:27+02:00
+  turn_count: 6
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
     inversion recovers32images/twostarts; decoder-training comparison proposed only. Complete image-code
     contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.
-    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.'
+    Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.
+    Memory/KG-routed generation and editable scene factors required; learnedbindings remainplanned.'
 events_logged:
 - turn: 1
   type: pivot
@@ -148,6 +149,21 @@ events_logged:
     and sourcefreecreation share existingcanonicalfine and decoder. Bypass preserves code but decoderfidelity
     remainsseparatelyrequired. Residualaddition doesnotguarantee pixelpreservation. Reuseconditionaltransformer
     machinery onlyafter explicitnativeinterface and diffusion/flowchoice.
+- turn: 6
+  type: decision
+  id: N593
+  routing: direct
+  provenance: user
+  summary: Require memory-routed image generation and addressable scene aspects
+- turn: 6
+  type: observation
+  id: O411
+  routing: staged
+  provenance: ai-suggested
+  summary: Preserve faithfulvisualevidence and add justified addressable entity/factor control interfaces
+    with learnedspatialbindings. Reuse memoryrecords/retrieval, distinguish requested/preserve/context
+    roles, test counterfactualreference routing and isolatedfactorchanges. Reconstructionretention and
+    sevenRuleWorldslots do not establish generaldecomposition; encodertrainingmayneedrevision after demonstratedgap.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -187,6 +203,13 @@ ai_actions:
   files_changed:
   - docs/image-code-contract-plan.md
   - ara/evidence/tables/dit_code_direction_2026-09-25.json
+- turn: 6
+  action: Audited native retrieval/context/slot paths with actualClaude; amendedmemoryrouting/scenefactor
+    plan, primarysource grounding and peererrorreconciliation. No code/training.
+  provenance: ai-executed
+  files_changed:
+  - docs/image-code-contract-plan.md
+  - ara/evidence/tables/scene_generation_contract_2026-09-25.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -204,10 +227,13 @@ key_context:
 - turn: 5
   excerpt: 'Alex: In general yes, but proposes DiT controlled bymodel for latentcreation/editing, maybe
     residual and bypassforreconstruction.'
+- turn: 6
+  excerpt: Alex requires memory/KG entity-components to route neededdata toDiT and latentcodes supporting
+    entities,scene,style,camera,lighting,overlays and complexediting.
 open_threads:
 - Other actual-model rerun families, including lexical context and operator transfer.
-- Implement generallyapprovedcode replay/continuation slice without askingagain; thenfaithfuldecoding,
-  modelcontrolleddiffuser training/objective and consumeraccess. Broaderquality remainsopen.
+- Implementapprovedreplay; qualifydecoder; jointlyspecify native memory-conditionedDiffuser/controller
+  and task-specificscene-factorbindings, data/gates. No automaticfactorizationclaim.
 - Full-agent learning; other R2 modules remain untrained.
 ai_suggestions_pending:
 - O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.
@@ -217,3 +243,5 @@ ai_suggestions_pending:
   choice.
 - O410 precisehardbypass/residualarchitecture is a proposal. O409 firstslice approvedinprinciple, not
   blanket adoption of futureproducer choices.
+- O411 structuredcontrol/learnedbinding proposal is staged; user requirescapabilities but hasnotadopted
+  preciseimplementation.
