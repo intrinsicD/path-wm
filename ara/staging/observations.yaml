@@ -7345,3 +7345,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O419
+  timestamp: 2026-09-25T13:53+02:00
+  provenance: ai-suggested
+  content: Propose versioned profile references and active selection on the existing entity/component
+    store; derived GPU conditioning reusable and invalidated by profile/producer changes. Pin selection
+    per utterance and test crossed content/profile preservation and reload/switch behavior.
+  context: Integration proposal for explicit user requirement; embedding/adapter choice and learned speech
+    producer remain open.
+  potential_type: architecture
+  bound_to:
+  - N606
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

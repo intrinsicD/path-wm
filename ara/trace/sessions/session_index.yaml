@@ -368,7 +368,7 @@ sessions:
     feedback: feature error improves but pixels worsen5.5–6.0% in two seeds;990tests pass. Actual Claude
     reviewed grounded-speech/command plan; no speech runs. German speech-data shortlist and multi-axis
     quality acceptance reviewed; no audio downloaded.'
-  turn_count: 12
-  events_count: 42
+  turn_count: 13
+  events_count: 44
   claims_touched: []
   open_threads: 4

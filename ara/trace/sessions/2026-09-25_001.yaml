@@ -2,8 +2,8 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T13:44+02:00
-  turn_count: 12
+  last_turn: 2026-09-25T13:53+02:00
+  turn_count: 13
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
@@ -302,6 +302,20 @@ events_logged:
     and acoustic/output data as needed. Acceptance must separate semantics, multi-turn correctness, listening
     quality and interaction timing on held-out real speech; no single loss establishes conversational
     quality.
+- turn: 13
+  type: decision
+  id: N606
+  routing: direct
+  provenance: user
+  summary: Own KG entity stores learnable interchangeable profiles and active selection; model supplies
+    meaning.
+- turn: 13
+  type: architecture
+  id: O419
+  routing: staged
+  provenance: ai-suggested
+  summary: Versioned binding/cache ownership and crossed content/profile checks proposed; no implementation.
+
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;

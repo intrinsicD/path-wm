@@ -3122,3 +3122,9 @@ entries:
     test is in separate repository per card.
   - No speech run, codec adoption or empirical quality claim. Existing staged speech proposal remains
     open; no closure inferred.
+- turn: 2026-09-25_001#13
+  notes:
+  - N606 records explicit user ownership/learnability/interchangeability requirement. O419 stages integration
+    details; no broader speech-plan affirmation or capability validation inferred.
+  - Updated voice design and atlas. No model training, download, runtime changes or scientific quality
+    result.

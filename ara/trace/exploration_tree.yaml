@@ -9995,3 +9995,14 @@ tree:
   evidence:
   - docs/speech-data-quality.md
   status: open
+- id: N606
+  type: decision
+  title: Learnable interchangeable speech profiles belong to the agent entity
+  provenance: user
+  timestamp: 2026-09-25T13:53+02:00
+  description: Alex requires the model itself to supply understanding/intelligence and its own KG entity
+    to store learnable interchangeable speech profiles; output uses the currently loaded selection. Requirement
+    adopted; implementation remains open.
+  evidence:
+  - docs/agent-voice-design.md
+  status: adopted

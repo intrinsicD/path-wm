@@ -318,3 +318,45 @@ quality/cost changes. For the direct path, retain reusable speaker conditioning
 while the temporal speech sequence and utterance caches change; audit retained
 evidence versus the subset read by the speech consumer. No fixed token rate or
 assumed smaller decoder budget.
+
+
+## Learnable profiles owned by the agent entity — 25 September 2026
+
+Alex requires learnable, interchangeable speech profiles. Understanding, reasoning
+and intended content belong to the model itself. Its own entity in the knowledge
+graph must retain its profiles and the selection currently used for speech.
+This is an adopted design requirement, not implemented speech capability.
+
+Proposed binding through the existing Entity/Component/Relation store:
+
+- The agent entity references one or more versioned profile records and an active
+  profile selection. A profile retains its learned representation or artifact
+  reference, source evidence and compatible generator/version information.
+  Large learned artifacts can live on disk with a content hash; the graph owns
+  their identity and association. A GPU copy is a disposable cache.
+- The core supplies intended content and contextual delivery; the speech producer
+  combines these with the selected, loaded profile. The profile carries voice
+  identity and habitual acoustic delivery. Knowledge, goals and conversational
+  memory remain in the existing shared state. Desired momentary emphasis or pace
+  can vary without overwriting the persistent voice identity.
+- Learning or adapting a profile creates a new revision with provenance. Whether
+  that representation is an embedding, conditioning sequence or small adapter
+  remains to be selected and trained; interchangeability is only promised within
+  a defined compatible producer interface, not between arbitrary speech models.
+- Resolve and prepare the active profile once, reuse it across utterances, and
+  invalidate derived tensors when profile or producer versions change. Proposed
+  switching rule: pin a profile revision at utterance start; apply a new selection
+  at the next utterance, avoiding an accidental voice change halfway through.
+  Record the actual profile revision with emitted segments and playback history.
+
+`pathwm/world_state/records.py` already supplies entity identity and versioned
+components with evidence and model-version fields. The self-entity profile
+association, learned profile preparation/adaptation, active selection resolver
+and speech-generator conditioning are still missing integration contracts.
+The fixed-length AudioDecoder does not implement this voice capability.
+
+Acceptance should cross the same held-out content with multiple learned profiles,
+and each profile with unseen content. Check intelligibility, perceived identity,
+content/command preservation, persistence after reload and correct selection after
+switching. Profile identity must not become a shortcut for intent or referent in
+training data. These are proposed checks; no new implementation or run is implied.

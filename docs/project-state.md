@@ -78,7 +78,7 @@ Task plans own current work; older decisions remain in the
 | Decision and outcome verification | [Decision design](decision-design.md): distinguish declared completion from verified success; preserve scoped recall/calibration evidence. |
 | Actions and instruction semantics | [Action design](action-semantics-design.md): typed execution, uncertain inferred actions and outcome checks; general execution is not established. |
 | General latent processing and token roles | [Latent core](latent-core.md): shared multimodal processing and learning/readout contracts, without a new adopted layout. |
-| Speech, human perception and video understanding | [Speech/command plan](grounded-speech-plan.md): grounded audio goals first, output in parallel; no speech runs. [Human perception](human-perception-discussion.md) and [video](video-understanding-test-map.md): integration/quality open. |
+| Speech, human perception and video understanding | [Speech plan](grounded-speech-plan.md); [learnable KG voice profiles](agent-voice-design.md); no speech runs. [Human perception](human-perception-discussion.md) and [video](video-understanding-test-map.md): integration/quality open. |
 | Demand-driven inference | [Neural Engine](neural-engine-inference.md): bounded residency, feature/state ownership and loading policy remain proposals. |
 
 Use the [discussion checklist](architecture-discussion.md) and atlas. Discussion
