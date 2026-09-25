@@ -3101,3 +3101,9 @@ entries:
     preserved/repaired; all3trials pass so no best-runselection.
   - Trainingresumeexact; no parameter or target-selfattention caching. Prior broadfactorization/editingobservations
     remainunresolved, no stale/abandonment promotion.
+- turn: 2026-09-25_001#10
+  notes:
+  - N601 realphoto preview andO415 staged; fixedselectionno newtraining/model. Slowcodeonly
+    children have no targetRGB access.
+  - Earlier synthetic-only scope remains valid historically; fourphotowitnesses do
+    not promote broad natural quality. No stale/abandonment/affirmation closure inferred.

@@ -749,3 +749,16 @@ Independent actualClaude medium code review finds no blockers; its attached-head
 traversal recommendation is applied. Numerical evidence is scoped to tested
 FP32CUDA/CPU paths, not a guarantee of bit-exactness across all kernels/precisions.
 No editing-quality, generation or representation-capability promotion follows.
+
+
+Real-photo preview (user-requested display, no retraining):
+`runs/native_real_photo_preview_v1/report.html` and `photo-comparison.png`. Firstfour
+COCO64 test-subset selections from existingphoto_data seed45001, fixed before outputs.
+Same full native encoder, fastP1E8000decoder and1000-step code-only refinement from
+P1E2000. Fast per-imageMSE [.006380,.005605,.032124,.004053]; slow
+[7.949e-6,3.040e-6,5.437e-5,3.429e-6]. Allfour slow outputs pass the1e-4 reference;
+allfour fast outputs fail. Child code-only reads, frozenweights/RNG, step and resource
+checks pass. Four64px crops show retained photo detail, not broad natural-image
+qualification, useful photo slots, high-resolution reconstruction or generation.
+Protocol, recipe, source/data/checkpoint bindings, raw results and image panels are
+saved in the run; existing renderer structurally verified. No model changes.

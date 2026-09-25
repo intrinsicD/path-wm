@@ -1,0 +1,58 @@
+{
+  "run": "runs/native_real_photo_preview_v1",
+  "result_sha256": "ef0ab09f41d7a15402f8c76ec1ee31725e2e9ef5416ef7484c73de0718782542",
+  "result": {
+    "checks": {
+      "child": true,
+      "frozen": true,
+      "source_unchanged": true,
+      "time": true
+    },
+    "metrics": {
+      "fast": [
+        0.006379574537277222,
+        0.005604753270745277,
+        0.03212402015924454,
+        0.004053332377225161
+      ],
+      "slow": [
+        7.94859715824714e-06,
+        3.0404246444959426e-06,
+        5.436600258690305e-05,
+        3.429147227507201e-06
+      ]
+    },
+    "reference_gate": {
+      "fast": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "slow": [
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    "scope": "Four fixed COCO64 diagnostic crops; no natural-image qualification.",
+    "seconds": 10.218312643002719,
+    "valid": true
+  },
+  "protocol": {
+    "purpose": "Fixed four-photo diagnostic of existing native reconstruction, not natural-image qualification",
+    "selection": "photo_data(data/curriculum/coco_v1, default counts, seed45001).test first4; no output-based selection",
+    "resolution": 64,
+    "encoder": "real_visual_joint_repair_3501_u6000 frozen native encoder",
+    "fast_decoder": "native_decoder_subpixel_3601_u8000_v1",
+    "slow_initial_decoder": "native_decoder_subpixel_3601_v1",
+    "slow_steps": 1000,
+    "slow_lr": 0.03,
+    "budget_seconds": 180,
+    "child_memory_gib": 2,
+    "per_image_reference_mse": 0.0001,
+    "training": false,
+    "limits": "No new architecture, weight updates, generation or broad held-out quality claim; four existing prepared COCO crops only"
+  }
+}

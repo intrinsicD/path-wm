@@ -9935,3 +9935,15 @@ tree:
   - ara/evidence/tables/native_context_cache_2026-09-25.json
   - runs/native_context_cache_v3/report.html
   status: completed
+- id: N601
+  type: experiment
+  title: Four real photos through current native reconstruction
+  provenance: ai-executed
+  timestamp: 2026-09-25T12:48+02:00
+  result: Four fixed64pxCOCOcrops,no retraining. Fastdecoderfails4/4 MSE1e-4;1000step
+    savedcode refinementpasses4/4,worst5.437e-5. Frozen/code-only/resourcechecks pass.
+    Diagnosticpreview,not natural-imagequalification.
+  evidence:
+  - ara/evidence/tables/native_photo_preview_2026-09-25.json
+  - runs/native_real_photo_preview_v1/report.html
+  status: completed

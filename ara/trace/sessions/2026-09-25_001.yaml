@@ -3,7 +3,7 @@ session:
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
   last_turn: 2026-09-25T12:40+02:00
-  turn_count: 9
+  turn_count: 10
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
@@ -237,6 +237,18 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O414 promoted by explicit cacheimplementation authorization
+- turn: 10
+  type: experiment
+  id: N601
+  routing: direct
+  provenance: ai-executed
+  summary: Four real photos through current native reconstruction
+- turn: 10
+  type: claim
+  id: O415
+  routing: staged
+  provenance: ai-suggested
+  summary: Native photo retention versus fast decoding limited to four64pxwitnesses
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;

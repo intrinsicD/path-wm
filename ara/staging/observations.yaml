@@ -7284,3 +7284,18 @@ observations:
   promoted_to: architecture:A25
   crystallized_via: verbal-affirmation
   stale: false
+- id: O415
+  timestamp: 2026-09-25T12:48+02:00
+  provenance: ai-suggested
+  content: On four fixed COCO64crops the currentnativecodes retain enough information
+    for1000step pixelrefinement below1e-4MSE, while existingfastdecoder has largegrid/colorerrors.
+    Supports a decoder-recovery gap on these witnesses; doesnot establish generalnatural-image
+    retention, highresolution or useful semanticdecomposition.
+  context: User asks realphotos after syntheticgallery; no new architecture or training.
+  potential_type: claim
+  bound_to:
+  - N601
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
