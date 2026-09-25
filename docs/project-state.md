@@ -5,6 +5,8 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
+- **Active diagnosis:** [Reconstruction](reconstruction-diagnosis-plan.md), with Claude: audit actual feature retention versus decoder limitations; no new model path adopted.
+
 - **Completed experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md): two-seed decoder-only retraining gains1.09–1.71% MSE, missing the20% target. Optional path; encoder frozen.966 CPU tests pass.
 
 - **Completed slice:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
