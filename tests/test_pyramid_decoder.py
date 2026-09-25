@@ -115,3 +115,22 @@ def test_decoder_objective_weight_and_eval_preserve_training_state(native):
     with evaluation_mode(model):result=decoder_mask_eval(model,model,'cpu',2)
     assert torch.equal(rng,torch.get_rng_state()) and state_hash(model)==before
     assert all(v['mean']['pointer_agreement']==1 for v in result.values())
+
+
+def test_full_resolution_fine_connection_preserves_native_initialization(native):
+    model,pyramid,_=native
+    model.decoder.enable_pyramid_connections()
+    with torch.no_grad():before=model.from_pyramid(pyramid)
+    old={k:v.clone() for k,v in model.state_dict().items()}
+    rng=torch.get_rng_state().clone()
+    model.decoder.enable_fine_subpixels()
+    assert torch.equal(rng,torch.get_rng_state())
+    assert all(torch.equal(v,model.state_dict()[k]) for k,v in old.items())
+    with torch.no_grad():after=model.from_pyramid(pyramid)
+    assert torch.equal(before.recon,after.recon) and torch.equal(before.alpha,after.alpha)
+    model.requires_grad_(False);model.decoder.fine_subpixel.requires_grad_(True)
+    target=before.recon.detach().clone();target[:,:,::4,::4]*=.9
+    loss=(model.from_pyramid(pyramid).recon-target).square().mean()
+    loss.backward()
+    assert model.decoder.fine_subpixel.weight.grad.abs().sum()>0
+    assert all(p.grad is None for p in model.encoder.parameters())

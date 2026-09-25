@@ -493,3 +493,31 @@ and mask/RGB evaluations exactly. Source/receipts:
 `full-cpu-receipt.json`. All completed smoke/replay runs have structurally verified
 standalone reports. Actual Claude's two implementation reviews reconciled the
 binding and continuation validation defects. P1a quality runs are separate evidence.
+
+P1a/P1D completed: all validity/source/frozen/resource checks pass. Both mask0.5
+controls exactly reproduce prior per-image records. RGB-only gains18.36–18.84% on
+train and22.46–22.63% on validation; both seeds pass mask/pointer preservation but
+fail overall20% relative and absolute fidelity gates. Validation MSE0.006736–0.006740,
+worst images0.01117–0.01129. Reports:
+`runs/native_decoder_objective_comparison_v1/report.html` and
+`runs/native_decoder_error_decomposition_v1/report.html`.
+P1D's exact additive decomposition passes on all2560images. RGB-only within-patch
+energy accounts for87.04–90.76% of error, and machine regions91.17–91.60%; these
+are overlapping diagnostics, not an additive explanation. This locates error but
+does not prove architectural impossibility or training saturation.
+
+P1E registered before implementation/runs: test a single optional zero-initialized
+fine-to-full-resolution residual connection in the EXISTING BroadcastDecoder:
+1x1 projection64→16*32, PixelShuffle4, added to the final64x64 hidden map before
+the existing output convolution. Retain coarse8/fine16 connections, existing RGB/
+alpha mixture, encoder and slot extractor. The hypothesis is that an explicit
+within-patch pixel path helps the measured fine-detail defect; not a new code or
+proof that nearest upsampling cannot learn it. Enabled at zero it must exactly
+preserve current output and RNG; disabled code keeps the existing branch verbatim.
+Train only decoder from the sameu6000 parent, seeds3601/3604,2000updates, RGB-only,
+batch32,lr3e-4,evaluation every500,10min/6GiB each. Compare against the matching P1a
+RGB-only runs, with identical source batches/initial outputs. Require20% MSE gain
+on both256-image populations in both seeds, unchanged absolute every-image MSE1e-4
+and meanbody/gradient1e-4, and mask/pointer decline limits0.005/0.01. Record added
+parameters and clipping effect. No checkpoint selection or automatic extension.
+This is a narrowly justified candidate, not a default adoption; preserve failure.
