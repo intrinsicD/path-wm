@@ -25,22 +25,51 @@ memory, encode-once, structured goals) runs as
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.unified_session --output runs/my_r2_life [--perception RUN]`;
 it is a labelled software check ([plan §18](integrated-architecture-plan.md#18-r2-softwarescheibe-eine-vereinheitlichte-sitzung-abgestimmter-vertrag)).
 
-The [native visual-memory slice](real-visual-memory-plan.md) uses that same recipe,
-the native perception/key and existing slot decoder. The commands below reproduce
-the J baseline, which is not qualified for reliable relocation. Current training
-repairs and their preserved failures are in the owning plan. Calibrate the existing
-identity policy on training scenes, then evaluate validation scenes:
+The [native visual-memory slice](real-visual-memory-plan.md) uses the native
+perception/key, persistent visual slots and existing slot decoder. The joint6000
+checkpoint passes all six fixed development populations2405–2410 with its TRAIN
+calibrated policy. Reproduce calibration and one population with fresh outputs:
 
 ```bash
-.venv/bin/python -m experiments.unified_session --calibrate-visual-binding --identity-run runs/latent_agent_r1/identity_joint_20260923 --seed 3403 --scenes 64 --output runs/my_visual_calibration
-.venv/bin/python -m experiments.unified_session --visual-memory --identity-run runs/latent_agent_r1/identity_joint_20260923 --binding-calibration runs/my_visual_calibration/binding.json --seed 2403 --scenes 32 --output runs/my_visual_memory
+.venv/bin/python -m experiments.unified_session --calibrate-visual-binding --identity-run runs/real_visual_joint_repair_3501_u6000_v1 --seed 3405 --scenes 64 --binding-match-thresholds .80 .85 .90 .925 .93 .935 .94 .95 --output runs/my_visual_calibration
+.venv/bin/python -m experiments.unified_session --visual-memory --identity-run runs/real_visual_joint_repair_3501_u6000_v1 --binding-calibration runs/my_visual_calibration/binding.json --seed 2405 --scenes 32 --output runs/my_visual_memory
 ```
 
-Use fresh output directories. The calibration must pass before its manifest exists;
-loading refuses changed source, checkpoint, policy or evidence. The same
-`--identity-run` and `--binding-calibration` arguments also work for the regular R2
-life command. Native visual-slot recall is distinct from fine-detail reconstruction
-and full-agent learning. Other R2 components remain untrained.
+Repeat the second command for seeds2406–2410 with separate output directories to
+reproduce the complete task qualification. The saved working manifest is
+`runs/real_visual_binding_confirmation_3405_joint_u6000_v2/binding.json`.
+That manifest confirms the fixed policy under the final source. Selection came
+from the preserved16-policy TRAIN search; its two matching policy rows and TRAIN
+score rows are exactly equal. See the [confirmation audit](../runs/reviews/real_visual_memory_20260924/release-confirmation-audit.json).
+The [aggregate report](../runs/real_visual_memory_comparison_joint_u6000_release_v1/report.html)
+retains the J control and scope limits; the owning plan preserves failed predecessors. All populations are
+known development data; fine-detail fidelity and full-agent learning remain open.
+
+`--binding-match-thresholds` requires `--calibrate-visual-binding` and strictly
+increasing finite values. Omitted, the grid remains `.80 .85 .90 .95`. New-instance
+thresholds remain match minus.05; the margin grid and selection rule are unchanged.
+Custom grids are recorded in the run and source-bound manifest. Calibration must
+pass before its manifest exists; loading rejects changed source, checkpoint,
+policy or evidence. Runtime source changes require fresh calibration. The same
+`--identity-run` and `--binding-calibration` arguments work for the regular R2
+life command; other R2 components remain untrained.
+
+To retrain the native component with the successful settings, use a fresh directory:
+
+```bash
+OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage perception \
+  --size full --device cuda --seed 3501 --updates 6000 --max-minutes 20 \
+  --max-reserved-gib 6 --lr 3e-4 \
+  --init-perception runs/latent_agent_r1/identity_joint_20260923 --init-key \
+  --identity joint --identity-weight .2 --texture-randomization 1.0 \
+  --identity-margin-positive .95 --identity-margin-negative .50 \
+  --identity-margin-weight 100 --output runs/my_native_identity
+```
+
+Then calibrate/evaluate that new checkpoint; do not reuse another checkpoint's
+manifest. The cleaned active recipe is behaviorally equivalent to the retained
+training recipe (verified native updates, optimizer and RNG). Training resume
+remains source-locked: use the original run's frozen source when resuming it.
 
 The optional **frozen-perception identity repair** trains the existing key only,
 using the parent's recorded texture randomization (J:1.0). Its cosine screen is
@@ -65,18 +94,12 @@ The recorded W1/W100 key-only attempts did not qualify the full task.
 The current calibration sequence includes lamp changes, new layouts, alternating
 side swaps and novel arrivals, with labels confined to evaluation/calibration.
 
-The optional `--confusable-twins 0.25` on perception identity training creates
-pairs with different body patterns and matched visible color means. Rule version 2
-shifts both proposed colors equally, preserving contrast and period. It accepts
-only colors in the generator's uniform range and checks every target against the
-held-out exclusion; rejected proposals keep original data. The rate is a proposal
-probability, and the run reports the lower effective rate and rejection counts.
-Default `0` preserves old batches and RNG draws.
-
-Training resume remains source-locked: older runs require their saved source; new
-runs support exact pause/resume under this recipe. Earlier version-1 runs and
-failures are preserved. This data option has not yet qualified identity quality;
-see the native-memory plan for retention, calibration and runtime gates.
+The unsuccessful confusable-pair augmentation is retired from the active recipe;
+it was unused by the qualifying checkpoint. Both versions, failed runs and tests
+remain in commits65f4380 and430f57d and in their run snapshots. Reproduce those
+historical experiments with their frozen source in an isolated checkout, using
+fresh output directories. Training resume is source-locked. Removal does not
+change their negative results; see the [native-memory plan](real-visual-memory-plan.md).
 
 The validated **known-rule application curriculum** is available through the same recipe:
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage symbolic --oracle-curriculum 8000 --updates 16000 --device cuda --output runs/my_oracle_curriculum`.
@@ -852,12 +875,3 @@ and predeclared gates are in CI1 of `integrated-architecture-plan.md`. Each arm
 owns its report, raw predictions and checkpoint. The dataset contains exact shared
 training batches plus held-out panels. This trains a new pointed property query,
 not temporal tracking or the original lamp policy; no text input is required.
-
-The native visual-binding calibrator accepts `--binding-match-thresholds` with
-strictly increasing finite thresholds (for example `.90 .925 .93 .935 .94 .95`).
-This option requires `--calibrate-visual-binding`; the omitted default remains
-`.80 .85 .90 .95`. New-instance thresholds remain match minus.05, with the
-existing margin grid and selection rule. Calibrate on TRAIN, then evaluate the
-fixed task populations; a finer grid does not change acceptance gates. Custom
-grids are recorded in the run and source-bound binding manifest. Recipe source
-changes require fresh calibration before a manifest can be used again.

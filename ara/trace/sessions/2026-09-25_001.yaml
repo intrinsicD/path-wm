@@ -1,0 +1,87 @@
+session:
+  id: 2026-09-25_001
+  date: '2026-09-25'
+  started: 2026-09-25T02:35+02:00
+  last_turn: 2026-09-25T02:35+02:00
+  turn_count: 1
+  summary: Native visual-memory slice qualifies all six fixed development populations after existing-component
+    training/path repairs; no added representation. Failures and limits preserved.
+events_logged:
+- turn: 1
+  type: pivot
+  id: N580
+  routing: direct
+  provenance: user
+  summary: Use actual native composition instead of extending the surrogate
+- turn: 1
+  type: experiment
+  id: N581
+  routing: direct
+  provenance: ai-executed
+  summary: Native visual persistence and frozen-key repair distinguish software from quality
+- turn: 1
+  type: decision
+  id: N582
+  routing: direct
+  provenance: ai-suggested
+  summary: Make arbitrary cosine proxy diagnostic prospectively
+- turn: 1
+  type: experiment
+  id: N583
+  routing: direct
+  provenance: ai-executed
+  summary: Joint and confusable-data candidates preserve negative outcomes
+- turn: 1
+  type: experiment
+  id: N584
+  routing: direct
+  provenance: ai-executed
+  summary: Finer TRAIN search fixes a search gap but does not qualify joint3000
+- turn: 1
+  type: experiment
+  id: N585
+  routing: direct
+  provenance: ai-executed
+  summary: Duration-only joint6000 qualifies six native development populations
+- turn: 1
+  type: experiment
+  id: N586
+  routing: direct
+  provenance: ai-executed
+  summary: Final-source confirmation reproduces native task behavior
+- turn: 1
+  type: observation
+  id: O404
+  routing: staged
+  provenance: ai-suggested
+  summary: Within these known synthetic development populations, existing native components can meet the
+    declared persistent identity/visual-memory gates after pathway and training/calibration repairs, without
+    adding a representation or parameters. This does not establish global optimality, fine-detail fidelity,
+    unseen-kind generalization or full-agent learning.
+- turn: 1
+  type: observation
+  id: O405
+  routing: staged
+  provenance: ai-suggested
+  summary: A failure in a surrogate, an arbitrary proxy monitor or a coarse policy search should not by
+    itself diagnose inadequate information in the actual representation. Here training duration fixed
+    the bounded native task; finer grid points were not required by the successful checkpoint.
+ai_actions:
+- turn: 1
+  action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
+    preserved failures, final-source audits and bounded interpretations. Recorded at close of work spanning24–25September.
+  provenance: ai-executed
+  files_changed:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'Alex: work on what we have; actual full-model testing; plan missing implementation together.
+    Actual Claude has same permissions; iterate until it runs and works.'
+open_threads:
+- Other actual-model rerun families, including lexical context and operator transfer.
+- Fine-detail fidelity and generalization beyond known procedural development populations.
+- Full-agent learning; other R2 modules remain untrained.
+ai_suggestions_pending:
+- O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.

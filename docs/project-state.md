@@ -5,9 +5,9 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Active:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
+- **Completed slice:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
-- **Latest evidence:** Native memory/training/calibration committed2449864;972 CPU tests pass. Persistence contracts pass. Existing joint3000 with finer TRAIN calibration passes five of six fixed populations;2405 is one relocated match short (60/64). No novel merges. Training variants remain unqualified. Reviewing the TRAIN policy tie-break before further training; no new representation. [Plan](real-visual-memory-plan.md) owns evidence and unchanged gates.
+- **Latest evidence:** The native visual-memory task passes all six fixed development populations using joint6000 and TRAIN-selected.90/.85/.10 policy: relocation62,63,61,63,64,64/64; zero novel merges; all persistence/restart/correction contracts pass. Retention passes all 12. Original architecture and parameter count. 957 final CPU tests pass with no skips and unchanged source; all six final-source task reruns exactly reproduce the qualified results. Unused augmentation is removed with evidence preserved. [Plan/report](real-visual-memory-plan.md) preserve failures, rerun commands and scope.
 
 - **Earlier screens:** [Affine transfer](representation-transfer-plan.md) passes surrogate gates but pixel ridge is stronger; [indexed lookup](scan-discovery-plan.md) passes without training. Actual-model counterparts remain subject to the rerun audit.
 

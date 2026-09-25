@@ -6,6 +6,43 @@ Claude has the same repository permissions for this task; this explicit instruct
 supersedes the older public-only review boundary. Preserve existing architecture,
 checkpoints and historical evidence. Other rerun families remain separately open.
 
+## Current outcome — 25 September 2026
+
+The actual native task now passes all six fixed development populations. Joint6000
+uses the original architecture and no confusable-pair augmentation. TRAIN3405
+selects match.90/new.85/margin.10; relocation is127/128 with zero false matches or
+novel merges. Perception retention passes all 12. Actual task results:
+
+| Seed | Original J | Joint3000, finer policy | Joint6000 | Required gate |
+| --- | ---: | ---: | ---: | --- |
+| 2405 | 55/64 | 60/64 | **62/64** | pass |
+| 2406 | 61/64 | 64/64 | **63/64** | pass |
+| 2407 | 57/64 | 61/64 | **61/64** | pass |
+| 2408 | 56/64 | 62/64 | **63/64** | pass |
+| 2409 | 58/64 | 61/64 | **64/64** | pass |
+| 2410 | 57/64 | 62/64 | **64/64** | pass |
+
+Each row is 32 actual scenes, 64 relocated identities; relocated-lamp accuracy has
+the same counts. Acquisition, same-layout identity/lamp updates and novel
+detection are1. Novelmerges0/192; every persistence/decoder-parity/restart/withdrawal contract
+passes, and weights remain frozen. Independent raw audits reproduce the gates;
+all 128 input frames per population match across the three models. Ten actual-model
+[manifest checks](../runs/reviews/real_visual_memory_20260924/policy-audit-u6000.json)
+pass on the original qualified source; final-source confirmation and task reruns also pass. Normal four-scene R2 life also passes restart and4/4presses
+(workflow scope; other learned R2 modules remain untrained).
+
+[Aggregate report](../runs/real_visual_memory_comparison_joint_u6000_release_v1/report.html),
+[commands](experiments.md), and the preserved chronological record below own the
+evidence. All populations are development/regression data, not sealed tests or
+new-kind evidence. Fine-detail reconstruction, pose/operator transfer, other
+historical surrogate reruns and full-agent learning are not established.
+
+Final cleanup removes the unused failed augmentation while preserving its source
+and results. The final full CPU suite passes **957 tests**, zero failures/errors/skips,
+with source unchanged (726.19 s). The final native reruns reproduce all six results
+exactly. The selected .90 threshold is also in the legacy grid: this successful
+candidate did not depend on the finer grid points.
+
 ## Objective and working plan
 
 Make the existing native R2 visual path rerunnable through persistent memory:
@@ -722,3 +759,96 @@ audits and101-file source snapshots pass. Aggregate report:
 `runs/real_visual_memory_comparison_joint_fine_v1/report.html`. No conditional
 cleanup or promotion is activated. Next review considers actual TRAIN decision
 margins and the existing highest-threshold tie-break; no new rule adopted yet.
+
+## Duration continuation after finer calibration (round33)
+
+All16 remaining task misses are positive-side abstentions/duplicates; wrong
+identities and novelmerges are0.2405's four correct scores are about.922,.825,
+.901,.925. A TRAIN max-margin tie-break would select approximately.93, still
+failing2405; that proposed change is rejected. Do not select.925 from validation.
+
+Joint3000 training positive violations were still falling (about.107 midway
+to.083 at end), supporting one duration-only continuation to6000updates.
+Counter-evidence: kind49 position minimum worsened from joint1000 to3000;
+improvement is not assumed. Fresh J initialization,seed3501,full64/7/3/32,
+batch32pairs,lr3e-4,jointidentityweight.2,procedural1,cosine targets.95/.50/W100,
+no twins,updates6000,20min/6GiB cap; output
+`real_visual_joint_repair_3501_u6000_v1`. Default no-twin behavior is already
+verified; require first3000 training rows to reproduce the earlier run exactly.
+The source-locked recipe refuses changing update budget on resume, so this is
+an explicitly fresh longer run, preserving the completed3000update evidence.
+
+Require retention3506, the exact same16-policy TRAIN3405 fine grid/selector,
+and all six fixed populations2405–2410 with unchanged gates. Every population
+is now known development data for this lineage. Stop and diagnose if the same
+stripe misses persist; no automatic extra fits or new representation. No source
+changes are required. Conditional removal of unused twins remains contingent
+on actual qualification.
+
+Joint6000 finished863.94s,6,000updates,source unchanged,C1true,3.418GiB maximum
+reserved. All first3,000training rows exactly match joint3000; settings differ
+only in update budget. Last100mean positive violation.07266 versus.083 at3000;
+this is a training diagnostic only. Retention3506 passesall12: MSE.008266
+versusJ.009126,pixel.988625 versus.984057,all attributes/lamps/detection/pointers1.
+Source snapshots101files verified. The unchanged16-policy TRAIN3405 calibration
+is running; no task qualification is assumed.
+
+## Final cleanup and release-source confirmation
+
+Unused confusable augmentation is removed by restoring the exact pre-option
+recipe; source/results/tests remain in65f4380/430f57d and run snapshots. Native
+64/7/3/32 two-update comparisons of restored versus retained6000recipes produce
+identical model/optimizer/allRNG/sampler/rows/settings; only source metadata
+differs. This is code equivalence, not a new quality claim.88focused tests pass.
+All101qualified runtime source files were unchanged by this cleanup.
+
+Independent final review found a report description bug: normal R2 life still
+said uncalibrated while loading a calibrated manifest. Fix only the description
+after successful manifest loading. This changes the source hash. Before running,
+fix the release confirmation to TRAIN3405/64, grid[.90], both original margins,
+same6000checkpoint; require metrics identical to the corresponding rows in the
+completed16-policy search. This CONFIRMS the alreadyselected.90/.85/.10 policy;
+it does not choose a threshold from validation or bypass source guards. Preserve
+the original full search and create a fresh source-bound manifest.
+
+Rerun all six full32-scene populations under final source, requiring unchanged
+gates and byte-identical raw metric rows to the qualified6000 runs; then normal
+four-scene R2 life with accurate metadata. Full CPU suite is also required. No
+model, runtime decision, evaluation or calibration-selection logic is changed by
+the description fix. Budget: confirmation<=10min/6GiB; each native evaluation
+<=5min; final fullsuite<=20min. CPU runs may overlap on frozen source, with no
+timing-comparison claim. Original source-bound manifests remain historical.
+
+Release correction: the first description-only attempt fixed settings.binding
+but missed the limitations text. Its test/calibration children were deliberately
+interrupted after77s, with source unchanged, receipts and partial source snapshot
+preserved; no completed result was affected. The final describe() receives a
+calibrated flag only after manifest verification and updates both descriptions.
+CLI help now explains the calibration option. Claude reviewed every description
+consumer and corrected the earlier oversight. Rather than add prose-only unit
+tests, verify both fields in the actual full-model R2 life, alongside its raw
+behavioral equality. The unrelated pre-existing invalid-CLI status issue remains
+outside this valid-path release. Restart final checks with fresh v2 outputs.
+
+
+### Completed release verification
+
+The final-source TRAIN confirmation
+`real_visual_binding_confirmation_3405_joint_u6000_v2` reproduces both .90 policy
+rows and raw metric bytes from the original 16-policy search. Its `binding.json`
+is the working manifest. `release-confirmation-audit.json` binds the original
+selection and confirmation artifacts by SHA256; confirmation is not a new search.
+
+All six `real_visual_memory_{2405..2410}_joint_u6000_release_v1` runs pass.
+`release-equality-audit.json` verifies identical raw rows, 768 decision records
+and 768 input blobs; only elapsed time differs in result metrics. The final R2
+life has identical behavior and correctly describes calibrated binding in both
+metadata fields. Each completed runtime run seals all 101 source files.
+
+Actual Claude Opus 5.5 medium completed 38 recorded collaboration rounds, including
+independent final artifact/source review. The full CPU suite passes 957/957,
+zero skips, source unchanged; receipt `assertions_native_release_v2.receipt.json`
+and JUnit `full-suite-native-release-v2.xml`. These review/audit files are in
+`runs/reviews/real_visual_memory_20260924/`. The existing report renderer verifies
+structure; no browser visual QA is claimed. This closes the first native slice,
+with the other rerun families and learning limits above still open.

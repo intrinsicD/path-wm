@@ -7102,3 +7102,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O404
+  timestamp: 2026-09-25T02:35+02:00
+  provenance: ai-suggested
+  content: Within these known synthetic development populations, existing native components can meet the
+    declared persistent identity/visual-memory gates after pathway and training/calibration repairs, without
+    adding a representation or parameters. This does not establish global optimality, fine-detail fidelity,
+    unseen-kind generalization or full-agent learning.
+  context: Full native joint6000 qualification and final-source reproduction; direct records N585–N586.
+  potential_type: claim
+  bound_to:
+  - N585
+  - N586
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O405
+  timestamp: 2026-09-25T02:35+02:00
+  provenance: ai-suggested
+  content: A failure in a surrogate, an arbitrary proxy monitor or a coarse policy search should not by
+    itself diagnose inadequate information in the actual representation. Here training duration fixed
+    the bounded native task; finer grid points were not required by the successful checkpoint.
+  context: Preserved failures and corrections across actual-model repair sequence.
+  potential_type: heuristic
+  bound_to:
+  - N580
+  - N581
+  - N582
+  - N584
+  - N585
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

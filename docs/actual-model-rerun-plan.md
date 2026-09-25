@@ -83,13 +83,14 @@ planning questions for this selected composition, not still-unanswered blockers.
 
 The existing RGB64 multiscale encoder, SlotPerception and broadcast decoder now
 connect through source-validated persistent visual slots. Native persistence,
-source withdrawal, restart and direct decoder parity pass; 958 CPU tests pass.
-The W100 key repair failed the required two-population identity screen. Joint
-training preserved measured perception abilities; the3,000-update model passes
-coarse calibration but fails relocation qualification. Confusable-pair training
-also remains unqualified. A finer TRAIN-only calibration of the fixed joint3000
-checkpoint is running after repairing the hardcoded search grid. No new codec
-or representation has been introduced.
+source withdrawal, restart and direct decoder parity pass. Joint6000, using the
+original architecture and TRAIN-selected.90/.85/.10 policy, passes all six fixed
+development populations2405–2410: relocation62,63,61,63,64,64/64; zero novelmerges;
+all other task gates and contracts pass. Retention passesall12. All earlier
+failures remain preserved.957 final CPU tests pass with no skips and unchanged source. Unused
+confusable-pair augmentation is removed; all six final-source task reruns exactly
+reproduce the qualified results. No new codec or
+representation is introduced. See the owning plan and its aggregate report.
 
 This closes the missing connection for those specific software contracts. It does
 not close fine-detail fidelity, part-wise correction, pose/operator transfer,

@@ -9647,3 +9647,94 @@ tree:
   - runs/reviews/nonlinear_fidelity_20260924/target-isolation-audit.json
   - runs/reviews/nonlinear_fidelity_20260924/full-suite-exit.json
   status: completed
+- id: N580
+  type: pivot
+  title: Use actual native composition instead of extending the surrogate
+  provenance: user
+  timestamp: 2026-09-25T02:35+02:00
+  from: DetailCodec repair as default continuation
+  to: Existing native representation, identified pathway gaps and training; full actual-model reruns
+  trigger: Alex rejects unnecessary architecture additions, requires actual-model testing and jointly
+    planned missing paths, then authorizes implementation with actual Claude Opus 5.5 medium.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N581
+  type: experiment
+  title: Native visual persistence and frozen-key repair distinguish software from quality
+  provenance: ai-executed
+  timestamp: 2026-09-25T02:35+02:00
+  result: Existing RGB/slot/key/decoder connected to source-bound instance memory; persistence, decoder
+    parity, source withdrawal and restart pass. Initial J task fails a relocation population. Frozen-key
+    W1/W100 proxy screens fail; W100 actual 2405 fails59/64 and2406 passes63/64. No architecture incapacity
+    inferred.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N582
+  type: decision
+  title: Make arbitrary cosine proxy diagnostic prospectively
+  provenance: ai-suggested
+  timestamp: 2026-09-25T02:35+02:00
+  choice: Before calibration3404 and evaluation2405/2406, remove ungrounded cosine-quantile proxy as task
+    prerequisite; preserve failed monitor outcomes and original actual task gates.
+  alternatives:
+  - Treat ad-hoc proxy failure as conclusive runtime failure
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N583
+  type: experiment
+  title: Joint and confusable-data candidates preserve negative outcomes
+  provenance: ai-executed
+  timestamp: 2026-09-25T02:35+02:00
+  result: Joint1000, larger identity weight and both confusable augmentation versions fail TRAIN qualification.
+    Joint3000 passes coarse calibration but fails both initial new evaluation populations60/64. Retention
+    passes; no validation-selected threshold or broader representation conclusion. Unused augmentation
+    is later removed after unaugmented candidate succeeds.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N584
+  type: experiment
+  title: Finer TRAIN search fixes a search gap but does not qualify joint3000
+  provenance: ai-executed
+  timestamp: 2026-09-25T02:35+02:00
+  result: Configurable monotone finite threshold grid keeps original gates/selector. TRAIN3405 selects.935
+    with126/128 and zero merges. Six populations give60,64,61,62,61,62/64; one fails. Alternative tie-break/validation-selected
+    thresholds not adopted. Calibration failure alone is not proof of representation incapacity.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N585
+  type: experiment
+  title: Duration-only joint6000 qualifies six native development populations
+  provenance: ai-executed
+  timestamp: 2026-09-25T02:35+02:00
+  result: Fresh6000-update run exactly reproduces first3000 training rows; original226168-parameter architecture,
+    no confusable augmentation. Retention12/12. Full16-policy TRAIN3405 search selects legacy-grid.90/.85/.10
+    with127/128 and zero merges. Fixed six populations give62,63,61,63,64,64/64; novelmerges0/192, native
+    contracts/frozen weights pass. Known development data only.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed
+- id: N586
+  type: experiment
+  title: Final-source confirmation reproduces native task behavior
+  provenance: ai-executed
+  timestamp: 2026-09-25T02:35+02:00
+  result: After unused augmentation removal and report metadata correction, fixed-policy TRAIN confirmation
+    exactly reproduces original selected-policy rows. Six full native release reruns reproduce raw metrics,768
+    decisions and768 inputs. R2 life4/4 presses/restart equality is software-scoped. Actual Claude Opus5.5
+    medium38 recorded rounds independently audits evidence. Final957 tests pass without skips on unchanged
+    source.
+  evidence:
+  - docs/real-visual-memory-plan.md
+  - ara/evidence/tables/native_visual_memory_2026-09-25.json
+  status: completed

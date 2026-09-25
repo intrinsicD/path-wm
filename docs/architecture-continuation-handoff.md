@@ -4,31 +4,42 @@ Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
 **Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
-Actual Claude Opus 5.5 at medium effort is the planning, implementation, review and
-test partner. Native memory/training/calibration is committed through2449864;
-972 CPU tests pass (845.66s, no skips, unchanged source). No alternate codec or
-representation was introduced. Native memory contracts pass; task qualification
-remains open.
+Actual Claude Opus5.5 at medium effort is the planning, implementation, review and
+test partner. The **first native visual-memory task now passes** all six fixed
+development populations. Native source/correction/restart/decoder contracts pass.
+Final cleanup, independent review and regression verification are complete;
+other rerun families remain open.
 
-Coarse-grid training repairs failed; all results and frozen sources remain.
-The calibrator now accepts explicit TRAIN thresholds, with source-bound policies.
-For the fixed joint3000 checkpoint, TRAIN3405 selects.935/.885/.10 with126/128
-relocated matches and zero merges. Its six task runs give60,64,61,62,61,62/64
-on2405–2410: five pass,2405 FAILS by one match. Other task metrics1,novelmerges0,
-all persistence/restart/correction contracts pass. Aggregate:
-`runs/real_visual_memory_comparison_joint_fine_v1/report.html`.
+Working checkpoint: `runs/real_visual_joint_repair_3501_u6000_v1`.
+Policy: `runs/real_visual_binding_confirmation_3405_joint_u6000_v2/binding.json`
+(match.90,new.85,margin.10; TRAIN3405,64scenes). Training is duration-only versus
+joint3000: first3000rows exactly equal;6000updates,863.94s,3.418GiB reserved,C1pass.
+Retention3506 passesall12. Actual2405–2410 relocation counts are62,63,61,63,64,64/64;
+relocated-lamp accuracy has the same counts. Acquisition/same-layout identity,
+lamps and novel detection1;novelmerges0/192;contracts/frozenweights pass. Independent
+raw/source/input audits pass. Regular four-scene R2 life gives4/4presses and exact
+restart (workflow-only, other learned R2 modules untrained).
 
-Next: Claude round33 independently diagnoses actual misses and reviews whether
-TRAIN decision margins justify replacing the highest-threshold tie-break. No
-new selection rule or fit is adopted yet. Do not pick thresholds from validation.
-No conditional cleanup is activated: removing the unused twins augmentation was
-planned only after full qualification. All six populations remain required;
-all are development/regression data now. No sealed/new-kind claim.
+Report: `runs/real_visual_memory_comparison_joint_u6000_release_v1/report.html`.
+Reproduction: [experiment guide](experiments.md). Source61826ca includes final cleanup and metadata correction;2449864 added
+configurable TRAIN calibration.957 final CPU tests pass with no skips and unchanged source.
+Unused confusable-pair augmentation is removed; native short-run equivalence is
+exact and all failed runs/code versions remain preserved. Actual Claude completed
+38 collaboration rounds. A report-description correction required a new source-bound
+manifest: fixed-policy TRAIN confirmation equals the original .90 search rows,
+and all six full task reruns plus R2 life exactly reproduce behavior. No trained
+weights, runtime decisions or selection rules changed. The .90 selection is also
+a legacy grid point; this candidate did not require the finer points.
+
+All populations are known development/regression data. No sealed/new-kind,
+fine-detail, pose/operator-transfer or full-agent claim. Earlier key-only,
+training-data and coarse-policy failures remain in the owning plan; do not
+rewrite them as successes.
 
 Actual Claude sessionf06c55a5-52cd-4530-8d0f-42cb9ac6ee42, CLI modelclaude-opus-5-5,
 explicit medium effort. Reviews/receipts in `runs/reviews/real_visual_memory_20260924/`.
 Alex authorized Claude as a same-permission implementation partner; the older
-public-only boundary is overridden for this task. Other rerun families remain open.
+public-only boundary is overridden for this task.
 
 **Current request:** [Actual-model reruns and joint gap plan](actual-model-rerun-plan.md)
 owns the audit. Prefer the real model; any downscaled check must be followed by the

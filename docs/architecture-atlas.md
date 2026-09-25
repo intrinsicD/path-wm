@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-24, repository snapshot `2449864 native memory and configurable TRAIN calibration;972 CPU tests; five of six task populations pass, qualification open`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-24, repository snapshot `61826ca final native memory/calibration; joint6000 passes six fixed development populations; final cleanup and 957-test verification complete`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -46,7 +46,7 @@ flowchart TB
     class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
     class belief discussion_needs_discussion;
-    memory["Local / Global Context + optional World State → §5/13<br/>Internal split to discuss · external entities/evidence<br/>Validated: Storage / causal reads / bounded lexical selection<br/>Discussion still pending"]
+    memory["Local / Global Context + optional World State → §5/13<br/>Internal split to discuss · external entities/evidence<br/>Validated: Storage / causal reads / bounded lexical and native visual memory<br/>Discussion still pending"]
     class memory discussion_validated;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
     class workspace discussion_discussed;
@@ -1395,6 +1395,6 @@ Human-learning comparison (plan section21): prior structure, cross-case comparis
 
 CI1: Eingangsslot-Farbprobe100%; neuer Kern-Farbpfad bei fester Wahrnehmung Basis/Farbpaar100%, Positionspaar99,22%, Erhaltung bestanden. Encoderadaption: Positionspaar100%, Form99,32→71,88% und Größe100→95,21%; Erhaltung verfehlt, nicht übernommen. Ein Seed, externe Zeigeposition, synthetische Ansichten; Split nur im Diagnosetraining, keine volle Vortrainings-/Induktionsvalidierung. Berichte runs/core_information_ci1/, Rohdaten unabhängig geprüft.
 
-Native memory software:972 CPU tests and runtime persistence/correction/restart contracts pass. Finer TRAIN calibration of existing joint3000 selects.935, improving runtime results to five of six passing populations.2405 remains60/64 relocated matches (requires61); all other metrics and novel-object checks pass. Qualification remains open. Failed training variants and coarse policies are preserved; no replacement representation, fine-detail or full-agent claim. See real-visual-memory-plan.md.
+Native visual-memory task passes all six fixed development populations with joint6000 and TRAIN-selected .90/.85/.10 policy: relocation62,63,61,63,64,64/64; zero novel merges; persistence, decoder parity, correction and restart pass. Perception retention passes12/12. Original architecture and parameter count; unused failed augmentation removed with source/results preserved.957 final CPU tests pass, zero skips, source unchanged. Six final-source task reruns exactly reproduce the qualified results. No sealed-test, new-kind, fine-detail or full-agent claim. See real-visual-memory-plan.md.
 
 Source: [docs/integrated-architecture-plan.md](../docs/integrated-architecture-plan.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/shared-abstraction-spec.md](../docs/shared-abstraction-spec.md), [pathwm/models/multiscale.py · FeaturePyramid:35](../pathwm/models/multiscale.py), [pathwm/world_state/store.py · WorldStore:189](../pathwm/world_state/store.py), [pathwm/models/slots.py · SlotPerception:112](../pathwm/models/slots.py), [pathwm/models/latent_core.py · LatentCore:46](../pathwm/models/latent_core.py), [pathwm/world_state/concepts.py · ConceptAgent:278](../pathwm/world_state/concepts.py), [pathwm/data/rule_world.py · TaskContract:486](../pathwm/data/rule_world.py), [pathwm/evaluation/rule_world.py · run_life:410](../pathwm/evaluation/rule_world.py), [experiments/latent_agent.py](../experiments/latent_agent.py), [pathwm/world_state/session.py · WorldSession:92](../pathwm/world_state/session.py), [pathwm/world_state/unified.py · UnifiedAgent:189](../pathwm/world_state/unified.py), [experiments/unified_session.py](../experiments/unified_session.py), [tests/test_unified_session.py](../tests/test_unified_session.py), [tests/test_unified_testimony.py](../tests/test_unified_testimony.py), [tests/test_unified_claim_provenance.py](../tests/test_unified_claim_provenance.py), [docs/real-visual-memory-plan.md](../docs/real-visual-memory-plan.md), [tests/test_instance_visual_memory.py](../tests/test_instance_visual_memory.py).

@@ -216,3 +216,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Frozen representation transfer,24 September](tables/representation_transfer_2026-09-24.json): two codecs × two populations pass affine-map gates; pixel-channel ridge is stronger. Nonlinear threshold output fidelity remains poor. Four actual Opus5.5 medium rounds, raw and target-isolation audits; no neural updates or learned-induction claim.
 
 - [Nonlinear output fidelity,24 September](tables/nonlinear_fidelity_2026-09-24.json): two codecs × two populations identify a fixed affine decoder-range blocker; optimal numerical MSE0.0308–0.0344 versus0.002 gate. Raw threshold control passes; weights/old outputs unchanged. Independent raw/poison audits and actual Opus5.5 medium review; no neural training or learned-induction claim.
+
+Native visual memory on the actual model: [evidence](tables/native_visual_memory_2026-09-25.json), [plan](../../docs/real-visual-memory-plan.md). Six fixed development populations pass; training/calibration failures and final-source confirmation retained. No fine-detail, new-kind or full-agent claim.
