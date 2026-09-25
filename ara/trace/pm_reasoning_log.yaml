@@ -3093,3 +3093,11 @@ entries:
   - Cache exactness is dependencyanalysis, not bitwise or timingvalidation. Qwen fullprefixreuse
     distinguished from native fixedcontextprojectionreuse. No implementation authorized
     by mere applicabilityquestion.
+- turn: 2026-09-25_001#9
+  notes:
+  - Explicit approval promotes onlyO414 fixedcontextcache proposal toA25; no broader
+    Qwenadoption or quality claim.
+  - N600 records actualfullnativebit-identical trajectories andtiming; failedfirstreport
+    preserved/repaired; all3trials pass so no best-runselection.
+  - Trainingresumeexact; no parameter or target-selfattention caching. Prior broadfactorization/editingobservations
+    remainunresolved, no stale/abandonment promotion.

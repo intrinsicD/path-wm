@@ -936,3 +936,12 @@ supplied entity/lamp requests through real stored components; it does not implem
 language instruction following, learned core routing, source-free creation or
 other scene factors. See [the code and generation plan](image-code-contract-plan.md)
 for exact checkpoints, evidence, budgets and qualification gates.
+
+
+Native context-cache comparison (actual trained flow3711/3712 and P1Edecoder):
+`python -m experiments.context_cache --output NEW_RUN`. Requires the named completed
+native checkpoints and saved full-refinement source codes. It compares all16solver
+steps, final codes and decoded pixels, then measures cached/uncached producer and
+producer+decoder latency at batch1and8 with30paired repeats. This is an inference
+optimization check, not a new editing-quality evaluation. Settings and gate are in
+the [image-code plan](image-code-contract-plan.md#p4-invocation-local-fixed-context-kv-reuse-approved).

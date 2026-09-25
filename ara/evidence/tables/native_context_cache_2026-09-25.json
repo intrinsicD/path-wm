@@ -1,0 +1,218 @@
+{
+  "run": "runs/native_context_cache_v3",
+  "result_sha256": "a3b63eef61ed4ef9aeed106fb627f5bd3bebca57a5f3504c196410330ef48180",
+  "result": {
+    "checks": {
+      "3711_frozen": true,
+      "3711_rng": true,
+      "3711_train_0_0": true,
+      "3711_train_0_1": true,
+      "3711_train_16_0": true,
+      "3711_train_16_1": true,
+      "3711_train_24_0": true,
+      "3711_train_24_1": true,
+      "3711_train_32_0": true,
+      "3711_train_32_1": true,
+      "3711_train_40_0": true,
+      "3711_train_40_1": true,
+      "3711_train_48_0": true,
+      "3711_train_48_1": true,
+      "3711_train_56_0": true,
+      "3711_train_56_1": true,
+      "3711_train_8_0": true,
+      "3711_train_8_1": true,
+      "3711_validation_0_0": true,
+      "3711_validation_0_1": true,
+      "3711_validation_16_0": true,
+      "3711_validation_16_1": true,
+      "3711_validation_24_0": true,
+      "3711_validation_24_1": true,
+      "3711_validation_32_0": true,
+      "3711_validation_32_1": true,
+      "3711_validation_40_0": true,
+      "3711_validation_40_1": true,
+      "3711_validation_48_0": true,
+      "3711_validation_48_1": true,
+      "3711_validation_56_0": true,
+      "3711_validation_56_1": true,
+      "3711_validation_8_0": true,
+      "3711_validation_8_1": true,
+      "3712_frozen": true,
+      "3712_rng": true,
+      "3712_train_0_0": true,
+      "3712_train_0_1": true,
+      "3712_train_16_0": true,
+      "3712_train_16_1": true,
+      "3712_train_24_0": true,
+      "3712_train_24_1": true,
+      "3712_train_32_0": true,
+      "3712_train_32_1": true,
+      "3712_train_40_0": true,
+      "3712_train_40_1": true,
+      "3712_train_48_0": true,
+      "3712_train_48_1": true,
+      "3712_train_56_0": true,
+      "3712_train_56_1": true,
+      "3712_train_8_0": true,
+      "3712_train_8_1": true,
+      "3712_validation_0_0": true,
+      "3712_validation_0_1": true,
+      "3712_validation_16_0": true,
+      "3712_validation_16_1": true,
+      "3712_validation_24_0": true,
+      "3712_validation_24_1": true,
+      "3712_validation_32_0": true,
+      "3712_validation_32_1": true,
+      "3712_validation_40_0": true,
+      "3712_validation_40_1": true,
+      "3712_validation_48_0": true,
+      "3712_validation_48_1": true,
+      "3712_validation_56_0": true,
+      "3712_validation_56_1": true,
+      "3712_validation_8_0": true,
+      "3712_validation_8_1": true,
+      "decoder_final_frozen": true,
+      "memory_budget": true,
+      "source_unchanged": true,
+      "time_budget": true,
+      "timing_frozen": true,
+      "timing_rng": true
+    },
+    "default_gate": true,
+    "equivalence_peak_reserved": {
+      "3711": 243269632,
+      "3712": 161480704
+    },
+    "evidence": {
+      "gpu_before": "3251012, 334 MiB\n",
+      "gpu_timing_1_after": "3251012, 172 MiB\n",
+      "gpu_timing_1_before": "3251012, 340 MiB\n",
+      "gpu_timing_8_after": "3251012, 260 MiB\n",
+      "gpu_timing_8_before": "3251012, 172 MiB\n",
+      "inputs": {
+        "runs/native_code_refinement_confirmation_v1/train-0-0.code.pt": "0370a3b835daa2a164de4e4596427f5579ce6a14b479b3c07519a0386d1b9e4c",
+        "runs/native_code_refinement_confirmation_v1/validation-0-0.code.pt": "f9fdf76f5ae40e084978e11e28310cf34489dc850b9dd187122081ab9e88c4d4"
+      },
+      "runs/native_memory_edit_3711_flow_v1/last.pt": "164ccba9d017f164b6b380b29ff468e643d9e1dc5b446388d1be3f15f36c8d53",
+      "runs/native_memory_edit_3712_flow_v1/last.pt": "88924d069ec59778718e7a895dd948f10130937c7bab262ee3e65953efd3e4d1"
+    },
+    "limitations": [
+      "Cache numerical/performance validation only; no generation-quality claim.",
+      "Native full configuration; direct percept bindings, not a new memory evaluation.",
+      "Existing report renderer; structural QA."
+    ],
+    "seconds": 21.990538891986944,
+    "timings": {
+      "1_False": {
+        "cached_seconds": 0.02218669152352959,
+        "kv_bytes": 394752,
+        "memory": {
+          "False": {
+            "allocated": 31954944,
+            "reserved": 46137344
+          },
+          "True": {
+            "allocated": 32412160,
+            "reserved": 46137344
+          }
+        },
+        "prepared_bytes": 66049,
+        "ratio": 0.7717831406179664,
+        "total_cache_bytes": 460801,
+        "uncached_seconds": 0.028747313015628606
+      },
+      "1_True": {
+        "cached_seconds": 0.03016123449197039,
+        "kv_bytes": 394752,
+        "memory": {
+          "False": {
+            "allocated": 43315712,
+            "reserved": 67108864
+          },
+          "True": {
+            "allocated": 43315712,
+            "reserved": 67108864
+          }
+        },
+        "prepared_bytes": 66049,
+        "ratio": 0.8151696896120091,
+        "total_cache_bytes": 460801,
+        "uncached_seconds": 0.03699994599446654
+      },
+      "8_False": {
+        "cached_seconds": 0.042975162010407075,
+        "kv_bytes": 3158016,
+        "memory": {
+          "False": {
+            "allocated": 37969408,
+            "reserved": 50331648
+          },
+          "True": {
+            "allocated": 42491904,
+            "reserved": 50331648
+          }
+        },
+        "prepared_bytes": 528392,
+        "ratio": 0.9067027781975193,
+        "total_cache_bytes": 3686408,
+        "uncached_seconds": 0.04739718796918169
+      },
+      "8_True": {
+        "cached_seconds": 0.05451862601330504,
+        "kv_bytes": 3158016,
+        "memory": {
+          "False": {
+            "allocated": 125803520,
+            "reserved": 159383552
+          },
+          "True": {
+            "allocated": 125803520,
+            "reserved": 159383552
+          }
+        },
+        "prepared_bytes": 528392,
+        "ratio": 0.9197766667859585,
+        "total_cache_bytes": 3686408,
+        "uncached_seconds": 0.059273765014950186
+      }
+    },
+    "valid": true
+  },
+  "resume": {
+    "cuda": true,
+    "model": true,
+    "numpy": true,
+    "optimizer": true,
+    "random": true,
+    "rows": true,
+    "sampler": true,
+    "scheduler": true,
+    "schema": true,
+    "step": true,
+    "torch": true
+  },
+  "reviews": [
+    "runs/reviews/scene_capabilities_20260925/cache-code-review.json",
+    "runs/reviews/scene_capabilities_20260925/cache-benchmark-review.json"
+  ],
+  "cpu_regression": {
+    "command": "python -m pytest -q -p no:cacheprovider",
+    "exit_code": 0,
+    "passed": 988,
+    "receipt": "runs/reviews/scene_capabilities_20260925/cache-implementation.json",
+    "log": "runs/reviews/scene_capabilities_20260925/cache-full-cpu.log",
+    "source_sha256": "9d352a06e39cf376bda04c6cc7dfc975621f2ff38cdfe81ab746d0549e2add84",
+    "tests_sha256": "df4898b253d461ab4feb5fe580880406e726ec6fe21915c0df4fa1269dfa8e1c",
+    "notes": "Final background full suite; prior runs interrupted and not counted. Parent narrowed cache traversal before this final run."
+  },
+  "raw_audit": {
+    "all_batches_pass": true,
+    "distinct_source_images": 32,
+    "equivalence_batches": 64,
+    "max_code_error": 0.0,
+    "max_rgb_error": 0.0,
+    "max_trajectory_error": 0.0,
+    "request_outputs": 512,
+    "timing_rows": 240
+  }
+}

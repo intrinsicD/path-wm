@@ -188,6 +188,13 @@ The direct variant regresses clean features; the flow variant integrates a learn
 field from locally seeded noise. Explicit sample IDs control reproducible noise
 without entering network context. Generation progress never updates world time.
 Training uses detached codec targets; generator-only inference has no encoder input.
+In eval mode with autograd disabled, flow sampling prepares fixed context and each
+attention block's context keys/values once per generation call. The cache never
+outlives that call; it adds no weights or checkpoint fields. Pass
+`features(..., cache_context=False)` for the uncached reference. Training,
+grad-enabled execution and direct regression use the original path, even if
+`cache_context=True` is passed. Target self-attention remains dynamic.
+See [native cache validation](image-code-contract-plan.md#p4-invocation-local-fixed-context-kv-reuse-approved).
 Old exports retain StateFeatureDecoder. The [first comparison](image-output-plan.md#conditional-generator-results)
 and follow-up fail capability gates; these are experimental weights, not a default
 upgrade. This recipe trains a fixed selected-object request through working/reasoning

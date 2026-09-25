@@ -365,7 +365,7 @@ sessions:
     contract proposed for user goal: featureaccess, faithful inspection and generation; no implementation.
     Alex generally approves replay slice and proposes optional model-controlled DiT with direct bypass.
     Memory/KG-routed generation and editable scene factors required; learnedbindings remainplanned.'
-  turn_count: 8
-  events_count: 30
+  turn_count: 9
+  events_count: 33
   claims_touched: []
   open_threads: 3

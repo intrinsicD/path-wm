@@ -243,3 +243,14 @@
 - **Adoption**: N513; user responds “Ja, gute Idee” to targeted TaskPolicy extension. [Discussion and current-code boundary](../../../docs/architecture-walkthrough.md#wer-entscheidet).
 - **Implementation references**: [Current TaskPolicy](../../../pathwm/models/tasks.py), [current WorldSession](../../../pathwm/world_state/session.py). These establish extension points, not completion of the new behavior.
 - **Limits**: Design direction only. No context-control implementation, selected head/action schema, training budget, independent usefulness or capability claim. Current graph query remains caller-supplied.
+
+
+## A25: Invocation-local fixed-context KV reuse in native flow sampling
+
+- **Design**: Prepare normalized/projected context and each existing cross-attention layer's keys/values once per frozen inference call. Keep target attention dynamic; preserve training/grad/direct paths and the uncached reference. No cross-request cache or new model weights.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O414; Alex explicitly authorizes implementation and actual-model comparison.
+- **Adoption/implementation**: N599; [native generator](../../../pathwm/models/conditional_image.py), [comparison recipe](../../../experiments/context_cache.py), [full-configuration checks](../../../tests/test_conditional_image.py).
+- **Evidence**: N600; [bound local measurements](../../evidence/tables/native_context_cache_2026-09-25.json), [P4 plan/results](../../../docs/image-code-contract-plan.md#p4-invocation-local-fixed-context-kv-reuse-approved).
+- **Limits**: An execution optimization, not a new representation or editing capability. Tested FP32 paths; mathematical equivalence is not a universal bitwise guarantee. Local RTX3050 timing with CPU regression alongside; no dedicated-system throughput claim.

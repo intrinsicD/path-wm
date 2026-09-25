@@ -9908,3 +9908,30 @@ tree:
   - docs/qwen-image-21-comparison.md
   - runs/reviews/scene_capabilities_20260925/qwen21-cache-review.json
   status: completed
+- id: N599
+  type: decision
+  title: Implement approved invocation-local KV reuse
+  provenance: user
+  timestamp: 2026-09-25T12:35+02:00
+  choice: Alex says Yes please do that to same-model fixed-context KV optimization
+    and actualtrained-model equivalence/performance check.
+  alternatives:
+  - Continue recomputing fixedcontext everyflowstep
+  evidence:
+  - docs/image-code-contract-plan.md
+  - docs/qwen-image-21-comparison.md
+  status: completed
+- id: N600
+  type: experiment
+  title: Native context cache matches outputs and reduces local inference latency
+  provenance: ai-executed
+  timestamp: 2026-09-25T12:35+02:00
+  result: 'Two trained checkpoints,512request outputs from32source images,16steps:
+    all states/velocities/finalcodes/RGB bitidentical in testedFP32CUDA. All3timing
+    trials pass fixedadoptiongate. Final producer median28.747to22.187ms batch1 and47.397to42.975ms
+    batch8; completepath37.000to30.161ms and59.274to54.519ms. Exact3update nativeGPUresume
+    passes. No new parameters, quality or arbitraryprecision claim.'
+  evidence:
+  - ara/evidence/tables/native_context_cache_2026-09-25.json
+  - runs/native_context_cache_v3/report.html
+  status: completed

@@ -3,6 +3,7 @@
 import math
 import torch
 from torch import nn
+from torch.nn import functional as F
 from .features import validate
 
 
@@ -54,20 +55,32 @@ class OutputBlock(nn.Module):
             nn.Linear(width, 2 * width), nn.GELU(), nn.Linear(2 * width, width)
         )
 
-    def forward(self, x, context, valid):
+    def forward(self, x, context, valid, kv=None):
+        """`kv` is this block's `_context_kv(context)`; it replaces only the
+        context key/value projections, with the same weights, query and output."""
         z = self.norms[0](x)
         x = x + self.self_attention(z, z, z, need_weights=False)[0]
-        x = (
-            x
-            + self.context_attention(
-                self.norms[1](x),
-                context,
-                context,
-                key_padding_mask=~valid,
-                need_weights=False,
+        z = self.norms[1](x)
+        if kv is None:
+            z = self.context_attention(
+                z, context, context, key_padding_mask=~valid, need_weights=False
             )[0]
-        )
+        else:
+            a = self.context_attention
+            b, n, w = z.shape
+            q = F.linear(z, a.in_proj_weight[:w], a.in_proj_bias[:w])
+            q = q.view(b, n, a.num_heads, -1).transpose(1, 2)
+            z = F.scaled_dot_product_attention(q, *kv, attn_mask=valid[:, None, None])
+            z = a.out_proj(z.transpose(1, 2).reshape(b, n, w))
+        x = x + z
         return x + self.mlp(self.norms[2](x))
+
+    def _context_kv(self, context):
+        """Fused key/value projection of fixed context, as [B,heads,N,W/heads]."""
+        a = self.context_attention
+        b, n, w = context.shape
+        kv = F.linear(context, a.in_proj_weight[w:], a.in_proj_bias[w:])
+        return kv.view(b, n, 2, a.num_heads, -1).permute(2, 0, 3, 1, 4).unbind(0)
 
 
 class ConditionalFeatureGenerator(nn.Module):
@@ -157,6 +170,9 @@ class ConditionalFeatureGenerator(nn.Module):
 
     def field(self, features, progress, context, valid=None):
         validate(features, self.feature_spec)
+        return self._field(features, progress, *self._context(context, valid))
+
+    def _context(self, context, valid):
         if (
             context.ndim != 3
             or context.shape[-1] != self.context_width
@@ -176,7 +192,10 @@ class ConditionalFeatureGenerator(nn.Module):
         context = context.masked_fill(~valid[..., None], 0)
         if not torch.isfinite(context).all():
             raise ValueError("Nonfinite valid context")
-        context = self.context_projection(self.context_norm(context))
+        return self.context_projection(self.context_norm(context)), valid
+
+    def _field(self, features, progress, context, valid, kv=None):
+        kv = kv or {}
         b = len(context)
         t = torch.as_tensor(
             progress, device=context.device, dtype=context.dtype
@@ -196,11 +215,11 @@ class ConditionalFeatureGenerator(nn.Module):
                 + time
             )
             for block in self.blocks[k]:
-                x = block(x, context, valid)
+                x = block(x, context, valid, kv.get(block))
             scales.append(x)
         x = torch.cat(scales, 1)
         for block in self.fusion:
-            x = block(x, context, valid)
+            x = block(x, context, valid, kv.get(block))
         out = {}
         offset = 0
         for k, s in self.feature_spec.items():
@@ -214,8 +233,23 @@ class ConditionalFeatureGenerator(nn.Module):
         return out
 
     def features(
-        self, context, trace=None, *, seed=None, sample_ids=None, steps=None, valid=None
+        self,
+        context,
+        trace=None,
+        *,
+        seed=None,
+        sample_ids=None,
+        steps=None,
+        valid=None,
+        cache_context=None,
     ):
+        """`cache_context` (flow only): prepare the context and each block's context
+        keys/values once per call and reuse them for every solver step. Default
+        None enables it only in eval mode without autograd. It is always disabled
+        in training mode or under autograd, including explicit True, so gradients
+        use the unchanged path; False forces that path. The cache is a local of
+        this call, never stored, so changed context, mask, weights or dtype are
+        picked up by the next call. Outputs agree to float rounding, not bitwise."""
         if trace is not None:
             raise ValueError("Generator attention trace is not implemented")
         count = len(context)
@@ -243,11 +277,24 @@ class ConditionalFeatureGenerator(nn.Module):
                 ).to(context)
                 for k, s in self.feature_spec.items()
             }
-            result = integrate(
-                lambda x, t: self.field(x, t, context, valid),
-                x,
-                self.steps if steps is None else steps,
+            cached = cache_context is not False and not (
+                self.training or torch.is_grad_enabled()
             )
+            if cached:
+                prepared = self._context(context, valid)
+                kv = {
+                    m: m._context_kv(prepared[0])
+                    for group in [*self.blocks.values(), self.fusion]
+                    for m in group
+                }
+
+                def field(x, t):
+                    validate(x, self.feature_spec)
+                    return self._field(x, t, *prepared, kv)
+
+            else:
+                field = lambda x, t: self.field(x, t, context, valid)
+            result = integrate(field, x, self.steps if steps is None else steps)
         return self.unstandardize(result)
 
     def forward(self, context, **kwargs):

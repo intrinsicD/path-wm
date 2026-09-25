@@ -366,3 +366,144 @@ def test_sampled_image_supervision_matches_full_manual_unroll_gradient():
     assert all(p.grad is None for p in g.head.parameters())
     with pytest.raises(ValueError, match="Decoded-image path"):
         objective(g, cache, [0, 1], 1, decoded_image_path="unknown")
+
+
+def native_editor(objective="flow", seed=91):
+    """The actual native editor configuration: width 64, 16x16 fine grid, depth 2,
+    fusion 1, 16 flow steps, 256 source tokens plus one request token."""
+    from experiments.unified_session import EDIT_STEPS, WIDTH, edit_model
+
+    torch.manual_seed(seed)
+    model = edit_model(objective, EDIT_STEPS).eval()
+    g = model["generator"]
+    g.calibrate({"fine": torch.randn(4, WIDTH, 16, 16) * 3 + 1})
+    source = torch.randn(2, 256, WIDTH)
+    with torch.no_grad():
+        context = model["request"].context(
+            source, torch.randn(2, WIDTH), torch.tensor([0, 1])
+        )
+    return model, g, source, context
+
+
+def close(a, b):
+    return a.keys() == b.keys() and all(
+        torch.allclose(a[k], b[k], atol=2e-5, rtol=2e-5) for k in a
+    )
+
+
+def attributes(module):
+    return {name: set(vars(m)) for name, m in module.named_modules()}
+
+
+def count_context_work(g, monkeypatch):
+    from pathwm.models.conditional_image import OutputBlock
+
+    counts = dict(norm=0, attention=0, kv=0)
+    original = OutputBlock._context_kv
+
+    def kv(self, context):
+        counts["kv"] += 1
+        return original(self, context)
+
+    monkeypatch.setattr(OutputBlock, "_context_kv", kv)
+    g.context_norm.register_forward_hook(lambda *_: counts.update(norm=counts["norm"] + 1))
+    for m in g.modules():
+        if isinstance(m, OutputBlock):
+            m.context_attention.register_forward_hook(
+                lambda *_: counts.update(attention=counts["attention"] + 1)
+            )
+    return counts
+
+
+def test_native_context_cache_matches_baseline_and_prepares_context_once(monkeypatch):
+    from pathwm.models.conditional_image import edit_code
+
+    model, g, source, context = native_editor()
+    counts = count_context_work(g, monkeypatch)
+    keys, state = list(g.state_dict()), {k: v.clone() for k, v in g.state_dict().items()}
+    before = attributes(model)
+    rng = torch.get_rng_state().clone()
+    with torch.no_grad():
+        base = g.features(context, sample_ids=[3, 5], cache_context=False)
+        assert counts == dict(norm=16, attention=48, kv=0)
+        counts.update(norm=0, attention=0)
+        cached = g.features(context, sample_ids=[3, 5])  # default: eval and no grad
+        assert counts == dict(norm=1, attention=0, kv=3)
+        explicit = g.features(context, sample_ids=[3, 5], cache_context=True)
+        edited = edit_code("edit", source, generator=g, context=context, sample_ids=[3, 5])
+    assert close(base, cached) and torch.equal(cached["fine"], explicit["fine"])
+    assert torch.allclose(
+        edited, source + base["fine"].flatten(2).transpose(1, 2), atol=2e-5, rtol=2e-5
+    )
+    assert edit_code("reconstruct", source, generator=g, context=context) is source
+    assert torch.equal(rng, torch.get_rng_state())
+    assert list(g.state_dict()) == keys == list(native_editor()[1].state_dict())
+    assert all(torch.equal(v, g.state_dict()[k]) for k, v in state.items())
+    assert attributes(model) == before
+
+
+def test_native_context_cache_keeps_padding_masks_and_nonfinite_padding():
+    _, g, _, context = native_editor()
+    valid = torch.ones(context.shape[:2], dtype=torch.bool)
+    valid[0, 200:256] = False
+    valid[1, 10:50] = False
+    poisoned = context.clone()
+    poisoned[0, 200:256] = float("nan")
+    poisoned[1, 10:50] = float("inf")
+    with torch.no_grad():
+        base = g.features(context, valid=valid, cache_context=False)
+        clean = g.features(context, valid=valid)
+        dirty = g.features(poisoned, valid=valid)
+        unmasked = g.features(context)
+        with pytest.raises(ValueError, match="valid tokens"):
+            g.features(context, valid=valid & False)
+    assert close(base, clean) and torch.equal(clean["fine"], dirty["fine"])
+    assert torch.isfinite(dirty["fine"]).all()
+    assert not torch.allclose(clean["fine"], unmasked["fine"], atol=1e-3)
+
+
+def test_native_context_cache_is_rebuilt_for_changed_context_weights_and_dtype():
+    model, g, source, context = native_editor()
+    width = g.width
+    with torch.no_grad():
+        first = g.features(context)
+        changed = model["request"].context(
+            source, torch.randn(2, width), torch.tensor([1, 0])
+        )
+        second = g.features(changed)
+        assert close(second, g.features(changed, cache_context=False))
+        assert not torch.allclose(first["fine"], second["fine"], atol=1e-3)
+        g.fusion[0].context_attention.in_proj_weight[width:].mul_(1.5)
+        g.blocks["fine"][0].context_attention.in_proj_bias[width:].add_(0.3)
+        g.context_norm.weight.mul_(0.7)
+        third = g.features(changed)
+        assert close(third, g.features(changed, cache_context=False))
+        assert not torch.allclose(second["fine"], third["fine"], atol=1e-3)
+        g.double()
+        wide = g.features(changed.double())
+        assert wide["fine"].dtype == torch.float64
+        assert close(wide, g.features(changed.double(), cache_context=False))
+
+
+@pytest.mark.parametrize("mode", ["train", "eval_grad", "direct"])
+def test_native_context_cache_falls_back_to_the_unchanged_path(mode, monkeypatch):
+    from pathwm.models.conditional_image import OutputBlock
+
+    _, g, _, context = native_editor("direct" if mode == "direct" else "flow")
+    g.train(mode == "train")
+    monkeypatch.setattr(
+        OutputBlock, "_context_kv", lambda *_: pytest.fail("context cache built")
+    )
+    params = [p for p in g.parameters() if p.requires_grad]
+    runs = []
+    for cache in [True, None, False]:
+        leaf = context.clone().requires_grad_(True)
+        with torch.set_grad_enabled(mode != "direct"):
+            out = g.features(leaf, sample_ids=[3, 5], cache_context=cache)["fine"]
+        if mode == "direct":
+            runs.append((out,))
+            continue
+        grads = torch.autograd.grad(out.square().mean(), [leaf, *params])
+        runs.append((out, *grads))
+    for other in runs[1:]:
+        assert all(torch.equal(a, b) for a, b in zip(runs[0], other))

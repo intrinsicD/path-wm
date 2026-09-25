@@ -2,8 +2,8 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T12:10+02:00
-  turn_count: 8
+  last_turn: 2026-09-25T12:40+02:00
+  turn_count: 9
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
     access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
@@ -219,6 +219,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Fixed-context projectionreuse proposed; no benchmark or architecturechange
+- turn: 9
+  type: decision
+  id: N599
+  routing: direct
+  provenance: user
+  summary: Implement approved invocation-local KV reuse
+- turn: 9
+  type: experiment
+  id: N600
+  routing: direct
+  provenance: ai-executed
+  summary: Native context cache matches outputs and reduces local inference latency
+- turn: 9
+  type: architecture
+  id: A25
+  routing: crystallized
+  provenance: user-revised
+  summary: O414 promoted by explicit cacheimplementation authorization
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;

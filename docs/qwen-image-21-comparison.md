@@ -179,3 +179,10 @@ an inference-length solver loop, so the main expected benefit is sampling/editin
 Any later differentiable rollout must preserve gradient accumulation through shared
 preparation. Standing principles: prepare once, reuse only invariants, keep fine
 evidence, measure compute/memory/latency separately and test the actual model.
+
+Implementation follow-through: Alex approved the cache slice. Native per-call K/V
+reuse now passes two-trained-checkpoint trajectory/code/RGB equivalence, three local
+timing trials and exact training-resume checks. Default inference adoption passes
+the predeclared gate. See [P4 results](image-code-contract-plan.md#p4-invocation-local-fixed-context-kv-reuse-approved)
+and `runs/native_context_cache_v3/report.html`. The proposal text above records the
+pre-implementation reasoning; this addendum records its scoped implementation.

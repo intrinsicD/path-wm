@@ -717,3 +717,35 @@ opt-in or remove it based on the measured cause. Timing is local, not a general
 speed guarantee. Report owns raw data, identity/source and standalone existing-renderer
 HTML; no new reporting framework. Principles: prepare once, scope invariant ownership,
 preserve retained information and measure actual execution separately from quality.
+
+
+P4 measured result: `runs/native_context_cache_v3/report.html` passes all numerical,
+frozen-state/RNG, source, resource and default-adoption gates. Both trained seeds,
+32source images x4entity/state requests x2sampleIDs =256outputs per seed; all16
+states/velocities, final native codes and decodedRGB are bit-identical on the tested
+FP32CUDA path. This is512request outputs, not512distinct source images. Fivewarmups,
+30alternating paired repeats, no concurrentGPUprocesses; CPU regression ran alongside,
+so these are local developer-machine timings, not dedicated-system throughput.
+
+| Batch | Producer uncached / cached | Producer + native decoder uncached / cached |
+| --- | --- | --- |
+|1|28.747 /22.187ms|37.000 /30.161ms|
+|8|47.397 /42.975ms|59.274 /54.519ms|
+
+ProjectedK/V occupy394,752bytes per sample; preparedcontext/mask add66,049bytes,
+for460,801bytes of cache tensors (batch8:3,686,408bytes). Actual peakallocation and
+reservation are separately in the result. No model parameters/checkpoint fields
+were added. Inference eval/no-grad flow caching is now the default; explicit
+`cache_context=False` keeps the reference. Training/grad/direct paths are unchanged.
+The samefullnative3-update GPU training, paused at1then resumed, matches uninterrupted
+weights/optimizer/rows/all RNG/sampler fields exactly (`cache-resume-check.json`).
+The first report needed a missing row `split` label; its numerical results were
+preserved, report repaired with an audit receipt, and v2/v3 regenerate independently.
+Allthree timing trials pass; v3 adds an explicit post-timing frozen-state audit.
+Full CPU regression:988passed, exit0; `cache-full-cpu.log` and
+`cache-full-cpu.json` preserve the final run. Interrupted earlier attempts are not
+counted. Six new native-configuration cache checks pass.
+Independent actualClaude medium code review finds no blockers; its attached-head
+traversal recommendation is applied. Numerical evidence is scoped to tested
+FP32CUDA/CPU paths, not a guarantee of bit-exactness across all kernels/precisions.
+No editing-quality, generation or representation-capability promotion follows.
