@@ -16,6 +16,8 @@ agent. Hidden rules/kinds/labels are generator, loss and evaluator knowledge.
 """
 
 import argparse
+from dataclasses import replace
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -45,7 +47,8 @@ from pathwm.io import (
     training_mode,
 )
 from pathwm.models.latent_core import LatentCore, cross_entropy, episode_loss, key_head
-from pathwm.models.slots import SlotPerception, SymbolicSlots, perception_loss, pointer
+from pathwm.models.slots import SlotPerception, SymbolicSlots, match_slots, perception_loss, pointer
+from pathwm.models.slots import cross_entropy as slot_cross_entropy
 
 IDENTITY_TEMPERATURE, IDENTITY_WEIGHT = 0.1, 0.2  # the S2 key InfoNCE temperature and weight
 # Frozen-perception key repair (predeclared): train-kind monitor stream and screen.
@@ -417,6 +420,280 @@ def parent_texture_randomization(path):
     run = path if path.is_dir() else path.parent
     settings = json.loads((run / "run.json").read_text())["identity"]["settings"]
     return float(settings.get("texture_randomization", 0.0))
+
+
+# Decoder-reconstruction mode: retrain only the actual slot decoder of a frozen perception
+# run, either slot-only (as trained) or with its optional pyramid connections enabled.
+DECODER_EVAL_SEEDS = dict(train=3602, validation=3603)  # fixed kind-table evaluation scenes
+DECODER_EVAL_CHUNK = 64  # generation/forward chunk; the last chunk holds any remainder
+DECODER_MASK_WEIGHT = 0.5  # the existing perception_loss weight of the matched mask CE
+FROZEN_PARTS = ("encoder", "slot_attention", "heads")
+
+
+def frozen_part_hashes(perception):
+    return {name: state_hash(getattr(perception, name)) for name in FROZEN_PARTS}
+
+
+def batch_hash(*tensors):
+    """sha256 over the exact bytes (dtype and shape included) of the given tensors."""
+    h = hashlib.sha256()
+    for t in tensors:
+        t = t.detach().cpu().contiguous()
+        h.update(f"{t.dtype}{tuple(t.shape)}".encode())
+        h.update(t.numpy().tobytes())
+    return h.hexdigest()
+
+
+def finite_tree(value, where="result"):
+    """Raise unless every number in a nested result is finite (None marks an undefined value)."""
+    if isinstance(value, dict):
+        for k, v in value.items():
+            finite_tree(v, f"{where}.{k}")
+    elif isinstance(value, (list, tuple)):
+        for i, v in enumerate(value):
+            finite_tree(v, f"{where}[{i}]")
+    elif isinstance(value, float) and not math.isfinite(value):
+        raise FloatingPointError(f"Non-finite value at {where}")
+
+
+def decoder_objective(percept, rgb, entity):
+    """The decoder's trained objective: RGB MSE + 0.5 * matched mask CE (existing match_slots/cross_entropy)."""
+    assign = match_slots(percept.alpha, entity)
+    target = torch.argsort(assign, 1).gather(1, entity.flatten(1)).reshape(entity.shape)
+    reconstruction = F.mse_loss(percept.recon, rgb)
+    mask = slot_cross_entropy(percept.alpha, target)
+    loss = reconstruction + DECODER_MASK_WEIGHT * mask
+    if not all(torch.isfinite(v) for v in (loss, reconstruction, mask)):
+        raise FloatingPointError("Non-finite decoder objective; refusing to optimize")
+    return loss, dict(loss=float(loss), reconstruction=float(reconstruction), mask=float(mask))
+
+
+def replaced_values(pyramid, values):
+    """The same pyramid metadata with replaced feature values (diagnostic interventions only)."""
+    return replace(pyramid, scales=tuple(replace(sc, values=v) for sc, v in zip(pyramid.scales, values)))
+
+
+@torch.no_grad()
+def decoder_eval(perception, device, scenes, interventions=()):
+    """Fixed evaluation scenes per population (kind-table textures): per-image records and means.
+
+    Per image: MSE; PSNR = 10 log10(1/MSE); machine-body MSE over pixels of entities 1-2
+    (None if the image has none); gradient error = 0.5 * (mean squared difference of the
+    horizontal adjacent-pixel forward differences, recon vs target, + the same vertically).
+    Scenes are drawn in chunks of DECODER_EVAL_CHUNK from Generator(seed); a final smaller
+    chunk holds any remainder, and every chunk is hashed. Slots always come from the true
+    pyramid. Interventions (diagnostic, not operational inference) replace only the
+    decoder's pyramid values: `zero` = zeros; `shuffled` = image i reads image i-1's pyramid
+    (roll by one over the whole population order).
+    """
+    summary, records, images = {}, {}, None
+    for population, seed in DECODER_EVAL_SEEDS.items():
+        g, chunks, remaining = torch.Generator().manual_seed(seed), [], scenes
+        while remaining > 0:
+            count = min(DECODER_EVAL_CHUNK, remaining)
+            remaining -= count
+            _, _, rgb, entity, _ = perception_batch(g, rw.KIND_SPLIT[population], count, device)
+            chunks.append((rgb, entity, perception.pyramid(rgb), batch_hash(rgb, entity)))
+        variants = dict(true=None)
+        for kind in interventions:
+            per_scale = list(zip(*(tuple(sc.values for sc in c[2].scales) for c in chunks)))  # scale -> chunks
+            if kind == "zero":
+                new = [[torch.zeros_like(v) for v in values] for values in per_scale]
+            elif kind == "shuffled":
+                sizes = [len(c[0]) for c in chunks]
+                new = [list(torch.roll(torch.cat(values), 1, 0).split(sizes)) for values in per_scale]
+            else:
+                raise ValueError(kind)
+            variants[kind] = [replaced_values(c[2], [new[s][i] for s in range(len(new))]) for i, c in enumerate(chunks)]
+        for variant, pyramids in variants.items():
+            per = dict(mse=[], psnr=[], machine_body_mse=[], gradient_error=[])
+            for i, (rgb, entity, pyramid, _) in enumerate(chunks):
+                if pyramids is None:
+                    recon = perception.from_pyramid(pyramid).recon
+                else:
+                    tokens = pyramid.as_tokens()
+                    slots = perception.slot_attention(tokens.values, tokens.valid)
+                    colors, alpha = perception.decoder(slots, pyramids[i])
+                    recon = (alpha.softmax(1)[:, :, None] * colors).sum(1)
+                error = (recon - rgb).square()
+                mse = error.mean((1, 2, 3))
+                machine = ((entity == 1) | (entity == 2))[:, None].to(error.dtype)
+                pixels = machine.sum((1, 2, 3))
+                body = (error * machine).sum((1, 2, 3)) / (3 * pixels).clamp_min(1)
+                dx = lambda x: x[..., :, 1:] - x[..., :, :-1]
+                dy = lambda x: x[..., 1:, :] - x[..., :-1, :]
+                gradient = 0.5 * ((dx(recon) - dx(rgb)).square().mean((1, 2, 3))
+                                  + (dy(recon) - dy(rgb)).square().mean((1, 2, 3)))
+                per["mse"] += mse.tolist()
+                per["psnr"] += (10 * torch.log10(1 / mse.clamp_min(1e-12))).tolist()
+                per["machine_body_mse"] += [float(v) if n > 0 else None for v, n in zip(body, pixels)]
+                per["gradient_error"] += gradient.tolist()
+                if variant == "true" and population == "validation" and images is None:
+                    images = (rgb[:8].cpu(), recon[:8].cpu())
+            present = [v for v in per["machine_body_mse"] if v is not None]
+            means = dict(mse=sum(per["mse"]) / scenes, psnr=sum(per["psnr"]) / scenes,
+                         machine_body_mse=sum(present) / len(present) if present else None,
+                         machine_body_images=len(present), gradient_error=sum(per["gradient_error"]) / scenes,
+                         images=len(per["mse"]))
+            finite_tree(per, f"{variant}.{population}")
+            finite_tree(means, f"{variant}.{population}")
+            summary.setdefault(variant, {})[population] = means
+            records.setdefault(variant, {})[population] = per
+        summary["inputs"] = summary.get("inputs", {})
+        summary["inputs"][population] = dict(seed=seed, images=scenes, chunk_sizes=[len(c[0]) for c in chunks],
+                                             chunk_sha256=[c[3] for c in chunks],
+                                             sha256=hashlib.sha256("".join(c[3] for c in chunks).encode()).hexdigest())
+    return summary, records, images
+
+
+def eval_row(split, step, means):
+    return dict(step=step, split=split, **{f"{p}_{k}": v for p, m in means.items() for k, v in m.items()})
+
+
+def write_evaluation(runner, name, step, summary, records):
+    path = runner.path / name
+    atomic_json(path, dict(step=step, definitions=decoder_eval.__doc__, summary=summary, per_image=records))
+    return dict(path=name, sha256=file_hash(path), step=step)
+
+
+def train_decoder_reconstruction(args, s):
+    """Retrain only the actual BroadcastDecoder of a frozen perception checkpoint.
+
+    Arm `slots`: the decoder as trained (slot-only). Arm `pyramid`: the same decoder with
+    its zero-initialized pyramid connections enabled. Both start from the same parent
+    decoder weights and see identical training batches (hashed per row); encoder, slot
+    attention and heads are frozen and hash-guarded. Objective: RGB MSE + 0.5 * matched
+    mask CE. The frozen heads' kind/attribute/lamp terms are logged as `semantic_*`
+    diagnostics only: they are not optimized, but they read the matching, which depends on
+    the decoder's alpha, so they may differ between arms and over training.
+    """
+    seed_everything(args.seed)
+    model = nn.ModuleDict(dict(perception=SlotPerception(s["width"], s["slots"], s["iterations"],
+                                                          decoder_width=s["decoder_width"])))
+    perception = model["perception"]
+    parent = warm_start(perception, args.init_perception)
+    for name in FROZEN_PARTS:
+        getattr(perception, name).requires_grad_(False)
+    parent_decoder = state_hash(perception.decoder)
+    if args.decoder_reconstruction == "pyramid":
+        perception.decoder.enable_pyramid_connections()
+    frozen = frozen_part_hashes(perception)
+    model = model.to(args.device)
+    trainable = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.AdamW(trainable, lr=args.lr)
+    added = sum(p.numel() for n, p in perception.decoder.named_parameters() if n.startswith(("coarse.", "fine.")))
+    interventions = ("zero", "shuffled") if args.decoder_reconstruction == "pyramid" else ()
+    sampler = rw.TextureSampler()
+    settings = dict(stage="perception", seed=args.seed, updates=args.updates, lr=args.lr, device=args.device,
+                    size=args.size, sizes=s, purpose="development", precision="fp32",
+                    max_reserved_gib=args.max_reserved_gib, decoder_reconstruction=args.decoder_reconstruction,
+                    decoder_eval_scenes=args.decoder_eval_scenes,
+                    objective=f"RGB MSE + {DECODER_MASK_WEIGHT} * matched mask CE (match_slots, cross_entropy) on "
+                              "the decoder only; frozen kind/attribute/lamp terms logged as semantic_* diagnostics, "
+                              "not optimized, assignment-dependent (may differ between arms)",
+                    optimizer=dict(name="AdamW", lr=args.lr, parameters="decoder only", gradient_clip_norm=1.0),
+                    batch=dict(scenes=s["perception_batch"], kinds="train", sampler="Run.sampler",
+                               hash="batch_sha256 = sha256(rgb, entity, attrs, lamps) per training row"),
+                    init_perception=str(args.init_perception),
+                    warm_start=dict(parent, optimizer="fresh AdamW over decoder parameters only"),
+                    parent_decoder_state_sha256=parent_decoder, frozen_part_state_sha256=frozen,
+                    frozen_mode="requires_grad False; eval mode via training_mode; hash-checked before saves",
+                    decoder_parameters=dict(total=sum(p.numel() for p in perception.decoder.parameters()),
+                                            added_pyramid_connections=added, trainable=sum(p.numel() for p in trainable)),
+                    texture_randomization=args.texture_randomization,
+                    texture_sampler=dict(near_lamp=sampler.near_lamp, radius=sampler.radius, exclusion=sampler.exclusion,
+                                         cap=sampler.cap, heldout_kinds=list(sampler.heldout),
+                                         stream="Generator(seed*1000003 + 7919 + step); training scenes only"),
+                    decoder_evaluation=dict(
+                        seeds=DECODER_EVAL_SEEDS, scenes=args.decoder_eval_scenes, chunk=DECODER_EVAL_CHUNK,
+                        textures="kind table (no randomization)", when="step 0 (parent decoder) and final",
+                        definitions=decoder_eval.__doc__, interventions=list(interventions),
+                        records="evaluation_initial.json / evaluation_final.json (per-image values, chunk hashes)"))
+    runner = Run(args.resume or args.output, settings=settings, data=rw.manifest(), recipe=__file__, model=model,
+                 optimizer=optimizer, device=args.device, resume=args.resume is not None)
+
+    def guard():
+        if frozen_part_hashes(perception) != frozen:
+            raise RuntimeError("Frozen perception parts changed; refusing to save or report this run")
+
+    started = time.perf_counter()
+    try:
+        guard()
+        if runner.step == 0 and not any(r.get("split") == "decoder_eval_initial" for r in runner.rows):
+            with evaluation_mode(model):
+                summary, records, _ = decoder_eval(perception, args.device, args.decoder_eval_scenes)
+            write_evaluation(runner, "evaluation_initial.json", 0, summary, records)
+            runner.log(eval_row("decoder_eval_initial", 0, summary["true"]))
+            enforce_ceiling(args, runner, guard=guard)
+        while runner.step < args.updates and not stop(runner, args, started):
+            training_mode(model)
+            augmentation = augmentation_stream(args.seed, runner.step)
+            scenes, lamps, rgb, entity, stats = perception_batch(
+                runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
+                randomize=args.texture_randomization, augmentation=augmentation)
+            attrs, lamps = scenes.attrs.to(args.device), lamps.to(args.device)
+            with torch.no_grad():
+                pyramid = perception.pyramid(rgb)
+            percept = perception.from_pyramid(pyramid)
+            loss, metrics = decoder_objective(percept, rgb, entity)
+            with torch.no_grad():
+                _, semantic = perception_loss(percept, rgb, entity, attrs, lamps)
+            optimizer.zero_grad()
+            loss.backward()
+            norm = torch.nn.utils.clip_grad_norm_(trainable, 1.0)
+            if not torch.isfinite(norm):
+                raise FloatingPointError("Non-finite decoder gradient; refusing to step")
+            optimizer.step()
+            runner.step += 1
+            runner.log(dict(step=runner.step, split="train", **metrics, gradient_norm=float(norm),
+                            batch_sha256=batch_hash(rgb, entity, attrs, lamps),
+                            **{f"semantic_{k}": v for k, v in semantic.items()
+                               if k not in ("loss", "reconstruction", "mask")}))
+            enforce_ceiling(args, runner, guard=guard)
+            if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
+                guard()
+                runner.save()
+        guard()
+        runner.save()
+        with evaluation_mode(model):
+            summary, records, images = decoder_eval(perception, args.device, args.decoder_eval_scenes, interventions)
+        enforce_ceiling(args, runner, guard=guard)
+        # A paused run keeps this evaluation in its files only, so an exact resume reproduces the rows.
+        final_file = write_evaluation(runner, "evaluation_final.json", runner.step, summary, records)
+        if runner.step >= args.updates:
+            runner.log(eval_row("decoder_eval_final", runner.step, summary["true"]))
+            runner.save()
+        initial_path = runner.path / "evaluation_initial.json"
+        initial = json.loads(initial_path.read_text())
+        elapsed = time.perf_counter() - started
+        result = dict(
+            evaluation_scope="Decoder-only reconstruction retraining on a frozen perception checkpoint; fixed kind-table "
+                             "scenes (train kinds seed 3602, validation kinds seed 3603). Arm-level metrics only; the "
+                             "predeclared pair gate is evaluated in the aggregate.",
+            gate=None, arm=args.decoder_reconstruction, evaluated_step=runner.step,
+            metrics=dict(initial=initial["summary"]["true"], final=summary["true"],
+                         interventions={k: summary[k] for k in interventions} or None,
+                         inputs=summary["inputs"],
+                         parameters=dict(model=parameters(model), decoder=settings["decoder_parameters"]),
+                         resources=dict(**resources(args.device), updates=runner.step, seconds=elapsed)),
+            evaluation_files=dict(initial=dict(path=initial_path.name, sha256=file_hash(initial_path), step=0),
+                                  final=final_file),
+            frozen_parts_unchanged=frozen_part_hashes(perception) == frozen,
+            parent_checkpoint=parent, stop_reason=stop_reason(runner, args, started),
+            limitations=["Reconstruction diagnostic only: no identity, persistent-memory or runtime claim.",
+                         "A pyramid-connected decoder needs the frame's pyramid (retained frame, recomputed); "
+                         "persistent memory still stores the 64-value slot.",
+                         "Interventions replace decoder feature values only and are not operational inference.",
+                         "semantic_* training terms are frozen-head diagnostics that depend on the alpha-derived "
+                         "matching; they are not optimized and are not claimed identical across arms.",
+                         "The encoder is the existing FeatureHierarchy (lossy merges), not the full invertible "
+                         "filter-bank design."])
+        finite_tree(result)
+        finish(runner, result, complete=runner.step >= args.updates, images=images)
+    except Exception as error:
+        runner.status("failed", "incomplete", str(error))
+        raise
+    return runner.path
 
 
 def train_perception(args, s):
@@ -1313,6 +1590,12 @@ def main():
     parser.add_argument("--freeze-perception", action="store_true",
                         help="perception only: train only the loaded key on frozen --init-perception weights "
                              "(requires --init-key and --identity detached; perception hash-guarded)")
+    parser.add_argument("--decoder-reconstruction", choices=("slots", "pyramid"),
+                        help="perception only: retrain only the actual slot decoder of the frozen --init-perception "
+                             "run, slot-only or with its pyramid connections enabled")
+    parser.add_argument("--decoder-eval-scenes", type=int,
+                        help="decoder reconstruction: fixed evaluation scenes per population "
+                             "(default sizes validation_scenes; 256 on the actual config)")
     parser.add_argument("--identity-margin-positive", type=float,
                         help="perception identity: absolute cosine target for same-machine pairs")
     parser.add_argument("--identity-margin-negative", type=float,
@@ -1354,6 +1637,25 @@ def main():
             args.texture_randomization = recorded
     if args.freeze_perception and args.stage != "perception":
         parser.error("--freeze-perception applies to the perception stage only")
+    if args.decoder_reconstruction:
+        if args.stage != "perception":
+            parser.error("--decoder-reconstruction applies to the perception stage only")
+        if args.resume is None:
+            if not args.init_perception:
+                parser.error("--decoder-reconstruction requires --init-perception (the frozen parent run)")
+            if args.identity or args.init_key or args.freeze_perception or args.identity_margin_weight is not None:
+                parser.error("--decoder-reconstruction excludes identity, key, freeze and margin options")
+            recorded = parent_texture_randomization(args.init_perception)
+            supplied = {a.split("=", 1)[0] for a in sys.argv[1:]}
+            if "--texture-randomization" in supplied and args.texture_randomization != recorded:
+                parser.error(f"--decoder-reconstruction uses the parent's recorded texture randomization {recorded}")
+            args.texture_randomization = recorded
+        if args.decoder_eval_scenes is None:
+            args.decoder_eval_scenes = SIZES[args.size]["validation_scenes"]
+        if args.decoder_eval_scenes < (2 if args.decoder_reconstruction == "pyramid" else 1):
+            parser.error("--decoder-eval-scenes must be positive (at least 2 for the pyramid arm's shuffle)")
+    elif args.decoder_eval_scenes is not None:
+        parser.error("--decoder-eval-scenes applies to --decoder-reconstruction only")
     margin = (args.identity_margin_positive, args.identity_margin_negative, args.identity_margin_weight)
     if any(v is not None for v in margin):
         if any(v is None for v in margin):
@@ -1368,7 +1670,7 @@ def main():
     if args.stage == "audit":
         audit(args, s)
     elif args.stage == "perception":
-        train_perception(args, s)
+        (train_decoder_reconstruction if args.decoder_reconstruction else train_perception)(args, s)
     elif args.stage in ("core", "symbolic"):
         if args.stage == "core" and args.perception is None and args.resume is None:
             parser.error("--perception RUN required")

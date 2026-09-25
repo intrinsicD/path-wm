@@ -83,10 +83,16 @@ class Double(nn.Module):
 
 
 class BroadcastDecoder(nn.Module):
-    """Slot -> 8x8 broadcast -> three nearest upsamplings -> RGB + alpha logit."""
+    """Slot -> 8x8 broadcast -> three nearest upsamplings -> RGB + alpha logit.
+
+    Optional (`enable_pyramid_connections`): the same frame's encoder pyramid also
+    conditions every slot's decoding, coarse 8x8 scale before the first conv and fine
+    16x16 scale before the second. Default decoders are unchanged.
+    """
 
     def __init__(self, width, hidden, size=64):
         super().__init__()
+        self.width, self.hidden = width, hidden
         self.base = size // 8
         self.position = nn.Linear(2, width)
         layers = [nn.Conv2d(width, hidden, 3, padding=1), nn.ReLU()]
@@ -99,12 +105,67 @@ class BroadcastDecoder(nn.Module):
         layers.append(nn.Conv2d(hidden, 4, 3, padding=1))
         self.network = nn.Sequential(*layers)
 
-    def forward(self, slots):
+    @property
+    def pyramid_enabled(self):
+        return hasattr(self, "coarse")
+
+    def enable_pyramid_connections(self):
+        """Add zero-initialized pointwise projections of the coarse (width->width at 8x8)
+        and fine (width->hidden at 16x16) pyramid scales. Existing weights and the
+        global RNG are preserved; the initial output equals the slot-only decoder."""
+        if self.pyramid_enabled:
+            return self
+        with torch.random.fork_rng(devices=[]):
+            self.coarse = nn.Conv2d(self.width, self.width, 1)
+            self.fine = nn.Conv2d(self.width, self.hidden, 1)
+        for layer in (self.coarse, self.fine):
+            nn.init.zeros_(layer.weight)
+            nn.init.zeros_(layer.bias)
+        device, dtype = self.position.weight.device, self.position.weight.dtype
+        self.coarse.to(device, dtype).train(self.training)
+        self.fine.to(device, dtype).train(self.training)
+        return self
+
+    def _maps(self, pyramid, slots):
+        """Native frame-local pyramid -> fine [B,W,16,16], coarse [B,W,8,8] (new tensors)."""
+        side, batch = self.base, len(slots)
+        expected = ((1, 2 * side, 2 * side), (1, side, side))
+        scales = getattr(pyramid, "scales", None)
+        if scales is None or len(scales) != 2 or tuple(tuple(s.grid) for s in scales) != expected:
+            raise ValueError(f"Decoder pyramid must have exactly the native scales {expected}")
+        weight = self.coarse.weight
+        maps = []
+        for scale, (_, h, w) in zip(scales, expected):
+            v, valid = scale.values, scale.valid
+            if not (torch.is_tensor(v) and v.ndim == 3 and v.shape == (batch, h * w, self.width)):
+                raise ValueError("Decoder pyramid values must be [B,N,width] matching the slots")
+            if v.device != slots.device or v.dtype != slots.dtype or weight.device != v.device or weight.dtype != v.dtype:
+                raise ValueError("Decoder pyramid values must share the slots' and decoder's device and dtype")
+            if not (torch.is_tensor(valid) and valid.dtype == torch.bool and valid.shape == (batch, h * w)
+                    and valid.device == v.device):
+                raise ValueError("Decoder pyramid valid mask must be a bool [B,N] tensor on the values' device")
+            if not valid.all() or not torch.isfinite(v).all():
+                raise ValueError("Decoder pyramid must be fully valid and finite (no partial frames)")
+            maps.append(v.transpose(1, 2).reshape(batch, self.width, h, w))
+        return maps
+
+    def forward(self, slots, pyramid=None):
         b, k, d = slots.shape
+        if self.pyramid_enabled and pyramid is None:
+            raise ValueError("This decoder is pyramid-connected; pass the frame's pyramid (no slot-only fallback)")
+        if not self.pyramid_enabled and pyramid is not None:
+            raise ValueError("Pyramid given to a slot-only decoder; enable_pyramid_connections() first")
         axis = torch.linspace(-1, 1, self.base, device=slots.device, dtype=slots.dtype)
         grid = torch.stack(torch.meshgrid(axis, axis, indexing="ij"), -1)
         x = slots.reshape(b * k, d, 1, 1) + self.position(grid).permute(2, 0, 1)[None]
-        out = self.network(x)
+        if pyramid is None:
+            out = self.network(x)
+        else:
+            fine, coarse = self._maps(pyramid, slots)
+            x = x + self.coarse(coarse).repeat_interleave(k, 0)
+            x = self.network[2](self.network[1](self.network[0](x)))  # conv 8x8, ReLU, double
+            x = x + self.fine(fine).repeat_interleave(k, 0)
+            out = self.network[3:](x)
         out = out.reshape(b, k, 4, *out.shape[-2:])
         return out[:, :, :3].sigmoid(), out[:, :, 3]
 
@@ -153,7 +214,8 @@ class SlotPerception(nn.Module):
         """Slot consumer of an already encoded pyramid (times are metadata only)."""
         tokens = pyramid.as_tokens()
         slots = self.slot_attention(tokens.values, tokens.valid)
-        colors, alpha = self.decoder(slots)
+        # A pyramid-connected decoder reads the same pyramid the slots came from.
+        colors, alpha = self.decoder(slots, pyramid) if self.decoder.pyramid_enabled else self.decoder(slots)
         recon = (alpha.softmax(1)[:, :, None] * colors).sum(1)
         b, k = slots.shape[:2]
         return Percept(

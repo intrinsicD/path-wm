@@ -28,7 +28,7 @@ def test_enable_preserves_native_output_weights_and_rng(native):
     model, pyramid, before = native
     old = {k:v.clone() for k,v in model.state_dict().items()}
     rng = torch.get_rng_state().clone()
-    model.decoder.enable_pyramid()
+    model.decoder.enable_pyramid_connections()
     assert torch.equal(rng, torch.get_rng_state())
     for key,value in old.items():
         assert torch.equal(value, model.state_dict()[key]), key
@@ -41,7 +41,7 @@ def test_enable_preserves_native_output_weights_and_rng(native):
 
 def test_enabled_decoder_requires_pyramid_and_rejects_bad_geometry(native):
     model, pyramid, percept = native
-    model.decoder.enable_pyramid()
+    model.decoder.enable_pyramid_connections()
     with pytest.raises(ValueError):
         model.decoder(percept.slots)
     fine, coarse = pyramid.scales
@@ -53,7 +53,7 @@ def test_enabled_decoder_requires_pyramid_and_rejects_bad_geometry(native):
 def test_native_decoder_training_freezes_source_and_reads_features(native):
     model, pyramid, percept = native
     model.requires_grad_(False)
-    model.decoder.enable_pyramid()
+    model.decoder.enable_pyramid_connections()
     model.decoder.requires_grad_(True)
     old_source = state_hash(model.encoder), state_hash(model.slot_attention), state_hash(model.heads)
     original_features = [s.values.clone() for s in pyramid.scales]
@@ -76,3 +76,27 @@ def test_native_decoder_training_freezes_source_and_reads_features(native):
         actual = model.decoder(percept.slots, pyramid)[0]
         erased = model.decoder(percept.slots, zeros)[0]
     assert not torch.equal(actual,erased)
+
+
+@pytest.mark.parametrize("fault", ["batch", "nonfinite", "invalid", "mask_shape", "mask_dtype", "missing_scale"])
+def test_native_decoder_rejects_invalid_feature_inputs(native, fault):
+    model, pyramid, percept = native
+    model.decoder.enable_pyramid_connections()
+    fine, coarse = pyramid.scales
+    if fault == "batch":
+        fine = replace(fine, values=fine.values[:1])
+    elif fault == "nonfinite":
+        values = fine.values.clone()
+        values[0, 0, 0] = float("nan")
+        fine = replace(fine, values=values)
+    elif fault == "mask_shape":
+        fine = replace(fine, valid=torch.tensor(True))
+    elif fault == "mask_dtype":
+        fine = replace(fine, valid=fine.valid.float())
+    elif fault == "invalid":
+        valid = fine.valid.clone()
+        valid[0, 0] = False
+        fine = replace(fine, valid=valid)
+    broken = replace(pyramid, scales=(fine,) if fault == "missing_scale" else (fine, coarse))
+    with pytest.raises(ValueError):
+        model.decoder(percept.slots, broken)
