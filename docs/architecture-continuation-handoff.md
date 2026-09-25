@@ -3,7 +3,15 @@
 Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-**Current continuation:** [Real visual-memory connection](real-visual-memory-plan.md).
+**Latest requested experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md).
+Alex explicitly requested adding the full existing features to the actual decoder,
+then retraining; he confirmed comparing current versus modified decoders. Two seeds
+× two arms ×2,000updates completed with frozen encoder/slots/heads. The optional
+coarse8/fine16 connections add6,240decoder parameters. MSE gains1.09–1.71% fail
+the registered20% target; valid negative result, not proof that features lack detail.
+Sourcea4baa11;966CPUtests pass. See the plan for exact results, reports, commands and limits.
+
+**Completed native-memory slice:** [Real visual-memory connection](real-visual-memory-plan.md).
 Actual Claude Opus5.5 at medium effort is the planning, implementation, review and
 test partner. The **first native visual-memory task now passes** all six fixed
 development populations. Native source/correction/restart/decoder contracts pass.
@@ -11,7 +19,7 @@ Final cleanup, independent review and regression verification are complete;
 other rerun families remain open.
 
 Working checkpoint: `runs/real_visual_joint_repair_3501_u6000_v1`.
-Policy: `runs/real_visual_binding_confirmation_3405_joint_u6000_v2/binding.json`
+Policy: `runs/native_identity_confirmation_after_decoder_v1/binding.json`
 (match.90,new.85,margin.10; TRAIN3405,64scenes). Training is duration-only versus
 joint3000: first3000rows exactly equal;6000updates,863.94s,3.418GiB reserved,C1pass.
 Retention3506 passesall12. Actual2405–2410 relocation counts are62,63,61,63,64,64/64;
@@ -28,7 +36,7 @@ exact and all failed runs/code versions remain preserved. Actual Claude complete
 38 collaboration rounds. A report-description correction required a new source-bound
 manifest: fixed-policy TRAIN confirmation equals the original .90 search rows,
 and all six full task reruns plus R2 life exactly reproduce behavior. No trained
-weights, runtime decisions or selection rules changed. The .90 selection is also
+weights, runtime decisions or selection rules changed in that release. The .90 selection is also
 a legacy grid point; this candidate did not require the finer points.
 
 All populations are known development/regression data. No sealed/new-kind,
@@ -538,3 +546,10 @@ is not experimental evidence. API-equivalent cost fields are not subscription bi
 - Commit completed work. Final delivery names what works, what failed, limitations,
   exact checks and report/reproduction locations. Do not silently narrow “complete
   architecture” to another protocol-only demonstration.
+
+The optional decoder implementation subsequently changed the source hash. Current
+fixed-policy confirmation equals the original .90 search rows and prior TRAIN
+metric bytes; normal R2 life is exactly reproduced. Prior six-population quality
+runs remain evidence for their recorded source; they were not rerun in the decoder
+experiment. Source guards remain strict. The experimental pyramid decoder is not
+used by the default identity/memory path.

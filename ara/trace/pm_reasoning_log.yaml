@@ -3033,3 +3033,15 @@ entries:
     retained. Counts corrected to7 misses; final .90 is a legacy grid point.
   - Final957-test verification is supporting evidence for the research slice, not a separate research
     event. Session timestamp records epilogue, not an invented experiment start.
+- turn: 2026-09-25_001#2
+  notes:
+  - Recorded explicit user authorization separately from agent-selected budget/gate; staged O406 without
+    promotion. User affirmation concerned comparing/retraining decoders, not a result or proof of representation
+    adequacy.
+  - Valid negative quality result preserved; no gate change, checkpoint selection, extra training or default
+    promotion. No contradiction with O404 native identity scope or O403 surrogate decoder-range scope.
+  - 'Peer interpretation narrowed: shuffled-versus-zero is not by itself proof of frame-independent content;
+    additional parameters need not improve optimization. A separate probe was not selected by Codex, rather
+    than explicitly rejected by Alex.'
+  - Same source/frozen checkpoint audits, actual full-config counterpart of initial downscaled smoke,966tests
+    and source-bound default compatibility recorded. No abandonment inferred for other open families.

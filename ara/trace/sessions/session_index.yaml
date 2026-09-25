@@ -358,9 +358,10 @@ sessions:
   open_threads: 3
 - id: 2026-09-25_001
   date: '2026-09-25'
-  summary: Native visual-memory slice qualifies all six fixed development populations after existing-component
-    training/path repairs; no added representation. Failures and limits preserved.
-  turn_count: 1
-  events_count: 9
+  summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
+    training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
+    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass.'
+  turn_count: 2
+  events_count: 12
   claims_touched: []
   open_threads: 3

@@ -836,7 +836,7 @@ outside this valid-path release. Restart final checks with fresh v2 outputs.
 The final-source TRAIN confirmation
 `real_visual_binding_confirmation_3405_joint_u6000_v2` reproduces both .90 policy
 rows and raw metric bytes from the original 16-policy search. Its `binding.json`
-is the working manifest. `release-confirmation-audit.json` binds the original
+was the working manifest for release source61826ca. `release-confirmation-audit.json` binds the original
 selection and confirmation artifacts by SHA256; confirmation is not a new search.
 
 All six `real_visual_memory_{2405..2410}_joint_u6000_release_v1` runs pass.
@@ -852,3 +852,16 @@ and JUnit `full-suite-native-release-v2.xml`. These review/audit files are in
 `runs/reviews/real_visual_memory_20260924/`. The existing report renderer verifies
 structure; no browser visual QA is claimed. This closes the first native slice,
 with the other rerun families and learning limits above still open.
+
+
+### Compatibility after the optional decoder experiment
+
+The subsequent [native pyramid decoder experiment](native-pyramid-decoder-plan.md)
+changes source hashes while leaving the default slot decoder unchanged. The
+current working manifest is
+`runs/native_identity_confirmation_after_decoder_v1/binding.json`. Its fixed-policy
+TRAIN scores and policy rows exactly reproduce the previous confirmation and
+original .90 search rows. Four-scene R2 life is also exactly reproduced. Old
+manifests and six-population qualification remain historical source-bound evidence;
+those six task populations were not rerun for this optional decoder experiment.
+See `runs/reviews/native_pyramid_decoder_20260925/identity-compatibility-audit.json`.

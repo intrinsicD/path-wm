@@ -179,3 +179,11 @@ The authorized first implementation slice is tracked in the
 separate: each needs a concrete mapping and gap plan before adding functionality.
 The surrogate affine-range result cannot be promoted into a bound on the native
 nonlinear decoder, and a native software pass is not a learned-quality pass.
+
+## Subsequent decoder-access comparison
+
+Alex requested full pyramid access in the actual slot decoder and its retraining.
+The [native decoder plan](native-pyramid-decoder-plan.md) records two matched seeds:
+1.09–1.71% MSE gains versus retrained slots-only, below the20% gate. Software and
+full-model execution pass (966CPUtests); the fine-detail quality gap remains open.
+No surrogate codec, new encoder or default memory representation was adopted.

@@ -37,10 +37,10 @@ calibrated policy. Reproduce calibration and one population with fresh outputs:
 
 Repeat the second command for seeds2406–2410 with separate output directories to
 reproduce the complete task qualification. The saved working manifest is
-`runs/real_visual_binding_confirmation_3405_joint_u6000_v2/binding.json`.
+`runs/native_identity_confirmation_after_decoder_v1/binding.json`.
 That manifest confirms the fixed policy under the final source. Selection came
 from the preserved16-policy TRAIN search; its two matching policy rows and TRAIN
-score rows are exactly equal. See the [confirmation audit](../runs/reviews/real_visual_memory_20260924/release-confirmation-audit.json).
+score rows are exactly equal. See the [confirmation audit](../runs/reviews/native_pyramid_decoder_20260925/identity-compatibility-audit.json).
 The [aggregate report](../runs/real_visual_memory_comparison_joint_u6000_release_v1/report.html)
 retains the J control and scope limits; the owning plan preserves failed predecessors. All populations are
 known development data; fine-detail fidelity and full-agent learning remain open.
@@ -70,6 +70,46 @@ Then calibrate/evaluate that new checkpoint; do not reuse another checkpoint's
 manifest. The cleaned active recipe is behaviorally equivalent to the retained
 training recipe (verified native updates, optimizer and RNG). Training resume
 remains source-locked: use the original run's frozen source when resuming it.
+
+The [native decoder comparison](native-pyramid-decoder-plan.md) retrains the actual
+slot decoder while freezing its encoder, slot attention and semantic heads. The
+`pyramid` arm adds coarse8×8 and fine16×16 feature connections (6,240 parameters);
+`slots` retrains the original decoder on the same batches and budget. This is an
+explicit reconstruction experiment, not the default memory decoder.
+
+```bash
+OMP_NUM_THREADS=2 .venv/bin/python -m experiments.latent_agent --stage perception \
+  --size full --device cuda --seed 3601 --updates 2000 --lr 3e-4 \
+  --decoder-reconstruction pyramid \
+  --init-perception runs/real_visual_joint_repair_3501_u6000_v1 \
+  --max-minutes 10 --max-reserved-gib 6 --output runs/my_pyramid_decoder
+```
+
+Use `--decoder-reconstruction slots` with a fresh directory for the matched
+control; repeat both arms at seed3604 for the registered two-seed comparison.
+Resume an interrupted run with `--stage perception --resume RUN`; the saved arm,
+parent, dimensions and training settings are restored. Each run saves per-image
+initial/final errors, matched-batch hashes, weights/optimizer/RNG and its report.
+The recipe's256-image evaluation per population is the registered full comparison.
+
+To load a pyramid-connected checkpoint for reconstruction, enable its connections
+before loading weights; then pass RGB through the native perception as usual:
+
+```python
+from pathwm.models.slots import SlotPerception
+from pathwm.io import load_component
+
+perception = SlotPerception()
+perception.decoder.enable_pyramid_connections()
+load_component(perception, "runs/my_pyramid_decoder/last.pt", "perception")
+perception.eval()
+# perception(rgb).recon uses the same pyramid for slots and decoder.
+```
+
+The decoder requires the full corresponding feature pyramid; a stored slot alone
+is insufficient for this experimental path. Perception parameter counts exclude
+the separate identity-key head. The existing multiscale encoder is not claimed
+to implement the complete information-preserving filter-bank specification.
 
 The optional **frozen-perception identity repair** trains the existing key only,
 using the parent's recorded texture randomization (J:1.0). Its cosine screen is

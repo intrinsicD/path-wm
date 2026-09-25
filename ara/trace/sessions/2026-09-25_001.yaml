@@ -2,10 +2,11 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T02:35+02:00
-  turn_count: 1
-  summary: Native visual-memory slice qualifies all six fixed development populations after existing-component
-    training/path repairs; no added representation. Failures and limits preserved.
+  last_turn: 2026-09-25T08:53+02:00
+  turn_count: 2
+  summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
+    training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
+    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass.'
 events_logged:
 - turn: 1
   type: pivot
@@ -66,6 +67,24 @@ events_logged:
   summary: A failure in a surrogate, an arbitrary proxy monitor or a coarse policy search should not by
     itself diagnose inadequate information in the actual representation. Here training duration fixed
     the bounded native task; finer grid points were not required by the successful checkpoint.
+- turn: 2
+  type: decision
+  id: N587
+  routing: direct
+  provenance: user
+  summary: Compare actual decoder with and without existing multiscale features
+- turn: 2
+  type: experiment
+  id: N588
+  routing: direct
+  provenance: ai-executed
+  summary: Native pyramid-connected decoder gives small gains and misses registered quality target
+- turn: 2
+  type: observation
+  id: O406
+  routing: staged
+  provenance: ai-suggested
+  summary: Bounded feature-access gain does not diagnose missing information or saturation.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -74,14 +93,27 @@ ai_actions:
   files_changed:
   - docs/real-visual-memory-plan.md
   - ara/evidence/tables/native_visual_memory_2026-09-25.json
+- turn: 2
+  action: Implemented optional actual decoder feature connections, matched decoder-only retraining and
+    independent result audits with actual Claude medium; preserved valid negative result.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/slots.py
+  - experiments/latent_agent.py
+  - docs/native-pyramid-decoder-plan.md
+  - ara/evidence/tables/native_pyramid_decoder_2026-09-25.json
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'Alex: work on what we have; actual full-model testing; plan missing implementation together.
     Actual Claude has same permissions; iterate until it runs and works.'
+- turn: 2
+  excerpt: Alex asks to pass multiscale features also to the decoder, says it needs retraining, and answers
+    Yes okay after the current/modified decoder comparison is explained.
 open_threads:
 - Other actual-model rerun families, including lexical context and operator transfer.
 - Fine-detail fidelity and generalization beyond known procedural development populations.
 - Full-agent learning; other R2 modules remain untrained.
 ai_suggestions_pending:
 - O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.
+- O406 remains staged; no user affirmation of the empirical interpretation is inferred.

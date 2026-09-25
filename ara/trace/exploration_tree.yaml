@@ -9738,3 +9738,36 @@ tree:
   - docs/real-visual-memory-plan.md
   - ara/evidence/tables/native_visual_memory_2026-09-25.json
   status: completed
+- id: N587
+  type: decision
+  title: Compare actual decoder with and without existing multiscale features
+  provenance: user
+  timestamp: 2026-09-25T08:53+02:00
+  choice: Alex requests passing multiscale features also to the actual decoder, identifies retraining
+    as necessary, and explicitly confirms the current-versus-modified decoder comparison. Codex/Claude
+    register frozen encoder/slot/head, two training seeds,2000updates and20%MSE target before execution.
+    Optional coarse8/fine16 projections start at zero; no substitute codec or default memory change.
+  alternatives:
+  - A separate reconstruction probe was considered by Claude and not selected by Codex for this literal
+    request.
+  evidence:
+  - docs/native-pyramid-decoder-plan.md
+  - ara/evidence/tables/native_pyramid_decoder_2026-09-25.json
+  status: completed
+- id: N588
+  type: experiment
+  title: Native pyramid-connected decoder gives small gains and misses registered quality target
+  provenance: ai-executed
+  timestamp: 2026-09-25T08:53+02:00
+  result: 'All four full64/7/3/32 runs complete2000 updates within budget. Seeds3601/3604 TRAIN/validation
+    MSE reductions1.279/1.711% and1.092/1.242%, below20% in every cell: valid experiment, quality gate
+    false. Zero/shuffled features increase MSE; adjacent-pixel gradient error nearly unchanged.
+    Decoder47556→53796 parameters (+6240), frozen74source tensors exact, matched initial outputs/training
+    inputs.966CPUtests0skip pass, source unchanged; exact state resume. Five actual Claude Opus5.5 medium
+    rounds. Current default identity calibration/life exactly reproduce prior outputs under fresh source
+    manifest; six quality populations remain historical.'
+  evidence:
+  - docs/native-pyramid-decoder-plan.md
+  - ara/evidence/tables/native_pyramid_decoder_2026-09-25.json
+  - runs/reviews/native_pyramid_decoder_20260925/claude-final-audit.md
+  status: completed

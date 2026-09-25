@@ -7136,3 +7136,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O406
+  timestamp: 2026-09-25T08:53+02:00
+  provenance: ai-suggested
+  content: This specific native additive feature connection with2000updates of decoder-only retraining
+    uses the pyramid but provides only1–2% additional reconstruction improvement over matched retrained
+    slots-only controls. It does not establish feature information absence, a fundamental decoder bound,
+    convergence, or fine-detail memory adequacy. Diagnose the cause before selecting another method or
+    budget.
+  context: Valid two-seed negative result under registered20%MSE target; actual implemented pyramid, not
+    the still-unimplemented invertible filter-bank design.
+  potential_type: claim
+  bound_to:
+  - N587
+  - N588
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
