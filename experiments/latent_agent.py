@@ -456,13 +456,13 @@ def finite_tree(value, where="result"):
         raise FloatingPointError(f"Non-finite value at {where}")
 
 
-def decoder_objective(percept, rgb, entity):
+def decoder_objective(percept, rgb, entity, mask_weight=DECODER_MASK_WEIGHT):
     """The decoder's trained objective: RGB MSE + 0.5 * matched mask CE (existing match_slots/cross_entropy)."""
     assign = match_slots(percept.alpha, entity)
     target = torch.argsort(assign, 1).gather(1, entity.flatten(1)).reshape(entity.shape)
     reconstruction = F.mse_loss(percept.recon, rgb)
     mask = slot_cross_entropy(percept.alpha, target)
-    loss = reconstruction + DECODER_MASK_WEIGHT * mask
+    loss = reconstruction + mask_weight * mask
     if not all(torch.isfinite(v) for v in (loss, reconstruction, mask)):
         raise FloatingPointError("Non-finite decoder objective; refusing to optimize")
     return loss, dict(loss=float(loss), reconstruction=float(reconstruction), mask=float(mask))
@@ -546,6 +546,41 @@ def decoder_eval(perception, device, scenes, interventions=()):
     return summary, records, images
 
 
+
+@torch.no_grad()
+def decoder_mask_eval(perception, reference, device, scenes):
+    """Independent fixed-population mask metrics; raw slots compared at machine centers.
+
+    Matched pixel accuracy and CE use match_slots per image. Pointer agreement is
+    against the frozen parent's raw slot ID at each of the two machine centers.
+    Generator(seed) is local; evaluation does not consume the training sampler.
+    """
+    result = {}
+    for population, seed in DECODER_EVAL_SEEDS.items():
+        g = torch.Generator().manual_seed(seed)
+        records = dict(pixel_accuracy=[], mask_ce=[], pointer_agreement=[])
+        hashes = []
+        remaining = scenes
+        while remaining:
+            count = min(DECODER_EVAL_CHUNK, remaining)
+            remaining -= count
+            scene, _, rgb, entity, _ = perception_batch(g, rw.KIND_SPLIT[population], count, device)
+            pyramid = perception.pyramid(rgb)
+            predicted = perception.from_pyramid(pyramid)
+            baseline = reference.from_pyramid(pyramid)
+            assignment = match_slots(predicted.alpha, entity)
+            target = torch.argsort(assignment, 1).gather(1, entity.flatten(1)).reshape(entity.shape)
+            records["pixel_accuracy"] += (predicted.alpha.argmax(1) == target).float().mean((1,2)).tolist()
+            records["mask_ce"] += (-predicted.alpha.log_softmax(1).gather(1, target[:,None])[:,0].mean((1,2))).tolist()
+            agreement = torch.stack([pointer(predicted.alpha, scene.machine_xy[:,m]) ==
+                                     pointer(baseline.alpha, scene.machine_xy[:,m]) for m in range(2)],1)
+            records["pointer_agreement"] += agreement.float().mean(1).tolist()
+            hashes.append(batch_hash(rgb, entity))
+        result[population] = dict(per_image=records, mean={k:sum(v)/len(v) for k,v in records.items()}, chunk_sha256=hashes)
+    finite_tree(result)
+    return result
+
+
 def eval_row(split, step, means):
     return dict(step=step, split=split, **{f"{p}_{k}": v for p, m in means.items() for k, v in m.items()})
 
@@ -574,6 +609,10 @@ def train_decoder_reconstruction(args, s):
     parent = warm_start(perception, args.init_perception)
     for name in FROZEN_PARTS:
         getattr(perception, name).requires_grad_(False)
+    from copy import deepcopy
+    mask_weight = getattr(args, "decoder_mask_weight", DECODER_MASK_WEIGHT)
+    eval_every = getattr(args, "decoder_eval_every", 0)
+    reference = deepcopy(perception).to(args.device).eval().requires_grad_(False) if eval_every else None
     parent_decoder = state_hash(perception.decoder)
     if args.decoder_reconstruction == "pyramid":
         perception.decoder.enable_pyramid_connections()
@@ -588,7 +627,8 @@ def train_decoder_reconstruction(args, s):
                     size=args.size, sizes=s, purpose="development", precision="fp32",
                     max_reserved_gib=args.max_reserved_gib, decoder_reconstruction=args.decoder_reconstruction,
                     decoder_eval_scenes=args.decoder_eval_scenes,
-                    objective=f"RGB MSE + {DECODER_MASK_WEIGHT} * matched mask CE (match_slots, cross_entropy) on "
+                    decoder_mask_weight=mask_weight, decoder_eval_every=eval_every,
+                    objective=f"RGB MSE + {mask_weight} * matched mask CE (match_slots, cross_entropy) on "
                               "the decoder only; frozen kind/attribute/lamp terms logged as semantic_* diagnostics, "
                               "not optimized, assignment-dependent (may differ between arms)",
                     optimizer=dict(name="AdamW", lr=args.lr, parameters="decoder only", gradient_clip_norm=1.0),
@@ -624,6 +664,9 @@ def train_decoder_reconstruction(args, s):
                 summary, records, _ = decoder_eval(perception, args.device, args.decoder_eval_scenes)
             write_evaluation(runner, "evaluation_initial.json", 0, summary, records)
             runner.log(eval_row("decoder_eval_initial", 0, summary["true"]))
+            if reference is not None:
+                with evaluation_mode(model):
+                    atomic_json(runner.path / "masks_initial.json", decoder_mask_eval(perception, reference, args.device, args.decoder_eval_scenes))
             enforce_ceiling(args, runner, guard=guard)
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
@@ -635,7 +678,7 @@ def train_decoder_reconstruction(args, s):
             with torch.no_grad():
                 pyramid = perception.pyramid(rgb)
             percept = perception.from_pyramid(pyramid)
-            loss, metrics = decoder_objective(percept, rgb, entity)
+            loss, metrics = decoder_objective(percept, rgb, entity, mask_weight)
             with torch.no_grad():
                 _, semantic = perception_loss(percept, rgb, entity, attrs, lamps)
             optimizer.zero_grad()
@@ -653,11 +696,22 @@ def train_decoder_reconstruction(args, s):
             if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
                 guard()
                 runner.save()
+            if eval_every and runner.step % eval_every == 0 and runner.step < args.updates:
+                with evaluation_mode(model):
+                    summary, records, _ = decoder_eval(perception, args.device, args.decoder_eval_scenes)
+                    masks = decoder_mask_eval(perception, reference, args.device, args.decoder_eval_scenes)
+                write_evaluation(runner, f"evaluation_step_{runner.step:06d}.json", runner.step, summary, records)
+                atomic_json(runner.path / f"masks_step_{runner.step:06d}.json", masks)
+                runner.log(eval_row("decoder_eval_periodic", runner.step, summary["true"]))
+                enforce_ceiling(args, runner, guard=guard)
         guard()
         runner.save()
         with evaluation_mode(model):
             summary, records, images = decoder_eval(perception, args.device, args.decoder_eval_scenes, interventions)
         enforce_ceiling(args, runner, guard=guard)
+        if reference is not None:
+            with evaluation_mode(model):
+                atomic_json(runner.path / "masks_final.json", decoder_mask_eval(perception, reference, args.device, args.decoder_eval_scenes))
         # A paused run keeps this evaluation in its files only, so an exact resume reproduces the rows.
         final_file = write_evaluation(runner, "evaluation_final.json", runner.step, summary, records)
         if runner.step >= args.updates:
@@ -1593,6 +1647,10 @@ def main():
     parser.add_argument("--decoder-reconstruction", choices=("slots", "pyramid"),
                         help="perception only: retrain only the actual slot decoder of the frozen --init-perception "
                              "run, slot-only or with its pyramid connections enabled")
+    parser.add_argument("--decoder-mask-weight", type=float, default=None,
+                        help="decoder-only objective mask CE weight; default0.5, set0 for RGB-only")
+    parser.add_argument("--decoder-eval-every", type=int, default=0,
+                        help="decoder-only fixed evaluation/mask preservation every N updates (0 disables)")
     parser.add_argument("--decoder-eval-scenes", type=int,
                         help="decoder reconstruction: fixed evaluation scenes per population "
                              "(default sizes validation_scenes; 256 on the actual config)")
@@ -1638,6 +1696,10 @@ def main():
     if args.freeze_perception and args.stage != "perception":
         parser.error("--freeze-perception applies to the perception stage only")
     if args.decoder_reconstruction:
+        if args.decoder_mask_weight is None:
+            args.decoder_mask_weight = DECODER_MASK_WEIGHT
+        if not math.isfinite(args.decoder_mask_weight) or args.decoder_mask_weight < 0 or args.decoder_eval_every < 0:
+            parser.error("decoder mask weight and evaluation interval must be nonnegative")
         if args.stage != "perception":
             parser.error("--decoder-reconstruction applies to the perception stage only")
         if args.resume is None:
@@ -1654,7 +1716,7 @@ def main():
             args.decoder_eval_scenes = SIZES[args.size]["validation_scenes"]
         if args.decoder_eval_scenes < (2 if args.decoder_reconstruction == "pyramid" else 1):
             parser.error("--decoder-eval-scenes must be positive (at least 2 for the pyramid arm's shuffle)")
-    elif args.decoder_eval_scenes is not None:
+    elif args.decoder_eval_scenes is not None or args.decoder_mask_weight is not None or args.decoder_eval_every:
         parser.error("--decoder-eval-scenes applies to --decoder-reconstruction only")
     margin = (args.identity_margin_positive, args.identity_margin_negative, args.identity_margin_weight)
     if any(v is not None for v in margin):

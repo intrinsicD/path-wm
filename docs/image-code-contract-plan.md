@@ -5,7 +5,7 @@ faithful reconstruction from actual latent codes for debugging and image generat
 He asks Codex and actual Claude Opus5.5 medium to frame the complete path and plan.
 This adopts the goal. Alex subsequently approves slice1 in general and adds a
 model-controlled DiT/editing direction; see the final amendment. Detailed generator
-choices remain proposed. No new representation or model change is made.
+choices remain proposed; implementation progress is recorded in the execution section.
 
 ## Recommended contract
 
@@ -15,7 +15,8 @@ and derive the seven slots through existing slot attention. The resulting **full
 `FeaturePyramid` remains the input view for consumers and the decoder**. This is a
 proposed ownership/interface choice over current features, not a new representation.
 
-Bind the payload and its geometry/validity metadata to encoder/decoder checkpoints,
+Bind the payload and its geometry/validity metadata to the encoder checkpoint; record
+slot-attention and decoder identities per decode (they are replaceable consumers), plus
 input resolution/preprocessing and schema. Persist the complete existing `FeatureScale`: values, grid, valid,
 times, ends and content_times, plus pyramid condition_time. Record the native
 zero16-wide condition explicitly; a different condition changes the continuation.
@@ -440,3 +441,55 @@ pyramid runs. Mask/pointer metrics are additional records, not changes to the RG
 metrics. Relative20% screen, absolute per-image1e-4 and meanbody/gradient1e-4 fidelity
 gates, and0.5/1point mask/pointer preservation gates remain as proposed above.
 No selection or gate changes after execution. Any extension is registered separately.
+
+
+Implementation review reconciliation: actual Claude Opus5.5 medium independently
+reviewed the code twice (`runs/reviews/scene_capabilities_20260925/`). Code meaning
+is encoder-bound, not decoder-bound: retraining a consumer must not invalidate the
+stored fine payload. Native slot-only perception can export the same codes. The
+hierarchy continuation validates dimensions, masks, conditions and availability.
+Replay exactness requires the same consumer weights/device; consumer changes are
+permitted but do not inherit an exact-output claim. The first replay audit failed
+because PyTorch lazily imported serialization runtime files; explicit runtime
+initialization before the data-read audit repaired this without allowing image or
+store reads. Preserve all earlier receipts, including this failed audit.
+
+Next editing protocol direction, before training registration: paired desired
+states for both machines on each source, retaining missing/ambiguous retrievals in
+all denominators. Use the real store and ExactRetriever; compare retrieved slots
+bit-for-bit with the actual encoder's slots. The existing conditional transformer
+flow producer is a scoped candidate for the requested diffusion-style editing path,
+not evidence of trained DiT control or broad scene decomposition. Source fine
+features plus a bound entity/state request condition the generated fine residual;
+reconstruction bypasses the producer entirely. Decoder fidelity remains a separate
+prerequisite for claiming successful image editing. RuleWorld cannot qualify camera,
+lighting, style, overlays or general hierarchical entities.
+
+P1D diagnostic registration (before results): after P1a, evaluate the parent and all
+four final decoders on the same256+256 fixed images. No optimization or checkpoint
+selection. Split RGB error into4x4 patch-mean and within-patch residual energy;
+verify their sum equals MSE within1e-7. Report disjoint entity-region and one-pixel
+entity-boundary/interior contributions to total error, plus the fine projection's
+singular values. A component exceeding50% in both populations and both seeds is
+labelled dominant for this data only. Dominance does not prove a causal capacity
+limit or justify a new decoder by itself; it guides a single matched repair or
+longer-training comparison. Budget5min/6GiB for the entire diagnostic. Decoder
+training/source remain frozen during measurement.
+
+
+P0 completed: native code persistence and shared hierarchy continuation are
+implemented. Final encoder-bound replay passes on both trained3601/3604 checkpoints,
+128images each, with exact coarse/slots/alpha/RGB/head outputs and original MSE.
+Fresh child reads only checkpoint+code; RGB encoding is forbidden; RNG/weights stay
+unchanged. Reports: `runs/native_image_code_encoder_bound_3601_v1/report.html` and
+`runs/native_image_code_encoder_bound_3604_v1/report.html`. This is exact replay of
+the existing imperfect decoder, not faithful pixels. Earlier whole-model-bound
+payload receipts are developmental formats, superseded by the encoder-bound schema.
+
+Verification:971 CPU tests pass (734.93s). Full-native3update interrupted/resumed
+training matches uninterrupted model, optimizer, sampler/global RNG, metric rows,
+and mask/RGB evaluations exactly. Source/receipts:
+`runs/reviews/scene_capabilities_20260925/final-software-check.json` and
+`full-cpu-receipt.json`. All completed smoke/replay runs have structurally verified
+standalone reports. Actual Claude's two implementation reviews reconciled the
+binding and continuation validation defects. P1a quality runs are separate evidence.

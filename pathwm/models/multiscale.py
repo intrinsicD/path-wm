@@ -446,19 +446,58 @@ class FeatureHierarchy(nn.Module):
             [ConditionedBlock(width, code_width) for _ in range(fusion_depth)]
         )
         self.layer_readout = None
+        self.width, self.code_width = width, code_width
+
+    def _process_scale(self, fine, condition, i, *, trace=None, history=None):
+        if i:
+            fine = self.merges[i - 1](fine, condition, trace=trace, name=f"merge.{i - 1}")
+        return self.stages[i](fine, condition, trace=trace, name=f"scale.{i}", history=history)
+
+    def continue_from_fine(self, fine, condition, *, condition_time=None):
+        """Continue an already processed first scale, without re-running its stage.
+
+        Final fusion/depth readouts change exports relative to merge inputs and
+        therefore cannot use this interface. No weights or operations are copied.
+        """
+        if self.fusion or self.layer_readout is not None:
+            raise ValueError("Fine continuation requires no fusion or depth readout")
+        x = fine.values
+        if (x.ndim != 3 or x.shape[-1] != self.width or len(x) < 1 or
+            not fine.grid or any(type(n) is not int or n < 1 for n in fine.grid) or
+            math.prod(fine.grid) != x.shape[1] or not torch.isfinite(x).all()):
+            raise ValueError("Invalid processed fine values or grid")
+        for name in ("times", "valid", "ends", "content_times"):
+            v = getattr(fine, name)
+            if v is None and name == "content_times":
+                continue
+            if not isinstance(v, torch.Tensor) or v.shape != x.shape[:2] or v.device != x.device or not torch.isfinite(v).all():
+                raise ValueError("Invalid processed fine metadata")
+        if fine.valid.dtype != torch.bool or fine.ends.dtype != torch.int64:
+            raise ValueError("Invalid processed fine mask or support")
+        if (not isinstance(condition, torch.Tensor) or condition.shape != (len(x), self.code_width) or
+            condition.dtype != x.dtype or condition.device != x.device or not torch.isfinite(condition).all()):
+            raise ValueError("Feature condition must be finite [B,code_width] with encoder dtype/device")
+        if condition_time is not None:
+            condition_time = torch.as_tensor(condition_time, device=x.device, dtype=torch.float64)
+            if condition_time.ndim == 0:
+                condition_time = condition_time.expand(len(x))
+            if condition_time.shape != (len(x),) or not torch.isfinite(condition_time).all():
+                raise ValueError("Invalid continuation condition time")
+            if ((fine.times < condition_time[:, None]) & fine.valid).any():
+                raise ValueError("Processed fine availability predates its condition")
+        scales = [fine]
+        for i in range(1, len(self.stages)):
+            scales.append(self._process_scale(scales[-1], condition, i))
+        return FeaturePyramid(tuple(scales), condition_time)
 
     def forward(self, fine, condition, *, condition_time=None, trace=None):
         scales, emitted = [], []
         for i, stage in enumerate(self.stages):
             if i:
-                fine = self.merges[i - 1](
-                    scales[-1], condition, trace=trace, name=f"merge.{i - 1}"
-                )
+                fine = scales[-1]
             # Later levels consume the fully processed preceding scale.
             history = [] if self.layer_readout is not None else None
-            finished = stage(
-                fine, condition, trace=trace, name=f"scale.{i}", history=history
-            )
+            finished = self._process_scale(fine, condition, i, trace=trace, history=history)
             scales.append(finished)
             emitted.append(
                 finished

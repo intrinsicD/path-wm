@@ -5,9 +5,9 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Image-code work:** [Plan](image-code-contract-plan.md): replay slice approved in general; model-controlled DiT with memory/KG routing and scene-factor editing required. Decomposition/conditioning remain unimplemented.
+- **Image-code work:** [Plan](image-code-contract-plan.md): native code persistence/replay implemented; exact full-model replay on256images across two trained checkpoints,971 CPU tests and exact resume pass. Decoder fidelity comparison running. Memory-conditioned editing with Claude is in an isolated implementation slice; general scene factors remain open.
 
-- **Completed experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md): two-seed decoder-only retraining gains1.09–1.71% MSE, missing the20% target. Optional path; encoder frozen.966 CPU tests pass.
+- **Earlier decoder result:** [Pyramid access](native-pyramid-decoder-plan.md) gains1.09–1.71% MSE, missing20%; encoder frozen.
 
 - **Completed slice:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
@@ -65,9 +65,8 @@ Task plans own current work; older decisions remain in the
   added cost. Short future-image fits still fail the copy-frame comparison;
   neither resource savings nor successful execution establishes learned utility.
   Reports: `runs/token_budget_final_v1/report.html` and `runs/token_budget_quality_v1/`.
-- The [belief model](belief-model.md) and [model guide](models.md) describe the
-  implemented categorical state, event transactions, causal evidence and bounded
-  memory. Long-horizon learning, calibrated uncertainty and broad autonomous
+- The [belief model](belief-model.md) and [model guide](models.md) describe
+  categorical state, events, causal evidence and bounded memory. Long-horizon learning, calibrated uncertainty and broad autonomous
   behavior need their own evidence. Preserve failed current/recent-recall results
   when selecting a bounded input/binding/readout diagnostic.
 

@@ -100,3 +100,18 @@ def test_native_decoder_rejects_invalid_feature_inputs(native, fault):
     broken = replace(pyramid, scales=(fine,) if fault == "missing_scale" else (fine, coarse))
     with pytest.raises(ValueError):
         model.decoder(percept.slots, broken)
+
+
+def test_decoder_objective_weight_and_eval_preserve_training_state(native):
+    from experiments.latent_agent import decoder_objective, decoder_mask_eval
+    from pathwm.io import evaluation_mode
+    model,pyramid,percept=native
+    _,_,rgb,entity,_=perception_batch(torch.Generator().manual_seed(3602),rw.KIND_SPLIT['train'],2,'cpu')
+    a,_=decoder_objective(percept,rgb,entity,0.)
+    b,metrics=decoder_objective(percept,rgb,entity,.5)
+    assert torch.equal(a,(percept.recon-rgb).square().mean())
+    assert abs(float(b-a)-.5*metrics['mask'])<1e-7
+    rng=torch.get_rng_state().clone();before=state_hash(model)
+    with evaluation_mode(model):result=decoder_mask_eval(model,model,'cpu',2)
+    assert torch.equal(rng,torch.get_rng_state()) and state_hash(model)==before
+    assert all(v['mean']['pointer_agreement']==1 for v in result.values())
