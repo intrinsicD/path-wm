@@ -77,3 +77,24 @@ not by itself prove exact non-injectivity. No extra collision gate is adopted.
 Success is a constructive recovery witness, not proof the features uniquely determine
 the image. Claude’s stronger wording in its review is not adopted. Deterministic
 algorithms and IEEE fp32 are requested through existing `seed_everything`.
+
+## First result and registered longer diagnostic
+
+`runs/native_encoder_inversion_v1/report.html`: valid, strict retention gate **fails**.
+1000updates: train/validation mean RGB MSE gray0.0000600/0.0000701,
+noise0.0005025/0.0005054. Both starts substantially outperform matched decoders, but
+one gray-validation image exceeds1e-4 and all noise images do; noise gradient guards
+also fail. Feature errors continue falling into the cosine tail. Runtime36.3s,
+peak reserved0.170GiB. These are partial recovery measurements, not a passing
+strict-retention claim; the first result and protocol remain preserved.
+
+Before executing a **separate follow-up**, register exactly10000updates from the
+same fresh gray/noise starts (not resume), with cosine denominator10000, lr0.03,
+scoring every500updates. Everything else, including targets, full model, all64
+individual-image criteria, body/gradient gates and10min/6GiB cap, stays unchanged.
+This is an explicitly result-informed optimization-budget diagnostic, not an
+independent confirmation population. Run `native_encoder_inversion_long_v1` uses
+`runs/reviews/reconstruction_diagnosis_20260925/invert_long.py` and saves its own
+protocol snapshot. No second extension or selection is authorized by this protocol.
+The question is whether more inversion computation recovers the residual detail;
+it does not test whether longer decoder training works.
