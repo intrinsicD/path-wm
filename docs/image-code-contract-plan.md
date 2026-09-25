@@ -687,3 +687,33 @@ For one saved code use `--code CODE.pt --decoded OUTPUT.pt` instead of `--output
 This establishes slow faithful debugging within these populations, not bit-exact
 RGB, faithful fast decoding, global invertibility, natural images or generated-code
 validity. P2 continues with its original fixed decoder and unchanged gates.
+
+## P4: invocation-local fixed-context KV reuse (approved)
+
+Alex approves implementing the cache comparison. All four earlier producer-training
+jobs are complete before shared source edits. Reuse existing normalized/projected
+context and each cross-attention layer's K/V only within one inference `features`
+call. Keep the uncached reference selectable. Do not cache target self-attention,
+change parameters, checkpoint formats, training gradients or reconstruction bypass.
+Training/grad-enabled execution and direct regression retain their existing path.
+
+Predeclared validation: actual trained flow3711 and3712 checkpoints, native64width,
+256fine tokens plus1request,3blocks,16Euler steps, native P1E3601decoder. Saved
+observed codes from the full refinement confirmation, first16train and16validation
+images, both machines and both desired states; sampleIDs0and1 for numerical checks.
+Compare every solver-state/velocity and final native code at atol2e-5/rtol2e-5;
+decodedRGB maxabsolute difference <=2e-5. No task-quality promotion. Full-module
+state/RNG unchanged; sameweights/checkpointkeys; actual full-configuration mask,
+changed-context/weight freshness and training-gradient checks. CPU full regression.
+
+Timing: RTX3050FP32, two CPU threads, synchronized wall time, batch1and8,16steps,
+5warmups and30paired timed repeats with alternating order, fixedseed3711 and
+sampleID0, matching native context. Report every raw pair, median latency, ratio,
+peakallocated/reservedmemory and cachebytes. Include full producer+native decoder
+latency. No concurrent GPU jobs. Budget15minutes/6GiB. Default inference caching
+is accepted only if all equivalence checks pass and median producer latency improves
+at least5% in one batch size with no >5% regression in either; otherwise keep it
+opt-in or remove it based on the measured cause. Timing is local, not a general
+speed guarantee. Report owns raw data, identity/source and standalone existing-renderer
+HTML; no new reporting framework. Principles: prepare once, scope invariant ownership,
+preserve retained information and measure actual execution separately from quality.
