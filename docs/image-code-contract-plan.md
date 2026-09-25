@@ -656,3 +656,34 @@ extension is run. This is improved reconstruction, not saturation or fidelity.
 The run/report is `runs/native_decoder_subpixel_3601_u8000_v1/report.html`; the
 prefix and summed-resource audit are `long-prefix-check.json` and
 `long-result-check.json` in the review directory. Its isolated source remains intact.
+
+
+External comparison: [Qwen-Image-2.1](qwen-image-21-comparison.md) distinguishes
+semantic/spatial conditioning and7Bimage+8Bvision-language scale from our184,448parameter
+request/producer path. This does not adopt a replacement representation or establish
+that current decoder/edit failures are size-limited. General factorization remains open.
+
+
+P2 first flow quality result (`runs/native_memory_edit_3711_flow_eval_v1/report.html`)
+is valid but fails: train/validation paired lamp accuracy.3594/.3633, explained
+visible change.1620/.0927, normalized no-op drift.3749/.3965. Decoded true-target
+lamp ceiling1.0; controls do not establish useful editing. Coverage.9922/.9648
+passes, with2/9 unresolved bindings. Claude's read-only diagnosis finds same-kind
+twin machines competing for appearance identity; no evaluator mapping bug. Preserve
+these counted failures. Binding changes affect generated outputs; similar aggregate
+wrong-binding accuracy does not establish ignored conditioning. Direct-control
+quality evaluation and second-seed training remain in progress.
+
+P3D full confirmation completes: `runs/native_code_refinement_confirmation_v1/report.html`.
+All512observed native images (256train,256validation) pass registered absolute
+reconstruction gates using1000pixel-Adam steps initialized from P1E3601decoder.
+Train/validation meanRGBMSE3.077e-6/2.699e-6; worst1.3615e-5/1.3377e-5. Mean
+machine-body and gradient errors also pass1e-4. Actual frozen encoder, serialized
+code-only child inputs, unchanged source/weights/RNG, finite/bounded outputs and
+resource checks all pass;376.58s. Existing report renderer structurally verified.
+The128image screen passed decoder starts but failed gray starts. Recipe:
+`python -m experiments.image_code_refinement --checkpoint runs/native_decoder_subpixel_3601_v1/last.pt --output NEW_RUN --scenes 256 --steps 1000 --starts decoder`.
+For one saved code use `--code CODE.pt --decoded OUTPUT.pt` instead of `--output`.
+This establishes slow faithful debugging within these populations, not bit-exact
+RGB, faithful fast decoding, global invertibility, natural images or generated-code
+validity. P2 continues with its original fixed decoder and unchanged gates.

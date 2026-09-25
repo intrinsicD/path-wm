@@ -9839,3 +9839,59 @@ tree:
   - docs/image-code-contract-plan.md
   - ara/evidence/tables/scene_generation_contract_2026-09-25.json
   status: completed
+- id: N594
+  type: experiment
+  title: Native code replay decoder repair and first memory-edit trial
+  provenance: ai-executed
+  timestamp: 2026-09-25T12:00+02:00
+  result: P0 exact fresh-process native replay128images percheckpoint; P1a RGB-only
+    validationgain22.5% but trainrelative/absolute fail; P1E fine-subpixel repair
+    validationgain52.4–52.8% versus RGB-only, preservation passes, absolute fidelity
+    fails.8000update extension validationMSE.002082 fails. First P2flow train/val
+    pairlamp.359/.363 and explainedchange.162/.093 fail despite targetlampceiling1.
+    No general capability.
+  evidence:
+  - docs/image-code-contract-plan.md
+  - runs/native_decoder_subpixel_comparison_v1/report.html
+  - runs/native_decoder_subpixel_3601_u8000_v1/report.html
+  - runs/native_memory_edit_3711_flow_eval_v1/report.html
+  status: completed
+- id: N595
+  type: experiment
+  title: Saved native code refinement warm-start screen
+  provenance: ai-executed
+  timestamp: 2026-09-25T12:00+02:00
+  result: 1000pixel-Adamsteps from native decoder reconstruct128observed images from
+    savedcodes only. WorstMSE train9.05e-6,val1.34e-5; primary absolute gates pass,
+    graycontrol fails.512confirmation running. Frozen actual native encoder, no extra
+    image input or decoder weighttraining; no global invertibility/generatedcode claim.
+  evidence:
+  - runs/native_code_refinement_screen_v1/report.html
+  - experiments/image_code_refinement.py
+  status: completed
+- id: N596
+  type: question
+  title: Compare Qwen Image2.1 architecture and scale with native PATH-WM
+  provenance: user
+  timestamp: 2026-09-25T12:00+02:00
+  description: Alex asks how QwenImage2.1 works, differences from ourarchitecture
+    and whether modelsize explains capabilities. Official2.1source/config audit with
+    actualClaudeOpus5.5medium. No replacement architecture adopted.
+  evidence:
+  - docs/qwen-image-21-comparison.md
+  - runs/reviews/scene_capabilities_20260925/qwen21-review.json
+  status: completed
+- id: N597
+  type: experiment
+  title: Full512image saved native code refinement confirmation
+  provenance: ai-executed
+  timestamp: 2026-09-25T12:02+02:00
+  result: All512images pass registeredabsoluteRGB/body/gradientgates.1000pixelAdamsteps
+    fromfixedP1Edecoder; train/valmeanMSE3.077e-6/2.699e-6,worst1.3615e-5/1.3377e-5.376.58s,
+    validtrue, structuralreportverified. Code-only child reads andfrozen/source/RNGchecks
+    pass. Slowobserved-code debuggingonly; fastdecoder andgeneration unqualified.
+  evidence:
+  - runs/native_code_refinement_confirmation_v1/report.html
+  - runs/native_code_refinement_confirmation_v1/result.json
+  - experiments/image_code_refinement.py
+  status: completed

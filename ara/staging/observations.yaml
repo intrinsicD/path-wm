@@ -7234,3 +7234,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O412
+  timestamp: 2026-09-25T12:00+02:00
+  provenance: ai-suggested
+  content: Current native finecode retention, fastdecoding and conditionedediting
+    are separate problems. Scoped inversion witnesses and decoderconnection improvement
+    do not justify replacing multiscale representation. Firstflowfailures do not isolate
+    size,conditioning or optimization; binder twinambiguity remains counted.
+  context: Native experiments and source audit withClaude; directcontrol and fullconfirmation
+    pending.
+  potential_type: claim
+  bound_to:
+  - N594
+  - N595
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O413
+  timestamp: 2026-09-25T12:00+02:00
+  provenance: ai-suggested
+  content: Qwen2.1 combines7Bsingle-streamDiT, separateQwen3VL8B and64channelRGBA
+    VAE. SpatialVAE conditioning plus image-aware instructionstates supports separate
+    semantic/pixel roles, not guaranteed explicit factorization. Our180032parameter
+    generator and RuleWorldtraining differ enormously, but scale does not supply missing
+    learned interfaces or prove cause of currentfailures.
+  context: Primary releasedconfigs/code comparison; no head-to-headrun or quantifiedtraining-data/size
+    ablation. Peer ignored-binding inference rejected.
+  potential_type: architecture
+  bound_to:
+  - N596
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
