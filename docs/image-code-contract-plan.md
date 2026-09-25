@@ -421,3 +421,22 @@ different supervision/conditioning; pick one explicitly. Re-encoded heads/keys a
 diagnostic checks, supplemented by independent target/property evidence. General
 entity decomposition may need variable counts and part hierarchies; the present
 seven-slot configuration is a baseline, not a permanent limit or general capability.
+
+## Execution: approved initial slices (25September)
+
+Alex explicitly requests establishing the capabilities with Claude. Implementation
+begins with code-only replay and the already planned decoder-objective comparison.
+The native replay check uses each original first64-image evaluation chunk at seeds
+3602/3603 and trained decoder checkpoints3601/3604. Require exact coarse/slot/alpha/
+RGB replay and original per-image MSE, compatible model/metadata validation, fresh
+process reads limited to checkpoint+code, unchanged RNG/weights, and no encoder
+forward. Full native model;128images per checkpoint; software gates only.
+
+P1a registers the four previously proposed decoder runs now: seeds3601/3604,
+weights0.5/0.0, native pyramid arm, parentu6000,2000updates, lr3e-4, batch32,
+fixed evaluation every500,10min/6GiB per run. Existing256+256 populations and original
+input streams. Control final per-image records must exactly reproduce previous
+pyramid runs. Mask/pointer metrics are additional records, not changes to the RGB
+metrics. Relative20% screen, absolute per-image1e-4 and meanbody/gradient1e-4 fidelity
+gates, and0.5/1point mask/pointer preservation gates remain as proposed above.
+No selection or gate changes after execution. Any extension is registered separately.
