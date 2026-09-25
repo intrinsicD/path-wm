@@ -5,6 +5,8 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
+- **Active:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md): frozen encoder, matched decoder retraining; no result yet.
+
 - **Completed slice:** [Real visual-memory connection](real-visual-memory-plan.md), with Claude Opus5.5 medium.
 - [Actual-model reruns](actual-model-rerun-plan.md):36 reference checks pass (105 with regression); resource/R2 rerun. Remaining gaps open.
 - **Latest evidence:** The native visual-memory task passes all six fixed development populations using joint6000 and TRAIN-selected.90/.85/.10 policy: relocation62,63,61,63,64,64/64; zero novel merges; all persistence/restart/correction contracts pass. Retention passes all 12. Original architecture and parameter count. 957 final CPU tests pass with no skips and unchanged source; all six final-source task reruns exactly reproduce the qualified results. Unused augmentation is removed with evidence preserved. [Plan/report](real-visual-memory-plan.md) preserve failures, rerun commands and scope.

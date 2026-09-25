@@ -1,0 +1,78 @@
+"""Native full-config decoder connection contracts; no quality claim from these checks."""
+from dataclasses import replace
+from pathlib import Path
+
+import pytest
+import torch
+
+from experiments.latent_agent import perception_batch
+from pathwm.data import rule_world as rw
+from pathwm.io import load_component, state_hash
+from pathwm.models.slots import SlotPerception
+
+PARENT = Path(__file__).resolve().parents[1] / 'runs/real_visual_joint_repair_3501_u6000_v1/last.pt'
+
+
+@pytest.fixture
+def native():
+    model = SlotPerception().eval()
+    load_component(model, PARENT, 'perception')
+    _, _, rgb, _, _ = perception_batch(torch.Generator().manual_seed(3602), rw.KIND_SPLIT['train'], 2, 'cpu')
+    with torch.no_grad():
+        pyramid = model.pyramid(rgb)
+        percept = model.from_pyramid(pyramid)
+    return model, pyramid, percept
+
+
+def test_enable_preserves_native_output_weights_and_rng(native):
+    model, pyramid, before = native
+    old = {k:v.clone() for k,v in model.state_dict().items()}
+    rng = torch.get_rng_state().clone()
+    model.decoder.enable_pyramid()
+    assert torch.equal(rng, torch.get_rng_state())
+    for key,value in old.items():
+        assert torch.equal(value, model.state_dict()[key]), key
+    with torch.no_grad():
+        after = model.from_pyramid(pyramid)
+    assert torch.equal(before.recon, after.recon)
+    assert torch.equal(before.alpha, after.alpha)
+    assert torch.equal(before.slots, after.slots)
+
+
+def test_enabled_decoder_requires_pyramid_and_rejects_bad_geometry(native):
+    model, pyramid, percept = native
+    model.decoder.enable_pyramid()
+    with pytest.raises(ValueError):
+        model.decoder(percept.slots)
+    fine, coarse = pyramid.scales
+    wrong = replace(pyramid, scales=(replace(fine, grid=(1,8,32)), coarse))
+    with pytest.raises(ValueError):
+        model.decoder(percept.slots, wrong)
+
+
+def test_native_decoder_training_freezes_source_and_reads_features(native):
+    model, pyramid, percept = native
+    model.requires_grad_(False)
+    model.decoder.enable_pyramid()
+    model.decoder.requires_grad_(True)
+    old_source = state_hash(model.encoder), state_hash(model.slot_attention), state_hash(model.heads)
+    original_features = [s.values.clone() for s in pyramid.scales]
+    optimizer = torch.optim.AdamW(model.decoder.parameters(), lr=3e-4)
+    # Actual pretrained RGB reconstruction is a fixed target; a perturbation ensures
+    # a nonzero update. This tests gradient routing, not learned reconstruction quality.
+    target = percept.recon.detach() * .9
+    for _ in range(2):
+        colors, alpha = model.decoder(percept.slots.detach(), pyramid)
+        prediction = (alpha.softmax(1)[:,:,None] * colors).sum(1)
+        optimizer.zero_grad()
+        (prediction-target).square().mean().backward()
+        optimizer.step()
+    assert old_source == (state_hash(model.encoder), state_hash(model.slot_attention), state_hash(model.heads))
+    assert all(p.grad is None for p in model.encoder.parameters())
+    for saved,scale in zip(original_features,pyramid.scales):
+        assert torch.equal(saved,scale.values)
+    zeros = replace(pyramid, scales=tuple(replace(s,values=torch.zeros_like(s.values)) for s in pyramid.scales))
+    with torch.no_grad():
+        actual = model.decoder(percept.slots, pyramid)[0]
+        erased = model.decoder(percept.slots, zeros)[0]
+    assert not torch.equal(actual,erased)
