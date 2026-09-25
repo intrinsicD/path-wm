@@ -1,0 +1,63 @@
+{
+  "date": "2026-09-25T13:25+02:00",
+  "status": "reviewed proposal; no speech training, model install or selected codec",
+  "plan": "docs/grounded-speech-plan.md",
+  "plan_sha256": "d1b663a370000c03bcfd324517af068301c875eac6f520dc52c7261605e47590",
+  "review": {
+    "design": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "exit_code": 0,
+      "response_sha256": "067a82af9ab21d1c128ce27fdff9d3fdb3ab898cee0ce498b6623f0d9bf44743",
+      "brief_sha256": "3a0a1637ea9080d3f80fb0d6284706f41e008c86c76afc7cad1016ce568327b9",
+      "scope": "abstract public-only review; no private code/data/results exported"
+    },
+    "reconcile": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "exit_code": 0,
+      "response_sha256": "7b63ff2f4e6a0f6b984d05a8f1c645e28db2493a9b21a87dd40b13fbb05eea5c",
+      "brief_sha256": "0e172e101d122bf9aaddc63f5ea6da2ffc02150393d9b643773e39d7ecb58b50",
+      "scope": "abstract public-only review; no private code/data/results exported"
+    }
+  },
+  "local_source_hashes": {
+    "pathwm/models/multiscale.py": "640328c753180fcafbdd5011e87d75eb1c11070f6c5622411d54a1d86cd656e6",
+    "pathwm/models/modalities.py": "68d6c4ae94aad327b2f714324c47b3e875fd079b0f233cd7d044703795320f21",
+    "pathwm/models/tasks.py": "ed5ac385e46a997de908873243521a05c2d88fbc439c9b9bc822bfaa97818f5d",
+    "pathwm/models/agent.py": "fd489fb089d39588463cee215766b535fb32d1da85952b3a05bbe3b39c5f2b63",
+    "pathwm/world_state/episodes.py": "2240f1b471177080e6bfbbd22b105cf720140e4b90da962f43d27978a7bacf6b",
+    "pathwm/world_state/unified.py": "0abc0bc20e795b67587c3613b317abb0aaac3acaa4e4c64d47e1a7bae773ceb3"
+  },
+  "public_sources": [
+    {
+      "url": "https://arxiv.org/abs/2410.00037",
+      "supports": "parallel audio streams, aligned text/audio; pretrained text backbone"
+    },
+    {
+      "url": "https://github.com/kyutai-labs/moshi",
+      "supports": "official streaming Mimi implementation"
+    },
+    {
+      "url": "https://arxiv.org/abs/2503.20215",
+      "supports": "blockwise inputs and hidden-state-conditioned Thinker/Talker speech output"
+    }
+  ],
+  "corrections": [
+    "Acoustic reconstruction is not a semantic-input gate",
+    "Time alignment alone is not representation compatibility",
+    "Transcript comparison is not an upper bound",
+    "Simple intent recognition need not require expensive core reasoning",
+    "No unrequested ban on integrated pretrained modules",
+    "Use actual existing binary-state goals; no assumed object movement",
+    "Segment playback does not imply word-exact truncation"
+  ],
+  "unresolved": [
+    "audio component/data selection",
+    "audio instruction/typed goal API",
+    "language learning cost and generalization",
+    "streaming and output alignment validation"
+  ]
+}

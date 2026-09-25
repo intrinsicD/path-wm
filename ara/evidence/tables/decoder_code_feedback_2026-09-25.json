@@ -1,0 +1,371 @@
+{
+  "date": "2026-09-25T13:25+02:00",
+  "result": {
+    "checks": {
+      "3601_control_budget": true,
+      "3601_control_completed": true,
+      "3601_control_frozen": true,
+      "3601_control_old_records": true,
+      "3601_control_rows": true,
+      "3601_control_source": true,
+      "3601_control_train_inputs": true,
+      "3601_control_train_pixel_recomputed": true,
+      "3601_control_validation_inputs": true,
+      "3601_control_validation_pixel_recomputed": true,
+      "3601_feedback_budget": true,
+      "3601_feedback_completed": true,
+      "3601_feedback_frozen": true,
+      "3601_feedback_rows": true,
+      "3601_feedback_source": true,
+      "3601_feedback_train_inputs": true,
+      "3601_feedback_train_pixel_recomputed": true,
+      "3601_feedback_validation_inputs": true,
+      "3601_feedback_validation_pixel_recomputed": true,
+      "3601_same_initial": true,
+      "3601_train_same_eval": true,
+      "3601_training_stream": true,
+      "3601_validation_same_eval": true,
+      "3604_control_budget": true,
+      "3604_control_completed": true,
+      "3604_control_frozen": true,
+      "3604_control_old_records": true,
+      "3604_control_rows": true,
+      "3604_control_source": true,
+      "3604_control_train_inputs": true,
+      "3604_control_train_pixel_recomputed": true,
+      "3604_control_validation_inputs": true,
+      "3604_control_validation_pixel_recomputed": true,
+      "3604_feedback_budget": true,
+      "3604_feedback_completed": true,
+      "3604_feedback_frozen": true,
+      "3604_feedback_rows": true,
+      "3604_feedback_source": true,
+      "3604_feedback_train_inputs": true,
+      "3604_feedback_train_pixel_recomputed": true,
+      "3604_feedback_validation_inputs": true,
+      "3604_feedback_validation_pixel_recomputed": true,
+      "3604_same_initial": true,
+      "3604_train_same_eval": true,
+      "3604_training_stream": true,
+      "3604_validation_same_eval": true
+    },
+    "clip_active_fraction": {
+      "3601_control": 0.0,
+      "3601_feedback": 0.0005,
+      "3604_control": 0.0,
+      "3604_feedback": 0.0
+    },
+    "code_weight": 0.25617932740093896,
+    "fidelity_gate": false,
+    "gate": false,
+    "gates": {
+      "3601_train": {
+        "body": false,
+        "fidelity": false,
+        "gradient": false,
+        "mask": true,
+        "pointer": true,
+        "relative": false
+      },
+      "3601_validation": {
+        "body": false,
+        "fidelity": false,
+        "gradient": false,
+        "mask": true,
+        "pointer": true,
+        "relative": false
+      },
+      "3604_train": {
+        "body": false,
+        "fidelity": false,
+        "gradient": false,
+        "mask": true,
+        "pointer": true,
+        "relative": false
+      },
+      "3604_validation": {
+        "body": false,
+        "fidelity": false,
+        "gradient": false,
+        "mask": true,
+        "pointer": true,
+        "relative": false
+      }
+    },
+    "limitations": [
+      "Two paired seeds; fixed synthetic development populations; no natural-image qualification.",
+      "One calibration-derived weight and 2000-update budget, no search. Raw code MSE weights high-scale channels more.",
+      "No teacher-image distillation or iterative inference. Pixel and feature quality reported separately.",
+      "CPU regression ran concurrently; elapsed runtime is resource accounting, not an isolated speed benchmark.",
+      "Existing report renderer, structural QA only."
+    ],
+    "metrics": {
+      "3601_train": {
+        "code_control": 0.0016312265277065308,
+        "code_feedback": 0.0014745612006663578,
+        "control": {
+          "gradient_error": 0.006156851951345743,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.014256977885452216,
+          "mse": 0.0034858644989981258,
+          "psnr": 24.90881997346878
+        },
+        "feedback": {
+          "gradient_error": 0.006498241486951883,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.015035408690891927,
+          "mse": 0.0036768467675756256,
+          "psnr": 24.661471843719482
+        },
+        "mask_control": {
+          "mask_ce": 0.026585243162116967,
+          "pixel_accuracy": 0.9897575378417969,
+          "pointer_agreement": 1.0
+        },
+        "mask_feedback": {
+          "mask_ce": 0.030804628644546028,
+          "pixel_accuracy": 0.9876289367675781,
+          "pointer_agreement": 1.0
+        },
+        "relative_reduction": -0.05478763406678322,
+        "worst_image_mse": 0.010281680151820183
+      },
+      "3601_validation": {
+        "code_control": 0.001649286644806125,
+        "code_feedback": 0.001514476419743005,
+        "control": {
+          "gradient_error": 0.005814060938064358,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.012759683148033218,
+          "mse": 0.0032043135292951774,
+          "psnr": 25.172384522855282
+        },
+        "feedback": {
+          "gradient_error": 0.006129177631919447,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.01355406217953714,
+          "mse": 0.003392721824639011,
+          "psnr": 24.90760662406683
+        },
+        "mask_control": {
+          "mask_ce": 0.025196679820510326,
+          "pixel_accuracy": 0.9901275634765625,
+          "pointer_agreement": 1.0
+        },
+        "mask_feedback": {
+          "mask_ce": 0.029775370850984473,
+          "pixel_accuracy": 0.9878349304199219,
+          "pointer_agreement": 1.0
+        },
+        "relative_reduction": -0.05879833344063434,
+        "worst_image_mse": 0.0070463260635733604
+      },
+      "3604_train": {
+        "code_control": 0.001613769217783556,
+        "code_feedback": 0.0014894519442805176,
+        "control": {
+          "gradient_error": 0.0061246993882377865,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.014172409300954314,
+          "mse": 0.003463988194198464,
+          "psnr": 24.93758523464203
+        },
+        "feedback": {
+          "gradient_error": 0.0064716802844486665,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.015011820116342278,
+          "mse": 0.0036662385527961305,
+          "psnr": 24.675540179014206
+        },
+        "mask_control": {
+          "mask_ce": 0.024965835975308437,
+          "pixel_accuracy": 0.9906187057495117,
+          "pointer_agreement": 1.0
+        },
+        "mask_feedback": {
+          "mask_ce": 0.0278177703730762,
+          "pixel_accuracy": 0.9892950057983398,
+          "pointer_agreement": 1.0
+        },
+        "relative_reduction": -0.058386561171426044,
+        "worst_image_mse": 0.010262710973620415
+      },
+      "3604_validation": {
+        "code_control": 0.001628200635423127,
+        "code_feedback": 0.001512710131919448,
+        "control": {
+          "gradient_error": 0.005785747948721109,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.012673140645347303,
+          "mse": 0.003183118025845033,
+          "psnr": 25.20364051312208
+        },
+        "feedback": {
+          "gradient_error": 0.006113407913289848,
+          "images": 256,
+          "machine_body_images": 256,
+          "machine_body_mse": 0.013477291558956495,
+          "mse": 0.0033740460125954996,
+          "psnr": 24.933262512087822
+        },
+        "mask_control": {
+          "mask_ce": 0.02383251386345364,
+          "pixel_accuracy": 0.9908905029296875,
+          "pointer_agreement": 1.0
+        },
+        "mask_feedback": {
+          "mask_ce": 0.026898052587057464,
+          "pixel_accuracy": 0.9893617630004883,
+          "pointer_agreement": 1.0
+        },
+        "relative_reduction": -0.05998143493274344,
+        "worst_image_mse": 0.007098005618900061
+      }
+    },
+    "relative_gate": false,
+    "resources": {
+      "3601_control": {
+        "device_total_gib": 7.63604736328125,
+        "device_used_gib_at_end": 3.42333984375,
+        "reserved_within_6gib": true,
+        "seconds": 198.05771539296256,
+        "torch_max_allocated_gib": 1.6262164115905762,
+        "torch_max_reserved_gib": 2.240234375,
+        "updates": 2000
+      },
+      "3601_feedback": {
+        "device_total_gib": 7.63604736328125,
+        "device_used_gib_at_end": 3.41943359375,
+        "reserved_within_6gib": true,
+        "seconds": 227.16962826700183,
+        "torch_max_allocated_gib": 1.6281695365905762,
+        "torch_max_reserved_gib": 2.240234375,
+        "updates": 2000
+      },
+      "3604_control": {
+        "device_total_gib": 7.63604736328125,
+        "device_used_gib_at_end": 3.41748046875,
+        "reserved_within_6gib": true,
+        "seconds": 193.28860932798125,
+        "torch_max_allocated_gib": 1.6262164115905762,
+        "torch_max_reserved_gib": 2.240234375,
+        "updates": 2000
+      },
+      "3604_feedback": {
+        "device_total_gib": 7.63604736328125,
+        "device_used_gib_at_end": 3.42724609375,
+        "reserved_within_6gib": true,
+        "seconds": 218.25289816700388,
+        "torch_max_allocated_gib": 1.6281695365905762,
+        "torch_max_reserved_gib": 2.240234375,
+        "updates": 2000
+      }
+    },
+    "valid": true
+  },
+  "bindings": {
+    "3601_control": {
+      "hashes": {
+        "evaluation_final.json": "58b66b25d9c5e16ba94bc8ea004098cd9d8402b33636b8c70a8d0cddc4a16222",
+        "last.pt": "0cee00d6f2d63a7758dcb2c49f3ca359dab77d00c0ee358ca5c6fe6e2d09495a",
+        "masks_final.json": "fad7ee6c17cde7c9f331e05ddd1e8c1042dfa5fcbc4ae68216d83d4d73e07bcf",
+        "metrics.jsonl": "e4826ded93763727238383fd658b924067507a856e727aae56425a442b4cc58e",
+        "result.json": "cdd24de6da2d12a3b4519719f3690494752970768b153d5e4542a4bae1c693dd",
+        "run.json": "851786cb78f4cb7942a18cb11e58c31f1641ac5e997cf5fdc1b375361dd09909"
+      },
+      "path": "runs/native_decoder_code_control_3601_v1"
+    },
+    "3601_feedback": {
+      "hashes": {
+        "evaluation_final.json": "7a897051dac2df1af53a1eea46557e3b5493ff37644524e0a6cae7f53ede553e",
+        "last.pt": "fc03641ea0cffcae750c8d20900dc812ff4f2ffeddfddd36b947ac30c98cd24b",
+        "masks_final.json": "233333771146a71114318b6cb6c600161cadcd9479e0a48c12956f4f5ddadf84",
+        "metrics.jsonl": "3dbcffdde37d0d76b15577a717b860655a6c32c3316d93a1509eb27400f2cf23",
+        "result.json": "ff780e51fb5a900676838fb5e3a20fdce7861418d72984c820722ba311888515",
+        "run.json": "c66a7ea4b5a9e0e4f29ebecb373827b2634c019f569f45d1ea749e1537c61d0a"
+      },
+      "path": "runs/native_decoder_code_feedback_3601_v1"
+    },
+    "3604_control": {
+      "hashes": {
+        "evaluation_final.json": "85649df3da4ca69961cc5e94cf827c58a14ad9314e0367c5f542ea59da2e0a4f",
+        "last.pt": "011e0588098bc0634bb1298b6fb952eb81195271f029ab311fa9ca349ff2103f",
+        "masks_final.json": "61d54771a76d48079c2e32d338070a6ca8f60017d1973216558763be95571e4d",
+        "metrics.jsonl": "1361d01f3933b7ba74a53a218307997e98414dd28512bbc75a25501405daf974",
+        "result.json": "0767f51529ad74b6d2878f667b691e81bad9c4691b032e2097989ca4ee969fee",
+        "run.json": "a91ff6c66e18f7368f923c3c9f603f533557d8156fd2ab70204d3b588ee941a7"
+      },
+      "path": "runs/native_decoder_code_control_3604_v1"
+    },
+    "3604_feedback": {
+      "hashes": {
+        "evaluation_final.json": "4ccf24fefb3f3197d04af315b6c746884cfaf1ac306e7d891f313705e1504743",
+        "last.pt": "b18b0c53d1fafba5a554305eb4e2f88cc8af98242343f7037a4c051b2e916179",
+        "masks_final.json": "2284af28b2eb8d6a369fbc4f5c358d011f973c640377bb0f395e9e90e168a676",
+        "metrics.jsonl": "e9d428ada58dc94c7940ed461f58fa7a5766fe7fc6224e2cc400052c47c85ce6",
+        "result.json": "59829841812ee5dc80b229c269856b20e06126137891e25c9f278fff54965e70",
+        "run.json": "bab93b4c5ce06a26209bae310c55f72e9b916cdc25f41fba6e686bd93567837c"
+      },
+      "path": "runs/native_decoder_code_feedback_3604_v1"
+    }
+  },
+  "comparison_files": {
+    "result.json": "ebc94f9649ed787851340a63c6b25b8670a8d183f9705c86e4cf8cd49e66f14b",
+    "run.json": "ccf347f9f1d8e80859d33f4148b21c83e8a66a26b50dc85ed2dd44c03127e8de",
+    "code_evaluation.json": "92160fcd484283b670184d5bb77fae035fbd92067e9b668173c0d46a27e8f210",
+    "report.html": "043266b80896fcd656769c2c9bfafdfa15fff3b4989924b3e7960b88f64909e4",
+    "comparison.png": "f06f30f2da172eed641ad3f60d17c30e6df830e9d1f28233d91a230ec237f3d1",
+    "report.qa.json": "cc3a1d76c1803b445631daa91ccb0b470cf5460685ada57e50941d28cc750f36"
+  },
+  "software_check": {
+    "cpu": {
+      "cuda": true,
+      "final_evaluation": true,
+      "identity_sha256": true,
+      "metrics": true,
+      "model": true,
+      "numpy": true,
+      "optimizer": true,
+      "random": true,
+      "rows": true,
+      "sampler": true,
+      "scheduler": true,
+      "schema": true,
+      "step": true,
+      "torch": true
+    },
+    "cuda": {
+      "cuda": true,
+      "final_evaluation": true,
+      "identity_sha256": true,
+      "metrics": true,
+      "model": true,
+      "numpy": true,
+      "optimizer": true,
+      "random": true,
+      "rows": true,
+      "sampler": true,
+      "scheduler": true,
+      "schema": true,
+      "step": true,
+      "torch": true
+    }
+  },
+  "tests": {
+    "command": ".venv/bin/python -m pytest",
+    "exit_code": 0,
+    "passed": 990,
+    "seconds": 749.63,
+    "log": "full-cpu.log",
+    "scope": "complete CPU regression with two new native code-feedback tests"
+  },
+  "plan": "docs/image-code-contract-plan.md",
+  "review_scope": "Actual Claude abstract methodology review; numerical audit local."
+}

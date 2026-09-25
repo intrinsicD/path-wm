@@ -5,7 +5,7 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Image-code work:** [Plan](image-code-contract-plan.md): code-only replay and memory-routed editing software implemented;982tests and exact CPU/CUDA resume pass. Decoder repair improves validation52%, but fidelity still fails. Slow reconstruction passes512images. KV reuse saves9–23% producer time; fast decoding and flow editing still fail quality.
+- **Image-code work:** [Plan](image-code-contract-plan.md): replay/editing interfaces and exact resume pass; slow reconstruction passes512images. Fast fidelity/edit quality fail. P5 code feedback lowers feature error but worsens pixel MSE5.5–6.0% in two seeds; keep default0.990CPU tests pass. KV reuse saves9–23% producer time.
 
 - **Earlier decoder result:** [Pyramid access](native-pyramid-decoder-plan.md) gains1.09–1.71% MSE, missing20%; encoder frozen.
 
@@ -78,7 +78,7 @@ Task plans own current work; older decisions remain in the
 | Decision and outcome verification | [Decision design](decision-design.md): distinguish declared completion from verified success; preserve scoped recall/calibration evidence. |
 | Actions and instruction semantics | [Action design](action-semantics-design.md): typed execution, uncertain inferred actions and outcome checks; general execution is not established. |
 | General latent processing and token roles | [Latent core](latent-core.md): shared multimodal processing and learning/readout contracts, without a new adopted layout. |
-| Speech, human perception and video understanding | [Voice](agent-voice-design.md), [human perception](human-perception-discussion.md), [video test map](video-understanding-test-map.md): model selection, integration and natural-data quality remain open. |
+| Speech, human perception and video understanding | [Speech/command plan](grounded-speech-plan.md): grounded audio goals first, output in parallel; no speech runs. [Human perception](human-perception-discussion.md) and [video](video-understanding-test-map.md): integration/quality open. |
 | Demand-driven inference | [Neural Engine](neural-engine-inference.md): bounded residency, feature/state ownership and loading policy remain proposals. |
 
 Use the [discussion checklist](architecture-discussion.md) and atlas. Discussion

@@ -7299,3 +7299,34 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O416
+  timestamp: 2026-09-25T13:25+02:00
+  provenance: ai-suggested
+  content: At the registered scale and2000-update budget, amortized fine-code consistency trades lower
+    feature error for worse RGB/body/gradient reconstruction in both native seeds. Does not establish
+    encoder information loss, decoder saturation or failure of all feedback weights/distillation.
+  context: P5 actual native matched comparison; default feedback weight remains0.
+  potential_type: claim
+  bound_to:
+  - N602
+  - N603
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O417
+  timestamp: 2026-09-25T13:25+02:00
+  provenance: ai-suggested
+  content: Propose bounded spoken lamp questions/goals and contextual clarification through shared state
+    first, while speech output is prepared independently. Acoustic retention is not semantic proof; direct
+    latent speech needs compatible learned interfaces, causal access and playback/text alignment. Free
+    conversation additionally needs language competence.
+  context: Actual Claude abstract review/reconciliation plus local interface audit. Planning authorized;
+    data/model/API selection and speech training remain open.
+  potential_type: architecture
+  bound_to:
+  - N604
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

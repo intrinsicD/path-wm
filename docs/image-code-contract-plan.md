@@ -813,3 +813,49 @@ large-scale channels. Actual Claude Opus5.5 medium accepted the corrected bounde
 design and withdrew its unsupported assertion that an arbitrary encoder must be
 many-to-one. Its requested decision rule is the predeclared20%/preservation rule
 above. Two seeds remain a development screen, for positive as well as null results.
+
+P5 completed: **valid negative result**. Code feedback improves the feature metric
+but worsens pixel reconstruction at the registered weight/budget in both seeds.
+
+| Seed / population | RGB-only MSE | Feedback MSE | Pixel error increase | Code error decrease |
+| --- | ---: | ---: | ---: | ---: |
+| 3601 train | 0.0034858645 | 0.0036768468 | 5.48% | 9.60% |
+| 3601 validation | 0.0032043135 | 0.0033927218 | 5.88% | 8.17% |
+| 3604 train | 0.0034639882 | 0.0036662386 | 5.84% | 7.70% |
+| 3604 validation | 0.0031831180 | 0.0033740460 | 6.00% | 7.09% |
+
+Body and gradient errors worsen in all four comparisons. Masks/pointers preserve
+their registered limits; both relative and absolute fidelity gates fail. Candidate
+worst-image MSE is0.01028/0.01026 train and0.00705/0.00710 validation. Both controls
+exactly reproduce P1E per-image records; matched initial state/evaluation/training
+batch hashes, frozen parts, source hashes, resource checks and independent pixel
+recomputation all pass. Clipping occurs once in2000updates for candidate3601, never
+in the other runs; do not claim identical effective clipping or a unique mechanism.
+Run times193–227s each, all below15min/6GiB; CPU regression overlapped part of training,
+so timing is accounting, not a clean speed benchmark.
+
+990 CPU tests pass; native3update CPU/CUDA interrupted resume is exact for weights,
+optimizer, RNG/sampler, metric rows and evaluations. The first local verification
+harness expected a nonexistent report status `completed`; it failed after valid CPU
+runs. Corrected harness accepts `structural_verified`, audits the preserved CPU
+outputs and completes CUDA checks. No training evidence was overwritten.
+
+Report: [Code-feedback comparison](../runs/native_decoder_code_comparison_v1/report.html),
+with fixed-population curves, representative side-by-side images and exact metrics.
+Raw code metrics and source/checkpoint bindings are in the same directory. Existing
+renderer receives structural QA; the saved comparison image was visually inspected.
+No browser QA claim. Claude reviewed abstract methodology only under the public-only
+boundary; numerical/source/checkpoint audits were local. Receipts remain in the review
+directory. No weight search, second budget extension, teacher-image distillation or
+speech training follows. Keep feedback optional/default0; this result does not reject
+other weights, longer training, or distillation in general.
+
+Reproduce the feedback arm in a new output directory (use weight0 for its control):
+
+```bash
+.venv/bin/python -m experiments.latent_agent --stage perception --size full --device cuda \
+  --init-perception runs/real_visual_joint_repair_3501_u6000_v1 --seed 3601 --updates 2000 \
+  --decoder-reconstruction pyramid --decoder-subpixel --decoder-mask-weight 0 \
+  --decoder-code-weight 0.25617932740093896 --decoder-eval-scenes 256 --decoder-eval-every 500 \
+  --max-minutes 15 --max-reserved-gib 6 --output runs/NEW_FEEDBACK_RUN
+```

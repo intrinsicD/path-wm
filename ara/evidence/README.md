@@ -220,3 +220,7 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 Native visual memory on the actual model: [evidence](tables/native_visual_memory_2026-09-25.json), [plan](../../docs/real-visual-memory-plan.md). Six fixed development populations pass; training/calibration failures and final-source confirmation retained. No fine-detail, new-kind or full-agent claim.
 
 Native pyramid-connected decoder: [evidence](tables/native_pyramid_decoder_2026-09-25.json), [plan](../../docs/native-pyramid-decoder-plan.md). Actual two-seed decoder retraining yields1–2%gains, below20%target; valid negative result with frozen encoder and matched controls.
+
+Native decoder code feedback: [paired results](tables/decoder_code_feedback_2026-09-25.json); lower code error but worse pixels at the registered weight/budget.
+
+Grounded speech and spoken commands: [review/source bindings](tables/grounded_speech_plan_2026-09-25.json); design only, no speech training.

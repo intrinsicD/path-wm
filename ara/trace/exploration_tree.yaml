@@ -9947,3 +9947,41 @@ tree:
   - ara/evidence/tables/native_photo_preview_2026-09-25.json
   - runs/native_real_photo_preview_v1/report.html
   status: completed
+- id: N602
+  type: decision
+  title: Try frozen-encoder feedback for the fast decoder with Claude
+  provenance: user
+  timestamp: 2026-09-25T13:25+02:00
+  choice: Alex authorizes a matched test of RGB plus code-consistency training, with actual Claude collaboration.
+  alternatives:
+  - Keep RGB-only training
+  - Teacher-image distillation remains a separate untested alternative
+  evidence:
+  - docs/image-code-contract-plan.md
+  status: completed
+- id: N603
+  type: experiment
+  title: Native code-feedback training improves features but worsens pixels
+  provenance: ai-executed
+  timestamp: 2026-09-25T13:25+02:00
+  result: 'Two paired seeds,2000updates,lambda0.25617932740093896: validation RGB MSE rises5.88/6.00%,
+    fine-code MSE falls8.17/7.09%. Body/gradient quality worsens; mask/pointer guards pass. Both controls
+    reproduce old per-image records. Relative/absolute quality gates fail, validity checks pass.990CPU
+    tests and native CPU/CUDA exact resume pass. No default adoption.'
+  evidence:
+  - ara/evidence/tables/decoder_code_feedback_2026-09-25.json
+  - runs/native_decoder_code_comparison_v1/report.html
+  status: completed
+- id: N604
+  type: question
+  title: Plan interactive latent speech, grounded meaning and spoken commands with Claude
+  provenance: user
+  timestamp: 2026-09-25T13:25+02:00
+  description: Alex asks about spoken understanding, audio/world references, prosody, streaming turns,
+    wait/think/ask, speech output/text alignment, and requests actual Claude collaboration on a concrete
+    route to dialogue and commands. Reviewed plan uses existing native task/state/action ownership; no
+    speech implementation or training requested.
+  evidence:
+  - docs/grounded-speech-plan.md
+  - ara/evidence/tables/grounded_speech_plan_2026-09-25.json
+  status: open

@@ -1,5 +1,98 @@
 # Agent voice from reference recordings
 
+Current proposal after actual Claude review:
+[Grounded spoken dialogue and commands](grounded-speech-plan.md). It refines the
+initial discussion below: acoustic reconstruction is not a prerequisite for
+semantic-input experiments; input grounding and output preparation can proceed
+independently under a shared time/representation contract. Planning only.
+
+## First grounded conversation: proposed starting point, 25 September
+
+While decoder-feedback experiments run, Alex asks what is missing for spoken
+conversation and how to approach it. Existing audio/text encoders, output modules
+and episode records do not establish learned speech understanding, grounded answer
+formation or intelligible speech. Tone tests and conversation storage are separate
+from these learned capabilities. No speech implementation or training is authorized
+by this discussion; no pretrained component, dataset or codec has been selected.
+
+Proposed first end-to-end task: answer a spoken question about a small observed
+scene, then resolve a follow-up such as "and the other one?" using the same session.
+Choose attributes already validated in the actual model when registering the task;
+the conversational red-object example does not qualify existing color grounding.
+First train/check spoken content against object/property/state access with swapped
+question and scene controls. Then train a compatible state-conditioned speech
+sequence generator and acoustic output, potentially using a pretrained speech
+component after interface/resource review. Written transcripts may supervise or
+score learning without becoming a mandatory runtime text bridge.
+
+The proposed order is grounded question/answer alignment, intelligible direct
+speech, varied wording and follow-ups/corrections, then streaming and interruption
+behavior. Reuse the current shared state and episode ownership; do not introduce a
+separate conversation store or replace the real model with a toy dialogue system.
+Success must use held-out utterances and scenes, independent content checks and
+listening quality. All data, compute budgets, targets and thresholds remain to be
+registered before implementation. Free conversation is a broader objective than
+this bounded demonstration. This assistant proposal is awaiting Alex's discussion,
+not an adopted architecture or a capability validation.
+
+Alex follows up that latent codes should control the path, then asks whether to
+start with the encoder, decoder or joint training. Proposed staging: first verify
+real-speech codec reconstruction (acoustic preservation/intelligibility, not
+understanding); next train audio-to-shared-state grounding together with the core,
+using an independently checkable answer readout; next learn state-to-speech sequence
+generation; finally jointly fine-tune the connected conversation path. Understanding
+is not assigned to the encoder alone. A state vector needs a compatible temporal
+speech generator before acoustic decoding. These are discussion stages, not adopted
+training recipes, selected components or permission to run speech jobs.
+
+Alex then asks whether conversation repeatedly reprocesses the whole recording or
+handles arriving speech incrementally. Proposed streaming behavior: timestamped
+audio chunks with bounded acoustic context, compatible cached encoder state and
+versioned provisional interpretations in the shared session. Audio chunks are not
+speaker turns or semantic sentence boundaries. Later evidence can revise incomplete
+interpretations; retain source audio/provenance separately from derived working
+state. Endpointing and speaker changes need their own evidence, and silence alone
+does not guarantee turn completion. Begin with complete-utterance input, then train
+and verify the same path under chunked access, bounded lookahead and interruptions.
+Do not claim the current audio encoder already supports exact incremental caching,
+diarization or conversational streaming; interfaces and equivalence/quality tests
+remain to be designed. No speech training is launched by this explanation.
+
+Further questions concern control ownership, existing output and text alignment.
+Proposed control remains around the shared thinker: distinguish waiting for more
+input, useful additional reasoning, and an information gap requiring a question.
+Stable latent iterations alone do not establish correctness or resolved ambiguity.
+The audio front end supplies provisional evidence; it does not become a separate
+authoritative conversational state. These criteria remain to be specified/trained.
+
+Code inspection confirms `TaskPolicy` has operation/modality selection and the agent
+has an `emit` path. The native `AudioDecoder` attends state with four learned queries
+and emits a fixed-length waveform; it is not a trained variable-length speech
+sequence producer. `EpisodeClient.emit` can record/revalidate output chunks, including
+completion and obsolete-read/abort guards, but performs no external playback. These
+interfaces are groundwork, not evidence of learned conversational policy.
+
+For text that must match spoken wording, propose paired text/speech segments for one
+utterance, with explicitly trained alignment or a separate alignment step. Independent
+decoders reading the same state do not guarantee matching wording. Drive displayed/
+highlighted segments from playback progress rather than synthesis completion time.
+Interruptions cancel unplayed audio and pending display; already spoken source
+history is retained. Segment alignment is the first proposed scope; word highlighting
+additionally requires timestamps. No aligned generator, playback clock or text/audio
+synchronization is implemented by this discussion.
+
+Alex asks how audio can carry meaning, emotion and references to actual things.
+Proposed learning separates acoustic retention from contextual understanding:
+paraphrase/intent agreement, grounded spoken references with matched and mismatched
+scenes, non-speech event/source hypotheses, and prosody/context contrasts. Preserve
+observable acoustic cues separately from inferred emotion; loudness alone does not
+establish anger, and ambiguous sources/referents should remain uncertain. Grounding
+requires the audio encoder, shared core and memory together; no audio-only head is
+assumed to supply general semantics. Proposed tests vary scene, wording, prosody
+and prior referent independently and score the resulting answer or state against
+known evidence. These are candidate tasks, not selected data, objectives, thresholds
+or established emotion/intent understanding.
+
 Discussion proposal, 22 September 2026. Alex asks how the agent gets and uses a
 voice, and whether recordings can teach it that voice. No model selection,
 installation, training, audio generation or capability validation has occurred.
