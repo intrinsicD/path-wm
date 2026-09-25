@@ -16,13 +16,11 @@ agent. Hidden rules/kinds/labels are generator, loss and evaluator knowledge.
 """
 
 import argparse
-import functools
 import json
 import math
 from pathlib import Path
 import sys
 import time
-import types
 
 import numpy as np
 import torch
@@ -259,87 +257,13 @@ def perception_batch(generator, kinds, count, device, *, randomize=0.0, augmenta
     return scenes, lamps, rgb, entity, stats
 
 
-TWIN_COLOUR_RANGE = (0.2, 0.95)  # TextureSampler's uniform colour branch; twins are never clamped
-
-
-@functools.lru_cache(maxsize=1)
-def visible_fractions():
-    """Share of colour 0 in the VISIBLE machine body for each (pattern, period), measured
-    once from the actual renderer: machine 0 gets a white/black body and the visible body
-    is its entity pixels that are exactly white or black (panel and lamps have other
-    colours). Fixed scene, no random draws; returns an immutable mapping."""
-    keys = [(p, t) for p in range(6) for t in (2, 3, 4)]
-    n = len(keys)
-    scenes = rw.Scenes(torch.tensor([[0, 1]] * n), torch.tensor([[[16., 13.], [48., 13.]]] * n),
-                       torch.zeros(n, 4, 4, dtype=torch.long),
-                       torch.tensor([[[8., 46.], [24., 46.], [40., 46.], [56., 46.]]] * n))
-    white_black = torch.tensor([[1., 1., 1.], [0., 0., 0.]])
-    textures = rw.Textures(white_black.expand(n, 2, 2, 3).clone(), torch.tensor([[p, p] for p, _ in keys]),
-                           torch.tensor([[t, t] for _, t in keys]))
-    rgb, entity = rw.render(scenes, torch.zeros(n, 2, dtype=torch.long), textures)
-    white = (rgb == 1).all(1) & (entity == 1)
-    black = (rgb == 0).all(1) & (entity == 1)
-    shares = white.flatten(1).sum(-1) / (white | black).flatten(1).sum(-1)
-    return types.MappingProxyType({key: float(v) for key, v in zip(keys, shares)})
-
-
-def confusable_twins(textures, rate, generator):
-    """Loss-only confusable negatives (rule version 2, mean-matched).
-
-    With probability `rate` per scene, machine 1 becomes a twin of machine 0: the same
-    period, a different pattern (any of 0-5), and machine 0's two colours shifted by one
-    common offset so the twin's visible body mean equals machine 0's (contrast kept).
-    A candidate pattern is infeasible if a shifted colour leaves TWIN_COLOUR_RANGE or the
-    texture is `TextureSampler.heldout_like`; the twin is drawn uniformly among feasible
-    candidates, and a scene with none keeps its original body. Draws come only from
-    `generator`. Per-scene counts: twin_attempts, twins, twin_rejected. Per-candidate
-    counts (up to five per attempt): twin_target_range_rejections,
-    twin_target_heldout_rejections."""
-    count = len(textures.pattern)
-    propose = torch.rand(count, generator=generator) < rate
-    choice = torch.rand(count, generator=generator)
-    colors, pattern, period = textures.colors.clone(), textures.pattern.clone(), textures.period.clone()
-    fraction, sampler, (low, high) = visible_fractions(), rw.TextureSampler(), TWIN_COLOUR_RANGE
-    stats = dict(twin_attempts=0, twins=0, twin_rejected=0,
-                 twin_target_range_rejections=0, twin_target_heldout_rejections=0)
-    for b in torch.nonzero(propose).flatten().tolist():
-        stats["twin_attempts"] += 1
-        source, p0, t = colors[b, 0], int(pattern[b, 0]), int(period[b, 0])
-        feasible = []
-        for p1 in range(6):
-            if p1 == p0:
-                continue
-            shifted = source + (fraction[p0, t] - fraction[p1, t]) * (source[0] - source[1])
-            if (shifted < low).any() or (shifted > high).any():
-                stats["twin_target_range_rejections"] += 1
-            elif sampler.heldout_like(shifted, p1, t):
-                stats["twin_target_heldout_rejections"] += 1
-            else:
-                feasible.append((p1, shifted))
-        if not feasible:
-            stats["twin_rejected"] += 1
-            continue
-        p1, shifted = feasible[min(int(float(choice[b]) * len(feasible)), len(feasible) - 1)]
-        colors[b, 1], pattern[b, 1], period[b, 1] = shifted, p1, t
-        stats["twins"] += 1
-    stats["twin_rate"] = stats["twins"] / count
-    return rw.Textures(colors, pattern, period), stats
-
-
-def paired_perception_batch(generator, kinds, count, device, *, randomize, augmentation, pairing, twins=0.0):
+def paired_perception_batch(generator, kinds, count, device, *, randomize, augmentation, pairing):
     """View A (the unchanged default batch) followed by its paired view B (`rw.paired_view`).
 
     Returns the concatenated 2*count batch plus loss-only (textures, source) pairing.
-    `twins > 0` adds mean-matched confusable twin bodies to view A (drawn from `augmentation`
-    after its existing draws); 0 leaves batches and RNG consumption unchanged.
     """
     scenes, lamps, textures, stats = perception_scenes(generator, kinds, count, randomize=randomize, augmentation=augmentation)
     textures = rw.kind_textures(scenes.kind) if textures is None else textures
-    if twins:
-        if augmentation is None:
-            raise ValueError("Confusable twins need the augmentation generator")
-        textures, twin_stats = confusable_twins(textures, twins, augmentation)
-        stats = dict(stats or {}, **twin_stats)
     scenes_b, lamps_b, textures_b, source = rw.paired_view(pairing, scenes, lamps, textures)
     scenes = rw.Scenes.cat([scenes, scenes_b])
     lamps = torch.cat((lamps, lamps_b))
@@ -548,15 +472,6 @@ def train_perception(args, s):
     if key_source:
         settings["init_key"] = True
         settings["init_key_source"] = key_source
-    if args.confusable_twins:
-        settings["confusable_twins"] = args.confusable_twins
-        settings["confusable_twin_rule_version"] = 2
-        settings["confusable_twin_rule"] = (
-            "per view-A scene with this probability: machine 1 := same period, a different pattern (0-5), "
-            "machine 0's two colours shifted by one offset so the rendered visible body mean matches (contrast "
-            "kept); candidates outside colour range [0.2, 0.95] or heldout_like are infeasible; uniform over "
-            "feasible candidates, none -> original body; augmentation stream after its existing draws; "
-            "loss-only identity negatives. Texture sampler stats count draws before twin replacement.")
     if margin:
         settings["identity_margin_positive"], settings["identity_margin_negative"] = margin[:2]
         settings["identity_margin_weight"] = margin[2]
@@ -595,7 +510,7 @@ def train_perception(args, s):
                 scenes, lamps, rgb, entity, stats, (textures, source) = paired_perception_batch(
                     runner.sampler, rw.KIND_SPLIT["train"], s["perception_batch"], args.device,
                     randomize=args.texture_randomization, augmentation=augmentation,
-                    pairing=pairing_stream(args.seed, runner.step), twins=args.confusable_twins,
+                    pairing=pairing_stream(args.seed, runner.step),
                 )
             else:
                 scenes, lamps, rgb, entity, stats = perception_batch(
@@ -618,12 +533,9 @@ def train_perception(args, s):
                 metrics.update(identity_metrics, perception_loss=metrics["loss"])
                 loss = loss + args.identity_weight * identity
                 metrics["loss"] = float(loss.detach())
-            if stats and "replaced" in stats:
+            if stats:
                 metrics.update(texture_replaced=stats["replaced"], texture_near_lamp=stats["near_lamp"],
                                texture_heldout_rejections=stats["heldout_rejections"], texture_draws=stats["draws"])
-            if stats and "twin_attempts" in stats:
-                metrics.update({k: stats[k] for k in ("twin_attempts", "twins", "twin_rejected", "twin_rate",
-                                                      "twin_target_range_rejections", "twin_target_heldout_rejections")})
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad], 1.0)
@@ -1401,9 +1313,6 @@ def main():
     parser.add_argument("--freeze-perception", action="store_true",
                         help="perception only: train only the loaded key on frozen --init-perception weights "
                              "(requires --init-key and --identity detached; perception hash-guarded)")
-    parser.add_argument("--confusable-twins", type=float, default=0.0,
-                        help="perception identity: per-scene probability of a same-palette, different-pattern "
-                             "twin body in view A (loss-only confusable negatives; default 0 = unchanged)")
     parser.add_argument("--identity-margin-positive", type=float,
                         help="perception identity: absolute cosine target for same-machine pairs")
     parser.add_argument("--identity-margin-negative", type=float,
@@ -1445,13 +1354,6 @@ def main():
             args.texture_randomization = recorded
     if args.freeze_perception and args.stage != "perception":
         parser.error("--freeze-perception applies to the perception stage only")
-    if not (math.isfinite(args.confusable_twins) and 0.0 <= args.confusable_twins <= 1.0):
-        parser.error("--confusable-twins must be a finite probability in [0, 1]")
-    if args.confusable_twins:
-        if args.stage != "perception":
-            parser.error("--confusable-twins applies to the perception stage only")
-        if not args.identity:
-            parser.error("--confusable-twins requires --identity (identity pairs only)")
     margin = (args.identity_margin_positive, args.identity_margin_negative, args.identity_margin_weight)
     if any(v is not None for v in margin):
         if any(v is None for v in margin):

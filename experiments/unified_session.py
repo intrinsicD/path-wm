@@ -49,13 +49,18 @@ from pathwm.world_state.unified import (
 WIDTH, KEY, VALUE, STATE = 64, 32, 16, 16
 
 
-def describe(perception_run=None, identity_run=None, learned_keys=False):
+def describe(perception_run=None, identity_run=None, learned_keys=False, *, calibrated=False):
     """Scope, binding and limitations of THIS run's actual composition (no overclaim)."""
     if identity_run is not None:
         loaded = "perception and exported identity key from one S1 --identity run (named in run.json/models.json)"
         binding = "exported S1 identity key (uncalibrated binder thresholds)"
         keys = ("Session identity uses the exported S1 key (= core.key_head) on slot tokens with untrained, "
                 "uncalibrated binder thresholds: identity decisions are a software exercise, not learned tracking.")
+        if calibrated:
+            binding = "exported S1 identity key with checkpoint-bound TRAIN-calibrated binder thresholds"
+            keys = ("Session identity uses the exported S1 key (= core.key_head) on slot tokens with "
+                    "checkpoint-bound TRAIN-calibrated thresholds. This life checks software contracts; "
+                    "identity quality requires the separate native visual-memory evaluation.")
     elif learned_keys:
         loaded = ("an R1 perception checkpoint (named in run.json)" if perception_run is not None
                   else "no checkpoint")
@@ -803,7 +808,7 @@ def main():
                         help="bind with the (untrained) learned slot keys instead of the pixel fixture")
     parser.add_argument("--identity-run", type=Path,
                         help="S1 run trained with --identity: load its perception and exported key together; "
-                             "the session binds with that key (uncalibrated thresholds; no tracking claim)")
+                             "use --binding-calibration for calibrated thresholds; no full-agent claim")
     parser.add_argument("--visual-memory", action="store_true", help="evaluate native J visual memory and restart")
     parser.add_argument("--calibrate-visual-binding", action="store_true", help="calibrate existing J machine identity policy on train scenes")
     parser.add_argument("--binding-calibration", type=Path, help="checkpoint-bound binding.json for visual memory")
@@ -842,8 +847,8 @@ def main():
                           checkpoint_sha256=file_hash(args.identity_run / "last.pt"),
                           key="exported S1 identity key = core.key_head = session candidate key; "
                               "full provenance in models.json")
-    run = describe(args.perception, args.identity_run, args.learned_keys)
     _, binding_policy = visual_binding_policy(args.binding_calibration, args.identity_run)
+    run = describe(args.perception, args.identity_run, args.learned_keys, calibrated=binding_policy is not None)
     settings = dict(stage="unified-session-life", purpose="software", device="cpu", seed=args.seed,
                     scenes=args.scenes, width=WIDTH, perception=perception, binding=run["binding"],
                     binding_policy=binding_policy, candidate_scope=binding_policy["candidate_scope"] if binding_policy else "all",

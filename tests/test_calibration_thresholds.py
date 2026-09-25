@@ -10,10 +10,13 @@ from pathlib import Path
 import sys
 
 import pytest
+from torch import nn
 
 from experiments import unified_session as us
+from pathwm.io import source_record
 
-J = Path(__file__).resolve().parents[1] / "runs/latent_agent_r1/identity_joint_20260923"
+ROOT = Path(__file__).resolve().parents[1]
+J = ROOT / "runs/latent_agent_r1/identity_joint_20260923"
 LEGACY_RULE = ("Actual session grid: match in [.8,.85,.9,.95], new=match-.05, margin in [.05,.1]; "
                "maximize min acquisition/same-layout/relocated matching under false-match<=.005")
 
@@ -95,3 +98,10 @@ def test_cli_grid_requires_calibration_mode(tmp_path, monkeypatch, capsys):
         run_main(monkeypatch, "--output", out, "--identity-run", J, "--visual-memory",
                  "--binding-match-thresholds", "0.9")
     assert "--calibrate-visual-binding" in capsys.readouterr().err and not out.exists()
+
+
+def test_latent_recipe_is_outside_the_unified_session_manifest_source_hash():
+    # Binding manifests bind unified_session/pathwm sources, not the training recipe.
+    files = source_record(us.__file__, nn.Module())["files"]
+    assert str((ROOT / "experiments/latent_agent.py").resolve()) not in files
+    assert str((ROOT / "experiments/unified_session.py").resolve()) in files
