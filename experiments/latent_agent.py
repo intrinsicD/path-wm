@@ -616,11 +616,13 @@ def train_decoder_reconstruction(args, s):
     parent_decoder = state_hash(perception.decoder)
     if args.decoder_reconstruction == "pyramid":
         perception.decoder.enable_pyramid_connections()
+    if getattr(args, "decoder_subpixel", False):
+        perception.decoder.enable_fine_subpixels()
     frozen = frozen_part_hashes(perception)
     model = model.to(args.device)
     trainable = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.AdamW(trainable, lr=args.lr)
-    added = sum(p.numel() for n, p in perception.decoder.named_parameters() if n.startswith(("coarse.", "fine.")))
+    added = sum(p.numel() for n, p in perception.decoder.named_parameters() if n.startswith(("coarse.", "fine.", "fine_subpixel.")))
     interventions = ("zero", "shuffled") if args.decoder_reconstruction == "pyramid" else ()
     sampler = rw.TextureSampler()
     settings = dict(stage="perception", seed=args.seed, updates=args.updates, lr=args.lr, device=args.device,
@@ -628,6 +630,7 @@ def train_decoder_reconstruction(args, s):
                     max_reserved_gib=args.max_reserved_gib, decoder_reconstruction=args.decoder_reconstruction,
                     decoder_eval_scenes=args.decoder_eval_scenes,
                     decoder_mask_weight=mask_weight, decoder_eval_every=eval_every,
+                    decoder_subpixel=getattr(args, "decoder_subpixel", False),
                     objective=f"RGB MSE + {mask_weight} * matched mask CE (match_slots, cross_entropy) on "
                               "the decoder only; frozen kind/attribute/lamp terms logged as semantic_* diagnostics, "
                               "not optimized, assignment-dependent (may differ between arms)",
@@ -1647,6 +1650,8 @@ def main():
     parser.add_argument("--decoder-reconstruction", choices=("slots", "pyramid"),
                         help="perception only: retrain only the actual slot decoder of the frozen --init-perception "
                              "run, slot-only or with its pyramid connections enabled")
+    parser.add_argument("--decoder-subpixel", action="store_true",
+                        help="optional full-resolution fine residual, requires pyramid decoder")
     parser.add_argument("--decoder-mask-weight", type=float, default=None,
                         help="decoder-only objective mask CE weight; default0.5, set0 for RGB-only")
     parser.add_argument("--decoder-eval-every", type=int, default=0,
@@ -1695,6 +1700,8 @@ def main():
             args.texture_randomization = recorded
     if args.freeze_perception and args.stage != "perception":
         parser.error("--freeze-perception applies to the perception stage only")
+    if args.decoder_subpixel and args.decoder_reconstruction != "pyramid":
+        parser.error("--decoder-subpixel requires --decoder-reconstruction pyramid")
     if args.decoder_reconstruction:
         if args.decoder_mask_weight is None:
             args.decoder_mask_weight = DECODER_MASK_WEIGHT

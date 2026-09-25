@@ -5,7 +5,7 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
-- **Image-code work:** [Plan](image-code-contract-plan.md): native code persistence/replay implemented; exact full-model replay on256images across two trained checkpoints,971 CPU tests and exact resume pass. Decoder fidelity comparison running. Memory-conditioned editing with Claude is in an isolated implementation slice; general scene factors remain open.
+- **Image-code work:** [Plan](image-code-contract-plan.md): code-only replay and memory-routed editing software implemented;982tests and exact CPU/CUDA resume pass. Decoder repair improves validation52%, but fidelity still fails. Editing quality training and slow code-only debugging checks are running; general scene factors remain open.
 
 - **Earlier decoder result:** [Pyramid access](native-pyramid-decoder-plan.md) gains1.09–1.71% MSE, missing20%; encoder frozen.
 

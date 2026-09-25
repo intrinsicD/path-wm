@@ -915,3 +915,24 @@ and predeclared gates are in CI1 of `integrated-architecture-plan.md`. Each arm
 owns its report, raw predictions and checkpoint. The dataset contains exact shared
 training batches plus held-out panels. This trains a new pointed property query,
 not temporal tracking or the original lamp policy; no text input is required.
+
+### Native image codes and memory-conditioned edits
+
+`python -m experiments.image_code --checkpoint RUN/last.pt --output NEW_RUN`
+verifies saved-code replay on the native fixed populations. For an existing code,
+use `--checkpoint RUN/last.pt --code CODE.pt --decoded OUTPUT.pt`; no source image
+is read. The code binds the encoder, while the checkpoint supplies the decoder.
+Exact replay of an imperfect decoder is not faithful pixel reconstruction.
+
+The existing unified-session recipe now has an opt-in native residual-edit stage:
+`python -m experiments.unified_session --edit-train --identity-run IDENTITY_RUN
+--output NEW_RUN --edit-objective flow --updates 6000 --edit-steps 16
+--device cuda --max-minutes 20`. `direct` is the matched regression control.
+Resume with `--edit-train --resume RUN`. Evaluation uses
+`--edit-evaluate RUN --identity-run IDENTITY_RUN --decoder-run DECODER_RUN
+--binding-calibration CURRENT_BINDING_JSON --output NEW_EVAL --scenes 128
+--device cuda`. The binding manifest must match current source. This stage tests
+supplied entity/lamp requests through real stored components; it does not implement
+language instruction following, learned core routing, source-free creation or
+other scene factors. See [the code and generation plan](image-code-contract-plan.md)
+for exact checkpoints, evidence, budgets and qualification gates.

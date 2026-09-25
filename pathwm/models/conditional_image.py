@@ -264,3 +264,51 @@ def configure_generator(model, settings):
     new.to(next(model.parameters()).device)
     model.agent.decoders["image"] = new
     return new
+
+
+class ComponentRequest(nn.Module):
+    """Supplied structured edit request -> generator context tokens.
+
+    Context = source fine tokens plus one request token built from a bound memory
+    component (e.g. a stored instance `visual_slot`) and a desired discrete state.
+    The caller selects the entity; this module does not learn request selection.
+    `null=True` removes both binding and state (request-erased control).
+    """
+
+    def __init__(self, width=64, states=2):
+        super().__init__()
+        if width < 1 or states < 2:
+            raise ValueError("Positive width and at least two states required")
+        self.width, self.states = width, states
+        self.value = nn.Linear(width, width)
+        self.state = nn.Embedding(states, width)
+        self.kind = nn.Parameter(torch.randn(2, width) * 0.02)  # 0 source token, 1 request token
+
+    def context(self, source, values, state, *, null=False):
+        b = len(source)
+        if (source.ndim != 3 or source.shape[-1] != self.width or b < 1
+                or values.shape != (b, self.width) or state.shape != (b,)
+                or state.dtype != torch.long or ((state < 0) | (state >= self.states)).any()
+                or not torch.isfinite(source).all() or not torch.isfinite(values).all()):
+            raise ValueError("Request needs source [B,N,W], values [B,W] and long states in range")
+        request = self.kind[1].expand(b, -1)
+        if not null:
+            request = request + self.value(values) + self.state(state)
+        return torch.cat((source + self.kind[0], request[:, None]), 1)
+
+
+def edit_code(mode, source, *, generator=None, context=None, sample_ids=None, steps=None):
+    """`reconstruct`: return `source` itself; the generator, normalization and RNG are
+    never touched. `edit`: source fine tokens [B,N,C] plus the generator's sampled
+    residual for its single feature scale (unstandardized). Creation is not an edit."""
+    if mode == "reconstruct":
+        return source
+    if mode != "edit":
+        raise ValueError("Mode must be reconstruct or edit")
+    if len(generator.feature_spec) != 1:
+        raise ValueError("Residual editing needs a single feature scale")
+    (name, spec), = generator.feature_spec.items()
+    if source.shape[1:] != (math.prod(spec.size), spec.channels):
+        raise ValueError("Source tokens do not match the generator feature scale")
+    delta = generator.features(context, sample_ids=sample_ids, steps=steps)[name]
+    return source + delta.flatten(2).transpose(1, 2)

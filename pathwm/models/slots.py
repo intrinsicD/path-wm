@@ -149,6 +149,23 @@ class BroadcastDecoder(nn.Module):
             maps.append(v.transpose(1, 2).reshape(batch, self.width, h, w))
         return maps
 
+    def enable_fine_subpixels(self):
+        """Optional fine-grid residual with a distinct output for each 4x4 pixel phase.
+
+        Zero initialization preserves the existing decoder output and global RNG.
+        This uses the same native fine export; no new encoder or image code.
+        """
+        if not self.pyramid_enabled:
+            raise ValueError("Fine subpixels require the existing pyramid connections")
+        if hasattr(self, "fine_subpixel"):
+            return self
+        with torch.random.fork_rng(devices=[]):
+            self.fine_subpixel = nn.Conv2d(self.width, 16 * self.hidden, 1)
+        nn.init.zeros_(self.fine_subpixel.weight)
+        nn.init.zeros_(self.fine_subpixel.bias)
+        self.fine_subpixel.to(self.position.weight).train(self.training)
+        return self
+
     def forward(self, slots, pyramid=None):
         b, k, d = slots.shape
         if self.pyramid_enabled and pyramid is None:
@@ -165,7 +182,12 @@ class BroadcastDecoder(nn.Module):
             x = x + self.coarse(coarse).repeat_interleave(k, 0)
             x = self.network[2](self.network[1](self.network[0](x)))  # conv 8x8, ReLU, double
             x = x + self.fine(fine).repeat_interleave(k, 0)
-            out = self.network[3:](x)
+            if hasattr(self, "fine_subpixel"):
+                x = self.network[3:-1](x)
+                detail = F.pixel_shuffle(self.fine_subpixel(fine), 4)
+                out = self.network[-1](x + detail.repeat_interleave(k, 0))
+            else:
+                out = self.network[3:](x)
         out = out.reshape(b, k, 4, *out.shape[-2:])
         return out[:, :, :3].sigmoid(), out[:, :, 3]
 

@@ -20,6 +20,10 @@ from pathwm.models.image_code import make_image_code, save_image_code, load_imag
 def model(checkpoint, device):
     p=SlotPerception().eval()
     p.decoder.enable_pyramid_connections()
+    state=torch.load(checkpoint,map_location='cpu',weights_only=True)
+    weights=state.get('model',state)
+    if any(k.endswith('decoder.fine_subpixel.weight') for k in weights):
+        p.decoder.enable_fine_subpixels()
     load_component(p,checkpoint,'perception')
     return p.to(device).eval().requires_grad_(False)
 

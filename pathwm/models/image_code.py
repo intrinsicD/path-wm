@@ -25,7 +25,7 @@ def _native(perception):
         any(len(s.blocks) != 1 or s.window is not None for s in h.stages) or
         h.merges[0].factors != (1, 2, 2) or h.merges[0].packed or
         h.merges[0].cross_attention is None):
-        raise ValueError('Image code requires the native full pyramid-connected configuration')
+        raise ValueError('Image code requires the native full configuration')
     if any(m.training for m in perception.modules()):
         raise ValueError('Image code replay requires evaluation mode')
     if next(perception.encoder.parameters()).dtype != torch.float32:
@@ -85,6 +85,27 @@ def make_image_code(perception, pyramid, *, provenance):
               fine={**{k:getattr(fine,k).detach().cpu().clone() for k in FIELDS},'grid':fine.grid},
               condition=torch.zeros(len(fine.values),16), condition_time=None,
               provenance=[dict(p) for p in provenance])
+    _validate(code)
+    return code
+
+
+def code_from_values(perception, values, *, provenance):
+    """Wrap native fine token values [B,256,64] (e.g. a generated edit) with the
+    frame-local zero metadata of the native encoder. Values carry no image, source
+    event or blob; provenance is caller-declared and never dereferenced."""
+    _native(perception)
+    if (not isinstance(values, torch.Tensor) or values.ndim != 3 or values.shape[1:] != (256, 64)
+            or values.dtype != torch.float32):
+        raise ValueError('Native fine values must be [B,256,64]')
+    b = len(values)
+    zeros = torch.zeros(b, 256)
+    code = dict(schema=SCHEMA, encoding='RGB64-fp32-frame-local-zero',
+                encoder_sha256=state_hash(perception.encoder),
+                fine=dict(values=values.detach().cpu().clone(), times=zeros.clone(),
+                          valid=torch.ones(b, 256, dtype=torch.bool), ends=torch.zeros(b, 256, dtype=torch.long),
+                          content_times=zeros.clone(), grid=(1, 16, 16)),
+                condition=torch.zeros(b, 16), condition_time=None,
+                provenance=[dict(p) for p in provenance])
     _validate(code)
     return code
 

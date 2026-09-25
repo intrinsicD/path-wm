@@ -521,3 +521,138 @@ on both256-image populations in both seeds, unchanged absolute every-image MSE1e
 and meanbody/gradient1e-4, and mask/pointer decline limits0.005/0.01. Record added
 parameters and clipping effect. No checkpoint selection or automatic extension.
 This is a narrowly justified candidate, not a default adoption; preserve failure.
+
+P1E pre-run review clarifications: insert after finalReLU (`network[10]`) and before
+existing outputconv (`network[11]`); the residual is signed. It adds33,280parameters;
+capacity and changed global clipping prevent a capacity-independent causal claim.
+Report clipping-active fractions from recorded gradient norms. Re-run P1D on both
+candidate final checkpoints and require within-patch error to decline in every
+seed/population for the scoped mechanism screen. A relative pass means improved,
+not faithful. The shared residual alone adds a common alpha-logit shift (softmax
+cancels it), but other trained decoder weights can still change masks; preserve
+empirical guards. Boundary energy is NOT a proven error floor. The old fine
+projection's singular values do not bound information in the full fine export;
+no linear probe can establish that a nonlinear code lacks information. Texture
+comes from full fine codes, not summary-slot edits, so generation must modify those
+codes too. Actual Claude medium review retained these limitations.
+
+P1E completed: both candidates pass the20% relative, within-patch decline, mask
+and pointer preservation screens. Train MSE improves42.72–43.47%; validation
+52.43–52.77% to0.003183–0.003204. All absolute fidelity gates still fail. Clipping
+active fraction is0 for both controls/candidates, so clipping is not an observed
+confound here; extra capacity remains one. Comparison/decomposition reports:
+`runs/native_decoder_subpixel_comparison_v1/report.html` and
+`runs/native_decoder_subpixel_decomposition_v1/report.html`. Keep the path optional;
+this supports a useful decoder repair, not faithful reconstruction or general
+factorization.
+
+P1F preregistered budget screen: extend the same candidate training recipe to8000
+updates at seed3601, without architecture/objective/LR changes. Use an isolated
+frozen checkout to permit independent P2 development. Start from the sameu6000
+parent, declare8000updates from the outset, pause at2000 and require its model,
+optimizer, RNG/sampler and training rows to exactly match the earlier2000-update
+candidate before resuming. Final8000 checkpoint only; same256+256 data/gates and
+mask/pointer limits against P1aRGB-only. Budget20min totalGPU training time/6GiB;
+record overlap with other jobs, so runtime is a ceiling check, not a speed claim.
+This is a single-seed progress/fidelity screen. Only if absolute fidelity and
+preservation pass will seed3604 run at the same8000budget for confirmation. If not,
+preserve the failure and diagnose rather than spending the second-seed budget or
+claiming saturation. No hyperparameter/checkpoint search.
+
+## P2 execution registration: one real memory-controlled edit
+
+Before quality training/evaluation, register seeds3711/3712 × objectivesflow/direct,
+6000updates, AdamW3e-4,8source scenes ×2machines ×2desired states (=32requests),
+TRAIN randomized textures1.0, frozen actualJ6000 perception. Existing
+ConditionalFeatureGenerator uses fine64x16x16, depth2/fusion1/hidden64,16Euler steps;
+ComponentRequest supplies256source tokens and one stored-slot/state request token.
+This is the existing conditional transformer flow producer, not a claim to a new
+classical DiT or trained core request selection. Direct regression is only its
+matched control. Frozen target-code differences supervise training; target codes
+or post-images never enter generation. Train-only calibration is fixed in the
+recipe and checkpoint; exact CPU/CUDA resume and frozen/source checks required.
+Budget20min/6GiB per training run. Use all final checkpoints, no selection.
+
+Evaluation:128sources from train3702 and validation3703, each with all4requests;
+actual UnifiedAgent observes each source, supplied structured entity binding routes
+through ExactRetriever to the current validated visual_slot. Bind instance/component
+IDs, revisions, evidence and model version; require store/direct payload equality.
+Generator training encoder/slot/checkpoint identities must match this store before
+creating the run. Refresh the actual source-bound binder by fixed-policy confirmation,
+never bypass its source guard for quality evidence. Default-binder smokes remain
+software-only. Store encoding staysCPU; GPU generation/decoding is declared and
+compared within that evaluation. Decoder for primary P2 is fixed P1Eseed3601u2000,
+not whichever later checkpoint scores best; verify matching encoder and record
+consumer hashes. Poor full-image fidelity remains an independent failed requirement.
+
+Primary sampleID0, same noise across paired requests/controls. Score correct
+request, null request, swapped desired state, wrong instance binding and copy-source.
+Coverage≥.95; visible-change code explanation≥.8 and normalized no-op drift≤.1;
+pair lamp accuracy≥.90 (both desired states correct, other machine preserved);
+null/swapped pair accuracy≤.10 and wrong-binding accuracy against its appropriately
+swapped target≥.85; unchanged-region MSE against decoded true target≤1e-3. Lamp/
+control conclusions require decoded-target lamp ceiling≥.98; otherwise inconclusive.
+Both populations and flow seeds must pass. Full image fidelity cannot be inferred
+from a successful lamp classifier. Visibility coverage is reported: zero-pixel-change
+requests remain in coverage/lamp denominators; the code-explanation diagnostic
+explicitly conditions on nonzero changes, with ≥.98 visibility required for the
+code qualification. Failure penalties, fixed before evaluation: explanation0,
+normalized no-op drift1, preservation MSE1. Report failure counts and conditional
+metrics separately; failed retrievals never silently disappear from gated averages.
+No post-hoc threshold changes. Four samplingIDs0–3 may be diagnosed on the first16
+sources/population (full native architecture/16steps), without selecting an ID.
+Quality evaluation budget15min per full run; diagnostic populations are explicitly
+smaller sample counts, not smaller models.
+
+The first implementation remains an isolated candidate until independent review,
+final main-source tests and source-current store evaluation. Broader component/
+relation routing, learned entity selection, create mode and editable camera/light/
+style/overlays remain missing. This slice establishes only the stated entity/lamp
+edit if its gates pass.
+
+P3D preregistered optional debugging diagnostic (no new architecture): test whether
+code-only pixel refinement can provide faithful slow inspection while the fast
+learned decoder is still imperfect. Reuse the already validated native frozen-
+encoder inversion algorithm, initialize from P1Eseed3601's decoder, optimize only
+pixels against saved fine-code features (Adamlr0.03,1000cosine steps, clamp0..1).
+The inverter receives only compatible checkpoint+serializedcode; sourceRGB is
+available solely to a separate scorer. Re-encoding candidate pixels is intentional,
+not source-image retrieval. Require encoder identity equal to the proven J6000
+encoder, unchanged model hashes/parameter gradients/RNG, exact optimizer update
+count, finite bounded output, and audited data reads. No generator is invoked.
+
+StageA: first64 existing evaluation images in each population3602/3603, native
+model, processing chunks16; decoder start primary and gray start control, both1000
+steps. Require every primary imageMSE<=1e-4 and meanmachine-body/gradient<=1e-4.
+Control success is reported independently; no claim decoder initialization helps
+without its measured comparison. StageB only if primaryA passes: all256+256 same
+populations, same primary recipe and gates. Budget600s/2GiB per stage; overlapped
+jobs explicitly disclosed, no speed claim. Feature error and RGB error are separate:
+small feature error alone never proves recovery or global invertibility. No primary
+P2 decoder/gate changes, and no generated off-manifold code validity claim. A failed
+1000-step screen remains failed; the earlier10000-step schedule is a possible
+separately registered follow-up, not silent tuning. This establishes at most slow
+code-only debugging on these populations, not faithful fast decoding or generation.
+
+
+P2 software integrated: actual Claude implemented the request/flow/bypass and
+real-store evaluation path in an isolated checkout; independent review corrected
+failure denominators, producer compatibility, source provenance and report failure
+status.982 full CPU tests pass (761.43s), including actual-store invalidation,
+wrong-version rejection and target fault injection. Full native GPU3-update resume
+matches weights, optimizer, all RNG/sampler state and metric rows exactly. The
+fresh fixed-policy binder reproduces prior policy and metric files byte-for-byte;
+`runs/native_identity_confirmation_scene_edit_v1/binding.json` is source-current.
+GPU store smoke `runs/native_edit_gpu_store_smoke_v1` is software evidence only.
+All256 registered evaluation scenes have both lamps visible; original strict gates
+are unchanged (`runs/native_edit_visibility_audit_v1/report.html`). Quality training
+is still separate. Claude's corrected reviews and raw receipts are under
+`runs/reviews/scene_capabilities_20260925/`.
+
+P1F completed8000updates within budget, with its2000prefix exactly matching the
+prior candidate. Validation MSE0.002082 (worst0.005240) and train0.002021 remain
+above absolute fidelity gates. Per the registered stopping rule, no second-seed
+extension is run. This is improved reconstruction, not saturation or fidelity.
+The run/report is `runs/native_decoder_subpixel_3601_u8000_v1/report.html`; the
+prefix and summed-resource audit are `long-prefix-check.json` and
+`long-result-check.json` in the review directory. Its isolated source remains intact.
