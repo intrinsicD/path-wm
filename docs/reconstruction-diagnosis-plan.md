@@ -98,3 +98,11 @@ independent confirmation population. Run `native_encoder_inversion_long_v1` uses
 protocol snapshot. No second extension or selection is authorized by this protocol.
 The question is whether more inversion computation recovers the residual detail;
 it does not test whether longer decoder training works.
+
+Execution correction: `native_encoder_inversion_long_v1` is **invalid**. A literal
+loop bound remained1001 while settings and recorded final step said10000. The
+last scored state was at1000, and the serialized state followed1001 updates. Its
+original `valid:true` is superseded by `invalidation.json`; no quality inference.
+Preserve all outputs. Corrected `invert_long_v2.py` uses10001 loop evaluations,
+10000 optimizer updates and asserts the optimizer counter. Rerun as
+`native_encoder_inversion_long_v2` under the same registered protocol/gates/budget.
