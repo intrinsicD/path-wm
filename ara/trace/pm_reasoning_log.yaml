@@ -3086,3 +3086,10 @@ entries:
     observations remainopen. No stale/abandonment inference from same-day activity.'
   - Rejected peer claim of ignoredbinding from aggregateaccuracy; actualoutputchanges
     withbinding. Do not claim sizecausality or undisclosedQwentrainingdetails.
+- turn: 2026-09-25_001#8
+  notes:
+  - N598 question andO414 proposal captured; priorobservationsremainopen, no closure/abandonment
+    inferred.
+  - Cache exactness is dependencyanalysis, not bitwise or timingvalidation. Qwen fullprefixreuse
+    distinguished from native fixedcontextprojectionreuse. No implementation authorized
+    by mere applicabilityquestion.

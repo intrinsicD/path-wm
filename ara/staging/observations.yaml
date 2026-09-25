@@ -7268,3 +7268,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O414
+  timestamp: 2026-09-25T12:10+02:00
+  provenance: ai-suggested
+  content: Native fixedcontext normalization/projection and separateper-layer cross-attention
+    K/V can be reused across16flowsteps without mathematical modelchange. Targetattention
+    remainsdynamic.394752bytesFP32batch1 for3blocks257tokens64width. Exactwithinmath,
+    floating-point tolerance requires actualnative validation; no measuredspeed or
+    qualitybenefit. Cachelifetime scopedto frozeninferenceinvocation.
+  context: Qwen2.1 and currentnative sourceaudit withClaude; proposalnotimplementation.
+  potential_type: architecture
+  bound_to:
+  - N598
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -131,3 +131,51 @@ outputs change with the binding. Supervised entity-specific targets already supp
 a learning signal. Under-editing is observed; absent conditioning, inadequate
 capacity and optimization are not distinguished yet. See `qwen21-correction.json`
 in the review directory. No blanket mostly-not-size conclusion is adopted.
+
+## Follow-up: exact fixed-context KV reuse
+
+Alex asks whether Qwen's cache design could help PATH-WM. In Qwen2.1 both dependency
+conditions matter: block-causal attention prevents the fixed prefix from reading
+changing target tokens, and `causal_condition` uses fixed t=0 modulation for that
+prefix. First-step processing stores each layer's prefix keys/values. Later steps
+process only changing target tokens, attending to cached prefix and current target
+K/V. A causal mask alone would not suffice if prefix activations changed with the
+solver timestep. This skips prefix processing across layers, not merely repeated
+raw-image encoding. Source: [released transformer](https://github.com/huggingface/diffusers/blob/main/src/diffusers/models/transformers/transformer_qwenimage21.py).
+
+Our existing `ConditionalFeatureGenerator` has a simpler exact-reuse opportunity:
+`field` normalizes/projects the same context every solver step; every `OutputBlock`
+then recomputes that layer's K/V projections. The context does not read the evolving
+image and receives no progress embedding. Therefore an invocation-local prepared
+context could hold its validity mask, normalization/projection and separate K/V for
+each existing cross-attention layer. No causal redesign, extra model parameters,
+new codec or retraining is mathematically required. Different layers have different
+weights: one common projected K/V tensor cannot replace all of them.
+
+Keep target queries, target self-attention K/V, attention scores/softmax and output
+MLPs live each step. They depend on the evolving image. This saves context preparation
+and projections, unlike Qwen's larger saving of the whole prefix computation; it does
+not make attention to a long context free. For the current257context tokens,64width,
+three blocks, FP32, batch1, projected K/V storage is
+`2 * 3 * 257 * 64 * 4 = 394752bytes` (385.5KiB), excluding other state. Sixteen steps
+could use one context preparation rather than16; this is not a16x speedup claim.
+The direct-regression arm calls the field once, so has no cross-step benefit.
+
+Smallest proposed slice, not implemented: invocation-local inference preparation,
+using existing projection weights, compared against the uncached actual native
+checkpoint over the full16-step trajectory, decoded output and reconstruction
+bypass. Check finite outputs, tolerance appropriate to floating-point kernel changes,
+mask/batch behavior and changed-context invalidation; measure wall time and peak
+memory on the actual device. Retain the optimization only if measured useful.
+No quality improvement is claimed. Finish active quality jobs before source changes.
+
+Context/request/validity/position changes, memory evidence revisions, weight updates,
+dtype/device changes and any changed conditioning branch invalidate relevant entries.
+A cache scoped to one frozen inference invocation avoids most cross-request hazards.
+General memory reuse needs explicit ownership/versioning; only independently encoded
+unchanged components can be reused selectively. Do not reuse detached inference caches
+across optimizer updates. The current one-timestep flow-training loss does not run
+an inference-length solver loop, so the main expected benefit is sampling/editing.
+Any later differentiable rollout must preserve gradient accumulation through shared
+preparation. Standing principles: prepare once, reuse only invariants, keep fine
+evidence, measure compute/memory/latency separately and test the actual model.

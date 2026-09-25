@@ -9895,3 +9895,16 @@ tree:
   - runs/native_code_refinement_confirmation_v1/result.json
   - experiments/image_code_refinement.py
   status: completed
+- id: N598
+  type: question
+  title: Applicability of Qwen2.1 prefix KV reuse to native editor
+  provenance: user
+  timestamp: 2026-09-25T12:10+02:00
+  description: 'Source audit with actualClaude medium: Qwen blockcausal prefix plus
+    fixedt0modulation enables cross-step per-layerreuse. Nativecross-attention already
+    has fixedcontext. Proposed invocation-local K/V preparation only; no implementation
+    or speedmeasurement.'
+  evidence:
+  - docs/qwen-image-21-comparison.md
+  - runs/reviews/scene_capabilities_20260925/qwen21-cache-review.json
+  status: completed
