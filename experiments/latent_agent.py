@@ -468,6 +468,17 @@ def decoder_objective(percept, rgb, entity, mask_weight=DECODER_MASK_WEIGHT):
     return loss, dict(loss=float(loss), reconstruction=float(reconstruction), mask=float(mask))
 
 
+def decoder_code_loss(perception, reconstruction, target_fine):
+    """Raw fine-code MSE; frozen encoder differentiates pixels, target never learns."""
+    predicted = perception.pyramid(reconstruction).scales[0].values
+    if predicted.shape != target_fine.shape:
+        raise ValueError("Reconstruction and target fine-code shape must match")
+    loss = F.mse_loss(predicted, target_fine.detach())
+    if not torch.isfinite(loss):
+        raise FloatingPointError("Non-finite decoder code feedback")
+    return loss
+
+
 def replaced_values(pyramid, values):
     """The same pyramid metadata with replaced feature values (diagnostic interventions only)."""
     return replace(pyramid, scales=tuple(replace(sc, values=v) for sc, v in zip(pyramid.scales, values)))
@@ -611,6 +622,7 @@ def train_decoder_reconstruction(args, s):
         getattr(perception, name).requires_grad_(False)
     from copy import deepcopy
     mask_weight = getattr(args, "decoder_mask_weight", DECODER_MASK_WEIGHT)
+    code_weight = getattr(args, "decoder_code_weight", 0.0)
     eval_every = getattr(args, "decoder_eval_every", 0)
     reference = deepcopy(perception).to(args.device).eval().requires_grad_(False) if eval_every else None
     parent_decoder = state_hash(perception.decoder)
@@ -630,8 +642,9 @@ def train_decoder_reconstruction(args, s):
                     max_reserved_gib=args.max_reserved_gib, decoder_reconstruction=args.decoder_reconstruction,
                     decoder_eval_scenes=args.decoder_eval_scenes,
                     decoder_mask_weight=mask_weight, decoder_eval_every=eval_every,
+                    decoder_code_weight=code_weight,
                     decoder_subpixel=getattr(args, "decoder_subpixel", False),
-                    objective=f"RGB MSE + {mask_weight} * matched mask CE (match_slots, cross_entropy) on "
+                    objective=f"RGB MSE + {mask_weight} * matched mask CE + {code_weight} * raw fine-code MSE on "
                               "the decoder only; frozen kind/attribute/lamp terms logged as semantic_* diagnostics, "
                               "not optimized, assignment-dependent (may differ between arms)",
                     optimizer=dict(name="AdamW", lr=args.lr, parameters="decoder only", gradient_clip_norm=1.0),
@@ -682,6 +695,13 @@ def train_decoder_reconstruction(args, s):
                 pyramid = perception.pyramid(rgb)
             percept = perception.from_pyramid(pyramid)
             loss, metrics = decoder_objective(percept, rgb, entity, mask_weight)
+            # Do not run the extra encoder for the zero-weight control. Preserve
+            # gradients through its input, while its parameters/buffers stay frozen.
+            if code_weight:
+                code_loss = decoder_code_loss(perception, percept.recon, pyramid.scales[0].values)
+                loss = loss + code_weight * code_loss
+                metrics.update(loss=float(loss), code_mse=float(code_loss),
+                               weighted_code_loss=float(code_weight * code_loss))
             with torch.no_grad():
                 _, semantic = perception_loss(percept, rgb, entity, attrs, lamps)
             optimizer.zero_grad()
@@ -1654,6 +1674,8 @@ def main():
                         help="optional full-resolution fine residual, requires pyramid decoder")
     parser.add_argument("--decoder-mask-weight", type=float, default=None,
                         help="decoder-only objective mask CE weight; default0.5, set0 for RGB-only")
+    parser.add_argument("--decoder-code-weight", type=float, default=0.0,
+                        help="decoder-only raw fine-code feedback weight; encoder stays frozen")
     parser.add_argument("--decoder-eval-every", type=int, default=0,
                         help="decoder-only fixed evaluation/mask preservation every N updates (0 disables)")
     parser.add_argument("--decoder-eval-scenes", type=int,
@@ -1702,6 +1724,10 @@ def main():
         parser.error("--freeze-perception applies to the perception stage only")
     if args.decoder_subpixel and args.decoder_reconstruction != "pyramid":
         parser.error("--decoder-subpixel requires --decoder-reconstruction pyramid")
+    if not math.isfinite(args.decoder_code_weight) or args.decoder_code_weight < 0:
+        parser.error("--decoder-code-weight must be finite and nonnegative")
+    if args.decoder_code_weight and args.decoder_reconstruction != "pyramid":
+        parser.error("--decoder-code-weight requires --decoder-reconstruction pyramid")
     if args.decoder_reconstruction:
         if args.decoder_mask_weight is None:
             args.decoder_mask_weight = DECODER_MASK_WEIGHT

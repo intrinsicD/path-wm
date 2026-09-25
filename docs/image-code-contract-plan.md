@@ -804,3 +804,12 @@ report renderer with structural QA, clearly labelled. Review receipts live under
 Standing principles: reuse target preparation, separate generation from verification,
 and train the actual inference decoder. Extra encoder backward adds training compute
 and activation memory, with no new parameters or inference operations.
+
+P5 calibration completed before quality runs: lambda0.25617932740093896; decoder
+gradient L2 norms RGB0.0695454627, code0.1357358992 on the registered training batch.
+Shared initialization hash and batch hash are in `calibration.json`. The initial
+half-gradient ratio is not maintained during training. Raw code loss can overweight
+large-scale channels. Actual Claude Opus5.5 medium accepted the corrected bounded
+design and withdrew its unsupported assertion that an arbitrary encoder must be
+many-to-one. Its requested decision rule is the predeclared20%/preservation rule
+above. Two seeds remain a development screen, for positive as well as null results.
