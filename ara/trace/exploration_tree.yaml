@@ -9771,3 +9771,30 @@ tree:
   - ara/evidence/tables/native_pyramid_decoder_2026-09-25.json
   - runs/reviews/native_pyramid_decoder_20260925/claude-final-audit.md
   status: completed
+- id: N589
+  type: question
+  title: Locate native reconstruction shortfall before adding model machinery
+  provenance: user
+  timestamp: 2026-09-25T09:43+02:00
+  description: Alex asks what is actually needed and authorizes investigation with actual Claude. Diagnose
+    existing encoder export, decoder and training; no richer representation or new path adopted.
+  evidence:
+  - docs/reconstruction-diagnosis-plan.md
+  status: resolved
+- id: N590
+  type: experiment
+  title: Frozen native fine-export inversion recovers32known images from two starts
+  provenance: ai-executed
+  timestamp: 2026-09-25T09:43+02:00
+  result: 'Actual full64/7/3/32 parentu6000, finefeaturesonly loss, imagepixels optimized and model frozen.
+    First1000updates valid but strictgatefalse. First10000attempt invalid: loop1001 actualupdates/mislabeled10000,
+    preserved. Corrected separatelyregistered10000update followup passes64 individualimage and all body/gradient
+    checks; mean MSE4.52e-12..1.36e-11, worst1.1444e-10.347.57s,.170GiB. Independent saved-image/source/actualcounter
+    audit passes; standalone reports structuralverified. Five actual Claude Opus5.5 requestedmedium rounds.
+    Sameknown32images, result-informedbudget, no globalinvertibility/traineddecoder/memory claim; no sharedmodelsource
+    change.'
+  evidence:
+  - docs/reconstruction-diagnosis-plan.md
+  - ara/evidence/tables/reconstruction_diagnosis_2026-09-25.json
+  - runs/reviews/reconstruction_diagnosis_20260925/audit.json
+  status: completed

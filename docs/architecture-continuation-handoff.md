@@ -3,7 +3,16 @@
 Updated 25 September 2026 for a new Codex session in
 `/home/alex/Documents/path-wm`, branch `main`.
 
-**Latest requested experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md).
+**Latest diagnosis:** [Actual encoder retention](reconstruction-diagnosis-plan.md).
+With actual Claude Opus5.5 medium, frozen full encoder input inversion recovers32
+known images from2starts, worst MSE1.15e-10. All64 final checks pass; independent
+raw-image/source/update-count audit passes. First short failure and invalid longer
+attempt are preserved. No model/source/weights change. Next proposed slice compares
+existing decoder objectives with fixed evaluations and mask/pointer guards; discuss
+missing recipe behavior with Alex before implementation. No richer representation
+is justified by this diagnosis; global invertibility/memory remain unproven.
+
+**Previous requested experiment:** [Native decoder with pyramid access](native-pyramid-decoder-plan.md).
 Alex explicitly requested adding the full existing features to the actual decoder,
 then retraining; he confirmed comparing current versus modified decoders. Two seeds
 × two arms ×2,000updates completed with frozen encoder/slots/heads. The optional

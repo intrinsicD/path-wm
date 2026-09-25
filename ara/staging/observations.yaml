@@ -7154,3 +7154,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O407
+  timestamp: 2026-09-25T09:43+02:00
+  provenance: ai-suggested
+  content: The actual frozen fine export contains sufficient recoverable detail for these32known procedural
+    images from gray/noise starts. Learned decoders leave a large recoverable-error gap. This motivates
+    decoder/training diagnosis; it does not isolate a cause, establish globalinjectivity or validate stored-slot
+    memory. Encoder preservation guarantee remains a designgap rather than a demonstrated cause.
+  context: N590 controlled features-only input inversion; initial failure and invalid attempt preserved;
+    long budget chosen after firstresult. No user affirmation of interpretation yet.
+  potential_type: claim
+  bound_to:
+  - N588
+  - N590
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O408
+  timestamp: 2026-09-25T09:43+02:00
+  provenance: ai-suggested
+  content: Proposed next slice holds architecturefixed and compares existingpyramiddecoder RGB-only versus
+    RGB+.5maskCE with fixed evaluations,20%MSE target and mask/pointerpreservation guards. Missing recipebehavior
+    must be discussed with Alex beforeimplementation. Nullcomparison cannot rule out optimization effects;
+    flatcurves cannot prove capacitylimit.
+  context: Codex/Claude reconciled proposed lowest-change experiment; not adopted or implemented.
+  potential_type: heuristic
+  bound_to:
+  - N589
+  - N590
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -6,6 +6,10 @@ as necessary. Codex and actual Claude Opus 5.5 medium continue as partners, with
 the same permissions. This authorizes this bounded connection/training comparison,
 not a replacement encoder, codec, memory representation or full-agent redesign.
 
+Follow-up: [Actual-encoder retention diagnosis](reconstruction-diagnosis-plan.md)
+recovers the tested images from the existing fine features; the learned decoder
+remains the target for diagnosis. This does not alter the negative result below.
+
 ## Outcome
 
 The experiment is valid and complete, but **fails the registered quality target**.

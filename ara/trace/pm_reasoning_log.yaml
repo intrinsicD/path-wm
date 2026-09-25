@@ -3045,3 +3045,12 @@ entries:
     than explicitly rejected by Alex.'
   - Same source/frozen checkpoint audits, actual full-config counterpart of initial downscaled smoke,966tests
     and source-bound default compatibility recorded. No abandonment inferred for other open families.
+- turn: 2026-09-25_001#3
+  notes:
+  - Recorded userdiagnosticquestionN589 and experimentsequenceN590; stagedO407/O408, no promotion or userendorsement
+    inferred. PriorO406 does not claim absentfeatures and is consistent; oldphoto32wide and surrogateclaims
+    remainseparatelyscoped.
+  - Preserved firstvalidfailure, invalidloopattempt and result-informedlongfollowup. Finalnear-exact is
+    not bitwiseequal or generalinjectivity. No broaderencoder/memoryqualitypromotion.
+  - No new closure signal for other openobservations inferred from silence or skippedengineeringturns;
+    pendingdecoderimplementation requires jointplan.

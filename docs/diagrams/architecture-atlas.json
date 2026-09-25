@@ -625,7 +625,8 @@
         "Active reasoning is distinct from dense retained features. Current pyramid attention remains dense/masked and scales with encoder positions; the optional observation resampler is downstream and cannot remove that cost. PixelUnshuffle/local processing remains a separate encoder design question. The default complete-event path now encodes each modality once.",
         "22 September encoder efficiency: optional physical fine windows and packed pooling footprints preserve every exported position. Image256 global encoder self-attention positions5376→256; encoder pairs22.35M→0.153M; measured FP32 RTX3050 forward+backward194.77→64.50 ms, inference50.21→30.90 ms, peak allocated452.53→149.46 MiB.114 scoped tests pass. Fine-window restriction changes receptive fields;16-update fits do not validate detail retention. Small inputs still have overhead, coarsest global attention still scales, and defaults stay unchanged. See docs/encoder-token-budget-plan.md.",
         "22 September randomized-attention follow-up: Alex asks about randomized low-rank SVD. Distinguish Performer/FAVOR+ kernel features, Nystrom landmarks and sparse corrections from post-hoc SVD, whose exact attention sketches can still require quadratic work. Low singular energy is not spatial frequency or guaranteed irrelevance. Preserve local detail and test approximate global access only as a proposal; masks, normalization and quality remain open. No implementation or validation promotion; see docs/encoder-token-budget-plan.md.",
-        "22 September pre-integration kernel review: current FP32 explicit-mask calls use efficient SDPA. RTX3050/SM86 eligibility predicates admit native Flash only for tested half-precision no-mask/causal-flag inputs; explicit masks remain a constraint. Current FA4 source contains an Ampere path despite Hopper/Blackwell-focused documentation. Native SDPA, compiled Flex and pinned FA4 remain comparison candidates; no integration, timing or quality validation. See docs/encoder-token-budget-plan.md."
+        "22 September pre-integration kernel review: current FP32 explicit-mask calls use efficient SDPA. RTX3050/SM86 eligibility predicates admit native Flash only for tested half-precision no-mask/causal-flag inputs; explicit masks remain a constraint. Current FA4 source contains an Ampere path despite Hopper/Blackwell-focused documentation. Native SDPA, compiled Flex and pinned FA4 remain comparison candidates; no integration, timing or quality validation. See docs/encoder-token-budget-plan.md.",
+        "25 September actual-model diagnosis with Claude Opus5.5 medium: frozen native fine-export input inversion recovers32known images from2starts, worst MSE1.15e-10; all64 strict checks pass after a separately registered longer budget. Short failure and invalid longer attempt preserved. No model change, global invertibility or memory claim. Diagnose existing decoder training next; recipe objective/evaluation changes remain a joint-plan proposal. See docs/reconstruction-diagnosis-plan.md."
       ],
       "sources": [
         "pathwm/models/multiscale.py#FeatureHierarchy",
@@ -640,7 +641,8 @@
         "docs/token-budget-plan.md",
         "docs/encoder-token-budget-plan.md",
         "pathwm/models/multiscale.py#pack_scale",
-        "pathwm/models/multiscale.py#pool_packed_scale"
+        "pathwm/models/multiscale.py#pool_packed_scale",
+        "docs/reconstruction-diagnosis-plan.md"
       ]
     },
     {
@@ -1508,7 +1510,8 @@
         "Speech-efficiency follow-up: Alex identifies avoidable state-to-text-to-speech processing. Direct readout may fuse duplicated linguistic work and preserve conditioning, a valid efficiency hypothesis. Sequence-generation work remains; a separate text encoder is not universal. Distinguish total compute from streaming latency and compare matched quality/resource budgets. See docs/agent-voice-design.md; no measured speedup or validation change.",
         "Serial-training follow-up: Alex emphasizes architecture and training that respect actual dependencies. Explain causal/chunk masks, explicit lookahead, stable conditioning reuse and possible playback/generation overlap. Teacher-forced parallel training and free-running inference have different execution dependencies. No selected chunk size, policy, implementation or measured speedup; see docs/agent-voice-design.md.",
         "Alex clarifies the general scope: all multimodal internal processing/thinking should transform latent representations with compatible trained encoders/decoders, reiterating the existing direction. Audio temporal order does not mandate tokenwise serial generation AND decoding: distinguish autoregressive dependencies, block synthesis and playback. Task/content losses and matching access restrictions remain necessary; see docs/latent-core.md and docs/agent-voice-design.md. No new codec, implementation or validation.",
-        "25 September: Alex requests full existing pyramid features also in the actual slot decoder, then retraining, and confirms current-versus-modified comparison. Native optional coarse8/fine16 projections (+6240 parameters), frozen encoder/slots/heads, two seeds and2000updates each arm give1.09–1.71%MSE gains, below the registered20%target. Valid negative result;966CPUtests pass. Default decoder unchanged. No evidence of feature-information absence, convergence, fine-detail memory quality or full invertible filter-bank implementation. See docs/native-pyramid-decoder-plan.md."
+        "25 September: Alex requests full existing pyramid features also in the actual slot decoder, then retraining, and confirms current-versus-modified comparison. Native optional coarse8/fine16 projections (+6240 parameters), frozen encoder/slots/heads, two seeds and2000updates each arm give1.09–1.71%MSE gains, below the registered20%target. Valid negative result;966CPUtests pass. Default decoder unchanged. No evidence of feature-information absence, convergence, fine-detail memory quality or full invertible filter-bank implementation. See docs/native-pyramid-decoder-plan.md.",
+        "25 September actual-model diagnosis with Claude Opus5.5 medium: frozen native fine-export input inversion recovers32known images from2starts, worst MSE1.15e-10; all64 strict checks pass after a separately registered longer budget. Short failure and invalid longer attempt preserved. No model change, global invertibility or memory claim. Diagnose existing decoder training next; recipe objective/evaluation changes remain a joint-plan proposal. See docs/reconstruction-diagnosis-plan.md."
       ],
       "sources": [
         "pathwm/models/modalities.py#ImageDecoder",
@@ -1519,7 +1522,8 @@
         "docs/modality-foundation-plan.md",
         "docs/visual-codec-review.md",
         "docs/agent-voice-design.md",
-        "docs/native-pyramid-decoder-plan.md"
+        "docs/native-pyramid-decoder-plan.md",
+        "docs/reconstruction-diagnosis-plan.md"
       ]
     },
     {
@@ -3315,7 +3319,8 @@
         "§22: Informationsdiagnose am tatsächlichen Kerneingang und Nutzung durch kontrollierte Gegenfälle getrennt vorgeschlagen; Probe-Misserfolg beweist keine Abwesenheit. Keine neuen Tests ausgeführt.",
         "CI1: Eingangsslot-Farbprobe100%; neuer Kern-Farbpfad bei fester Wahrnehmung Basis/Farbpaar100%, Positionspaar99,22%, Erhaltung bestanden. Encoderadaption: Positionspaar100%, Form99,32→71,88% und Größe100→95,21%; Erhaltung verfehlt, nicht übernommen. Ein Seed, externe Zeigeposition, synthetische Ansichten; Split nur im Diagnosetraining, keine volle Vortrainings-/Induktionsvalidierung. Berichte runs/core_information_ci1/, Rohdaten unabhängig geprüft.",
         "Native visual-memory task passes all six fixed development populations with joint6000 and TRAIN-selected .90/.85/.10 policy: relocation62,63,61,63,64,64/64; zero novel merges; persistence, decoder parity, correction and restart pass. Perception retention passes12/12. Original architecture and parameter count; unused failed augmentation removed with source/results preserved.957 final CPU tests pass, zero skips, source unchanged. Six final-source task reruns exactly reproduce the qualified results. No sealed-test, new-kind, fine-detail or full-agent claim. See real-visual-memory-plan.md.",
-        "25 September: Alex requests full existing pyramid features also in the actual slot decoder, then retraining, and confirms current-versus-modified comparison. Native optional coarse8/fine16 projections (+6240 parameters), frozen encoder/slots/heads, two seeds and2000updates each arm give1.09–1.71%MSE gains, below the registered20%target. Valid negative result;966CPUtests pass. Default decoder unchanged. No evidence of feature-information absence, convergence, fine-detail memory quality or full invertible filter-bank implementation. See docs/native-pyramid-decoder-plan.md."
+        "25 September: Alex requests full existing pyramid features also in the actual slot decoder, then retraining, and confirms current-versus-modified comparison. Native optional coarse8/fine16 projections (+6240 parameters), frozen encoder/slots/heads, two seeds and2000updates each arm give1.09–1.71%MSE gains, below the registered20%target. Valid negative result;966CPUtests pass. Default decoder unchanged. No evidence of feature-information absence, convergence, fine-detail memory quality or full invertible filter-bank implementation. See docs/native-pyramid-decoder-plan.md.",
+        "25 September actual-model diagnosis with Claude Opus5.5 medium: frozen native fine-export input inversion recovers32known images from2starts, worst MSE1.15e-10; all64 strict checks pass after a separately registered longer budget. Short failure and invalid longer attempt preserved. No model change, global invertibility or memory claim. Diagnose existing decoder training next; recipe objective/evaluation changes remain a joint-plan proposal. See docs/reconstruction-diagnosis-plan.md."
       ],
       "sources": [
         "docs/integrated-architecture-plan.md",
@@ -3337,7 +3342,8 @@
         "tests/test_unified_claim_provenance.py",
         "docs/real-visual-memory-plan.md",
         "tests/test_instance_visual_memory.py",
-        "docs/native-pyramid-decoder-plan.md"
+        "docs/native-pyramid-decoder-plan.md",
+        "docs/reconstruction-diagnosis-plan.md"
       ]
     }
   ]

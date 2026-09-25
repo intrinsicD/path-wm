@@ -360,8 +360,9 @@ sessions:
   date: '2026-09-25'
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
-    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass.'
-  turn_count: 2
-  events_count: 12
+    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
+    inversion recovers32images/twostarts; decoder-training comparison proposed only.'
+  turn_count: 3
+  events_count: 16
   claims_touched: []
   open_threads: 3

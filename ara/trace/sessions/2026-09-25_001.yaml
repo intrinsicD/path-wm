@@ -2,11 +2,12 @@ session:
   id: 2026-09-25_001
   date: '2026-09-25'
   started: 2026-09-25T02:35+02:00
-  last_turn: 2026-09-25T08:53+02:00
-  turn_count: 2
+  last_turn: 2026-09-25T09:43+02:00
+  turn_count: 3
   summary: 'Native visual-memory slice qualifies all six fixed development populations after existing-component
     training/path repairs; no added representation. Failures and limits preserved. Native decoder pyramid
-    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass.'
+    access: two-seed1–2% gains miss20%target; valid negative result,966tests pass. Frozen native fine-export
+    inversion recovers32images/twostarts; decoder-training comparison proposed only.'
 events_logged:
 - turn: 1
   type: pivot
@@ -85,6 +86,36 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Bounded feature-access gain does not diagnose missing information or saturation.
+- turn: 3
+  type: question
+  id: N589
+  routing: direct
+  provenance: user
+  summary: Locate native reconstruction shortfall before adding model machinery
+- turn: 3
+  type: experiment
+  id: N590
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen native fine-export inversion recovers32known images from two starts
+- turn: 3
+  type: observation
+  id: O407
+  routing: staged
+  provenance: ai-suggested
+  summary: The actual frozen fine export contains sufficient recoverable detail for these32known procedural
+    images from gray/noise starts. Learned decoders leave a large recoverable-error gap. This motivates
+    decoder/training diagnosis; it does not isolate a cause, establish globalinjectivity or validate stored-slot
+    memory. Encoder preservation guarantee remains a designgap rather than a demonstrated cause.
+- turn: 3
+  type: observation
+  id: O408
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed next slice holds architecturefixed and compares existingpyramiddecoder RGB-only versus
+    RGB+.5maskCE with fixed evaluations,20%MSE target and mask/pointerpreservation guards. Missing recipebehavior
+    must be discussed with Alex beforeimplementation. Nullcomparison cannot rule out optimization effects;
+    flatcurves cannot prove capacitylimit.
 ai_actions:
 - turn: 1
   action: Completed actual native pathway/training/calibration experiments with actual Claude medium;
@@ -102,6 +133,14 @@ ai_actions:
   - experiments/latent_agent.py
   - docs/native-pyramid-decoder-plan.md
   - ara/evidence/tables/native_pyramid_decoder_2026-09-25.json
+- turn: 3
+  action: Audited actual source and savedcurves with actualClaude; registered/executed frozenencoderinputinversion,
+    preserved shortfailure and invalidlongattempt, verifiedcorrectedlongresult independently. No model
+    change.
+  provenance: ai-executed
+  files_changed:
+  - docs/reconstruction-diagnosis-plan.md
+  - ara/evidence/tables/reconstruction_diagnosis_2026-09-25.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -110,10 +149,15 @@ key_context:
 - turn: 2
   excerpt: Alex asks to pass multiscale features also to the decoder, says it needs retraining, and answers
     Yes okay after the current/modified decoder comparison is explained.
+- turn: 3
+  excerpt: 'Alex: Ok then figure that out. Together with Claude. Refers to locating the reconstruction
+    shortfall before adding machinery.'
 open_threads:
 - Other actual-model rerun families, including lexical context and operator transfer.
-- Fine-detail fidelity and generalization beyond known procedural development populations.
+- 'Learned decoder fidelity: objectivecomparison proposed, missingrecipebehavior requires jointplan; generalization
+  and memory detail remainopen.'
 - Full-agent learning; other R2 modules remain untrained.
 ai_suggestions_pending:
 - O404/O405 are staged interpretations; no user affirmation or broad promotion inferred.
 - O406 remains staged; no user affirmation of the empirical interpretation is inferred.
+- O407/O408 scoped interpretation and nextslice remainstaged; no useradoption inferred.

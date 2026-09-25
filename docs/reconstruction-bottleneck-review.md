@@ -1,6 +1,11 @@
 # Where reconstruction detail is lost
 
 12 September 2026. Source and saved-checkpoint review, with primary-paper comparison.
+
+**Historical configuration:** this page concerns the width32 hierarchy and handwritten
+photo experiment described below. The current native `SlotPerception` uses a
+48→64 stem and a different decoder. Do not transfer these loss claims to that model;
+see the [25September actual-model diagnosis](reconstruction-diagnosis-plan.md).
 No new training, model revision or high-resolution benchmark. These mechanisms are
 separate from entity recognition, memory and action prediction.
 
