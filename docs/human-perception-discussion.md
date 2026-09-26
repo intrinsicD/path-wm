@@ -470,3 +470,14 @@ nach Zustimmung: ein kurzer Webcam-Clip (vorhandenes `experiments/capture_webcam
 Ablage unter der Personen-Entität, Prüfungen: Gelenk-Reprojektion gegen unabhängigen
 2D-Detektor, Silhouettenüberlappung, Formstabilität, Revision bei neuen Ansichten,
 Speicher/Latenz unter 6 GiB.
+
+**Schätzerrecherche (27.09., 1 Uhr, nur Primärseiten gelesen, nichts heruntergeladen):**
+
+| Kandidat | Ausgabe | Größe / Laufzeit (Autorenangabe) | Lizenz / Voraussetzungen | Einordnung |
+| --- | --- | --- | --- | --- |
+| [Multi-HMR](https://github.com/naver/multi-hmr) (NAVER, ECCV 2024; Update Feb. 2026) | SMPL-X inkl. Hände/Gesichtsausdruck, mehrere Personen in einem Durchlauf | Checkpoints ViT-S/B/L; 672 px: 29/43/74 ms auf V100 | Code CC BY-NC-SA 4.0; `SMPLX_NEUTRAL.npz` separat nach Registrierung | **Erster Kandidat:** ViT-S/B plausibel unter dem 6-GiB-Ziel, keine eigene Messung |
+| [SMPLest-X](https://github.com/MotrixLab/SMPLest-X) (TPAMI 2025) | SMPL-X, stark skaliert | Huge-Gewichte 8,2 GB; YOLOv8x-Detektor zusätzlich | SMPL-X/SMPL-Dateien nötig | Passt in dieser Form nicht ins GPU-Budget; höchstens Offline-Lehrer |
+| MediaPipe Pose/Face Landmarker (siehe oben) | 2D/3D-Landmarken, Blendshapes | leicht, CPU-echtzeitfähig | Apache 2.0 | **Unabhängige Prüfreferenz** für Gelenk-Reprojektion, kein SMPL-X |
+
+Vorschlag: Multi-HMR ViT-S als Beobachtungsadapter/Lehrer, MediaPipe als unabhängige
+Prüfung der Reprojektion. Beides erst nach Alex' Zustimmung zu Lizenz und Download.
