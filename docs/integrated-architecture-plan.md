@@ -1774,3 +1774,18 @@ Lauf: `runs/latent_agent_r1/learnability_ladder_20260926/L4_D1/`, ≤20 min, ≤
 **Vor dem Start geändert:** GPU-Smoke 5,05 Updates/s (L4-O ≈7,4), max. 3,37 GiB; die
 6000 Updates bleiben als gematchtes Budget, die Zeitgrenze wird von 20 auf 35 min
 angehoben. Keine andere Änderung.
+
+**L4-D1 Ergebnis (27.09.2026):** abgeschlossen (Exit0, 6000 Updates, 840s, ≤3,11GiB,
+Bericht `structural_verified`; Einstellung `reader=evidence`, Outcome-BCE allein
+bestätigt). Screen verfehlt: Relations-ν in allen vier Armen 0,000 an jedem
+1000er-Punkt und am Ende; Trainingskurve praktisch gleich L4-O (konstante
+Vorhersage auf denselben Batches). Explorative Probe (`diagnosis/probe_L4_D1.json`):
+Cross-Attention der Fragetokens ist über die Belege nahezu gleichverteilt (maximales
+Gewicht auf einem Beleg 0,0084 bei 1/129≈0,0078; Null-Token 0,0073); Logit-Änderung
+durch vertauschte Belege 0,0002, durch leeren Support 0,0055; mittlere Vorhersage
+0,247; Outcome-Gradient an Evidenz-MLP/Block 6·10⁻⁵/8·10⁻⁴.
+**Deutung gemäß Vorab-Erklärung:** Auch direkter Zugriff lernt δ in diesem Budget
+nicht. Die Vorhersage kollabiert früh auf die Basisrate; die Attention wird nie
+selektiv und mittelt alle Belege, deren Mittel kaum von δ abhängt (Plateau-Hypothese,
+nicht isoliert). Kompression vor der Frage ist damit nicht die einzige Ursache.
+Nächster Schritt nur nach Absprache mit Alex.
