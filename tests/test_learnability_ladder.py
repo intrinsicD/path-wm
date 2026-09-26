@@ -275,3 +275,31 @@ def test_evidence_reader_loss_matches_masked_manual_read():
         logit = core.apply(q.m_pre, q.a, q.b, context[q.episode], None, valid[q.episode])[0]
         manual = torch.nn.functional.binary_cross_entropy_with_logits(logit, q.outcome)
     assert abs(metrics["outcome_bce"] - float(manual)) < 1e-6
+
+
+def test_support_sizes_option_and_secondary_small_pool(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    captured = []
+    original = rw.sample_episodes
+
+    def spy(*args, **kwargs):
+        captured.append(tuple(kwargs.get("support", ())))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "sample_episodes", spy)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--support-sizes", "4", "8",
+                                      "--output", str(tmp_path / "N")])
+    recipe.main()
+    settings = json.loads((tmp_path / "N" / "run.json").read_text())["identity"]["settings"]
+    assert settings["support_sizes"] == [4, 8]
+    assert (4, 8) in captured  # training batches use the declared sizes
+    result = json.loads((tmp_path / "N" / "result.json").read_text())
+    assert set(result["metrics"]["pool_small"]["nu"]) == set(ev.CONTROL_ARMS)
+    assert result["metrics"]["pool_small"]["support"] == 8
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--support-sizes", "0", "8",
+                                      "--output", str(tmp_path / "x")])
+    with pytest.raises(SystemExit):
+        recipe.main()

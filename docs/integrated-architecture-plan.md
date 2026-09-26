@@ -1789,3 +1789,22 @@ nicht. Die Vorhersage kollabiert früh auf die Basisrate; die Attention wird nie
 selektiv und mittelt alle Belege, deren Mittel kaum von δ abhängt (Plateau-Hypothese,
 nicht isoliert). Kompression vor der Frage ist damit nicht die einzige Ursache.
 Nächster Schritt nur nach Absprache mit Alex.
+
+### Nachtprogramm 27.09.2026 (vorab erklärt; Alex: selbständig weiterarbeiten bis 6:30)
+
+Alle Läufe: echter `LatentCore`, symbolische Stufe, Pool L4, Seed1101, Outcome-BCE
+allein, gleiche Pool-Population/Kontrollarme/Screen (Hauptscreen bei N=128).
+Neu und nur sekundär: dieselbe Pool-Auswertung zusätzlich bei N=8 (Seed+17), als
+Befund, nicht als Gate. Jeder Schritt ändert genau einen Faktor gegenüber seiner
+genannten Referenz. Keine neuen Mechanismen; nur Rezeptoptionen.
+
+1. **N1 = L4-D1-Nklein** (Referenz L4-D1): Trainings-Supportgrößen {4,8,16} statt
+   {8,…,128} (`--support-sizes 4 8 16`), p_empty unverändert 0,05. 6000 Updates.
+   - besteht → **N2**: gleiche Einstellung mit Code-Leser (Referenz N1), dann **N3**:
+     beste bestehende Einstellung auf L16 (Referenz: dieselbe Einstellung auf L4).
+   - verfehlt, aber ν_voll bei N=8 ≥ 0,3 → **N4**: wie N1 mit 30000 Updates.
+   - verfehlt sonst → **N4** ebenfalls (Plateau-Prüfung), danach Stopp.
+2. Jeder bestandene Screen wird mit einem zweiten Seed (2202) wiederholt, bevor er in
+   Folgeentscheidungen zählt; nur Entwicklungsbefund.
+3. Kein weiterer automatischer Faktor nach N4 oder N3; Zusammenfassung für Alex.
+Budget: je Lauf ≤35 min (N4 ≤150 min), ≤6 GiB; volle Testsuite vor jedem Push.
