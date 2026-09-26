@@ -1734,3 +1734,15 @@ Wiedereinführung der Hilfsterme als eigener Faktor. Verfehlt → Gradientendomi
 allein erklärt es nicht; nächster Kandidat ist der pro Frage lesende Evidenzpfad (D1)
 auf L4, nach Absprache. Kein Budget- oder Seedsweep.
 Lauf: `runs/latent_agent_r1/learnability_ladder_20260926/L4_O/`, ≤20 min, ≤6 GiB.
+
+**L4-O Ergebnis (26.09.2026):** abgeschlossen (Exit0, 6000 Updates, 811s, Bericht
+`structural_verified`). Screen verfehlt: Relations-ν voll/leer/permutiert/vertauscht
+jeweils 0,000 am Ende und an jedem 1000er-Punkt der jetzt geloggten Kurve.
+Train-Outcome-BCE 0,572→0,541, Query-Accuracy 0,74→0,77 (Mehrheitsrate 0,75).
+Explorative Probe (`diagnosis/probe_L4_O.json`): Evidenz trägt a₀/b₁ nun zu 0,998;
+Z bleibt nahezu konstant (Streuung 0,8%), T ignoriert Z (Swap-Änderung 0,0), mittlere
+Vorhersage 0,246. Outcome-Gradient an Evidenz/Seeds 7·10⁻⁵/7·10⁻⁶.
+**Deutung gemäß Vorab-Erklärung:** Die Hilfsterm-Konkurrenz allein erklärt den
+Fehlschlag nicht. Das Henne-Ei-Problem (T nutzt Z nicht, daher kein Signal an G)
+besteht auch mit reinem Ausgangsziel. Nächster Kandidat D1 (pro Frage direktes Lesen
+der Belegtokens durch den geteilten Block) auf L4 nur nach Absprache mit Alex.
