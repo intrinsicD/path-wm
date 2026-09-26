@@ -421,3 +421,52 @@ Speicher, CPU-RAM und p50/p95-End-to-End-Latenz getrennt berichten. Konkrete
 Latenz-/Qualitätsgates vor Laufbeginn setzen. Alte kleine Modelltests validieren
 diese neue Personenpipeline nicht. Keine Gewichtsdownloads oder Modelltests in
 dieser Budgetklärung; Design, Durchsatz und Erkennungsqualität bleiben offen.
+
+## Räumliches Wissen und parametrische Personen (Diskussion 26./27. September)
+
+Alex fragt, ob räumliches Wissen über Szenen und Entitäten latent oder explizit
+(Meshes, Punktwolken, Gaussian Splats) gelernt und abgelegt werden soll, und schlägt
+für Personen Skelett-/Poseparameter, Formparameter (SMPL oder neuer) und ein
+Gesichtsmodell (FLAME oder neuer) vor. Dies ist ein **Vorschlag**, keine Übernahme,
+Implementierung oder Validierung.
+
+**Vorgeschlagene Aufteilung (hybrid):**
+
+| Ebene | Inhalt | Rolle |
+| --- | --- | --- |
+| Evidenz | Frames, Kamera-/Aktionsprotokolle, ggf. Tiefe | maßgeblich; vorhandener Store |
+| Instanzzustand | Pose, Ausdehnung, Stütz-/Enthaltenseinsbeziehungen mit Unsicherheit; bei Personen Form β (langsam, zusammengeführt), Pose θ(t), Ausdruck ψ(t), Platzierung, Herkunft | explizit, versioniert, korrigierbar ohne Gewichtstraining |
+| Geometrie-Cache | objektzentrierte Gaussians mit latenten Merkmalen; Mesh aus Parametern bei Bedarf | abgeleitet, neu aufbaubar; Rendern zur Prüfung |
+| Latenter Kern | Entitätstokens (Code + Pose), gezielt nachgeladene Gelenk-/Detailtokens | Konzepte bleiben latent, Instanzen explizit |
+
+Begründung: Rendern der Instanzhypothese ist eine unabhängige Prüfung (Vorschlagen
+und Prüfen getrennt); Laufzeitkorrektur einer Personenform ist ein kontrollierter Fall
+des Gesamtziels (Wissen ohne Nachtraining erwerben und korrigieren). Rein latente
+Szenenzustände sind schwer prüfbar; Meshes eignen sich schlecht für Unscharfes;
+Punktwolken tragen kein Aussehen; Splats sind speicherintensiv und dynamisch schwierig.
+Eine latente, per Strahl-Decoder renderbare Szenenmenge (SRT/OSRT-artig) bleibt
+Vergleichsoption.
+
+**Nutzung durch den Agenten (Vorschlag):** (1) Entitätstokens aus β, θ, ψ und Pose für
+den Kern; (2) exakte Werkzeuge aus Vorwärtskinematik: Hand-/Kopfposition, Zeige- und
+Blickstrahl gegen den Szenengraph; (3) zeitliches Fenster aus der Historie für
+Bewegung und Ereignisse. Anwendungen: Zeigen/Blick auf Referenzobjekte abbilden,
+Posevorhersage mit Prüfung am nächsten Frame, Gesten als aus wenigen Beispielen
+erschlossene Konzepte (dasselbe Induktionsproblem wie §23 des Integrationsplans),
+Sprecherzuordnung mit Audio, Form als schwacher Wiedererkennungshinweis, Übergaben
+und Abstand beim eigenen Handeln. Vorgeschlagener erster Fall: **Zeigen**.
+
+**Format:** SMPL-X als gemeinsames Körper-/Hand-/Gesichtsformat; SKEL optional für
+biomechanische Gelenke; FLAME/SMIRK für detailliertere Gesichter. Zuerst ein externer
+Schätzer als Beobachtungsadapter/Lehrer (Pseudolabels) mit Nachoptimierung gegen
+Gelenkpunkte/Silhouette; später eigene Köpfe am Multiskalen-Encoder per Destillation.
+Kleidung/Haare später optional als Gaussians auf der Körperoberfläche.
+
+**Offene Entscheidungen für Alex:** Forschungslizenzen (SMPL/SMPL-X/FLAME/SKEL nur
+nichtkommerziell, Download nach eigener Registrierung); Wahl des Schätzers (zwei
+aktuelle Kandidaten mit Größe/Lizenz recherchieren, kein Download ohne Zustimmung);
+Priorität gegenüber der Regelinduktion; wichtigste Anwendung. Kleinster erster Test
+nach Zustimmung: ein kurzer Webcam-Clip (vorhandenes `experiments/capture_webcam.py`),
+Ablage unter der Personen-Entität, Prüfungen: Gelenk-Reprojektion gegen unabhängigen
+2D-Detektor, Silhouettenüberlappung, Formstabilität, Revision bei neuen Ansichten,
+Speicher/Latenz unter 6 GiB.
