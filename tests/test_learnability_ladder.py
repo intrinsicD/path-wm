@@ -166,3 +166,35 @@ def test_control_arms_run_on_cuda_like_cpu():
 def copy_to(cls, device):
     torch.manual_seed(0)
     return cls(WIDTH).to(device)
+
+
+def test_auxiliary_weight_zero_leaves_only_outcome_bce_gradients():
+    batch = _batch(rw.relation_ladder(4), episodes=4, support=(8,))
+    tokens = _tokens(batch)
+    core = _core().train()
+    variance = torch.ones(WIDTH)
+    loss, metrics = lc.episode_loss(core, tokens, variance, key_weight=0.0, auxiliary_weight=0.0)
+    assert torch.isclose(loss, torch.tensor(metrics["outcome_bce"]))
+    default, _ = lc.episode_loss(core, tokens, variance, key_weight=0.0)
+    explicit, _ = lc.episode_loss(core, tokens, variance, key_weight=0.0, auxiliary_weight=1.0)
+    assert torch.equal(default, explicit)
+    loss.backward()
+    assert core.next.weight.grad is None or not core.next.weight.grad.any()
+    assert core.evidence_mlp[0].weight.grad.abs().sum() > 0
+
+
+def test_auxiliary_weight_is_recorded_and_symbolic_only(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--auxiliary-weight", "0",
+                                      "--output", str(tmp_path / "O")])
+    recipe.main()
+    settings = json.loads((tmp_path / "O" / "run.json").read_text())["identity"]["settings"]
+    assert settings["auxiliary_weight"] == 0.0 and settings["objective"].startswith("unweighted outcome BCE")
+    for argv in (["--stage", "core", "--perception", str(tmp_path), "--auxiliary-weight", "0"],
+                 ["--stage", "symbolic", "--auxiliary-weight", "-1"]):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", *argv, "--output", str(tmp_path / "x")])
+        with pytest.raises(SystemExit):
+            recipe.main()

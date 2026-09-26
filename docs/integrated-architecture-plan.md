@@ -1718,3 +1718,19 @@ geloggt (`flat` verwarf verschachtelte Werte); Endwerte/Screen waren korrekt.
 Regressionstest ergänzt; die vier Läufe behalten nur Endwerte der Kontrollarme.
 
 **Nächster Schritt: Entscheidung mit Alex**, kein automatischer Folgelauf.
+
+### L4-O: nur Ausgangsziel auf L4 (vorab erklärt, 26.09.2026, von Alex freigegeben)
+
+**Frage:** Blockiert der dominante Hilfsgradient (Next-Token k=1,2 und Rollout) das
+Erlernen der Induktion? **Einziger Faktor:** Gewicht der Hilfsterme 1 → 0
+(`--auxiliary-weight 0`), also Ziel = ungewichtete Outcome-BCE. Alles andere wie L4:
+Seed1101, 6000 Updates, Pool L4, gleiche Pool-Population, Kontrollarme und Screen
+(ν_voll≥0,8; ν_voll−ν_leer≥0,5; ν_voll−ν_permutiert≥0,5). Next-Kopf bleibt dabei
+untrainiert; Rollout/Next-State wird nicht bewertet. Referenz ist der bestehende L4-Lauf.
+
+**Deutung:** besteht → Hilfsterm-Konkurrenz ist mit dem Fehlschlag verbunden (nicht als
+alleinige Ursache isoliert); nächster Schritt L16/L44 mit derselben Einstellung und
+Wiedereinführung der Hilfsterme als eigener Faktor. Verfehlt → Gradientendominanz
+allein erklärt es nicht; nächster Kandidat ist der pro Frage lesende Evidenzpfad (D1)
+auf L4, nach Absprache. Kein Budget- oder Seedsweep.
+Lauf: `runs/latent_agent_r1/learnability_ladder_20260926/L4_O/`, ≤20 min, ≤6 GiB.
