@@ -121,9 +121,45 @@ def test_symbolic_ladder_run_records_pool_and_control_arms(monkeypatch, tmp_path
                                       "--updates", "2", "--train-rules", "4", "--output", str(tmp_path / "L4")])
     recipe.main()
     run = json.loads((tmp_path / "L4" / "run.json").read_text())["identity"]["settings"]
-    assert run["train_rules"] == [r.key() for r in rw.relation_ladder(4)]
+    assert run["train_rules"] == 4  # restored as the CLI value on resume
+    assert run["train_rule_keys"] == [r.key() for r in rw.relation_ladder(4)]
     result = json.loads((tmp_path / "L4" / "result.json").read_text())
     pool = result["metrics"]["pool"]
     assert set(pool["nu"]) == {"full", "empty", "swapped", "permuted"}
     assert set(result["screen"]) >= {"passed", "criteria"}
     assert (tmp_path / "L4" / "report.html").exists()
+
+
+def test_ladder_pause_resume_matches_uninterrupted(monkeypatch, tmp_path):
+    import experiments.latent_agent as recipe
+
+    def run(*arguments):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", *arguments])
+        recipe.main()
+
+    common = ["--stage", "symbolic", "--size", "check", "--device", "cpu", "--updates", "4", "--train-rules", "16"]
+    run(*common, "--stop-after", "2", "--output", str(tmp_path / "paused"))
+    run("--stage", "symbolic", "--resume", str(tmp_path / "paused"))
+    run(*common, "--output", str(tmp_path / "straight"))
+    a = torch.load(tmp_path / "paused" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
+    assert a["step"] == b["step"] == 4
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA unavailable")
+def test_control_arms_run_on_cuda_like_cpu():
+    batch = _batch(rw.relation_ladder(4))
+    tokens, core = _tokens(batch), _core()
+    cuda_tokens = ev.symbolic_episode_tokens(copy_to(SymbolicSlots, "cuda"), batch, "cuda")
+    cuda_core = _core().to("cuda")
+    with torch.no_grad():
+        for arm in ev.CONTROL_ARMS:
+            cpu = ev.control_logits(core, tokens, arm, batch.rules, seed=2)
+            gpu = ev.control_logits(cuda_core, cuda_tokens, arm, batch.rules, seed=2)
+            assert torch.allclose(cpu, gpu.cpu(), atol=1e-4), arm
+
+
+def copy_to(cls, device):
+    torch.manual_seed(0)
+    return cls(WIDTH).to(device)

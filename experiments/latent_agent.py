@@ -58,12 +58,12 @@ KEY_SCREEN = dict(positive_q01=0.93, negative_q99=0.60, within_q99=0.60)
 SIZES = dict(
     full=dict(width=64, heads=4, slots=7, iterations=3, decoder_width=32, loops=2, code_tokens=4, key_width=32,
               perception_batch=32, episodes=16, support=(8, 16, 32, 64, 128), queries=32,
-              validation_scenes=256, validation_episodes=48, validate_every=250,
+              validation_scenes=256, validation_episodes=48, pool_episodes=64, validate_every=250,
               life_supports=(8, 32, 128), lives_per_support=4, life_queries=64, life_goals=16,
               distract=32, counter=24),
     check=dict(width=16, heads=2, slots=7, iterations=2, decoder_width=8, loops=2, code_tokens=2, key_width=8,
                perception_batch=4, episodes=2, support=(4, 8), queries=4,
-               validation_scenes=8, validation_episodes=4, validate_every=2,
+               validation_scenes=8, validation_episodes=4, pool_episodes=4, validate_every=2,
                life_supports=(8,), lives_per_support=1, life_queries=4, life_goals=4,
                distract=8, counter=8),
 )
@@ -999,6 +999,20 @@ def stop(runner, args, started):
 
 # ---------------------------------------------------------------- S2 core / S2s symbolic
 
+# §23 learnability ladder, fixed before any ladder run (relation ν on the pool population).
+LADDER_SCREEN = dict(nu_full=0.8, over_empty=0.5, over_permuted=0.5)
+
+
+def ladder_screen(ladder, nu):
+    """L1 needs only ν_full; induction rungs also need support dependence over empty/permuted arms."""
+    value = {arm: None if nu[arm] is None else nu[arm].get("relation") for arm in nu}
+    criteria = dict(nu_full=value["full"] is not None and value["full"] >= LADDER_SCREEN["nu_full"])
+    if ladder > 1:
+        for arm in ("empty", "permuted"):
+            ok = None not in (value["full"], value[arm])
+            criteria[f"over_{arm}"] = ok and value["full"] - value[arm] >= LADDER_SCREEN[f"over_{arm}"]
+    return dict(passed=all(criteria.values()), criteria=criteria, relation_nu=value, thresholds=LADDER_SCREEN)
+
 
 def train_core(args, s, *, symbolic=False):
     seed_everything(args.seed)
@@ -1038,23 +1052,33 @@ def train_core(args, s, *, symbolic=False):
     if key_source:
         settings["init_key"] = True
         settings["init_key_source"] = key_source
+    split = rw.split_rules()
+    ladder = getattr(args, "train_rules", None)
+    pool = rw.relation_ladder(ladder) if ladder else split["train"]
+    if ladder:  # §23 learnability ladder: only the training-rule pool changes
+        settings.update(train_rules=ladder, train_rule_keys=[r.key() for r in pool],
+                        pool_evaluation=dict(seed=args.seed + 11, episodes=s["pool_episodes"], support=max(s["support"]),
+                                             arms=list(ev.CONTROL_ARMS)),
+                        screen=LADDER_SCREEN)
     data = rw.manifest()
     runner = Run(args.resume or args.output, settings=settings, data=data, recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
-    split = rw.split_rules()
+    pool_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 11), pool, rw.KIND_SPLIT["train"],
+                                         episodes=s["pool_episodes"], support=(max(s["support"]),),
+                                         queries=s["queries"], p_empty=0.0) if ladder else None
     validation = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 7), split["validation"], rw.KIND_SPLIT["validation"],
                                     episodes=s["validation_episodes"], support=(max(s["support"]),), queries=s["queries"], p_empty=0.0)
     started = time.perf_counter()
     try:
         if runner.step == 0 and not args.resume:
             with torch.no_grad():  # fixed target scale from training frames (declared buffer)
-                warm = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 3), split["train"], rw.KIND_SPLIT["train"],
+                warm = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 3), pool, rw.KIND_SPLIT["train"],
                                           episodes=max(2, s["episodes"]), support=s["support"], queries=s["queries"], p_empty=0.0)
                 tokens = ev.encode_episodes(perceive, warm, args.device)
                 model.variance.copy_(torch.cat((tokens.support.m_post, tokens.query.m_post)).var(0).clamp_min(1e-4))
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
-            batch = rw.sample_episodes(runner.sampler, split["train"], rw.KIND_SPLIT["train"], episodes=s["episodes"],
+            batch = rw.sample_episodes(runner.sampler, pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
                                        support=s["support"], queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight)
@@ -1072,6 +1096,10 @@ def train_core(args, s, *, symbolic=False):
                     tokens = ev.encode_episodes(perceive, validation, args.device)
                     v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight)
                     m = ev.episode_metrics(model.core, perceive, validation, args.device, floors)
+                    if ladder:
+                        controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
+                                                      seed=args.seed + 13)
+                        runner.log(dict(step=runner.step, split="pool", **flat("nu_", controls["nu"])))
                 runner.log(dict(step=runner.step, split="validation", **v_metrics,
                                 **flat("nu_", m["nu"]), **flat("calibration_", m["calibration"])))
                 runner.save()
@@ -1079,6 +1107,8 @@ def train_core(args, s, *, symbolic=False):
         runner.save()
         with evaluation_mode(model):
             m = ev.episode_metrics(model.core, perceive, validation, args.device, floors)
+            controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
+                                          seed=args.seed + 13) if ladder else None
         elapsed = time.perf_counter() - started
         result = dict(
             evaluation_scope=("Diagnostic: supplied symbols and exact masks" if symbolic else "Development: supplied support routing on validation kinds/rules; lives are the integrated test")
@@ -1090,6 +1120,11 @@ def train_core(args, s, *, symbolic=False):
             stop_reason=stop_reason(runner, args, started),
             limitations=["Episode metrics supply the concept routing; they do not test autonomous binding or planning."],
         )
+        if ladder:
+            result["metrics"]["pool"] = controls
+            result["screen"] = ladder_screen(ladder, controls["nu"])
+            result["limitations"].append("§23 development screen: one seed, training-rule pool only; held-out "
+                                         "validation is secondary and no transfer claim follows from the pool.")
         finish(runner, result, complete=runner.step >= args.updates)
     except Exception as error:
         runner.status("failed", "incomplete", str(error))
@@ -1661,6 +1696,8 @@ def main():
     parser.add_argument("--oracle-curriculum", type=int, metavar="R",
                         help="symbolic only: ORACLE diagnostic, R relation-only updates then all training rules "
                              "until --updates (historical: 8000 of 16000)")
+    parser.add_argument("--train-rules", type=int, choices=rw.LADDER_SIZES,
+                        help="symbolic only (§23): train on a nested relation pool of 1/4/16/44 training rules")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1762,6 +1799,8 @@ def main():
             parser.error("identity margins need -1 <= negative < positive <= 1 and a positive finite weight")
     if args.oracle_curriculum is not None and (args.stage != "symbolic" or not 0 < args.oracle_curriculum < args.updates):
         parser.error("--oracle-curriculum R applies to the symbolic stage with 0 < R < --updates")
+    if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
+        parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":
         audit(args, s)
     elif args.stage == "perception":

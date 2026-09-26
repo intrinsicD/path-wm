@@ -219,6 +219,74 @@ def episode_metrics(core, perceive, batch, device, floors, loops=None):
     return dict(nu=nu_from_rows(rows, floors), calibration=calibration(rows))
 
 
+# ---------------------------------------------------------------- support-use controls (plan §23)
+
+CONTROL_ARMS = ("full", "empty", "swapped", "permuted")
+
+
+def permute_support_outcomes(support, generator):
+    """Shuffle observed outcomes (m_post, outcome) among the support rows of each episode."""
+    order = torch.arange(len(support))
+    episode = support.episode.cpu()  # CPU generator and index arithmetic on any device
+    for e in episode.unique().tolist():
+        rows = (episode == e).nonzero().squeeze(1)
+        order[rows] = rows[torch.randperm(len(rows), generator=generator)]
+    order = order.to(support.m_post.device)
+    return replace(support, m_post=support.m_post[order], outcome=support.outcome[order])
+
+
+def swap_sources(rules):
+    """Per episode, the next episode (cyclically) with a different rule; None if one has none."""
+    sources = []
+    for i, rule in enumerate(rules):
+        others = [(i + k) % len(rules) for k in range(1, len(rules))]
+        match = next((j for j in others if rules[j] != rule), None)
+        if match is None:
+            return None
+        sources.append(match)
+    return sources
+
+
+def control_logits(core, tokens, arm, rules, *, seed=0, loops=None):
+    """Query logits of one arm; query labels never enter. `rules` only choose swap partners."""
+    support = tokens.support
+    if arm == "permuted":
+        support = permute_support_outcomes(support, torch.Generator().manual_seed(seed))
+    if arm == "empty":
+        width = support.m_pre.shape[-1]
+        device = support.m_pre.device
+        z = core.induce(torch.zeros(tokens.episodes, 0, width, device=device),
+                        torch.zeros(tokens.episodes, 0, dtype=torch.bool, device=device), loops=loops)
+    else:
+        z = lc.codes_for(core, support, tokens.episodes, loops)
+    if arm == "swapped":
+        sources = swap_sources(rules)
+        if sources is None:
+            return None
+        z = z[torch.tensor(sources, device=z.device)]
+    elif arm not in ("full", "empty", "permuted"):
+        raise ValueError(f"Unknown control arm {arm}")
+    q = tokens.query
+    return core.apply(q.m_pre, q.a, q.b, z[q.episode], loops)[0]
+
+
+def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None):
+    """ν per family for every control arm on the same episodes; None where an arm is unavailable."""
+    tokens = encode_episodes(perceive, batch, device)
+    nu = {}
+    for arm in CONTROL_ARMS:
+        logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops)
+        if logit is None:
+            nu[arm] = None
+            continue
+        rows = [dict(family=batch.rules[int(e)].family, group=int(e), truth=int(y), s=int(pre[m]),
+                     p=float(torch.sigmoid(p.detach())))
+                for e, y, pre, m, p in zip(batch.query.episode, batch.query.outcome, batch.query.pre,
+                                           batch.query.machine, logit)]
+        nu[arm] = nu_from_rows(rows, floors)
+    return dict(nu=nu, episodes=len(batch.rules), rules=len(set(batch.rules)))
+
+
 # ---------------------------------------------------------------- lives
 
 

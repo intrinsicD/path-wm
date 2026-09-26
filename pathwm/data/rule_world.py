@@ -154,6 +154,29 @@ def split_groups():
     }
 
 
+LADDER_SIZES = (1, 4, 16, 44)
+_LADDER_PAIRS = ((0, 1), (1, 2), (2, 1), (3, 1))  # (j,k) whose four δ are all training rules
+
+
+def relation_ladder(n):
+    """Nested training-relation pools for the learnability ladder (plan §23).
+
+    1: (j,k)=(0,1), δ=0; 4: (0,1) with every δ; 16: four complete (j,k) pairs;
+    44: every training relation. Evaluator/recipe knowledge; never a model input.
+    """
+    if n not in LADDER_SIZES:
+        raise ValueError(f"Ladder sizes are {LADDER_SIZES}")
+    train = [r for r in split_rules()["train"] if r.family == "relation"]
+    if n == 44:
+        return tuple(train)
+    pairs = _LADDER_PAIRS[: max(1, n // 4)]
+    deltas = (0,) if n == 1 else range(4)
+    rules = tuple(Rule("relation", j, k, d) for j, k in pairs for d in deltas)
+    if not set(rules) <= set(train):
+        raise ValueError("Ladder rule outside the training split")
+    return rules
+
+
 def split_rules():
     groups = split_groups()
     lookup = {}
