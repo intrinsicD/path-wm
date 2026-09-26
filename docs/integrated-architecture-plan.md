@@ -1676,3 +1676,45 @@ CPU-`check`-Lauf dient nur der Softwareprüfung.
 Struktur; Episoden ziehen nur Poolregeln; Kontrollarme (leer = Induktion ohne gültige
 Belege, permutiert ändert nur Support-Ausgänge, vertauscht nutzt fremde Regel);
 Querylabel-Unabhängigkeit; `--train-rules` nur für die symbolische Stufe ohne Oracle.
+
+### Ergebnis L1–L44 (26.09.2026)
+
+Alle vier Läufe abgeschlossen (Exit0, je 6000 Updates, 746–761s, ≤3,14GiB reserviert,
+Berichte `structural_verified`, keine Browser-QA). Endcheckpoint, Pool-Population
+64 Episoden bei N=128, Relations-ν:
+
+| Stufe | voll | leer | permutiert | vertauscht | Screen |
+| --- | ---: | ---: | ---: | ---: | --- |
+| L1 | 1,000 | 1,000 | 1,000 | n. a. | besteht (Positivkontrolle) |
+| L4 | 0,000 | 0,000 | 0,000 | 0,000 | verfehlt |
+| L16 | 0,000 | 0,000 | 0,000 | 0,000 | verfehlt |
+| L44 | 0,000 | 0,000 | 0,000 | 0,000 | verfehlt |
+
+Gemäß vorab erklärter Deutung: Anwendungs-/Trainingspfad lernt eine feste Regel;
+**schon das Erschließen eines einzigen Faktors (δ, vier Regeln) wird nicht gelernt.**
+ν=0 heißt hier konstante Mehrheitsvorhersage (BA=0,5).
+
+**Explorative Diagnose (nachträglich, kein Gate):** lesende Proben auf den drei
+Endcheckpoints (`…/learnability_ladder_20260926/diagnosis/`, Skripte dort; 400
+frische Pool-Episoden, Seed4242, lineare Ridge-Probe 75/25):
+- Evidenztokens tragen die Rohinformation: Ausgang 0,99, a₀ 0,89–0,93, b₁ 0,96
+  (Zufall 0,25/0,75); die für δ nötige Differenz (b₁−a₀) mod 4 nur 0,38–0,39.
+- Der Code Z ist nahezu konstant: Streuung über Episoden ≈0,3% der Streuung innerhalb
+  Z; δ aus Z bei L4 0,47 (Mehrheit 0,28), bei L16/L44 kaum über Zufall.
+- T ignoriert Z: vertauschter Code ändert Logits im Mittel um ≤0,0002; Query-Logits
+  streuen kaum (Std 0,01–0,08), mittlere Vorhersage ≈ Basisrate 0,24.
+- Gradienten: Outcome-BCE erreicht Evidenz-MLP und Seeds mit ~10⁻⁴, den Block mit
+  ~3·10⁻²; im vollen S2s-Ziel dominiert der Next-Token-Term (Next-Kopf ~7–14, Block
+  ~1–2, Outcome-Kopf ~0,2–0,55).
+
+Deutung (Hypothese, nicht isoliert): Ohne δ ist jede Query marginal uninformativ
+(P=1/4 für jedes (a,b)), also lernt T den Prior; solange T Z ignoriert, erhält G
+kaum Signal, und die Mittelung über 128 Belege macht Z episodenunabhängig. Der
+dominante Next-Token-Gradient im geteilten Block kann das verstärken. Keine
+Aussage über Unmöglichkeit; ein Seed, 6000 Updates, symbolischer Eingang.
+
+**Softwarefehler, behoben nach den Läufen:** die Pool-Kontrollkurve wurde nicht
+geloggt (`flat` verwarf verschachtelte Werte); Endwerte/Screen waren korrekt.
+Regressionstest ergänzt; die vier Läufe behalten nur Endwerte der Kontrollarme.
+
+**Nächster Schritt: Entscheidung mit Alex**, kein automatischer Folgelauf.

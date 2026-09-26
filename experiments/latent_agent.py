@@ -1099,7 +1099,8 @@ def train_core(args, s, *, symbolic=False):
                     if ladder:
                         controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
                                                       seed=args.seed + 13)
-                        runner.log(dict(step=runner.step, split="pool", **flat("nu_", controls["nu"])))
+                        arms = {k: v for arm, nu in controls["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
+                        runner.log(dict(step=runner.step, split="pool", **arms))
                 runner.log(dict(step=runner.step, split="validation", **v_metrics,
                                 **flat("nu_", m["nu"]), **flat("calibration_", m["calibration"])))
                 runner.save()

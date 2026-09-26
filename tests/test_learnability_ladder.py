@@ -128,6 +128,9 @@ def test_symbolic_ladder_run_records_pool_and_control_arms(monkeypatch, tmp_path
     assert set(pool["nu"]) == {"full", "empty", "swapped", "permuted"}
     assert set(result["screen"]) >= {"passed", "criteria"}
     assert (tmp_path / "L4" / "report.html").exists()
+    rows = [json.loads(line) for line in (tmp_path / "L4" / "metrics.jsonl").read_text().splitlines()]
+    pool_rows = [r for r in rows if r.get("split") == "pool"]
+    assert pool_rows and all("nu_full_relation" in r and "nu_empty_relation" in r for r in pool_rows)
 
 
 def test_ladder_pause_resume_matches_uninterrupted(monkeypatch, tmp_path):
