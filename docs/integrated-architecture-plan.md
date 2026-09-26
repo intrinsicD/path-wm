@@ -1868,7 +1868,7 @@ bricht ihn, danach lernt der echte Kern die Belegnutzung mit beiden Lesern. Nich
 isoliert: kleine Supports, reines Outcome-Ziel und Evidenz-/Codeleser sind Teil der
 Einstellung. Kein Transfer auf ungesehene Regeln geprüft.
 
-**Einziger weiterer Schritt dieser Nacht (festgelegt 01:55 vor jedem neuen Lauf):**
+**Einziger weiterer Schritt dieser Nacht (Commit 01:50, vor dem Start von N9):**
 **N9** = N8 mit 30000 Updates (Budget als einziger Faktor, steigender Trend).
 Besteht → **N10** = N9 mit Seed2202, dann Stopp. Verfehlt → Stopp. Danach volle
 Testsuite, Push und Bericht.
