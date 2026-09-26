@@ -1808,3 +1808,15 @@ genannten Referenz. Keine neuen Mechanismen; nur Rezeptoptionen.
    Folgeentscheidungen zählt; nur Entwicklungsbefund.
 3. Kein weiterer automatischer Faktor nach N4 oder N3; Zusammenfassung für Alex.
 Budget: je Lauf ≤35 min (N4 ≤150 min), ≤6 GiB; volle Testsuite vor jedem Push.
+
+**Nachtrag vor dem N4-Ergebnis (27.09., 0:40):** Probe N1 bei N=8
+(`diagnosis/probe_N1_N8.json`): Attention weiter gleichverteilt (max. 0,108 bei
+1/9≈0,111), und auch die Query-Logits streuen kaum (Std 0,0055) – T nutzt weder Belege
+noch Frageobjekte. Hypothese: symmetrischer Sattel; bei uniformem δ ist jede Frage
+allein exakt uninformativ (P=1/4), daher kein Gradient für Objektmerkmale, ohne diese
+nützen Belege nichts. **Zusätzlicher Zweig, nur falls N4 verfehlt:**
+**N5** (Referenz N1): schiefe Trainingsverteilung der Regeln, δ=0 mit Wahrscheinlichkeit
+0,7, δ=1,2,3 je 0,1 (`--rule-repeats 7 1 1 1`), sonst identisch zu N1 (6000 Updates).
+Auswertung und Screen unverändert auf der **uniformen** Pool-Population; zusätzlich
+ν je δ als Befund. Besteht N5 → Wiederholung mit Seed2202, dann Stopp und Bericht.
+Verfehlt N5 → Stopp und Bericht. Kein weiterer Faktor in dieser Nacht.
