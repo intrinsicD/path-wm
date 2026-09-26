@@ -157,11 +157,12 @@ def codes_for(core, support, episodes, loops=None):
     return core.induce(padded, valid, loops=loops)
 
 
-def episode_loss(core, tokens, variance, *, temperature=0.1, loops=None, key_weight=0.2):
-    """Unweighted outcome BCE + next-token + 2-step rollout + key InfoNCE.
+def episode_loss(core, tokens, variance, *, temperature=0.1, loops=None, key_weight=0.2, auxiliary_weight=1.0):
+    """Unweighted outcome BCE + auxiliary_weight * (next-token + 2-step rollout) + key InfoNCE.
 
     `key_weight=0` removes the appearance-key objective (used by the symbolic
     diagnostic, whose machine tokens carry no appearance to identify a kind).
+    `auxiliary_weight=0` leaves the outcome BCE (and keys) as the only objective.
     """
     z = codes_for(core, tokens.support, tokens.episodes, loops)
     q = tokens.query
@@ -177,7 +178,12 @@ def episode_loss(core, tokens, variance, *, temperature=0.1, loops=None, key_wei
     next1 = (step1.square() / variance).mean()
     next2 = ((rolled2 - second.m_post).square() / variance).mean()
     rollout = F.binary_cross_entropy_with_logits(c_logit2, second.outcome)
-    total = outcome + next1 + next2 + 0.5 * rollout
+    if auxiliary_weight == 1.0:  # unchanged summation order keeps earlier runs bit-reproducible
+        total = outcome + next1 + next2 + 0.5 * rollout
+    elif auxiliary_weight:
+        total = outcome + auxiliary_weight * (next1 + next2 + 0.5 * rollout)
+    else:
+        total = outcome
     if key_weight:
         keys = core.key(tokens.keys[:, :2])
         similarity = keys[:, 0] @ keys[:, 1].T / temperature

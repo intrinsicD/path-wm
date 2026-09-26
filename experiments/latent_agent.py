@@ -1021,6 +1021,7 @@ def train_core(args, s, *, symbolic=False):
     # appearance-key InfoNCE is unidentifiable there, so it is disabled, and the
     # supplied-symbol embeddings stay fixed (encode_episodes runs under no_grad).
     key_weight = 0.0 if symbolic else 0.2
+    auxiliary = getattr(args, "auxiliary_weight", 1.0)
     if symbolic:
         model.perception.requires_grad_(False)
         model.core.key_head.requires_grad_(False)  # unused without appearance
@@ -1044,9 +1045,10 @@ def train_core(args, s, *, symbolic=False):
                     max_reserved_gib=args.max_reserved_gib,
                     perception=None if symbolic else str(args.perception),
                     perception_sha256=None if symbolic else state_hash(model.perception),
-                    objective="unweighted outcome BCE + next-token (k=1,2) + 0.5 rollout BCE"
+                    objective=("unweighted outcome BCE" + (" + next-token (k=1,2) + 0.5 rollout BCE" if auxiliary == 1.0
+                               else f" + {auxiliary} * (next-token (k=1,2) + 0.5 rollout BCE)" if auxiliary else ""))
                     + ("" if symbolic else " + 0.2 key InfoNCE"),
-                    key_weight=key_weight,
+                    key_weight=key_weight, auxiliary_weight=auxiliary,
                     diagnostic=("supplied render symbols and exact slot masks; fixed symbol embeddings; no appearance, "
                                 "so no key objective and no retrieval claim; not an R1 pixel gate") if symbolic else None)
     if key_source:
@@ -1081,7 +1083,8 @@ def train_core(args, s, *, symbolic=False):
             batch = rw.sample_episodes(runner.sampler, pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
                                        support=s["support"], queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
-            loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight)
+            loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
+                                         auxiliary_weight=auxiliary)
             optimizer.zero_grad()
             loss.backward()
             if not all(p.grad is None or torch.isfinite(p.grad).all() for p in trainable):
@@ -1094,7 +1097,8 @@ def train_core(args, s, *, symbolic=False):
             if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
                 with evaluation_mode(model):
                     tokens = ev.encode_episodes(perceive, validation, args.device)
-                    v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight)
+                    v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
+                                                     auxiliary_weight=auxiliary)
                     m = ev.episode_metrics(model.core, perceive, validation, args.device, floors)
                     if ladder:
                         controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
@@ -1699,6 +1703,8 @@ def main():
                              "until --updates (historical: 8000 of 16000)")
     parser.add_argument("--train-rules", type=int, choices=rw.LADDER_SIZES,
                         help="symbolic only (§23): train on a nested relation pool of 1/4/16/44 training rules")
+    parser.add_argument("--auxiliary-weight", type=float, default=1.0,
+                        help="symbolic only (§23 L4-O): weight of the next-token and rollout terms (0 = outcome BCE only)")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1800,6 +1806,9 @@ def main():
             parser.error("identity margins need -1 <= negative < positive <= 1 and a positive finite weight")
     if args.oracle_curriculum is not None and (args.stage != "symbolic" or not 0 < args.oracle_curriculum < args.updates):
         parser.error("--oracle-curriculum R applies to the symbolic stage with 0 < R < --updates")
+    if args.auxiliary_weight != 1.0 and (args.stage != "symbolic" or args.oracle_curriculum is not None
+                                         or not (math.isfinite(args.auxiliary_weight) and args.auxiliary_weight >= 0)):
+        parser.error("--auxiliary-weight applies to the symbolic induction stage and must be finite and nonnegative")
     if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":
