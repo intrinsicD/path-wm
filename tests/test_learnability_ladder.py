@@ -323,3 +323,34 @@ def test_support_sizes_survive_pause_and_resume(monkeypatch, tmp_path):
     assert a["step"] == b["step"] == 4
     assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
     assert json.loads((tmp_path / "paused" / "run.json").read_text())["identity"]["settings"]["support_sizes"] == [4, 8]
+
+
+def test_rule_repeats_skew_training_draws_but_not_the_evaluation_pool(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    pools = []
+    original = rw.sample_episodes
+
+    def spy(generator, rules, *args, **kwargs):
+        pools.append(tuple(rules))
+        return original(generator, rules, *args, **kwargs)
+
+    monkeypatch.setattr(rw, "sample_episodes", spy)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--rule-repeats", "7", "1", "1", "1",
+                                      "--output", str(tmp_path / "S")])
+    recipe.main()
+    ladder = rw.relation_ladder(4)
+    skewed = (ladder[0],) * 7 + ladder[1:]
+    assert skewed in pools and ladder in pools  # training draws skewed; evaluation pools uniform
+    settings = json.loads((tmp_path / "S" / "run.json").read_text())["identity"]["settings"]
+    assert settings["rule_repeats"] == [7, 1, 1, 1]
+    result = json.loads((tmp_path / "S" / "result.json").read_text())
+    by_rule = result["metrics"]["pool"]["nu_by_rule"]
+    assert by_rule and set(by_rule) <= {r.key() for r in ladder}  # rules present in the small check pool
+    for bad in (["--rule-repeats", "1", "1"], ["--rule-repeats", "0", "1", "1", "1"]):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-rules", "4", *bad,
+                                          "--output", str(tmp_path / "x")])
+        with pytest.raises(SystemExit):
+            recipe.main()

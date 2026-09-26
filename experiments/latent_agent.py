@@ -1061,11 +1061,14 @@ def train_core(args, s, *, symbolic=False):
     split = rw.split_rules()
     ladder = getattr(args, "train_rules", None)
     pool = rw.relation_ladder(ladder) if ladder else split["train"]
+    repeats = getattr(args, "rule_repeats", None)
+    # N5: skewed training draws by repeating pool rules; evaluation pools stay uniform.
+    train_pool = tuple(r for r, k in zip(pool, repeats) for _ in range(k)) if repeats else pool
     if ladder:  # §23 learnability ladder: only the training-rule pool changes
         settings.update(train_rules=ladder, train_rule_keys=[r.key() for r in pool],
                         pool_evaluation=dict(seed=args.seed + 11, episodes=s["pool_episodes"], support=max(s["support"]),
                                              arms=list(ev.CONTROL_ARMS)),
-                        screen=LADDER_SCREEN)
+                        screen=LADDER_SCREEN, rule_repeats=repeats)
     data = rw.manifest()
     runner = Run(args.resume or args.output, settings=settings, data=data, recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
@@ -1082,13 +1085,13 @@ def train_core(args, s, *, symbolic=False):
     try:
         if runner.step == 0 and not args.resume:
             with torch.no_grad():  # fixed target scale from training frames (declared buffer)
-                warm = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 3), pool, rw.KIND_SPLIT["train"],
+                warm = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 3), train_pool, rw.KIND_SPLIT["train"],
                                           episodes=max(2, s["episodes"]), support=s["support"], queries=s["queries"], p_empty=0.0)
                 tokens = ev.encode_episodes(perceive, warm, args.device)
                 model.variance.copy_(torch.cat((tokens.support.m_post, tokens.query.m_post)).var(0).clamp_min(1e-4))
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
-            batch = rw.sample_episodes(runner.sampler, pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
+            batch = rw.sample_episodes(runner.sampler, train_pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
                                        support=support_sizes, queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
@@ -1724,6 +1727,8 @@ def main():
                         help="symbolic only (§23 L4-D1): T reads an induced code or the support evidence directly")
     parser.add_argument("--support-sizes", type=int, nargs="+",
                         help="symbolic only (overnight N1): training support sizes (default: the size profile's)")
+    parser.add_argument("--rule-repeats", type=int, nargs="+",
+                        help="symbolic with --train-rules only (overnight N5): per-rule training draw multiplicity")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1833,6 +1838,9 @@ def main():
     if args.support_sizes is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None
                                            or min(args.support_sizes) < 1):
         parser.error("--support-sizes applies to the symbolic induction stage and needs positive sizes")
+    if args.rule_repeats is not None and (args.train_rules is None or len(args.rule_repeats) != args.train_rules
+                                          or min(args.rule_repeats) < 1):
+        parser.error("--rule-repeats needs --train-rules and one positive count per ladder rule")
     if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":
