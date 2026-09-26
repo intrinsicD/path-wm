@@ -1809,7 +1809,7 @@ genannten Referenz. Keine neuen Mechanismen; nur Rezeptoptionen.
 3. Kein weiterer automatischer Faktor nach N4 oder N3; Zusammenfassung für Alex.
 Budget: je Lauf ≤35 min (N4 ≤150 min), ≤6 GiB; volle Testsuite vor jedem Push.
 
-**Nachtrag vor dem N4-Ergebnis (27.09., 0:40):** Probe N1 bei N=8
+**Nachtrag vor dem N4-Ergebnis (27.09., Commit 0:34):** Probe N1 bei N=8
 (`diagnosis/probe_N1_N8.json`): Attention weiter gleichverteilt (max. 0,108 bei
 1/9≈0,111), und auch die Query-Logits streuen kaum (Std 0,0055) – T nutzt weder Belege
 noch Frageobjekte. Hypothese: symmetrischer Sattel; bei uniformem δ ist jede Frage
@@ -1829,7 +1829,7 @@ bei N=8 an jedem 1000er-Punkt. Probe siehe Nachtrag oben.
 5000er-Punkt; Train-Outcome-BCE 0,581/0,538/0,558 bei 10k/20k/30k. Das Plateau wird in
 fünffachem Budget nicht verlassen (ein Seed). Gemäß Vorab-Zweig folgt N5.
 
-**N5 Ergebnis (27.09., 1:50):** abgeschlossen (Exit0, 6000 Updates, 478s, ≤3,43GiB,
+**N5 Ergebnis (27.09., ca. 1:24; Uhrzeit korrigiert nach Git-Log):** abgeschlossen (Exit0, 6000 Updates, 478s, ≤3,43GiB,
 Bericht `structural_verified`). **Screen besteht** (ein Seed, Entwicklungsbefund):
 uniforme Pool-Population N=128: ν voll 0,973, leer 0,007, permutiert 0,198, vertauscht
 −0,294; je Regel δ=0/1/2/3: 1,000/0,994/1,000/0,882. Sekundär N=8: voll 0,902, leer
@@ -1838,7 +1838,7 @@ auf 0,973 erst zwischen 5000 und 6000. Train-Outcome-BCE 0,401/0,282/0,196 bei
 2k/4k/6k. Erstmals nutzt der echte Kern Belege zur Regelunterscheidung auf L4.
 Grenzen: ein Seed, später Sprung, Trainingsregeln (kein Transfer), symbolischer Eingang.
 
-**Vor dem Seed-Ergebnis festgelegte Fortsetzung (1:55):**
+**Vor dem Seed-Ergebnis festgelegte Fortsetzung (Commit 1:25):**
 - **N6** = N5 mit Seed2202 (geplant). Verfehlt → Stopp, Bericht „instabil“.
 - Besteht N6 → **N7** (Referenz N5): Code-Leser statt Evidenzleser, sonst N5.
   Prüft, ob die Kompression vor der Frage nach Symmetriebruch lernbar ist.
@@ -1846,3 +1846,29 @@ Grenzen: ein Seed, später Sprung, Trainingsregeln (kein Transfer), symbolischer
   (`--rule-repeats` 7,1,1,1 viermal), Evidenzleser, Seed1101, 6000 Updates.
   Screen auf uniformer L16-Pool-Population.
 - Danach Stopp und Bericht; kein weiterer Faktor.
+
+**N6 Ergebnis (Seed2202):** abgeschlossen (Exit0, 6000 Updates, 482s, ≤3,38GiB, Bericht
+`structural_verified`). **Besteht:** ν voll 0,983, leer 0,012, permutiert −0,046,
+vertauscht −0,319; je δ 1,000/1,000/0,952/0,985; N=8: voll 0,902. Sprung früher
+(0,248 bei 2k, 0,651 bei 3k, 0,955 bei 4k), danach stabil. Explorative Probe
+(`diagnosis/probe_N6_N128.json`, `…_N8.json`): Attention jetzt selektiv (max. Gewicht
+auf einem Beleg 0,027 bei N=128 ≈3,5× gleichverteilt; 0,25 bei N=8), Logit-Streuung 6,5,
+vertauschte Belege ändern Logits im Mittel um 8,1.
+**N7 Ergebnis (Code-Leser):** abgeschlossen (Exit0, 484s, ≤2,77GiB). **Besteht:** ν voll
+1,000 (alle vier δ 1,000), leer 0,010, permutiert 0,036, vertauscht −0,304; N=8 voll
+0,851. Sprung zwischen 4k (0,397) und 5k (0,996). Nach Symmetriebruch ist auch die
+Kompression vor der Frage lernbar.
+**N8 Ergebnis (L16, Schiefe je Paar):** abgeschlossen (Exit0, 481s, ≤3,43GiB).
+**Verfehlt:** ν voll 0,153 (leer 0,015, permutiert 0,004); steigend 0,039/0,069/0,153
+bei 4k/5k/6k. Je Regel: δ=0 für (0,1) 0,943 und (2,1) 0,952, (3,1) 0,392, sonst ≈0.
+
+**Deutung (L4, zwei Seeds + Code-Leser):** Der symmetrische Sattel der uniformen
+Regelverteilung war mit dem Scheitern verbunden; eine schiefe Trainingsverteilung
+bricht ihn, danach lernt der echte Kern die Belegnutzung mit beiden Lesern. Nicht
+isoliert: kleine Supports, reines Outcome-Ziel und Evidenz-/Codeleser sind Teil der
+Einstellung. Kein Transfer auf ungesehene Regeln geprüft.
+
+**Einziger weiterer Schritt dieser Nacht (festgelegt 01:55 vor jedem neuen Lauf):**
+**N9** = N8 mit 30000 Updates (Budget als einziger Faktor, steigender Trend).
+Besteht → **N10** = N9 mit Seed2202, dann Stopp. Verfehlt → Stopp. Danach volle
+Testsuite, Push und Bericht.
