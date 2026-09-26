@@ -1614,3 +1614,65 @@ CI1 Softwareprüfung: vier gezielte Tests bestehen, vollständige CPU-Suite820Te
 exit0 in665,79s auf finalem Rechensnapshot. Danach ausschließlich Report-Scope/
 Gesamt-Gate-Darstellung präzisiert und gezielte Tests erneut bestanden; exakter
 Delta-Nachweis `report-only-source-change.json`. Kein ungetesteter Rechenpfadwechsel.
+
+## 23. Lernbarkeitsleiter: Regelinduktion auf dem echten Kern (L1–L44, vorab erklärt)
+
+**Entscheidung Alex (26.09.2026):** Der volle Anspruch der Regelableitung bleibt,
+wenn nötig mit überarbeitetem Lernansatz. Geprüft wird der echte `LatentCore`, nicht
+der eigenständige Arm A der [Abstraktionsspezifikation](shared-abstraction-spec.md);
+dieser bleibt höchstens ein später ausdrücklich gekennzeichneter Vergleich.
+
+**Problem:** J44, RPAIR und SUC erreichen auch auf den *eigenen* Trainingsrelationen
+ν=0, obwohl der Support die Regel bei N=128 eindeutig bestimmt und T vorgegebene Codes
+anwenden kann (§16). Unbekannt ist, ob überhaupt irgendein Support→Verhalten-Lernen
+entsteht oder erst die Zahl der zu unterscheidenden Hypothesen scheitert.
+
+**Einziger veränderter Faktor:** Größe des Trainingsregelpools, nur Relationsfamilie,
+geschachtelt und strukturiert aus den 44 Trainingsrelationen (`rw.relation_ladder`):
+
+| Stufe | Regeln | Bedeutung |
+| --- | --- | --- |
+| L1 | (j,k)=(0,1), δ=0 | Positivkontrolle des Anwendungspfads; keine Induktion nötig |
+| L4 | (0,1), δ∈{0..3} | nur δ ist aus Belegen zu erschließen |
+| L16 | (j,k)∈{(0,1),(1,2),(2,1),(3,1)} × δ∈{0..3} | Rollen und δ |
+| L44 | alle Trainingsrelationen | Ausgangslage von J44 |
+
+**Unverändert:** Rezept `experiments.latent_agent --stage symbolic` (echter
+`LatentCore` volle Größe: Breite64, 4 Köpfe, 2 Schleifen, 4 Codetokens; eingefrorene
+`SymbolicSlots`-Einbettungen), S2s-Ziel (ungewichtete Outcome-BCE + Next-Token k=1,2 +
+0,5 Rollout-BCE), AdamW lr3e-4, Support {8..128}, p_empty0,05, 16 Episoden×32 Queries,
+Seed1101, frische Initialisierung. Abweichungen gegenüber J44 (BCE-only, R44-Start,
+Seeds×50) sind erklärt; J44 wird nicht als L44-Kontrolle behauptet.
+
+**Auswertung (jede 250 Updates und am Ende):** feste Pool-Population (Seed+11, 64
+Episoden, N=128, frische Szenen/Queries aus demselben Regelpool) mit ν je Episode und
+vier Armen desselben Checkpoints: voll, leer (kein gültiger Beleg), vertauscht (Code
+einer Episode mit anderer Regel; bei L1 nicht auswertbar) und permutiert (Support-
+Ausgänge innerhalb der Episode vertauscht). Zusätzlich die bestehende Validation auf
+zurückgehaltenen Regeln als sekundärer Befund. Querylabels erreichen nie G/T.
+
+**Screen (Entwicklung, ein Seed, Endcheckpoint, vorab fixiert):**
+- L1 besteht bei ν_voll ≥ 0,8.
+- L4/L16/L44 bestehen bei ν_voll ≥ 0,8 **und** ν_voll−ν_leer ≥ 0,5 **und**
+  ν_voll−ν_permutiert ≥ 0,5.
+
+**Deutung:** L1 scheitert → Defekt im Anwendungs-/Trainingspfad, zuerst reparieren.
+L1 besteht, L4 scheitert → schon einfachste Induktion (ein Faktor) wird nicht gelernt;
+nächster Schritt ist eine Diagnose des Evidenzvertrags (z. B. lineare Probe, ob a_j,
+b_k und Ausgang aus den Evidenztokens lesbar sind), kein neuer Mechanismus ohne Alex.
+Bruchstelle bei L16 oder L44 → Optimierungs-/Skalierungsproblem; ein Curriculum über
+die Regelzahl wäre der nächste Einzelfaktor. Alle bestehen → J44-Fehlschlag stammt aus
+dessen geänderten Bedingungen; dann gezielter Vergleich. Kein Ergebnis beweist
+Unmöglichkeit oder eine eindeutige Ursache; Transfer auf neue Regeln ist hier nicht
+das Gate.
+
+**Budget:** je Stufe 6000 Updates, ≤20 min, ≤6 GiB auf der RTX 3050 (≈7 Updates/s
+früher gemessen; die GPU kann durch andere Projekte belegt sein, Laufzeiten dann nur
+Buchführung). Vier Läufe unter `runs/latent_agent_r1/learnability_ladder_20260926/L{1,4,16,44}/`,
+jeder mit Rohmetriken, Checkpoint und `report.html`. Voll-Konfiguration; der
+CPU-`check`-Lauf dient nur der Softwareprüfung.
+
+**Tests zuerst (rot):** Leiter geschachtelt, nur Trainingsrelationen, erwartete
+Struktur; Episoden ziehen nur Poolregeln; Kontrollarme (leer = Induktion ohne gültige
+Belege, permutiert ändert nur Support-Ausgänge, vertauscht nutzt fremde Regel);
+Querylabel-Unabhängigkeit; `--train-rules` nur für die symbolische Stufe ohne Oracle.
