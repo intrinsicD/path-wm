@@ -79,8 +79,12 @@ class LatentCore(nn.Module):
             x = self.block(x, context, context_valid)
         return self.code_norm(x)
 
-    def apply(self, m, a, b, z, loops=None):
-        """Per-query [B,D] tokens and Z [B,K,D] -> (outcome logit [B], m_hat [B,D])."""
+    def apply(self, m, a, b, z, loops=None, context_valid=None):
+        """Per-query [B,D] tokens and Z [B,K,D] -> (outcome logit [B], m_hat [B,D]).
+
+        With `context_valid` [B,K] the block reads a masked context instead of a code,
+        e.g. the uncompressed support evidence of `evidence_context` (§23 L4-D1).
+        """
         x = torch.stack(
             (
                 m + self.types.weight[MACHINE],
@@ -90,7 +94,7 @@ class LatentCore(nn.Module):
             1,
         )
         for _ in range(self.loops if loops is None else loops):
-            x = self.block(x, z)
+            x = self.block(x, z, context_valid)
         h = self.head_norm(x[:, 0])
         return self.outcome(h).squeeze(-1), m + self.next(h)
 
@@ -151,29 +155,59 @@ def pad_by_episode(values, episode, episodes):
     return padded, valid
 
 
+def evidence_context(core, support, episodes):
+    """Uncompressed support evidence as a readable context: the exact context `induce` compresses.
+
+    [null + NULL; evidence + EVIDENCE] [E,1+Nmax,D] with validity [E,1+Nmax]; the null
+    token keeps an empty support finite.
+    """
+    e = core.evidence(support.m_pre, support.a, support.b, support.m_post)
+    padded, valid = pad_by_episode(e, support.episode, episodes)
+    tokens = padded.masked_fill(~valid[..., None], 0) + core.types.weight[EVIDENCE]
+    null = (core.null + core.types.weight[NULL]).expand(episodes, 1, -1)
+    ones = torch.ones(episodes, 1, dtype=torch.bool, device=valid.device)
+    return torch.cat((null, tokens), 1), torch.cat((ones, valid), 1)
+
+
+def read_context(core, support, episodes, reader="code", loops=None):
+    """What T reads per episode: an induced code (valid=None) or the evidence context."""
+    if reader == "code":
+        return codes_for(core, support, episodes, loops), None
+    if reader == "evidence":
+        return evidence_context(core, support, episodes)
+    raise ValueError(f"Unknown reader {reader}")
+
+
 def codes_for(core, support, episodes, loops=None):
     e = core.evidence(support.m_pre, support.a, support.b, support.m_post)
     padded, valid = pad_by_episode(e, support.episode, episodes)
     return core.induce(padded, valid, loops=loops)
 
 
-def episode_loss(core, tokens, variance, *, temperature=0.1, loops=None, key_weight=0.2, auxiliary_weight=1.0):
+def episode_loss(core, tokens, variance, *, temperature=0.1, loops=None, key_weight=0.2, auxiliary_weight=1.0,
+                 reader="code"):
     """Unweighted outcome BCE + auxiliary_weight * (next-token + 2-step rollout) + key InfoNCE.
 
     `key_weight=0` removes the appearance-key objective (used by the symbolic
     diagnostic, whose machine tokens carry no appearance to identify a kind).
     `auxiliary_weight=0` leaves the outcome BCE (and keys) as the only objective.
+    `reader="evidence"` lets T read the support evidence directly instead of a code.
     """
-    z = codes_for(core, tokens.support, tokens.episodes, loops)
+    z, valid = read_context(core, tokens.support, tokens.episodes, reader, loops)
+
+    def ctx(episode):
+        return z[episode], None if valid is None else valid[episode]
+
     q = tokens.query
-    logit, predicted = core.apply(q.m_pre, q.a, q.b, z[q.episode], loops)
+    z_q, valid_q = ctx(q.episode)
+    logit, predicted = core.apply(q.m_pre, q.a, q.b, z_q, loops, valid_q)
     outcome = F.binary_cross_entropy_with_logits(logit, q.outcome)
     first = tokens.chain.select(tokens.chain.step == 0)
     second = tokens.chain.select(tokens.chain.step == 1)
     if not torch.equal(first.episode, second.episode):
         raise ValueError("Chain steps must be paired per episode in the same order")
-    c_logit1, rolled = core.apply(first.m_pre, first.a, first.b, z[first.episode], loops)
-    c_logit2, rolled2 = core.apply(rolled, second.a, second.b, z[second.episode], loops)
+    c_logit1, rolled = core.apply(first.m_pre, first.a, first.b, ctx(first.episode)[0], loops, ctx(first.episode)[1])
+    c_logit2, rolled2 = core.apply(rolled, second.a, second.b, ctx(second.episode)[0], loops, ctx(second.episode)[1])
     step1 = torch.cat((predicted - q.m_post, rolled - first.m_post))
     next1 = (step1.square() / variance).mean()
     next2 = ((rolled2 - second.m_post).square() / variance).mean()

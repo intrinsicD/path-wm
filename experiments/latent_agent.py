@@ -1022,6 +1022,7 @@ def train_core(args, s, *, symbolic=False):
     # supplied-symbol embeddings stay fixed (encode_episodes runs under no_grad).
     key_weight = 0.0 if symbolic else 0.2
     auxiliary = getattr(args, "auxiliary_weight", 1.0)
+    reader = getattr(args, "reader", "code")
     if symbolic:
         model.perception.requires_grad_(False)
         model.core.key_head.requires_grad_(False)  # unused without appearance
@@ -1048,7 +1049,7 @@ def train_core(args, s, *, symbolic=False):
                     objective=("unweighted outcome BCE" + (" + next-token (k=1,2) + 0.5 rollout BCE" if auxiliary == 1.0
                                else f" + {auxiliary} * (next-token (k=1,2) + 0.5 rollout BCE)" if auxiliary else ""))
                     + ("" if symbolic else " + 0.2 key InfoNCE"),
-                    key_weight=key_weight, auxiliary_weight=auxiliary,
+                    key_weight=key_weight, auxiliary_weight=auxiliary, reader=reader,
                     diagnostic=("supplied render symbols and exact slot masks; fixed symbol embeddings; no appearance, "
                                 "so no key objective and no retrieval claim; not an R1 pixel gate") if symbolic else None)
     if key_source:
@@ -1084,7 +1085,7 @@ def train_core(args, s, *, symbolic=False):
                                        support=s["support"], queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
-                                         auxiliary_weight=auxiliary)
+                                         auxiliary_weight=auxiliary, reader=reader)
             optimizer.zero_grad()
             loss.backward()
             if not all(p.grad is None or torch.isfinite(p.grad).all() for p in trainable):
@@ -1098,11 +1099,11 @@ def train_core(args, s, *, symbolic=False):
                 with evaluation_mode(model):
                     tokens = ev.encode_episodes(perceive, validation, args.device)
                     v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
-                                                     auxiliary_weight=auxiliary)
-                    m = ev.episode_metrics(model.core, perceive, validation, args.device, floors)
+                                                     auxiliary_weight=auxiliary, reader=reader)
+                    m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
                     if ladder:
                         controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
-                                                      seed=args.seed + 13)
+                                                      seed=args.seed + 13, reader=reader)
                         arms = {k: v for arm, nu in controls["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool", **arms))
                 runner.log(dict(step=runner.step, split="validation", **v_metrics,
@@ -1111,9 +1112,9 @@ def train_core(args, s, *, symbolic=False):
                 print(f"{settings['stage']}: saved step {runner.step}", flush=True)
         runner.save()
         with evaluation_mode(model):
-            m = ev.episode_metrics(model.core, perceive, validation, args.device, floors)
+            m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
             controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
-                                          seed=args.seed + 13) if ladder else None
+                                          seed=args.seed + 13, reader=reader) if ladder else None
         elapsed = time.perf_counter() - started
         result = dict(
             evaluation_scope=("Diagnostic: supplied symbols and exact masks" if symbolic else "Development: supplied support routing on validation kinds/rules; lives are the integrated test")
@@ -1705,6 +1706,8 @@ def main():
                         help="symbolic only (§23): train on a nested relation pool of 1/4/16/44 training rules")
     parser.add_argument("--auxiliary-weight", type=float, default=1.0,
                         help="symbolic only (§23 L4-O): weight of the next-token and rollout terms (0 = outcome BCE only)")
+    parser.add_argument("--reader", choices=("code", "evidence"), default="code",
+                        help="symbolic only (§23 L4-D1): T reads an induced code or the support evidence directly")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1809,6 +1812,8 @@ def main():
     if args.auxiliary_weight != 1.0 and (args.stage != "symbolic" or args.oracle_curriculum is not None
                                          or not (math.isfinite(args.auxiliary_weight) and args.auxiliary_weight >= 0)):
         parser.error("--auxiliary-weight applies to the symbolic induction stage and must be finite and nonnegative")
+    if args.reader != "code" and (args.stage != "symbolic" or args.oracle_curriculum is not None):
+        parser.error("--reader evidence applies to the symbolic induction stage without --oracle-curriculum")
     if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":

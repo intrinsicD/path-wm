@@ -262,3 +262,16 @@ def test_reader_option_is_recorded_and_symbolic_only(monkeypatch, tmp_path):
                                       "--reader", "evidence", "--output", str(tmp_path / "x")])
     with pytest.raises(SystemExit):
         recipe.main()
+
+
+def test_evidence_reader_loss_matches_masked_manual_read():
+    batch = _batch(rw.relation_ladder(4), episodes=3, support=(8,))
+    tokens, core = _tokens(batch), _core()
+    q = tokens.query
+    with torch.no_grad():
+        _, metrics = lc.episode_loss(core, tokens, torch.ones(WIDTH), key_weight=0.0, auxiliary_weight=0.0,
+                                     reader="evidence")
+        context, valid = lc.evidence_context(core, tokens.support, tokens.episodes)
+        logit = core.apply(q.m_pre, q.a, q.b, context[q.episode], None, valid[q.episode])[0]
+        manual = torch.nn.functional.binary_cross_entropy_with_logits(logit, q.outcome)
+    assert abs(metrics["outcome_bce"] - float(manual)) < 1e-6

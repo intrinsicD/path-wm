@@ -148,10 +148,10 @@ def symbolic_episode_tokens(symbolic, batch, device):
 
 
 @torch.no_grad()
-def episode_predictions(core, tokens, loops=None):
-    z = lc.codes_for(core, tokens.support, tokens.episodes, loops)
+def episode_predictions(core, tokens, loops=None, reader="code"):
+    z, valid = lc.read_context(core, tokens.support, tokens.episodes, reader, loops)
     q = tokens.query
-    logit, _ = core.apply(q.m_pre, q.a, q.b, z[q.episode], loops)
+    logit, _ = core.apply(q.m_pre, q.a, q.b, z[q.episode], loops, None if valid is None else valid[q.episode])
     return logit
 
 
@@ -200,9 +200,9 @@ def calibration(rows, bins=10):
     )
 
 
-def episode_metrics(core, perceive, batch, device, floors, loops=None):
+def episode_metrics(core, perceive, batch, device, floors, loops=None, reader="code"):
     tokens = encode_episodes(perceive, batch, device)
-    logit = episode_predictions(core, tokens, loops)
+    logit = episode_predictions(core, tokens, loops, reader)
     rows = []
     for i in range(len(batch.query)):
         e = int(batch.query.episode[i])
@@ -247,35 +247,35 @@ def swap_sources(rules):
     return sources
 
 
-def control_logits(core, tokens, arm, rules, *, seed=0, loops=None):
-    """Query logits of one arm; query labels never enter. `rules` only choose swap partners."""
+def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code"):
+    """Query logits of one arm; query labels never enter. `rules` only choose swap partners.
+
+    empty: code induced from no evidence, or for the evidence reader the null token only.
+    """
     support = tokens.support
     if arm == "permuted":
         support = permute_support_outcomes(support, torch.Generator().manual_seed(seed))
     if arm == "empty":
-        width = support.m_pre.shape[-1]
-        device = support.m_pre.device
-        z = core.induce(torch.zeros(tokens.episodes, 0, width, device=device),
-                        torch.zeros(tokens.episodes, 0, dtype=torch.bool, device=device), loops=loops)
-    else:
-        z = lc.codes_for(core, support, tokens.episodes, loops)
+        support = support.select(torch.zeros(len(support), dtype=torch.bool, device=support.episode.device))
+    z, valid = lc.read_context(core, support, tokens.episodes, reader, loops)
     if arm == "swapped":
         sources = swap_sources(rules)
         if sources is None:
             return None
-        z = z[torch.tensor(sources, device=z.device)]
+        index = torch.tensor(sources, device=z.device)
+        z, valid = z[index], None if valid is None else valid[index]
     elif arm not in ("full", "empty", "permuted"):
         raise ValueError(f"Unknown control arm {arm}")
     q = tokens.query
-    return core.apply(q.m_pre, q.a, q.b, z[q.episode], loops)[0]
+    return core.apply(q.m_pre, q.a, q.b, z[q.episode], loops, None if valid is None else valid[q.episode])[0]
 
 
-def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None):
+def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code"):
     """ν per family for every control arm on the same episodes; None where an arm is unavailable."""
     tokens = encode_episodes(perceive, batch, device)
     nu = {}
     for arm in CONTROL_ARMS:
-        logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops)
+        logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops, reader=reader)
         if logit is None:
             nu[arm] = None
             continue
