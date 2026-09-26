@@ -1820,3 +1820,11 @@ nützen Belege nichts. **Zusätzlicher Zweig, nur falls N4 verfehlt:**
 Auswertung und Screen unverändert auf der **uniformen** Pool-Population; zusätzlich
 ν je δ als Befund. Besteht N5 → Wiederholung mit Seed2202, dann Stopp und Bericht.
 Verfehlt N5 → Stopp und Bericht. Kein weiterer Faktor in dieser Nacht.
+
+**N1 Ergebnis:** abgeschlossen (Exit0, 6000 Updates, 479s, ≤3,43GiB, Bericht
+`structural_verified`). Screen verfehlt; Relations-ν aller Arme 0,000 bei N=128 und
+bei N=8 an jedem 1000er-Punkt. Probe siehe Nachtrag oben.
+**N4 Ergebnis:** abgeschlossen (Exit0, 30000 Updates, 2424s, ≤3,43GiB, Bericht
+`structural_verified`). Screen verfehlt; alle Arme 0,000 bei N=128 und N=8 an jedem
+5000er-Punkt; Train-Outcome-BCE 0,581/0,538/0,558 bei 10k/20k/30k. Das Plateau wird in
+fünffachem Budget nicht verlassen (ein Seed). Gemäß Vorab-Zweig folgt N5.
