@@ -1001,6 +1001,7 @@ def stop(runner, args, started):
 
 # §23 learnability ladder, fixed before any ladder run (relation ν on the pool population).
 LADDER_SCREEN = dict(nu_full=0.8, over_empty=0.5, over_permuted=0.5)
+SMALL_POOL_SUPPORT = 8
 
 
 def ladder_screen(ladder, nu):
@@ -1023,6 +1024,7 @@ def train_core(args, s, *, symbolic=False):
     key_weight = 0.0 if symbolic else 0.2
     auxiliary = getattr(args, "auxiliary_weight", 1.0)
     reader = getattr(args, "reader", "code")
+    support_sizes = tuple(getattr(args, "support_sizes", None) or s["support"])
     if symbolic:
         model.perception.requires_grad_(False)
         model.core.key_head.requires_grad_(False)  # unused without appearance
@@ -1050,6 +1052,7 @@ def train_core(args, s, *, symbolic=False):
                                else f" + {auxiliary} * (next-token (k=1,2) + 0.5 rollout BCE)" if auxiliary else ""))
                     + ("" if symbolic else " + 0.2 key InfoNCE"),
                     key_weight=key_weight, auxiliary_weight=auxiliary, reader=reader,
+                    support_sizes=getattr(args, "support_sizes", None), train_support=list(support_sizes),
                     diagnostic=("supplied render symbols and exact slot masks; fixed symbol embeddings; no appearance, "
                                 "so no key objective and no retrieval claim; not an R1 pixel gate") if symbolic else None)
     if key_source:
@@ -1069,6 +1072,10 @@ def train_core(args, s, *, symbolic=False):
     pool_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 11), pool, rw.KIND_SPLIT["train"],
                                          episodes=s["pool_episodes"], support=(max(s["support"]),),
                                          queries=s["queries"], p_empty=0.0) if ladder else None
+    # Secondary small-support pool (overnight plan): a finding, never part of the screen.
+    small_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 17), pool, rw.KIND_SPLIT["train"],
+                                          episodes=s["pool_episodes"], support=(SMALL_POOL_SUPPORT,),
+                                          queries=s["queries"], p_empty=0.0) if ladder else None
     validation = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 7), split["validation"], rw.KIND_SPLIT["validation"],
                                     episodes=s["validation_episodes"], support=(max(s["support"]),), queries=s["queries"], p_empty=0.0)
     started = time.perf_counter()
@@ -1082,7 +1089,7 @@ def train_core(args, s, *, symbolic=False):
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
             batch = rw.sample_episodes(runner.sampler, pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
-                                       support=s["support"], queries=s["queries"])
+                                       support=support_sizes, queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
                                          auxiliary_weight=auxiliary, reader=reader)
@@ -1106,6 +1113,10 @@ def train_core(args, s, *, symbolic=False):
                                                       seed=args.seed + 13, reader=reader)
                         arms = {k: v for arm, nu in controls["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool", **arms))
+                        small = ev.control_metrics(model.core, perceive, small_population, args.device, floors,
+                                                   seed=args.seed + 19, reader=reader)
+                        arms = {k: v for arm, nu in small["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
+                        runner.log(dict(step=runner.step, split="pool_small", **arms))
                 runner.log(dict(step=runner.step, split="validation", **v_metrics,
                                 **flat("nu_", m["nu"]), **flat("calibration_", m["calibration"])))
                 runner.save()
@@ -1115,6 +1126,8 @@ def train_core(args, s, *, symbolic=False):
             m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
             controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
                                           seed=args.seed + 13, reader=reader) if ladder else None
+            small = ev.control_metrics(model.core, perceive, small_population, args.device, floors,
+                                       seed=args.seed + 19, reader=reader) if ladder else None
         elapsed = time.perf_counter() - started
         result = dict(
             evaluation_scope=("Diagnostic: supplied symbols and exact masks" if symbolic else "Development: supplied support routing on validation kinds/rules; lives are the integrated test")
@@ -1128,6 +1141,7 @@ def train_core(args, s, *, symbolic=False):
         )
         if ladder:
             result["metrics"]["pool"] = controls
+            result["metrics"]["pool_small"] = dict(small, support=SMALL_POOL_SUPPORT, role="secondary finding, not screened")
             result["screen"] = ladder_screen(ladder, controls["nu"])
             result["limitations"].append("§23 development screen: one seed, training-rule pool only; held-out "
                                          "validation is secondary and no transfer claim follows from the pool.")
@@ -1708,6 +1722,8 @@ def main():
                         help="symbolic only (§23 L4-O): weight of the next-token and rollout terms (0 = outcome BCE only)")
     parser.add_argument("--reader", choices=("code", "evidence"), default="code",
                         help="symbolic only (§23 L4-D1): T reads an induced code or the support evidence directly")
+    parser.add_argument("--support-sizes", type=int, nargs="+",
+                        help="symbolic only (overnight N1): training support sizes (default: the size profile's)")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1814,6 +1830,9 @@ def main():
         parser.error("--auxiliary-weight applies to the symbolic induction stage and must be finite and nonnegative")
     if args.reader != "code" and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--reader evidence applies to the symbolic induction stage without --oracle-curriculum")
+    if args.support_sizes is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None
+                                           or min(args.support_sizes) < 1):
+        parser.error("--support-sizes applies to the symbolic induction stage and needs positive sizes")
     if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":

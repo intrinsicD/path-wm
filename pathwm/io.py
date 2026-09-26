@@ -377,9 +377,11 @@ def resume_arguments(parser, args):
             setattr(
                 args,
                 name,
-                action.type(value)
-                if action.type is not None and value is not None
-                else value,
+                value
+                if action.type is None or value is None
+                else [action.type(v) for v in value]
+                if isinstance(value, list)  # nargs options are recorded as JSON lists
+                else action.type(value),
             )
     return args
 

@@ -303,3 +303,23 @@ def test_support_sizes_option_and_secondary_small_pool(monkeypatch, tmp_path):
                                       "--output", str(tmp_path / "x")])
     with pytest.raises(SystemExit):
         recipe.main()
+
+
+def test_support_sizes_survive_pause_and_resume(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    def run(*arguments):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", *arguments])
+        recipe.main()
+
+    common = ["--stage", "symbolic", "--size", "check", "--device", "cpu", "--updates", "4", "--train-rules", "4",
+              "--support-sizes", "4", "8"]
+    run(*common, "--stop-after", "2", "--output", str(tmp_path / "paused"))
+    run("--stage", "symbolic", "--resume", str(tmp_path / "paused"))
+    run(*common, "--output", str(tmp_path / "straight"))
+    a = torch.load(tmp_path / "paused" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
+    assert a["step"] == b["step"] == 4
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+    assert json.loads((tmp_path / "paused" / "run.json").read_text())["identity"]["settings"]["support_sizes"] == [4, 8]
