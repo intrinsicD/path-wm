@@ -273,7 +273,7 @@ def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code
 def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code"):
     """ν per family for every control arm on the same episodes; None where an arm is unavailable."""
     tokens = encode_episodes(perceive, batch, device)
-    nu = {}
+    nu, by_rule = {}, {}
     for arm in CONTROL_ARMS:
         logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops, reader=reader)
         if logit is None:
@@ -284,7 +284,11 @@ def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None
                 for e, y, pre, m, p in zip(batch.query.episode, batch.query.outcome, batch.query.pre,
                                            batch.query.machine, logit)]
         nu[arm] = nu_from_rows(rows, floors)
-    return dict(nu=nu, episodes=len(batch.rules), rules=len(set(batch.rules)))
+        if arm == "full":  # per-rule finding (e.g. skewed training draws), same rows
+            for rule in dict.fromkeys(batch.rules):
+                own = [r for r in rows if batch.rules[r["group"]] == rule]
+                by_rule[rule.key()] = nu_from_rows(own, floors).get(rule.family)
+    return dict(nu=nu, nu_by_rule=by_rule, episodes=len(batch.rules), rules=len(set(batch.rules)))
 
 
 # ---------------------------------------------------------------- lives
