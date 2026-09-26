@@ -1746,3 +1746,28 @@ Vorhersage 0,246. Outcome-Gradient an Evidenz/Seeds 7·10⁻⁵/7·10⁻⁶.
 Fehlschlag nicht. Das Henne-Ei-Problem (T nutzt Z nicht, daher kein Signal an G)
 besteht auch mit reinem Ausgangsziel. Nächster Kandidat D1 (pro Frage direktes Lesen
 der Belegtokens durch den geteilten Block) auf L4 nur nach Absprache mit Alex.
+
+### L4-D1: pro Frage direktes Lesen der Belege auf L4 (vorab erklärt, 26.09.2026, von Alex freigegeben)
+
+**Frage:** Löst ein direkter Gradientenweg von T zu den Belegen das Henne-Ei-Problem aus
+L4/L4-O? **Einziger Faktor gegenüber L4-O:** Lesepfad `--reader evidence` statt `code`.
+T's Fragetokens `[m+MACHINE, a+ROLE_A, b+ROLE_B]` lesen im geteilten Block per
+Cross-Attention direkt den Kontext `[null+NULL; evidence(m_pre,a,b,m_post)+EVIDENCE]`
+mit exakter Maske – exakt der Kontext, den `induce` sonst komprimiert (Vertrag wie
+historisches D1, `…/evidence_reader_20260923/reader.py`). Keine neuen Gewichte; Seeds
+und `code_norm` bleiben ungenutzt. Alles andere wie L4-O: Pool L4, Outcome-BCE allein
+(`--auxiliary-weight 0`), Seed1101, 6000 Updates, gleiche Pool-Population,
+Kontrollarme (leer = nur Null-Token; vertauscht = Belege und Maske einer anderen
+Regel; permutiert) und Screen. Kosten je Frage wachsen mit N (≤128 Tokens).
+
+**Umsetzung:** optionaler Parameter `context_valid` in `LatentCore.apply` (Standard
+unverändert), `evidence_context()` baut denselben Kontext wie `induce` (induce bleibt
+bitgleich), `episode_loss`/Kontrollen/Validierung erhalten `reader`. Tests zuerst:
+bitgleicher Standardpfad, Kontext = induce-Kontext, Maskierung/Padding, Kontrollen,
+Querylabel-Unabhängigkeit, Option nur für die symbolische Stufe.
+
+**Deutung:** besteht → die Kompression vor der Frage ist mit dem Fehlschlag verbunden
+(kein isolierter Beweis); nächster Schritt L16/L44 mit D1, danach Destillation eines
+kompakten Codes als eigener Faktor. Verfehlt → auch direkter Zugriff lernt δ nicht;
+dann Evidenzvertrag (z. B. gelernter Paarvergleich auf L4) nach Absprache.
+Lauf: `runs/latent_agent_r1/learnability_ladder_20260926/L4_D1/`, ≤20 min, ≤6 GiB.

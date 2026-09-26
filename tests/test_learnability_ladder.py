@@ -198,3 +198,67 @@ def test_auxiliary_weight_is_recorded_and_symbolic_only(monkeypatch, tmp_path):
         monkeypatch.setattr(sys, "argv", ["latent_agent", *argv, "--output", str(tmp_path / "x")])
         with pytest.raises(SystemExit):
             recipe.main()
+
+
+def test_evidence_context_is_the_induce_context_and_default_apply_is_unchanged():
+    batch = _batch(rw.relation_ladder(4), episodes=3, support=(8,))
+    tokens, core = _tokens(batch), _core()
+    with torch.no_grad():
+        context, valid = lc.evidence_context(core, tokens.support, tokens.episodes)
+        e = core.evidence(tokens.support.m_pre, tokens.support.a, tokens.support.b, tokens.support.m_post)
+        padded, pad_valid = lc.pad_by_episode(e, tokens.support.episode, tokens.episodes)
+        assert valid[:, 0].all() and torch.equal(valid[:, 1:], pad_valid)
+        assert torch.equal(context[:, 1:][pad_valid], (padded + core.types.weight[lc.EVIDENCE])[pad_valid])
+        z = lc.codes_for(core, tokens.support, tokens.episodes)
+        q = tokens.query
+        assert torch.equal(core.apply(q.m_pre, q.a, q.b, z[q.episode])[0],
+                           core.apply(q.m_pre, q.a, q.b, z[q.episode], context_valid=None)[0])
+
+
+def test_evidence_reader_ignores_padding_and_empty_is_null_only():
+    batch = _batch(rw.relation_ladder(4), episodes=3, support=(8,))
+    tokens, core = _tokens(batch), _core()
+    q = tokens.query
+    with torch.no_grad():
+        context, valid = lc.evidence_context(core, tokens.support, tokens.episodes)
+        base = core.apply(q.m_pre, q.a, q.b, context[q.episode], context_valid=valid[q.episode])[0]
+        junk = torch.cat((context, torch.full_like(context[:, :2], 1e3)), 1)
+        junk_valid = torch.cat((valid, torch.zeros_like(valid[:, :2])), 1)
+        padded = core.apply(q.m_pre, q.a, q.b, junk[q.episode], context_valid=junk_valid[q.episode])[0]
+        assert torch.allclose(base, padded, atol=1e-5)
+        empty = ev.control_logits(core, tokens, "empty", batch.rules, reader="evidence")
+        null_only = core.apply(q.m_pre, q.a, q.b, context[q.episode][:, :1], context_valid=valid[q.episode][:, :1])[0]
+        assert torch.allclose(empty, null_only, atol=1e-6)
+
+
+def test_evidence_reader_loss_trains_evidence_not_seeds_and_ignores_query_labels():
+    batch = _batch(rw.relation_ladder(4), episodes=4, support=(8,))
+    tokens, core = _tokens(batch), _core().train()
+    loss, _ = lc.episode_loss(core, tokens, torch.ones(WIDTH), key_weight=0.0, auxiliary_weight=0.0, reader="evidence")
+    loss.backward()
+    assert core.evidence_mlp[0].weight.grad.abs().sum() > 0 and core.seeds.grad is None
+    q = tokens.query
+    poisoned = dataclasses.replace(tokens, query=dataclasses.replace(q, outcome=1 - q.outcome, m_post=-q.m_post))
+    core.eval()
+    with torch.no_grad():
+        for arm in ev.CONTROL_ARMS:
+            assert torch.equal(ev.control_logits(core, tokens, arm, batch.rules, seed=5, reader="evidence"),
+                               ev.control_logits(core, poisoned, arm, batch.rules, seed=5, reader="evidence")), arm
+
+
+def test_reader_option_is_recorded_and_symbolic_only(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--auxiliary-weight", "0",
+                                      "--reader", "evidence", "--output", str(tmp_path / "D")])
+    recipe.main()
+    settings = json.loads((tmp_path / "D" / "run.json").read_text())["identity"]["settings"]
+    assert settings["reader"] == "evidence"
+    result = json.loads((tmp_path / "D" / "result.json").read_text())
+    assert set(result["metrics"]["pool"]["nu"]) == set(ev.CONTROL_ARMS)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "core", "--perception", str(tmp_path),
+                                      "--reader", "evidence", "--output", str(tmp_path / "x")])
+    with pytest.raises(SystemExit):
+        recipe.main()
