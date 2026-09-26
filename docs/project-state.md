@@ -21,14 +21,14 @@ Task plans own current work; older decisions remain in the
   do not establish the complete capability.
 - **Integrated architecture R1/R2:** the [plan](integrated-architecture-plan.md)
   connects one session/store/clock, shared image features, concept memory, typed
-  execution and verification. 820 CPU tests pass, including causal claims,
-  identity-key sharing and correction. J passes the primary identity screen
+  execution and verification. J passes the primary identity screen
   (100% versus54.6% cross-lamp), but misses one fresh-scene attribute guard:
   provisional development input. All five oracle application families pass
   (nu≥0.863). Code search and eight induction paths failed; copied-example recall was learned
   but degraded during the failed transfer curriculum. CI1 (§22): color reaches core; frozen property query passes. Encoder adaptation loses shape/size retention; full prior curriculum remains open.
+  Ladder §23: core learns one fixed relation, not even four δ-rules; Z stays constant. Next: Alex.
   Rollout, learned full R1/R2 and natural data remain unproven.
-  Plan §0,10,11,16,18–19; evidence: `runs/latent_agent_r1/`.
+  Plan §0,10,11,16,18–19,23; evidence: `runs/latent_agent_r1/`.
 - **Concept-learning discussion:** the [research review](latent-concept-learning-review.md)
   records current literature and actual Claude Opus5.5 max review. Alex's initial
   target is structure shared above instances; actions and analogies are subcases.
