@@ -1771,3 +1771,6 @@ Querylabel-Unabhängigkeit, Option nur für die symbolische Stufe.
 kompakten Codes als eigener Faktor. Verfehlt → auch direkter Zugriff lernt δ nicht;
 dann Evidenzvertrag (z. B. gelernter Paarvergleich auf L4) nach Absprache.
 Lauf: `runs/latent_agent_r1/learnability_ladder_20260926/L4_D1/`, ≤20 min, ≤6 GiB.
+**Vor dem Start geändert:** GPU-Smoke 5,05 Updates/s (L4-O ≈7,4), max. 3,37 GiB; die
+6000 Updates bleiben als gematchtes Budget, die Zeitgrenze wird von 20 auf 35 min
+angehoben. Keine andere Änderung.
