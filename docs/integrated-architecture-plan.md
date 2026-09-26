@@ -1828,3 +1828,21 @@ bei N=8 an jedem 1000er-Punkt. Probe siehe Nachtrag oben.
 `structural_verified`). Screen verfehlt; alle Arme 0,000 bei N=128 und N=8 an jedem
 5000er-Punkt; Train-Outcome-BCE 0,581/0,538/0,558 bei 10k/20k/30k. Das Plateau wird in
 fünffachem Budget nicht verlassen (ein Seed). Gemäß Vorab-Zweig folgt N5.
+
+**N5 Ergebnis (27.09., 1:50):** abgeschlossen (Exit0, 6000 Updates, 478s, ≤3,43GiB,
+Bericht `structural_verified`). **Screen besteht** (ein Seed, Entwicklungsbefund):
+uniforme Pool-Population N=128: ν voll 0,973, leer 0,007, permutiert 0,198, vertauscht
+−0,294; je Regel δ=0/1/2/3: 1,000/0,994/1,000/0,882. Sekundär N=8: voll 0,902, leer
+−0,002, permutiert 0,090. Kurve: Plateau ν≈0,266 (nur δ=0) von 2000 bis 5000, Sprung
+auf 0,973 erst zwischen 5000 und 6000. Train-Outcome-BCE 0,401/0,282/0,196 bei
+2k/4k/6k. Erstmals nutzt der echte Kern Belege zur Regelunterscheidung auf L4.
+Grenzen: ein Seed, später Sprung, Trainingsregeln (kein Transfer), symbolischer Eingang.
+
+**Vor dem Seed-Ergebnis festgelegte Fortsetzung (1:55):**
+- **N6** = N5 mit Seed2202 (geplant). Verfehlt → Stopp, Bericht „instabil“.
+- Besteht N6 → **N7** (Referenz N5): Code-Leser statt Evidenzleser, sonst N5.
+  Prüft, ob die Kompression vor der Frage nach Symmetriebruch lernbar ist.
+- Und **N8** (Referenz N5): Pool L16 mit derselben Schiefe je (j,k)-Paar
+  (`--rule-repeats` 7,1,1,1 viermal), Evidenzleser, Seed1101, 6000 Updates.
+  Screen auf uniformer L16-Pool-Population.
+- Danach Stopp und Bericht; kein weiterer Faktor.
