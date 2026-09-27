@@ -2043,3 +2043,12 @@ Einziger Faktor gegenüber F1: 6000 → 30000 Updates (≤150 min). Läufe **F2-
 Evidenzleser, Outcome-BCE, Supports {4,8,16}). Screen unverändert. Bestandene Läufe
 werden mit Seed2202 wiederholt (**F2-…-2202**), bevor sie zählen. Danach Stopp und
 Bericht; Mischlauf aller Familien erst nach Absprache.
+
+**F2 Zwischenstand (27.09., 14:45):** alle Läufe Exit0, Berichte `structural_verified`.
+F2-toggle **besteht** (ν voll 1,000, leer 0,015, permutiert −0,011, vertauscht −0,304);
+F2-open **besteht** (1,000; −0,936; −1,152; −1,617); F2-close **besteht** (1,000; −0,959;
+−0,975; −1,662; alle vier Regeln 1,00). Sprung jeweils zwischen 5k und 10k, danach stabil.
+F2-toggle-2202 **besteht** (1,000; 0,010; −0,002; −0,333); schon 0,94 bei 5k, kurzer
+Einbruch auf 0,91 bei 25k, am Ende 1,000 (mögliche Instabilität notiert).
+Zurückgehaltene Regeln weiterhin ≈0 bzw. unter der Kurzschlussstrategie (kein Transfer).
+F2-open-2202 und F2-close-2202 laufen.
