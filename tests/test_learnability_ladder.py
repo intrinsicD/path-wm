@@ -496,3 +496,22 @@ def test_control_metrics_with_symbolic_tokens_match_the_rendered_path():
         direct = ev.control_metrics(core, perceive, batch, "cpu", floors, seed=2, reader="evidence",
                                     tokens=ev.symbolic_episode_tokens(symbolic, batch, "cpu"))
     assert rendered == direct
+
+
+def test_mixed_family_run_resumes_exactly(monkeypatch, tmp_path):
+    import experiments.latent_agent as recipe
+
+    def run(*arguments):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", *arguments])
+        recipe.main()
+
+    common = ["--stage", "symbolic", "--size", "check", "--device", "cpu", "--updates", "4",
+              "--train-families", "category", "toggle", "--train-rules", "4",
+              "--rule-repeats", "7", "1", "1", "1", "7", "1", "1", "1"]
+    run(*common, "--stop-after", "2", "--output", str(tmp_path / "paused"))
+    run("--stage", "symbolic", "--resume", str(tmp_path / "paused"))
+    run(*common, "--output", str(tmp_path / "straight"))
+    a = torch.load(tmp_path / "paused" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
+    assert a["step"] == b["step"] == 4
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])

@@ -1891,7 +1891,9 @@ def main():
     if args.rule_repeats is not None and (args.train_rules is None or len(args.rule_repeats) != pool_size
                                           or min(args.rule_repeats) < 1):
         parser.error("--rule-repeats needs --train-rules and one positive count per ladder rule")
-    if args.train_families is not None and (args.train_family is not None or args.train_rules is None
+    # On resume, the recorded default train_family ("relation") is restored next to train_families.
+    if args.train_families is not None and (args.train_family is not None and args.resume is None
+                                            or args.train_rules is None
                                             or len(set(args.train_families)) != len(args.train_families)
                                             or args.delta_weights is not None):
         parser.error("--train-families needs --train-rules, distinct families, no --train-family/--delta-weights")
