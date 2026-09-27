@@ -706,6 +706,106 @@ Die dortigen Reviewbelege trennen gemeinsame Schlussfolgerungen von methodischen
 Präferenzen. Ein endlicher Generator und zufällig initialisierte Tensorpfade wurden
 geprüft; kein Modelltraining und kein allgemeiner Abstraktionsnachweis.
 
+## Selbst entdeckte Konzepte über die Zeit
+
+27./28. September 2026. Alex fragt, ob die Architekturidee von
+[Arc2Face](compact-instance-memory-ideas.md) (ein kompakter Code steuert einen
+generativen Prior) auch Konzepte wie „Box“ lernen kann, und präzisiert: Am besten
+lernt das Modell über die Zeit selbst, was Konzepte sind; „Box“ war nur ein Beispiel.
+Die folgende Einordnung ist ein Diskussionsvorschlag des Assistenten (Claude Opus
+5.5), gegengelesen von Fable 5.1 und Codex gpt-6-astra; keine beschlossene Methode,
+kein Ergebnis und keine Opus-`max`-Review wie in den Abschnitten oben.
+
+**Rolle eines code-konditionierten Generators.** Ein auf einen gegebenen Code
+konditionierter Generator (Arc2Face; [Textual Inversion](https://arxiv.org/abs/2208.01618),
+Gal et al. 2022, das bei eingefrorenem Modell ein neues Token-Embedding optimiert)
+entdeckt allein kein Gruppierungskriterium. Generative Modelle mit latenter Struktur
+können dagegen Gruppierungen finden (Mischungsmodelle; Objektgruppierung durch
+Rekonstruktion wie [Slot Attention](https://arxiv.org/abs/2006.15055) und DINOSAUR
+in der Tabelle oben). Hypothese: Als primäres Lernsignal lenkt Pixelerzeugung eher
+auf Aussehen als auf Nutzung und ist teuer; generatives Lernen bleibt möglich, aber
+keine Voraussetzung. Nützliche Rollen des konditionierten Generators: Sichtbarmachung
+im Debug-Modus („zeig, was du für X hältst“), ein zusätzlicher Konsistenztest und
+später Vorstellung für Planung. Instanz- wie Konzeptzustände können Unsicherheit
+tragen; der Unterschied liegt in der zulässigen Variation über Mitglieder, nicht in
+einer festgelegten Punkt- oder Verteilungsform.
+
+**Vorgeschlagener Entdeckungskreislauf.** Leitkriterium ist Vorhersagenutzen:
+Eine Kategorie lohnt sich, wenn sie nicht beobachtete Merkmale neuer Fälle
+vorhersagt (Anderson 1991, *The adaptive nature of human categorization*,
+Psychological Review 98). Andersons Algorithmus ist eine Näherung einer
+Dirichlet-Prozess-Mischung ([Sanborn, Griffiths & Navarro 2010](https://cocosci.princeton.edu/tom/papers/rationalapproximations.pdf)):
+Jede Beobachtung wird einer bekannten oder einer neuen Kategorie zugeordnet, gesteuert
+von einem Kopplungsprior. [Neural Clustering Processes](https://arxiv.org/abs/1901.00409)
+(Pakman et al., ICML 2020) amortisieren diese Zuordnung mit einem Mengen-Netz, das
+auf Stichproben eines Generators geclusterter Daten trainiert und im Test mit festen
+Gewichten verwendet wird; das passt zum G/F-Vertrag. Latent-Cause-Modelle
+([Gershman & Niv 2010](https://pmc.ncbi.nlm.nih.gov/articles/PMC2862793/)) übertragen
+dieselbe Idee auf Lernen mit Handlungen. Die Zuordnung hängt von der gewählten
+Repräsentation, Likelihood und dem Prior ab; sie belegt allein keine nützlichen
+Kriterien und ist in PATH-WM nicht implementiert.
+
+1. *Vorschlagen:* Evidenz, die keine vorhandene Abstraktion gut erklärt, erzeugt
+   einen vorläufigen Eintrag mit Belegen.
+2. *Bewähren (Agentenkriterium):* Zur Laufzeit gibt es keine beschriftete
+   Zurückhaltemenge. Der Agent kann nur prequentiell urteilen (erst vorhersagen,
+   dann spätere Evidenz beobachten) oder über Posteriormasse. Entfernen, Vertauschen
+   und Wiederherstellen sowie unberührte Abschlussfragen sind dagegen
+   *Evaluatorkontrollen*; ihre Labels dürfen keine Einträge festschreiben.
+3. *Korrigieren:* Aufteilen, Zusammenlegen oder Verwerfen als versionierte Revision
+   mit Invalidierung abhängiger Zustände. Das erfordert eine Erweiterung des
+   Belegvertrags der [Spezifikation](shared-abstraction-spec.md) (§7 kennt nur
+   Hinzufügen/Ersetzen/Zurückziehen bei extern vergebener `concept_id`): Das Modell
+   müsste Belege selbst Einträgen zuordnen. Belege bleiben abrufbar, sodass neu
+   partitioniert werden kann.
+4. *Überlappung:* Mehrere Einteilungen derselben Instanzen sind zulässig (vgl. die
+   Kreuzkategorisierung oben, ebenfalls ein Dirichlet-Prozess-Modell).
+5. *Handeln:* Eingriffe können Hypothesen trennen; in der Grammatik der Spezifikation
+   wählt der Generator `u`, nicht das Modell, daher liegt dieser Schritt außerhalb
+   der kleinsten Prüfung.
+
+Der Kern bleibt das G/F-Gerüst: Belege → Zustand → gemeinsamer Leser. Ohne
+vorgegebene Gruppierung wären mehrere explizite Zustände mit Zuordnung ein Kandidat,
+ein gemeinsamer Zustand mit abfrageabhängigem Lesen ein anderer; beide ändern den
+Tensorvertrag (`Z:[B,K,d]` pro Episode). Unüberwachtes Meta-Lernen
+([CACTUs](https://arxiv.org/abs/1810.02334), Hsu, Levine & Finn, ICLR 2019)
+konstruiert Trainingsaufgaben automatisch durch Clustern von Embeddings; der
+Meta-Lerner selbst erhält dort gruppierte Episoden und belegt den hier gemeinten
+Entdeckungsvertrag nicht. Die
+Review unterscheidet bereits „vorgegeben versus selbst erschlossen“ als getrennte,
+schwerere Prüfung.
+
+**Grenze und Hybrid.** Selbst entdeckte Abstraktionen folgen dem Nutzen, nicht den
+Grenzen menschlicher Begriffe. In Andersons Modell ist ein Name nur ein weiteres
+vorhersagbares Merkmal. Entsprechend ist ein gelegentlicher Hinweis von Alex („das
+ist auch eine Box“) ein billiger, korrigierbarer Beleg, kein Oracle, das fertige
+Konzepte in den Graphen schreibt. Vorgeschlagen ist ein Hybrid: selbstständige
+Entdeckung, Namen und Grenzfälle gelegentlich von außen.
+
+**Stehende Prinzipien.** *Vorschlagen und Prüfen trennen* (Kandidat aus schlechter
+Erklärung, Bestätigung prequentiell); *Zustand mit Zuständigkeit und Lebensdauer*
+(vorläufige, bestätigte und verworfene Einträge mit Belegen); *vor dem Verwerfen
+organisieren* (Belege bleiben abrufbar, Neupartitionierung möglich); *Rechenaufwand
+nützlich verteilen* (harte Grenze für Kandidatensuche und -zahl); *das System
+trainieren, das laufen wird* (Episoden ohne vorgegebene Gruppierung). Der erwartete
+Nutzen ist, dass neue Abstraktionen ohne Gewichtsänderung und ohne vorgegebene
+Gruppierung entstehen und korrigierbar bleiben. Kosten sind gehaltene gegenüber
+gelesenen Belegen, Kandidatenzustände, Parameter, Such-/Aktualisierungsrechnung und
+Latenz; Gefahr vieler kurzlebiger Einträge.
+
+**Kleinste sinnvolle Prüfung (Vorschlag, nicht geplant).** In der endlichen Grammatik
+der Spezifikation sind Belege `x` gleichverteilt; „ungruppiert“ kann dort nur heißen,
+dass Belege mehrerer Regeln gemischt sind. Dann ist die Abfrage ohne Zusatz
+mehrdeutig. Nötig wären: gemischte Belege aus demselben Split, ein abfrageseitiger
+Hinweis (Ankerbeleg oder paarweise Frage „gleiche Regel wie dieser Beleg?“), ein
+Mischungs-Referenzposterior in §6 (für eine iid-Mischung aus k Regeln faktorisiert
+die Likelihood pro Beleg und bleibt exakt berechenbar) und vom Modell vergebene
+Zuordnungen im Belegspeicher. Vergleich mit dem vorgegeben gruppierten Arm bei
+gleicher Datenmenge und gleichem Budget, wobei die Gruppierung als privilegierte
+Information ausgewiesen wird, sowie mit dem Mischungs-Posterior als
+Informationsreferenz. Die hier besprochenen Verfahren belegen das vollständige
+PATH-WM-Ziel autonomer Konzeptentdeckung nicht.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen

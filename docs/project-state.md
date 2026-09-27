@@ -35,6 +35,8 @@ Task plans own current work; older decisions remain in the
   Joint/staged learning, latent codes and exemplars remain alternatives. The
   [shared-abstraction protocol](shared-abstraction-spec.md) defines proposed
   frozen-weight updates; no new mechanism or trained-model result is adopted.
+  28 September: [self-discovered concepts](latent-concept-learning-review.md#selbst-entdeckte-konzepte-über-die-zeit)
+  (prediction-driven propose/confirm/correct loop) recorded as proposal only.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented
