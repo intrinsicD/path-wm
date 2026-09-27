@@ -145,8 +145,10 @@ the first call. Count all attempts; report defects and incomplete calls. This is
 workflow calibration, with no training, model download or real research records.
 One sample per condition cannot establish a research-design default.
 
-Full local evidence: `/tmp/pathwm-agent-efficiency-frrez0nn/` (manifest, runner,
-unabridged CLI traces, generated suites, fixtures, checks and snapshots). Durable
+Full local evidence: originally `/tmp/pathwm-agent-efficiency-frrez0nn/` (manifest, runner,
+unabridged CLI traces, generated suites, fixtures, checks and snapshots); moved on
+27 September 2026 to `runs/tmp_archive_20260927/` with the same directory name. Paths
+inside the recorded results JSON keep their original `/tmp` spelling. Durable
 measurements and the final disposition will be recorded below.
 
 ### Slices 1–3 verified
