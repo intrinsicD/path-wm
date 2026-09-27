@@ -1228,10 +1228,30 @@ def render_report(directory):
         scope = result.get("evaluation_split", result.get("evaluation_scope", ""))
         parts.append(f"<p>{escape(str(scope))}</p>")
         if "gate" in result:
-            label = "passed" if result["gate"] is True else "not passed"
+            if result["gate"] is None:
+                parts.append(
+                    "<p><strong>No formal capability gate declared for this run.</strong></p>"
+                )
+            else:
+                label = "passed" if result["gate"] is True else "not passed"
+                parts.append(
+                    f"<p><strong>Declared capability screen: {label}.</strong></p>"
+                )
+        screen = result.get("screen")
+        if isinstance(screen, dict) and "passed" in screen:
+            label = "passed" if screen["passed"] is True else "not passed"
             parts.append(
-                f"<p><strong>Declared capability screen: {label}.</strong></p>"
+                f"<p><strong>Declared development screen: {label}.</strong></p>"
+                "<table><tr><th>Arm / criterion</th><th>Value</th></tr>"
             )
+            for group in ("relation_nu", "family_nu", "criteria", "thresholds"):
+                for key, value in (screen.get(group) or {}).items():
+                    shown = "n/a" if value is None else f"{value:.4g}" if isinstance(value, float) else value
+                    parts.append(
+                        f"<tr><td>{escape(group.replace('_', ' '))}: {escape(str(key))}</td>"
+                        f"<td>{escape(str(shown))}</td></tr>"
+                    )
+            parts.append("</table>")
         parts.append(
             "<p>Accuracy values are fractions from 0 to 1. Error metrics retain the recipe's scale.</p>"
         )

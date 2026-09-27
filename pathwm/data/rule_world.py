@@ -177,6 +177,22 @@ def relation_ladder(n):
     return rules
 
 
+def family_ladder(family, n):
+    """Nested training pools for any family (F1): transitions reuse the relation
+    triples (identical training split); category: 1 = (j=0, V={0,1}), 4 = every
+    training category with j=0, 16 = all training categories."""
+    if family == "relation":
+        return relation_ladder(n)
+    if family in ("open", "close", "toggle"):
+        return tuple(Rule(family, r.j, r.k, r.delta) for r in relation_ladder(n))
+    if family != "category" or n not in (1, 4, 16):
+        raise ValueError("Category ladder sizes are 1, 4 and 16")
+    train = [r for r in split_rules()["train"] if r.family == "category"]
+    first = sorted((r for r in train if r.j == 0), key=lambda r: r.values)
+    rules = (first[0],) if n == 1 else tuple(first) if n == 4 else tuple(first + [r for r in train if r.j != 0])
+    return rules
+
+
 def split_rules():
     groups = split_groups()
     lookup = {}

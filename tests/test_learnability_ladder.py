@@ -388,3 +388,57 @@ def test_delta_weights_and_uniform_after_shape_training_draws_only(monkeypatch, 
                                           "--output", str(tmp_path / "x")])
         with pytest.raises(SystemExit):
             recipe.main()
+
+
+def test_report_distinguishes_missing_gate_and_shows_development_screen(tmp_path):
+    import json
+    from pathwm.evaluation.report import render_report
+
+    screen = dict(passed=True, criteria=dict(nu_full=True, over_empty=True),
+                  relation_nu=dict(full=0.98, empty=0.01, permuted=0.0, swapped=None),
+                  thresholds=dict(nu_full=0.8, over_empty=0.5, over_permuted=0.5))
+    for name, value in {"run.json": {"identity": {"settings": {"purpose": "development"}}},
+                        "status.json": {"result": "completed", "step": 4},
+                        "result.json": {"gate": None, "screen": screen, "metrics": {}}}.items():
+        (tmp_path / name).write_text(json.dumps(value))
+    (tmp_path / "metrics.jsonl").write_text("")
+    html = render_report(tmp_path).read_text()
+    assert "Declared capability screen: not passed" not in html
+    assert "No formal capability gate" in html
+    assert "Declared development screen: passed" in html and "0.98" in html
+
+
+def test_family_ladders_mirror_relation_triples_and_category_structure():
+    train = set(rw.split_rules()["train"])
+    for family in ("open", "close", "toggle"):
+        for n in rw.LADDER_SIZES:
+            rules = rw.family_ladder(family, n)
+            assert [(r.j, r.k, r.delta) for r in rules] == [(r.j, r.k, r.delta) for r in rw.relation_ladder(n)]
+            assert all(r.family == family and r in train for r in rules)
+    assert rw.family_ladder("relation", 16) == rw.relation_ladder(16)
+    cat = {n: rw.family_ladder("category", n) for n in (1, 4, 16)}
+    assert cat[1] == (rw.Rule("category", 0, values=(0, 1)),)
+    assert len(cat[4]) == 4 and {r.j for r in cat[4]} == {0}
+    assert len(cat[16]) == 16 and set(cat[16]) == {r for r in train if r.family == "category"}
+    assert set(cat[1]) < set(cat[4]) < set(cat[16])
+    with pytest.raises(ValueError):
+        rw.family_ladder("category", 44)
+
+
+def test_train_family_option_trains_and_screens_that_family(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-family", "toggle", "--train-rules", "4",
+                                      "--rule-repeats", "7", "1", "1", "1", "--output", str(tmp_path / "T")])
+    recipe.main()
+    settings = json.loads((tmp_path / "T" / "run.json").read_text())["identity"]["settings"]
+    assert settings["train_family"] == "toggle"
+    assert settings["train_rule_keys"] == [r.key() for r in rw.family_ladder("toggle", 4)]
+    result = json.loads((tmp_path / "T" / "result.json").read_text())
+    assert result["screen"]["family"] == "toggle" and set(result["screen"]["family_nu"]) == set(ev.CONTROL_ARMS)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-family", "toggle",
+                                      "--output", str(tmp_path / "x")])
+    with pytest.raises(SystemExit):
+        recipe.main()
