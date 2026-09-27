@@ -1982,3 +1982,11 @@ Referenz: N5 (Relation). Jeder bestandene Lauf wird mit Seed2202 wiederholt.
 Deutung: Bestehen aller Familien → gemeinsamer Mischlauf aller Familien auf L4 als
 nächster Plan (mit Alex); einzelne Fehlschläge → familienspezifische Diagnose.
 Start nach Abschluss von C2/C3 (GPU belegt).
+
+**C2 Ergebnis:** abgeschlossen (Exit0, 30000 Updates, 2515s, ≤3,43GiB, Bericht
+`structural_verified`). **Verfehlt:** ν voll 0,323, leer 0,000, permutiert 0,000,
+vertauscht −0,037. Bis 15k identisch zu C1 (0,186); nach Umschalten auf uniforme Regeln
+0,250/0,281/0,323 bei 20k/25k/30k: erlernte Belegnutzung bleibt ohne Schiefe erhalten
+und wächst weiter (andere Regeln als in C1 kamen hinzu, z. B. (2,1,δ=2) 1,00).
+Zurückgehaltene Relationen 0,000. Deutung: Die Einstiegsstufe wird nach dem Einstieg
+nicht dauerhaft benötigt; Angleichen schadet in diesem Budget nicht (ein Seed).
