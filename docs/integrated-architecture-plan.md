@@ -2052,3 +2052,12 @@ F2-toggle-2202 **besteht** (1,000; 0,010; −0,002; −0,333); schon 0,94 bei 5k
 Einbruch auf 0,91 bei 25k, am Ende 1,000 (mögliche Instabilität notiert).
 Zurückgehaltene Regeln weiterhin ≈0 bzw. unter der Kurzschlussstrategie (kein Transfer).
 F2-open-2202 und F2-close-2202 laufen.
+**F2 abgeschlossen (27.09., 15:45):** F2-open-2202 **besteht** (ν voll 1,000, leer −0,975,
+permutiert −0,971, vertauscht −1,652; alle Regeln 1,00); F2-close-2202
+**besteht** (1,000; −0,987; −0,819; −1,667; alle Regeln 1,00). Sprung wieder zwischen
+5k und 10k. **Stand:** Auf L4 lernt der echte `LatentCore` für alle fünf Familien
+Regelinduktion aus Belegen, je zwei Seeds (Relation zusätzlich mit Code-Leser), sobald
+eine häufige Einstiegsregel vorhanden ist; Übergangsfamilien brauchen dafür ≈10k statt
+6k Updates. Grenzen: nur Trainingsregeln, je Familie getrennt trainiert, symbolischer
+Eingang, Entwicklungs-Screens. **Nächster Schritt mit Alex:** Mischlauf aller Familien
+auf L4, danach Transfer.
