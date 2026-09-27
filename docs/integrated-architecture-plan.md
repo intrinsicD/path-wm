@@ -2098,3 +2098,11 @@ dann 0,98; Open −0,98…−0,51, dann 0,99; Toggle ≈0,2–0,3, dann 0,73; Cl
 Einstieg stark (Einzelläufe: 5k–10k), verhindert ihn aber nicht. Zurückgehaltene Regeln:
 kein Transfer. Gemäß Plan keine Seed-Wiederholung; Stopp. **Vorschlag an Alex:** M1 mit
 60000 Updates (einziger Faktor Budget), da alle Kurven am Ende steigen.
+
+### M2: Mischlauf mit 60000 Updates (vorab erklärt, 27.09.2026, von Alex freigegeben)
+
+Einziger Faktor gegenüber M1: 30000 → 60000 Updates (≤240 min). Sonst identisch
+(fünf L4-Leitern, Schiefe 7,1,1,1 je Familie, Evidenzleser, Outcome-BCE, Supports
+{4,8,16}, Seed1101, gleiche Pool-Populationen, Screen je Familie). Besteht M2 →
+Wiederholung mit Seed2202 (**M2-2202**), dann Stopp und Bericht; Transfer danach mit Alex.
+Verfehlt → Stopp und Diagnose je Familie.
