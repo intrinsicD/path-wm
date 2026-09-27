@@ -1965,3 +1965,20 @@ vertauscht −0,017; Kurve 0,187/0,186/0,210/0,317/0,329 bei 10k–30k. Je Regel
 (3,1) 1,00/0,06/−0,03/−0,04. Zurückgehaltene Relationen: ν voll −0,001 (kein Transfer).
 Gegenüber N9 (0,266) langsamer stufenweiser Fortschritt: δ-Stufen erscheinen nacheinander,
 wie im Review als Treppe vorhergesagt; innerhalb des Budgets nicht abgeschlossen.
+
+### F1: Einstiegsstufe über alle Familien auf L4 (vorab erklärt, 27.09.2026; Alex: erst Familien, dann Transfer)
+
+**Frage:** Trägt die auf Relationen gefundene Einstellung (N5: L4, Schiefe 7,1,1,1,
+Evidenzleser, Outcome-BCE, Supports {4,8,16}, 6000 Updates) auf die übrigen Familien?
+**Leitern** (`rw.family_ladder(f, n)`): Open/Close/Toggle verwenden die Relations-Tripel
+(j,k,δ) der Leiter (Trainingssplit identisch); Kategorie: 1 = (j=0, V={0,1}),
+4 = alle vier Trainingskategorien mit j=0, 16 = alle 16 Trainingskategorien.
+Neue Option `--train-family` (Standard relation). Schiefe `--rule-repeats 7 1 1 1`
+(erste Leiterregel häufig). Screen wie bisher, ν in der jeweiligen Familie mit ihrem
+Referenzfloor (Übergänge: Änderungsmaß Δ=y⊕s).
+
+Läufe (Seed1101, je ≤35 min): **F1-cat**, **F1-open**, **F1-close**, **F1-toggle**.
+Referenz: N5 (Relation). Jeder bestandene Lauf wird mit Seed2202 wiederholt.
+Deutung: Bestehen aller Familien → gemeinsamer Mischlauf aller Familien auf L4 als
+nächster Plan (mit Alex); einzelne Fehlschläge → familienspezifische Diagnose.
+Start nach Abschluss von C2/C3 (GPU belegt).
