@@ -354,3 +354,37 @@ def test_rule_repeats_skew_training_draws_but_not_the_evaluation_pool(monkeypatc
                                           "--output", str(tmp_path / "x")])
         with pytest.raises(SystemExit):
             recipe.main()
+
+
+def test_delta_weights_and_uniform_after_shape_training_draws_only(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    calls = []
+    original = rw.sample_episodes
+
+    def spy(generator, rules, *args, **kwargs):
+        calls.append(tuple(rules))
+        return original(generator, rules, *args, **kwargs)
+
+    monkeypatch.setattr(rw, "sample_episodes", spy)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "4", "--train-rules", "4", "--delta-weights", "8", "4", "2", "1",
+                                      "--uniform-after", "2", "--output", str(tmp_path / "C")])
+    recipe.main()
+    ladder = rw.relation_ladder(4)
+    weighted = tuple(r for r in ladder for _ in range((8, 4, 2, 1)[r.delta]))
+    assert calls.count(weighted) >= 2 and ladder in calls  # skewed early updates, uniform later and in pools
+    settings = json.loads((tmp_path / "C" / "run.json").read_text())["identity"]["settings"]
+    assert settings["delta_weights"] == [8, 4, 2, 1] and settings["uniform_after"] == 2
+    result = json.loads((tmp_path / "C" / "result.json").read_text())
+    held = result["metrics"]["pool_heldout"]
+    assert set(held["nu"]) == set(ev.CONTROL_ARMS)
+    validation = {r.key() for r in rw.split_rules()["validation"] if r.family == "relation"}
+    assert held["nu_by_rule"] and set(held["nu_by_rule"]) <= validation
+    for bad in (["--delta-weights", "1", "1"], ["--delta-weights", "1", "1", "1", "1", "--rule-repeats", "1", "1", "1", "1"],
+                ["--uniform-after", "2"]):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-rules", "4", *bad,
+                                          "--output", str(tmp_path / "x")])
+        with pytest.raises(SystemExit):
+            recipe.main()

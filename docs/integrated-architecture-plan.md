@@ -1889,3 +1889,28 @@ dessen Sprung. Gemäß Vorab-Erklärung **Stopp dieser Nacht**; kein N10.
   (seltene δ). Die Schiefe hilft stufenweise; die nächste Frage ist ein gezielter
   Symmetriebruch je Stufe (Curriculum über Schiefe oder Regelzahl) – nicht gestartet.
 - Offene Grenzen: nur Trainingsregeln, symbolischer Eingang, Entwicklungs-Screens.
+
+### Curriculum über die Schiefe und Transfer (C1–C3, vorab erklärt, 27.09.2026, von Alex freigegeben)
+
+**Beobachtung:** In N9 sind die zwölf δ≠0-Regeln untereinander gleich häufig; „7,1,1,1“
+bricht nur die Symmetrie zwischen δ=0 und dem Rest. **Hypothese:** Eine geometrische
+Schiefe über δ (Gewichte 8,4,2,1 für δ=0,1,2,3; p≈0,53/0,27/0,13/0,07) bricht alle
+Stufen zugleich. Neue Rezeptoptionen: `--delta-weights w0 w1 w2 w3` (Relationsregeln
+werden im Training gemäß δ wiederholt; ersetzt `--rule-repeats`) und `--uniform-after S`
+(ab Update S gleichverteilte Trainingsregeln). Neue Auswertung (Befund): Pool
+zurückgehaltener Validierungsrelationen (`pool_heldout`, Seed+23, 64 Episoden, N=128,
+dieselben Kontrollarme); die Gewichte berühren keine Auswertungspopulation.
+
+Gemeinsam: echter `LatentCore`, symbolische Stufe, Evidenzleser, Outcome-BCE allein,
+Supports {4,8,16}, Seed1101, 30000 Updates, ≤150 min, ≤6 GiB, gleicher Screen auf der
+jeweiligen uniformen Pool-Population.
+1. **C1** (Referenz N9): L16 mit `--delta-weights 8 4 2 1` statt 7,1,1,1 je Paar.
+2. **C2** (Referenz C1): wie C1 mit `--uniform-after 15000`. Prüft, ob die Kompetenz
+   ohne Schiefe erhalten bleibt (Endcheckpoint nach 15000 uniformen Updates).
+3. **C3** (Referenz: C1-Einstellung): L44 mit `--delta-weights 8 4 2 1`. Screen auf
+   uniformer L44-Pool-Population; **Transfer-Befund** auf `pool_heldout` (10
+   zurückgehaltene Relationen), vorläufige Befundschwelle ν_voll ≥ 0,8 und
+   ν_voll−ν_leer ≥ 0,5; kein formales Gate.
+Reihenfolge fest: C1 → C2 → C3, unabhängig vom Ausgang (jeder Lauf ist für sich
+informativ). Danach Stopp und Bericht. Seed-Wiederholung nur für bestandene Läufe
+und nur nach Absprache.
