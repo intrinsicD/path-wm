@@ -2157,3 +2157,30 @@ bei 20k–40k, der andere nicht innerhalb von 60k. Das entspricht der Review-War
 (Fluchtzeit als Verteilung, rechtszensiert). Einzelfamilien-Läufe schafften es mit beiden
 Seeds; der gemeinsame Kern verzögert und destabilisiert den Einstieg. Mischlauf damit
 **nicht robust** bestätigt. Frozen Worktree `a424e18` nach Abschluss entfernt.
+
+### Review Mischlauf: Fable 5.1 (max) und Codex gpt-6-astra (xhigh), 28.09.2026
+
+Auf Alex' Wunsch beide mit demselben öffentlichen, hypothetischen Brief (kein Code, keine
+Rohmesswerte; Fable ohne Werkzeuge, Codex schreibgeschützt in leerem Verzeichnis).
+Brief, Antworten, Belege: `runs/reviews/mixed_family_entry_20260928/` (Fable 293s, nur
+`claude-fable-5-1`; Codex 126s, `gpt-6-astra`).
+
+**Übereinstimmende Korrektur:** Im Mischlauf erhält jede Familie 20% der Episoden; 60000
+Mischupdates ≈ 12000 Einzelfamilien-Updates. Seed A sprang bei 20–40k ≈ 4–8k pro Familie –
+so schnell wie einzeln. Seed B ist bei ≈12k pro Familie rechtszensiert. Die Aussage
+„gemeinsamer Kern destabilisiert den Einstieg“ ist mit zwei Seeds **nicht gedeckt**;
+sparsamste Erklärung: Verdünnung plus breite, zufällige Fluchtzeit. (Eigene Nachrechnung
+bestätigt die Umrechnung.) Die M2s-Deutung oben ist entsprechend zu lesen.
+**Empfehlungen (beide):** billige Diagnosen vor dem Curriculum – Kurven nach
+Familien-Episoden ausrichten; Identifizierbarkeit der 20 Regeln ohne Familienkennung
+(Codex); Gradienten-Kosinus/-Normen je Familie am Plateau-Checkpoint; Verzweigungen ab
+Seed-B-Checkpoint (Optimizer-Reset, LR). Verdünnungstest: Mischlauf mit 5× Batch (Fable)
+bzw. Basis auf ≈6 Seeds (Codex). Curriculum danach, mit gleichem Budget gegen normalen
+Mischlauf; Reihenfolge strittig (Fable: Relation → Übergänge → Kategorie zuletzt; Codex:
+Kategorie → Relation → Übergänge). Transfer jetzt billig prüfen (Fable: Einzelfamilie mit
+zurückgehaltenem δ), da offen ist, ob eine wiederverwendbare Rechnung oder nur Auswahl
+unter trainierten Regeln gelernt wurde. Zuverlässigkeitsaussagen brauchen ≈10 Seeds
+(10/10 ⇒ untere 95%-Grenze ≈0,69). Hinweis: die Einstiegsregeln der vier m-Familien sind
+auf (j,k,δ)=(0,1,0) ausgerichtet; LR konstant 3e-4, AdamW wd 0,01.
+**Vorschlag an Alex:** (1) CPU-Diagnosen; (2) 5×-Batch-Mischlauf mit 2 Seeds und
+Transfer-Test mit zurückgehaltenem δ; (3) Curriculum nur bei Bedarf.
