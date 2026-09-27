@@ -2000,3 +2000,19 @@ einzelne Regel ist häufig genug, um als in den Gewichten lernbare Einstiegsstuf
 dienen. Wirksam war bisher eine dominante Einzelregel (N5/N6/N7, N9/C1 für δ=0).
 **C-Reihe abgeschlossen; Stopp gemäß Plan.** Transfer bleibt offen und folgt laut Alex
 nach den Familien.
+
+**Berichtskorrektur und Browser-QA (27.09.2026):** Der Renderer zeigte `gate: null`
+als „Declared capability screen: not passed“ und den Leiter-Screen gar nicht; N5–N7
+wirkten dadurch fälschlich gescheitert. Korrigiert (`pathwm/evaluation/report.py`,
+Test in `tests/test_learnability_ladder.py`): fehlendes Gate wird als „No formal capability
+gate declared“ angezeigt, der Entwicklungsscreen mit Armen/Kriterien/Schwellen. Alle 16
+Leiterberichte neu erzeugt; ursprüngliche Fassungen als `report.before_screen_fix.html`
+erhalten; Ergebnisse unverändert. Browser-QA (eingebauter Browser über lokalen
+Server, Fenster ausgeblendet, daher Text/DOM statt Scroll-Screenshots): N6 zeigt
+„passed“, C3 „not passed“ mit korrekten Werten; eingebettete Kurve geladen (1400 px),
+alle Metrikabschnitte inklusive `pool heldout` vorhanden. Kurve N6 zusätzlich als Bild
+geprüft. **Befund:** Die Linie „validation“ ist die gemischte Validierungspopulation
+(alle Familien, zurückgehaltene Regeln), nicht der Leiterpool; ihr Verlust steigt bei N6
+genau mit dem Einsetzen der Belegnutzung (≈0,8 → 2,9): Überkonfidenz außerhalb des
+Trainingspools. **Berichtsgrenze:** Die Screen-ν-Kurven (pool, pool_small, pool_heldout)
+stehen nur als Rohzeilen in `metrics.jsonl`, nicht als Grafik.
