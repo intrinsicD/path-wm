@@ -1064,6 +1064,11 @@ def train_core(args, s, *, symbolic=False):
         settings["init_key_source"] = key_source
     split = rw.split_rules()
     ladder = getattr(args, "train_rules", None)
+
+    def encoded(batch):
+        """Symbolic evaluation tokens without rendering (bit-identical, tested); pixel runs render."""
+        return ev.symbolic_episode_tokens(model.perception, batch, args.device) if symbolic else None
+
     mixed = getattr(args, "train_families", None)  # M1: one core, several family ladders
     family = getattr(args, "train_family", None) or "relation"
     families = list(mixed) if mixed else [family]
@@ -1136,15 +1141,15 @@ def train_core(args, s, *, symbolic=False):
                                                      auxiliary_weight=auxiliary, reader=reader)
                     m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
                     if ladder:
-                        controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
+                        controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors, tokens=encoded(pool_population),
                                                       seed=args.seed + 13, reader=reader)
                         arms = {k: v for arm, nu in controls["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool", **arms))
-                        small = ev.control_metrics(model.core, perceive, small_population, args.device, floors,
+                        small = ev.control_metrics(model.core, perceive, small_population, args.device, floors, tokens=encoded(small_population),
                                                    seed=args.seed + 19, reader=reader)
                         arms = {k: v for arm, nu in small["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool_small", **arms))
-                        held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors,
+                        held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors, tokens=encoded(heldout_population),
                                                   seed=args.seed + 29, reader=reader)
                         arms = {k: v for arm, nu in held["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool_heldout", **arms))
@@ -1155,11 +1160,11 @@ def train_core(args, s, *, symbolic=False):
         runner.save()
         with evaluation_mode(model):
             m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
-            controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors,
+            controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors, tokens=encoded(pool_population),
                                           seed=args.seed + 13, reader=reader) if ladder else None
-            small = ev.control_metrics(model.core, perceive, small_population, args.device, floors,
+            small = ev.control_metrics(model.core, perceive, small_population, args.device, floors, tokens=encoded(small_population),
                                        seed=args.seed + 19, reader=reader) if ladder else None
-            held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors,
+            held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors, tokens=encoded(heldout_population),
                                       seed=args.seed + 29, reader=reader) if ladder else None
         elapsed = time.perf_counter() - started
         result = dict(

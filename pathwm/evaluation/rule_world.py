@@ -247,7 +247,7 @@ def swap_sources(rules):
     return sources
 
 
-def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code"):
+def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code", chunk=2048):
     """Query logits of one arm; query labels never enter. `rules` only choose swap partners.
 
     empty: code induced from no evidence, or for the evidence reader the null token only.
@@ -267,12 +267,19 @@ def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code
     elif arm not in ("full", "empty", "permuted"):
         raise ValueError(f"Unknown control arm {arm}")
     q = tokens.query
-    return core.apply(q.m_pre, q.a, q.b, z[q.episode], loops, None if valid is None else valid[q.episode])[0]
+    logits = []
+    for start in range(0, len(q.episode), chunk):  # queries are independent; bounds evaluation memory
+        e = q.episode[start : start + chunk]
+        logits.append(core.apply(q.m_pre[start : start + chunk], q.a[start : start + chunk], q.b[start : start + chunk],
+                                 z[e], loops, None if valid is None else valid[e])[0])
+    return torch.cat(logits) if logits else q.m_pre.new_zeros(0)
 
 
-def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code"):
+@torch.no_grad()
+def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code", tokens=None):
     """ν per family for every control arm on the same episodes; None where an arm is unavailable."""
-    tokens = encode_episodes(perceive, batch, device)
+    # Symbolic callers may pass `symbolic_episode_tokens` (bit-identical, no rendering).
+    tokens = encode_episodes(perceive, batch, device) if tokens is None else tokens
     nu, by_rule = {}, {}
     for arm in CONTROL_ARMS:
         logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops, reader=reader)

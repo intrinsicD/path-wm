@@ -472,3 +472,27 @@ def test_mixed_family_pool_screens_every_family(monkeypatch, tmp_path):
                                           "--output", str(tmp_path / "x")])
         with pytest.raises(SystemExit):
             recipe.main()
+
+
+def test_chunked_control_logits_match_a_single_pass():
+    batch = _batch(rw.relation_ladder(4), episodes=6, support=(8,))
+    tokens, core = _tokens(batch), _core()
+    with torch.no_grad():
+        for reader in ("code", "evidence"):
+            for arm in ev.CONTROL_ARMS:
+                whole = ev.control_logits(core, tokens, arm, batch.rules, seed=3, reader=reader, chunk=10**6)
+                parts = ev.control_logits(core, tokens, arm, batch.rules, seed=3, reader=reader, chunk=5)
+                assert torch.allclose(whole, parts, atol=1e-5), (reader, arm)
+
+
+def test_control_metrics_with_symbolic_tokens_match_the_rendered_path():
+    batch = _batch(rw.family_ladder("toggle", 4), episodes=4, support=(8,))
+    torch.manual_seed(0)
+    symbolic = SymbolicSlots(WIDTH)
+    core, floors = _core(), rw.floors()
+    perceive = ev.symbolic_perceiver(symbolic)
+    with torch.no_grad():
+        rendered = ev.control_metrics(core, perceive, batch, "cpu", floors, seed=2, reader="evidence")
+        direct = ev.control_metrics(core, perceive, batch, "cpu", floors, seed=2, reader="evidence",
+                                    tokens=ev.symbolic_episode_tokens(symbolic, batch, "cpu"))
+    assert rendered == direct
