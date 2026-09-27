@@ -798,8 +798,10 @@ der Spezifikation sind Belege `x` gleichverteilt; „ungruppiert“ kann dort nu
 dass Belege mehrerer Regeln gemischt sind. Dann ist die Abfrage ohne Zusatz
 mehrdeutig. Nötig wären: gemischte Belege aus demselben Split, ein abfrageseitiger
 Hinweis (Ankerbeleg oder paarweise Frage „gleiche Regel wie dieser Beleg?“), ein
-Mischungs-Referenzposterior in §6 (für eine iid-Mischung aus k Regeln faktorisiert
-die Likelihood pro Beleg und bleibt exakt berechenbar) und vom Modell vergebene
+Mischungs-Referenzposterior in §6 (bei bedingter Unabhängigkeit der Belege gegeben
+Regeln und Gewichte faktorisiert die Likelihood pro Beleg; exakte Aufzählung verlangt
+zusätzlich ein kleines festes `k`, einen erklärten Mischungsprior und ein Budget für
+die Aufzählung, etwa 280² Regelpaare mal Belege für k = 2) und vom Modell vergebene
 Zuordnungen im Belegspeicher. Vergleich mit dem vorgegeben gruppierten Arm bei
 gleicher Datenmenge und gleichem Budget, wobei die Gruppierung als privilegierte
 Information ausgewiesen wird, sowie mit dem Mischungs-Posterior als
