@@ -1251,6 +1251,13 @@ def render_report(directory):
                         f"<tr><td>{escape(group.replace('_', ' '))}: {escape(str(key))}</td>"
                         f"<td>{escape(str(shown))}</td></tr>"
                     )
+            for fam, sub in (screen.get("per_family") or {}).items():  # mixed-family screens
+                full = (sub.get("family_nu") or sub.get("relation_nu") or {}).get("full")
+                shown = "n/a" if full is None else f"{full:.4g}"
+                verdict = "passed" if sub.get("passed") else "not passed"
+                parts.append(
+                    f"<tr><td>family {escape(fam)}: {verdict}</td><td>nu full {escape(shown)}</td></tr>"
+                )
             parts.append("</table>")
         parts.append(
             "<p>Accuracy values are fractions from 0 to 1. Error metrics retain the recipe's scale.</p>"

@@ -1064,8 +1064,11 @@ def train_core(args, s, *, symbolic=False):
         settings["init_key_source"] = key_source
     split = rw.split_rules()
     ladder = getattr(args, "train_rules", None)
+    mixed = getattr(args, "train_families", None)  # M1: one core, several family ladders
     family = getattr(args, "train_family", None) or "relation"
-    pool = rw.family_ladder(family, ladder) if ladder else split["train"]
+    families = list(mixed) if mixed else [family]
+    pool = tuple(r for f in families for r in rw.family_ladder(f, ladder)) if ladder else split["train"]
+    pool_episodes = s["pool_episodes"] * len(families)  # 64 per family in the evaluation pools
     repeats = getattr(args, "rule_repeats", None)
     delta_weights = getattr(args, "delta_weights", None)
     uniform_after = getattr(args, "uniform_after", None)
@@ -1075,25 +1078,27 @@ def train_core(args, s, *, symbolic=False):
     train_pool = tuple(r for r, k in zip(pool, repeats) for _ in range(k)) if repeats else pool
     if ladder:  # §23 learnability ladder: only the training-rule pool changes
         settings.update(train_rules=ladder, train_rule_keys=[r.key() for r in pool],
-                        pool_evaluation=dict(seed=args.seed + 11, episodes=s["pool_episodes"], support=max(s["support"]),
+                        pool_evaluation=dict(seed=args.seed + 11, episodes=pool_episodes, support=max(s["support"]),
                                              arms=list(ev.CONTROL_ARMS)),
                         screen=LADDER_SCREEN, train_family=family, rule_repeats=getattr(args, "rule_repeats", None),
                         delta_weights=delta_weights, uniform_after=uniform_after,
-                        heldout_evaluation=dict(seed=args.seed + 23, episodes=s["pool_episodes"],
-                                                support=max(s["support"]), rules=f"validation {family} rules"))
+                        heldout_evaluation=dict(seed=args.seed + 23, episodes=pool_episodes,
+                                                support=max(s["support"]), rules=f"validation {'/'.join(families)} rules"))
+        if mixed:
+            settings.update(train_families=families)
     data = rw.manifest()
     runner = Run(args.resume or args.output, settings=settings, data=data, recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
     pool_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 11), pool, rw.KIND_SPLIT["train"],
-                                         episodes=s["pool_episodes"], support=(max(s["support"]),),
+                                         episodes=pool_episodes, support=(max(s["support"]),),
                                          queries=s["queries"], p_empty=0.0) if ladder else None
     # Secondary small-support pool (overnight plan): a finding, never part of the screen.
     small_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 17), pool, rw.KIND_SPLIT["train"],
-                                          episodes=s["pool_episodes"], support=(SMALL_POOL_SUPPORT,),
+                                          episodes=pool_episodes, support=(SMALL_POOL_SUPPORT,),
                                           queries=s["queries"], p_empty=0.0) if ladder else None
-    heldout_rules = tuple(r for r in split["validation"] if r.family == family)
+    heldout_rules = tuple(r for r in split["validation"] if r.family in families)
     heldout_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 23), heldout_rules,
-                                            rw.KIND_SPLIT["validation"], episodes=s["pool_episodes"],
+                                            rw.KIND_SPLIT["validation"], episodes=pool_episodes,
                                             support=(max(s["support"]),), queries=s["queries"],
                                             p_empty=0.0) if ladder else None
     validation = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 7), split["validation"], rw.KIND_SPLIT["validation"],
@@ -1171,7 +1176,12 @@ def train_core(args, s, *, symbolic=False):
             result["metrics"]["pool"] = controls
             result["metrics"]["pool_small"] = dict(small, support=SMALL_POOL_SUPPORT, role="secondary finding, not screened")
             result["metrics"]["pool_heldout"] = dict(held, role="held-out validation relations; transfer finding, not screened")
-            result["screen"] = ladder_screen(ladder, controls["nu"], family)
+            if mixed:  # every family must pass on its own
+                per_family = {f: ladder_screen(ladder, controls["nu"], f) for f in families}
+                result["screen"] = dict(passed=all(v["passed"] for v in per_family.values()), per_family=per_family,
+                                        families=families, thresholds=LADDER_SCREEN)
+            else:
+                result["screen"] = ladder_screen(ladder, controls["nu"], family)
             result["limitations"].append("§23 development screen: one seed, training-rule pool only; held-out "
                                          "validation is secondary and no transfer claim follows from the pool.")
         finish(runner, result, complete=runner.step >= args.updates)
@@ -1757,6 +1767,8 @@ def main():
                         help="symbolic with --train-rules only (overnight N5): per-rule training draw multiplicity")
     parser.add_argument("--train-family", choices=rw.FAMILIES,
                         help="symbolic with --train-rules (F1): family of the ladder pool (default relation)")
+    parser.add_argument("--train-families", nargs="+", choices=rw.FAMILIES,
+                        help="symbolic with --train-rules (M1): one core on the union of these family ladders")
     parser.add_argument("--delta-weights", type=int, nargs=4,
                         help="symbolic with --train-rules (C1-C3): training draw multiplicity per relation δ=0..3")
     parser.add_argument("--uniform-after", type=int,
@@ -1870,9 +1882,16 @@ def main():
     if args.support_sizes is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None
                                            or min(args.support_sizes) < 1):
         parser.error("--support-sizes applies to the symbolic induction stage and needs positive sizes")
-    if args.rule_repeats is not None and (args.train_rules is None or len(args.rule_repeats) != args.train_rules
+    pool_size = (args.train_rules or 0) * len(args.train_families or [None])
+    if args.rule_repeats is not None and (args.train_rules is None or len(args.rule_repeats) != pool_size
                                           or min(args.rule_repeats) < 1):
         parser.error("--rule-repeats needs --train-rules and one positive count per ladder rule")
+    if args.train_families is not None and (args.train_family is not None or args.train_rules is None
+                                            or len(set(args.train_families)) != len(args.train_families)
+                                            or args.delta_weights is not None):
+        parser.error("--train-families needs --train-rules, distinct families, no --train-family/--delta-weights")
+    if args.train_families and "category" in args.train_families and args.train_rules not in (1, 4, 16):
+        parser.error("category ladders have 1, 4 or 16 rules")
     if args.train_family is not None and args.train_rules is None:
         parser.error("--train-family needs --train-rules")
     if args.train_family == "category" and (args.train_rules not in (1, 4, 16) or args.delta_weights is not None):

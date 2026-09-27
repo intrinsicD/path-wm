@@ -462,6 +462,10 @@ def test_mixed_family_pool_screens_every_family(monkeypatch, tmp_path):
     assert set(screen["per_family"]) == set(families)
     assert screen["passed"] == all(s["passed"] for s in screen["per_family"].values())
     assert result["metrics"]["pool"]["episodes"] == 5 * recipe.SIZES["check"]["pool_episodes"]
+    html = (tmp_path / "M" / "report.html").read_text()
+    assert html.count("<table><tr><th>Arm / criterion") == html.count("family toggle") == 1
+    body = html.split("Declared development screen")[1].split("Accuracy values")[0]
+    assert body.count("<table>") == body.count("</table>") == 1 and "family category" in body
     for bad in (["--train-families", "relation", "--train-family", "open"],
                 ["--train-families", "relation", "relation"]):
         monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-rules", "4", *bad,
