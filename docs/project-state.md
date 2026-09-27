@@ -26,7 +26,7 @@ Task plans own current work; older decisions remain in the
   provisional development input. All five oracle application families pass
   (nu≥0.863). Code search and eight induction paths failed; copied-example recall was learned
   but degraded during the failed transfer curriculum. CI1 (§22): color reaches core; frozen property query passes. Encoder adaptation loses shape/size retention; full prior curriculum remains open.
-  §23: a frequent entry rule unlocks L4 induction in all five families (2 seeds); L16/L44/transfer open.
+  §23: a frequent entry rule opens L4 induction in all 5 families (2 seeds); L16/L44/transfer open.
   Rollout, learned full R1/R2 and natural data remain unproven.
   Plan §0,10,11,16,18–19,23; evidence: `runs/latent_agent_r1/`.
 - **Concept-learning discussion:** the [research review](latent-concept-learning-review.md)
