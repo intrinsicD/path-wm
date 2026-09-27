@@ -2075,3 +2075,8 @@ erste Regel jeder Familie ×7). Keine Familienkennung im Modellinput.
 ν_voll−ν_permutiert ≥ 0,5; bestanden nur, wenn alle fünf bestehen. Zurückgehaltene
 Regeln aller Familien als Befund. Besteht M1 → Wiederholung mit Seed2202 (**M1-2202**),
 dann Stopp und Bericht; Transfer danach mit Alex. Verfehlt → Stopp, Diagnose je Familie.
+**M1 vor dem Start:** GPU-Smoke lief zunächst in Speichermangel. Ursachen und Korrekturen
+(Werte unverändert, getestet): Kontrollauswertung baute Autograd-Graphen auf
+(`evaluation_mode` schaltet Gradienten nicht ab) → `no_grad`; symbolische Läufe rendern
+für die Kontrollen nicht mehr, sondern nutzen die bitgleichen `symbolic_episode_tokens`;
+Fragen werden blockweise ausgewertet. Smoke danach 8,9 Updates/s, ≤2,55 GiB.
