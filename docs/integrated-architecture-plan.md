@@ -1957,3 +1957,11 @@ bereitstellen; natürliche Schiefe ist eine Umsetzung; vor Auswertung angleichen
 Uniform bleibt Kontrolle“ bedingt übernehmen. C2 (Angleichen) und C3 (Transfer)
 decken zwei Bedingungen bereits ab; offen bleiben Bayes-Obergrenze, Mehrseed-Kontrollen
 und der Vergleich gestuft vs. stationär.
+
+**C1 Ergebnis:** abgeschlossen (Exit0, 30000 Updates, 4121s, ≤3,43GiB, Bericht
+`structural_verified`). **Verfehlt:** ν voll 0,329, leer −0,001, permutiert 0,001,
+vertauscht −0,017; Kurve 0,187/0,186/0,210/0,317/0,329 bei 10k–30k. Je Regel (δ=0,1,2,3):
+(0,1) 1,00/0,61/0,23/0,00; (1,2) 0,22/0/0/−0,07; (2,1) 1,00/1,00/0,07/−0,02;
+(3,1) 1,00/0,06/−0,03/−0,04. Zurückgehaltene Relationen: ν voll −0,001 (kein Transfer).
+Gegenüber N9 (0,266) langsamer stufenweiser Fortschritt: δ-Stufen erscheinen nacheinander,
+wie im Review als Treppe vorhergesagt; innerhalb des Budgets nicht abgeschlossen.
