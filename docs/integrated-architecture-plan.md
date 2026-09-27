@@ -1914,3 +1914,46 @@ jeweiligen uniformen Pool-Population.
 Reihenfolge fest: C1 → C2 → C3, unabhängig vom Ausgang (jeder Lauf ist für sich
 informativ). Danach Stopp und Bericht. Seed-Wiederholung nur für bestandene Läufe
 und nur nach Absprache.
+
+### Review: schiefe Trainingsverteilung als Prinzip (Fable 5.1, effort max, 27.09.2026)
+
+Auf Alex' Wunsch mit `claude-fable-5-1` bei `--effort max` diskutiert (öffentlicher,
+hypothetischer Brief ohne Code/Messwerte; keine Werkzeuge; Beleg bestätigt nur dieses
+Modell). Brief, Antwort, Beleg: `runs/reviews/skewed_training_principle_20260927/`.
+
+**Kernaussagen Fable (Hypothesen/Präferenzen, nicht validiert):**
+- Besser als „Symmetriebruch“ passt eine **Einstiegsstufe** (staircase): Schiefe fügt
+  eine niedrigstufige, in den Gewichten lernbare Komponente hinzu, deren Merkmale
+  (z. B. (b_k−a_j) mod 4) das In-Context-Problem niedrigstufig machen. Die Gradienten
+  der Belege sind nicht null, sondern hochgradige Interaktionen → Plateau als
+  Verlangsamung; unsere 30000-Update-Läufe sind rechtszensiert.
+- Gleichwahrscheinlichkeit ist nicht die entscheidende Größe (die seltenen L4-Regeln
+  sind untereinander gleich häufig und werden gelernt); entscheidend ist Erreichbarkeit
+  aus schon gelernten Merkmalen.
+- Risiken: Prior-Fehlanpassung (Netz ≈ Bayes-Vorhersage unter Trainingsprior),
+  Vernachlässigung seltener Regeln, transientes In-Context-Lernen, Schiefe als
+  Hyperparameter, Einzelseeds. Schutz: Angleichen an Gleichverteilung vor der
+  Auswertung, zurückgehaltene Regeln, Auswertung je Regelgruppe und Supportgröße gegen
+  Bayes-optimal, ≥5 Seeds.
+- Empfehlung: **mit Bedingungen übernehmen**, als Prinzip „Einstiegsstufe bereitstellen“
+  (Schiefe ist eine Umsetzung); pro Modalität neu validieren.
+- Vorgeschlagene Kontrollen: sehr langer uniformer Lauf mit Seeds und Proben;
+  Bayes-Obergrenze je Supportgröße; uniform über unvollständige Regelmenge;
+  gestuftes Curriculum vs. stationäre Schiefe vs. Hilfsziel Regel-ID bei gleichem Budget;
+  Schiefe über δ vs. (j,k) vs. gemeinsam.
+
+**Eigene Prüfung gegen vorhandene Evidenz:**
+- „Nur Vollständigkeitsartefakt“: bereits abgeschwächt – L44/J44 trainierten uniform
+  über 44 von 64 Relationen (unvollständige Familie, Randverteilung damit nicht konstant)
+  und scheiterten ebenfalls (ν=0). Nicht ausgeschlossen, aber nicht allein erklärend.
+- Fables Vermutung, reine δ-Schiefe lege die (j,k)-Auswahl nicht frei: N9 lernte δ=0 für
+  alle vier Paare aus Belegen (leer/permutiert ≈0) – die Paarauswahl wurde also gelernt;
+  gestockt haben die seltenen δ.
+- Identifizierbarkeit bei kleinen Supports: für L4 bei N=8 enthält eine Episode in
+  ≈90% mindestens ein positives Beispiel; eine exakte Bayes-Obergrenze je N fehlt noch.
+
+**Konsequenz (Vorschlag an Alex, nicht übernommen):** Prinzip als „Einstiegsstufe
+bereitstellen; natürliche Schiefe ist eine Umsetzung; vor Auswertung angleichen;
+Uniform bleibt Kontrolle“ bedingt übernehmen. C2 (Angleichen) und C3 (Transfer)
+decken zwei Bedingungen bereits ab; offen bleiben Bayes-Obergrenze, Mehrseed-Kontrollen
+und der Vergleich gestuft vs. stationär.
