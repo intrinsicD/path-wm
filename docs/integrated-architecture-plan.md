@@ -1990,3 +1990,13 @@ vertauscht −0,037. Bis 15k identisch zu C1 (0,186); nach Umschalten auf unifor
 und wächst weiter (andere Regeln als in C1 kamen hinzu, z. B. (2,1,δ=2) 1,00).
 Zurückgehaltene Relationen 0,000. Deutung: Die Einstiegsstufe wird nach dem Einstieg
 nicht dauerhaft benötigt; Angleichen schadet in diesem Budget nicht (ein Seed).
+
+**C3 Ergebnis (L44, δ-Gewichte 8,4,2,1):** abgeschlossen (Exit0, 30000 Updates,
+2520s, ≤3,43GiB, Bericht `structural_verified`). **Verfehlt:** ν voll 0,001, leer −0,001,
+permutiert 0,001; an jedem 5000er-Punkt ≈0; mittleres ν je δ 0,01/0,00/0,00/0,00;
+zurückgehaltene Relationen 0,000 (kein Transfer). Deutung (Hypothese, konsistent mit dem
+Review): Bei 44 Regeln verteilt sich das δ-Gewicht auf ≈11 Regeln je Stufe; keine
+einzelne Regel ist häufig genug, um als in den Gewichten lernbare Einstiegsstufe zu
+dienen. Wirksam war bisher eine dominante Einzelregel (N5/N6/N7, N9/C1 für δ=0).
+**C-Reihe abgeschlossen; Stopp gemäß Plan.** Transfer bleibt offen und folgt laut Alex
+nach den Familien.
