@@ -1277,6 +1277,13 @@ Ein Seed, synthetische vollständig beobachtete Szenen, acht Validationsarten; k
 C3-, Zwillingsidentitäts-, Naturdaten- oder Gesamtagentennachweis.
 Entscheidung: `runs/reviews/integrated_architecture_20260923/identity-adoption-decision.md`.
 
+**Ergänzung 27. September (Vorschlag, nicht geplant).** Der gepaarte Ansichtsverlust
+ist Schritt 1 eines allgemeinen Rezepts: Identitätscode plus Störfaktoren als
+getrennte Eingabe. Schritt 2 wäre, aus dem Code mit dem vorhandenen Decoder eine
+*andere* Ansicht derselben Instanz zu rekonstruieren; das begünstigt, dass der Code
+Identität statt Ansicht trägt, und ist unabhängig zu prüfen. Labels liefern synthetische Szenen und später Tracks (fehlbare
+Aufsicht); kein Gesichtsdatensatz nötig ([Ideensammlung](compact-instance-memory-ideas.md)).
+
 ## 20. Diskussion Punkt 1: Übertragung zwischen Startzuständen
 
 Alex möchte zuerst Punkt 1 besprechen; kein neuer Lauf oder Umbau. Vorschlag:
@@ -2133,3 +2140,20 @@ kein Rendern in der symbolischen Stufe; Kontrollarme/Zusatz-Pools jede vierte Au
 (Arm „voll“ weiter alle 250 Updates, Ende vollständig). **M2s** = M2-Einstellungen
 unverändert (60000 Updates, Seed1101; bei Bestehen M2s-2202), gestartet aus eingefrorenem
 Worktree `../path-wm-frozen/<commit>` gemäß Workflow; Commit steht in `run.json`.
+
+**M2s Ergebnis (Seed1101, 60000 Updates, 2961s, Bericht `structural_verified`):
+besteht – alle fünf Familien in einem gemeinsamen Kern.** ν voll/leer/permutiert:
+Kategorie 1,000/0,003/−0,032; Relation 0,950/0,064/−0,033; Open 0,970/−1,322/−2,502;
+Close 0,926/−1,510/−0,126; Toggle 0,951/0,000/−0,010. Kurve bei 10k…60k (Relation/Open/
+Close/Toggle): Plateau bis 20k, Sprünge 20k–40k, ab 40k ≈1,00, am Ende 0,93–0,97.
+**Äquivalenzbeleg für den schnelleren Pfad:** Die M2s-Werte bei 10k/20k/30k stimmen exakt
+mit M1 (gleicher Seed, alter Pfad mit Rendern) überein, z. B. 30k: 0,98/0,99/−0,31/0,73.
+Zurückgehaltene Regeln: kein Transfer (Relation 0,002, Kategorie −0,032).
+**M2s-2202 (Seed2202, 2652s): verfehlt.** Nur Kategorie besteht (1,000; leer 0,052);
+Relation 0,271, Toggle 0,268, Open −0,811, Close −0,926 – über alle 60000 Updates
+unverändert auf dem Plateau (Werte bei 10k…60k praktisch identisch).
+**Deutung:** Der Einstieg im Mischlauf ist seedabhängig: ein Seed verlässt das Plateau
+bei 20k–40k, der andere nicht innerhalb von 60k. Das entspricht der Review-Warnung
+(Fluchtzeit als Verteilung, rechtszensiert). Einzelfamilien-Läufe schafften es mit beiden
+Seeds; der gemeinsame Kern verzögert und destabilisiert den Einstieg. Mischlauf damit
+**nicht robust** bestätigt. Frozen Worktree `a424e18` nach Abschluss entfernt.
