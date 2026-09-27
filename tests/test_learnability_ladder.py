@@ -388,3 +388,21 @@ def test_delta_weights_and_uniform_after_shape_training_draws_only(monkeypatch, 
                                           "--output", str(tmp_path / "x")])
         with pytest.raises(SystemExit):
             recipe.main()
+
+
+def test_report_distinguishes_missing_gate_and_shows_development_screen(tmp_path):
+    import json
+    from pathwm.evaluation.report import render_report
+
+    screen = dict(passed=True, criteria=dict(nu_full=True, over_empty=True),
+                  relation_nu=dict(full=0.98, empty=0.01, permuted=0.0, swapped=None),
+                  thresholds=dict(nu_full=0.8, over_empty=0.5, over_permuted=0.5))
+    for name, value in {"run.json": {"identity": {"settings": {"purpose": "development"}}},
+                        "status.json": {"result": "completed", "step": 4},
+                        "result.json": {"gate": None, "screen": screen, "metrics": {}}}.items():
+        (tmp_path / name).write_text(json.dumps(value))
+    (tmp_path / "metrics.jsonl").write_text("")
+    html = render_report(tmp_path).read_text()
+    assert "Declared capability screen: not passed" not in html
+    assert "No formal capability gate" in html
+    assert "Declared development screen: passed" in html and "0.98" in html
