@@ -276,12 +276,13 @@ def control_logits(core, tokens, arm, rules, *, seed=0, loops=None, reader="code
 
 
 @torch.no_grad()
-def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code", tokens=None):
+def control_metrics(core, perceive, batch, device, floors, *, seed=0, loops=None, reader="code", tokens=None,
+                    arms=CONTROL_ARMS):
     """ν per family for every control arm on the same episodes; None where an arm is unavailable."""
     # Symbolic callers may pass `symbolic_episode_tokens` (bit-identical, no rendering).
     tokens = encode_episodes(perceive, batch, device) if tokens is None else tokens
     nu, by_rule = {}, {}
-    for arm in CONTROL_ARMS:
+    for arm in arms:
         logit = control_logits(core, tokens, arm, batch.rules, seed=seed, loops=loops, reader=reader)
         if logit is None:
             nu[arm] = None

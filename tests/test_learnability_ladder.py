@@ -528,3 +528,29 @@ def test_symbolic_stage_never_renders(monkeypatch, tmp_path):
     monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
                                       "--updates", "2", "--train-rules", "4", "--output", str(tmp_path / "S")])
     recipe.main()
+
+
+def test_control_arms_are_evaluated_every_fourth_validation_without_changing_training(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    def run(name):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                          "--updates", "8", "--train-rules", "4", "--output", str(tmp_path / name)])
+        recipe.main()
+        return [json.loads(line) for line in (tmp_path / name / "metrics.jsonl").read_text().splitlines()]
+
+    rows = run("sparse")  # check size validates every 2 updates; full controls at update 8 only
+    pools = {r["step"]: r for r in rows if r.get("split") == "pool"}
+    assert set(pools) == {2, 4, 6, 8}
+    assert all(set(k for k in pools[s] if k.startswith("nu_")) == {"nu_full_relation", "nu_full_groups_without_both_classes"}
+               for s in (2, 4, 6))
+    assert "nu_empty_relation" in pools[8] and "nu_permuted_relation" in pools[8]
+    assert {r["step"] for r in rows if r.get("split") in ("pool_small", "pool_heldout")} == {8}
+    monkeypatch.setattr(recipe, "CONTROL_EVERY_VALIDATIONS", 1)
+    run("dense")
+    a = torch.load(tmp_path / "sparse" / "last.pt", weights_only=True)
+    b = torch.load(tmp_path / "dense" / "last.pt", weights_only=True)
+    assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+    assert json.loads((tmp_path / "sparse" / "result.json").read_text())["metrics"]["pool"] == \
+        json.loads((tmp_path / "dense" / "result.json").read_text())["metrics"]["pool"]

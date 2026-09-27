@@ -1001,6 +1001,9 @@ def stop(runner, args, started):
 
 # §23 learnability ladder, fixed before any ladder run (relation ν on the pool population).
 LADDER_SCREEN = dict(nu_full=0.8, over_empty=0.5, over_permuted=0.5)
+# Control arms and secondary pools every 4th validation (1000 updates at full size) and at the end;
+# the main pool's full arm at every validation. Evaluation never changes training (RNG/buffers kept).
+CONTROL_EVERY_VALIDATIONS = 4
 SMALL_POOL_SUPPORT = 8
 
 
@@ -1140,11 +1143,15 @@ def train_core(args, s, *, symbolic=False):
                     v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
                                                      auxiliary_weight=auxiliary, reader=reader)
                     m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader, tokens=encoded(validation))
+                    every = CONTROL_EVERY_VALIDATIONS * s["validate_every"]
+                    complete = runner.step % every == 0 or runner.step == args.updates
                     if ladder:
                         controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors, tokens=encoded(pool_population),
-                                                      seed=args.seed + 13, reader=reader)
+                                                      seed=args.seed + 13, reader=reader,
+                                                      arms=ev.CONTROL_ARMS if complete else ("full",))
                         arms = {k: v for arm, nu in controls["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool", **arms))
+                    if ladder and complete:
                         small = ev.control_metrics(model.core, perceive, small_population, args.device, floors, tokens=encoded(small_population),
                                                    seed=args.seed + 19, reader=reader)
                         arms = {k: v for arm, nu in small["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
