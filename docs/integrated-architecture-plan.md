@@ -2016,3 +2016,18 @@ geprüft. **Befund:** Die Linie „validation“ ist die gemischte Validierungsp
 genau mit dem Einsetzen der Belegnutzung (≈0,8 → 2,9): Überkonfidenz außerhalb des
 Trainingspools. **Berichtsgrenze:** Die Screen-ν-Kurven (pool, pool_small, pool_heldout)
 stehen nur als Rohzeilen in `metrics.jsonl`, nicht als Grafik.
+
+**F1 Ergebnisse (je 6000 Updates, Exit0, Berichte `structural_verified`):**
+
+| Familie | ν voll | leer | permutiert | vertauscht | je Regel (δ bzw. V) | zurückgeh. | Screen |
+| --- | ---: | ---: | ---: | ---: | --- | ---: | --- |
+| Kategorie | 1,000 | 0,024 | −0,003 | −0,317 | 1,00/1,00/1,00/1,00 | −0,020 | besteht |
+| Toggle | 0,722 | 0,009 | −0,107 | −0,240 | 1,00/1,00/0,43/0,62 | −0,021 | verfehlt |
+| Open | 0,258 | −0,933 | −1,346 | −1,510 | 1,00/−0,08/1,00/−1,33 | −1,302 | verfehlt |
+| Close | −0,381 | −0,959 | −1,226 | −1,350 | 0,99/−1,33/−0,31/−1,39 | −1,256 | verfehlt |
+
+Kurven ν voll (1k→6k): Kategorie 0,27/0,77/1,00/0,96/0,97/1,00; Toggle 0,01/0,02/0,02/
+0,27/0,31/0,72; Open −0,96/−1,07/−0,67/−0,67/−0,67/0,26; Close −1,07/−0,96/−0,96/
+−0,73/−0,73/−0,38 – alle drei verfehlten Familien steigen am Ende noch. Open/Close
+haben den hohen Referenzfloor 0,9 (ν=0,8 ⇔ BA 0,98); negative ν heißen schlechter als
+die Kurzschlussstrategie. Gemäß Plan: Kategorie mit Seed2202 wiederholen (**F1-cat-2202**).
