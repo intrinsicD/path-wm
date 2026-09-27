@@ -2111,3 +2111,19 @@ Verfehlt → Stopp und Diagnose je Familie.
 scheiterte zuerst an einem CLI-Prüffehler für Mischläufe (behoben, Test ergänzt), danach
 korrekt an der Quell-Identitätsprüfung. **M2r** = identische Einstellungen, neu ab 0,
 als systemd-User-Dienst (überlebt Abmelden, Linger aktiv). M2 bleibt mit `INTERRUPTED.txt`.
+
+### Trainingsgeschwindigkeit der symbolischen Stufe (Analyse 27.09.2026, Alex' Auftrag)
+
+Messung in eingefrorener Kopie (`runs/reviews/training_speed_20260927/profile_step.py`,
+M-Konfiguration, volle Größe; GPU-Werte mit parallel laufendem M2r, daher Näherungen):
+Episoden ziehen 13 ms, **Rendern 71 ms** (CPU 185 ms), symbolische Tokens 0,6 ms,
+Vorwärts/Rückwärts/Optimierer 36 ms pro Update; Auswertung alle 250 Updates ≈10–12 s
+(drei Pools × vier Kontrollarme + gerenderte Validierung). M1: 94 ms/Update gesamt.
+**Äquivalenzprüfung:** Training und Validierung über `symbolic_episode_tokens` statt
+Rendern liefern nach 10 Updates bitgleiche Gewichte und identische Metrikzeilen.
+Vorschläge: (1) symbolische Tokens im Training/Validierung (bitgleich; umsetzen);
+(2) Kontrollarme und Zusatz-Pools alle 1000 statt 250 Updates, Ende vollständig
+(nur Kurvenauflösung; Alex' Zustimmung erbeten); (3) Hintergrund-Vorbereitung der
+Episoden bei deterministischer Reihenfolge; (4) bf16/`torch.compile` nur mit
+Qualitätsvergleich. Schätzung (1)+(2): ≈2,5–3× schneller; exakte Messung nach M2r.
+Codeänderungen erst nach M2r/M2r-2202 in `main` (Lauf nutzt `main`).
