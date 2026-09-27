@@ -140,6 +140,16 @@ overwrite an existing run. Explicit resume must check compatible code, modules,
 data/splits, objective, optimizer and precision. Checkpoints include model buffers,
 optimizer/scheduler, progress and RNG/sampler state. Document exact replay limits.
 
+Start long runs (more than a few minutes) from a frozen copy of the committed source so
+that an interrupted run can always resume exactly while `main` keeps changing:
+`git worktree add --detach ../path-wm-frozen/<commit> <commit>`, then run the recipe with
+that worktree as working directory, the main `.venv` interpreter and an absolute
+`--output` under the main `runs/`. Resume from the same worktree; remove it only after
+the run and its report are complete, and record its commit with the result. On this
+machine `systemd-oomd` can end the whole desktop session under memory pressure, which
+also ends runs started from the session (`nohup`, `systemd-run --user`); a system-level
+unit with `User=alex`, set up by Alex, avoids that.
+
 Record resolved settings, code identity, source and split identities, initialization,
 seed, sample/update counts, precision and package/device information. Raw JSON and
 JSONL are authoritative. Result completion must be written before report generation.
