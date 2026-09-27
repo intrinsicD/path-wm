@@ -1244,7 +1244,7 @@ def render_report(directory):
                 f"<p><strong>Declared development screen: {label}.</strong></p>"
                 "<table><tr><th>Arm / criterion</th><th>Value</th></tr>"
             )
-            for group in ("relation_nu", "criteria", "thresholds"):
+            for group in ("relation_nu", "family_nu", "criteria", "thresholds"):
                 for key, value in (screen.get(group) or {}).items():
                     shown = "n/a" if value is None else f"{value:.4g}" if isinstance(value, float) else value
                     parts.append(
