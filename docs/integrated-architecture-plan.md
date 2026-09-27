@@ -2127,3 +2127,9 @@ Vorschläge: (1) symbolische Tokens im Training/Validierung (bitgleich; umsetzen
 Episoden bei deterministischer Reihenfolge; (4) bf16/`torch.compile` nur mit
 Qualitätsvergleich. Schätzung (1)+(2): ≈2,5–3× schneller; exakte Messung nach M2r.
 Codeänderungen erst nach M2r/M2r-2202 in `main` (Lauf nutzt `main`).
+**M2r gestoppt, M2s gestartet (27.09., ≈21:15, Alex):** M2r bei Update 17000 bewusst
+gestoppt (`STOPPED.txt`), um mit dem schnelleren, bitgleichen Pfad neu zu rechnen:
+kein Rendern in der symbolischen Stufe; Kontrollarme/Zusatz-Pools jede vierte Auswertung
+(Arm „voll“ weiter alle 250 Updates, Ende vollständig). **M2s** = M2-Einstellungen
+unverändert (60000 Updates, Seed1101; bei Bestehen M2s-2202), gestartet aus eingefrorenem
+Worktree `../path-wm-frozen/<commit>` gemäß Workflow; Commit steht in `run.json`.
