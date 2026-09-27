@@ -2080,3 +2080,21 @@ dann Stopp und Bericht; Transfer danach mit Alex. Verfehlt → Stopp, Diagnose j
 (`evaluation_mode` schaltet Gradienten nicht ab) → `no_grad`; symbolische Läufe rendern
 für die Kontrollen nicht mehr, sondern nutzen die bitgleichen `symbolic_episode_tokens`;
 Fragen werden blockweise ausgewertet. Smoke danach 8,9 Updates/s, ≤2,55 GiB.
+
+**M1 Ergebnis (27.09., 16:50):** abgeschlossen (Exit0, 30000 Updates, 2835s, ≤2,55GiB,
+Bericht `structural_verified`). **Verfehlt** (3/5 Familien):
+
+| Familie | ν voll | leer | permutiert | vertauscht | Screen |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Kategorie | 1,000 | 0,010 | −0,030 | −0,072 | besteht |
+| Relation | 0,979 | 0,101 | −0,055 | −0,007 | besteht |
+| Open | 0,993 | −1,290 | −1,368 | −1,747 | besteht |
+| Toggle | 0,732 | 0,004 | −0,062 | −0,062 | verfehlt |
+| Close | −0,308 | −1,673 | −1,025 | −1,218 | verfehlt |
+
+Kurven ν voll bei 5k/10k/…/30k: Kategorie 0,84/1,00/…/1,00; Relation 0,42 bis 25k (0,46),
+dann 0,98; Open −0,98…−0,51, dann 0,99; Toggle ≈0,2–0,3, dann 0,73; Close ≈−0,94, dann
+−0,31. Vier Familien springen erst zwischen 25k und 30k: der gemeinsame Kern verzögert den
+Einstieg stark (Einzelläufe: 5k–10k), verhindert ihn aber nicht. Zurückgehaltene Regeln:
+kein Transfer. Gemäß Plan keine Seed-Wiederholung; Stopp. **Vorschlag an Alex:** M1 mit
+60000 Updates (einziger Faktor Budget), da alle Kurven am Ende steigen.
