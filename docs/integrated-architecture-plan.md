@@ -2106,3 +2106,8 @@ Einziger Faktor gegenüber M1: 30000 → 60000 Updates (≤240 min). Sonst ident
 {4,8,16}, Seed1101, gleiche Pool-Populationen, Screen je Familie). Besteht M2 →
 Wiederholung mit Seed2202 (**M2-2202**), dann Stopp und Bericht; Transfer danach mit Alex.
 Verfehlt → Stopp und Diagnose je Familie.
+**M2 unterbrochen (27.09.):** Beim Abmelden der Desktop-Sitzung wurde der Prozess bei Update
+12500 beendet (Rohzeilen und Checkpoint bis 12500 erhalten, kein Ergebnis). Das Fortsetzen
+scheiterte zuerst an einem CLI-Prüffehler für Mischläufe (behoben, Test ergänzt), danach
+korrekt an der Quell-Identitätsprüfung. **M2r** = identische Einstellungen, neu ab 0,
+als systemd-User-Dienst (überlebt Abmelden, Linger aktiv). M2 bleibt mit `INTERRUPTED.txt`.
