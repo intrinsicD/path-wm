@@ -2035,3 +2035,11 @@ die Kurzschlussstrategie. Gemäß Plan: Kategorie mit Seed2202 wiederholen (**F1
 −0,016, vertauscht −0,270. Kategorie-Einstieg damit in zwei Seeds bestätigt.
 Nächster Schritt für Open/Close/Toggle: Entscheidung mit Alex (Vorschlag: gleiche
 Einstellung mit 30000 Updates, da alle drei Kurven am Ende noch steigen).
+
+### F2: Übergangsfamilien mit 30000 Updates (vorab erklärt, 27.09.2026, von Alex freigegeben)
+
+Einziger Faktor gegenüber F1: 6000 → 30000 Updates (≤150 min). Läufe **F2-toggle**,
+**F2-open**, **F2-close** (Seed1101, sonst identisch zu F1: L4, Schiefe 7,1,1,1,
+Evidenzleser, Outcome-BCE, Supports {4,8,16}). Screen unverändert. Bestandene Läufe
+werden mit Seed2202 wiederholt (**F2-…-2202**), bevor sie zählen. Danach Stopp und
+Bericht; Mischlauf aller Familien erst nach Absprache.
