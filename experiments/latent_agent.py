@@ -1062,13 +1062,20 @@ def train_core(args, s, *, symbolic=False):
     ladder = getattr(args, "train_rules", None)
     pool = rw.relation_ladder(ladder) if ladder else split["train"]
     repeats = getattr(args, "rule_repeats", None)
-    # N5: skewed training draws by repeating pool rules; evaluation pools stay uniform.
+    delta_weights = getattr(args, "delta_weights", None)
+    uniform_after = getattr(args, "uniform_after", None)
+    if delta_weights:  # C1-C3: geometric skew over δ, per relation rule
+        repeats = [delta_weights[r.delta] for r in pool]
+    # N5/C: skewed training draws by repeating pool rules; evaluation pools stay uniform.
     train_pool = tuple(r for r, k in zip(pool, repeats) for _ in range(k)) if repeats else pool
     if ladder:  # §23 learnability ladder: only the training-rule pool changes
         settings.update(train_rules=ladder, train_rule_keys=[r.key() for r in pool],
                         pool_evaluation=dict(seed=args.seed + 11, episodes=s["pool_episodes"], support=max(s["support"]),
                                              arms=list(ev.CONTROL_ARMS)),
-                        screen=LADDER_SCREEN, rule_repeats=repeats)
+                        screen=LADDER_SCREEN, rule_repeats=getattr(args, "rule_repeats", None),
+                        delta_weights=delta_weights, uniform_after=uniform_after,
+                        heldout_evaluation=dict(seed=args.seed + 23, episodes=s["pool_episodes"],
+                                                support=max(s["support"]), rules="validation relations"))
     data = rw.manifest()
     runner = Run(args.resume or args.output, settings=settings, data=data, recipe=__file__, model=model,
                  optimizer=optimizer, device=args.device, resume=args.resume is not None)
@@ -1079,6 +1086,11 @@ def train_core(args, s, *, symbolic=False):
     small_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 17), pool, rw.KIND_SPLIT["train"],
                                           episodes=s["pool_episodes"], support=(SMALL_POOL_SUPPORT,),
                                           queries=s["queries"], p_empty=0.0) if ladder else None
+    heldout_rules = tuple(r for r in split["validation"] if r.family == "relation")
+    heldout_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 23), heldout_rules,
+                                            rw.KIND_SPLIT["validation"], episodes=s["pool_episodes"],
+                                            support=(max(s["support"]),), queries=s["queries"],
+                                            p_empty=0.0) if ladder else None
     validation = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 7), split["validation"], rw.KIND_SPLIT["validation"],
                                     episodes=s["validation_episodes"], support=(max(s["support"]),), queries=s["queries"], p_empty=0.0)
     started = time.perf_counter()
@@ -1091,7 +1103,9 @@ def train_core(args, s, *, symbolic=False):
                 model.variance.copy_(torch.cat((tokens.support.m_post, tokens.query.m_post)).var(0).clamp_min(1e-4))
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
-            batch = rw.sample_episodes(runner.sampler, train_pool, rw.KIND_SPLIT["train"], episodes=s["episodes"],
+            skewed = uniform_after is None or runner.step < uniform_after
+            batch = rw.sample_episodes(runner.sampler, train_pool if skewed else pool, rw.KIND_SPLIT["train"],
+                                       episodes=s["episodes"],
                                        support=support_sizes, queries=s["queries"])
             tokens = ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
@@ -1120,6 +1134,10 @@ def train_core(args, s, *, symbolic=False):
                                                    seed=args.seed + 19, reader=reader)
                         arms = {k: v for arm, nu in small["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
                         runner.log(dict(step=runner.step, split="pool_small", **arms))
+                        held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors,
+                                                  seed=args.seed + 29, reader=reader)
+                        arms = {k: v for arm, nu in held["nu"].items() if nu for k, v in flat(f"nu_{arm}_", nu).items()}
+                        runner.log(dict(step=runner.step, split="pool_heldout", **arms))
                 runner.log(dict(step=runner.step, split="validation", **v_metrics,
                                 **flat("nu_", m["nu"]), **flat("calibration_", m["calibration"])))
                 runner.save()
@@ -1131,6 +1149,8 @@ def train_core(args, s, *, symbolic=False):
                                           seed=args.seed + 13, reader=reader) if ladder else None
             small = ev.control_metrics(model.core, perceive, small_population, args.device, floors,
                                        seed=args.seed + 19, reader=reader) if ladder else None
+            held = ev.control_metrics(model.core, perceive, heldout_population, args.device, floors,
+                                      seed=args.seed + 29, reader=reader) if ladder else None
         elapsed = time.perf_counter() - started
         result = dict(
             evaluation_scope=("Diagnostic: supplied symbols and exact masks" if symbolic else "Development: supplied support routing on validation kinds/rules; lives are the integrated test")
@@ -1145,6 +1165,7 @@ def train_core(args, s, *, symbolic=False):
         if ladder:
             result["metrics"]["pool"] = controls
             result["metrics"]["pool_small"] = dict(small, support=SMALL_POOL_SUPPORT, role="secondary finding, not screened")
+            result["metrics"]["pool_heldout"] = dict(held, role="held-out validation relations; transfer finding, not screened")
             result["screen"] = ladder_screen(ladder, controls["nu"])
             result["limitations"].append("§23 development screen: one seed, training-rule pool only; held-out "
                                          "validation is secondary and no transfer claim follows from the pool.")
@@ -1729,6 +1750,10 @@ def main():
                         help="symbolic only (overnight N1): training support sizes (default: the size profile's)")
     parser.add_argument("--rule-repeats", type=int, nargs="+",
                         help="symbolic with --train-rules only (overnight N5): per-rule training draw multiplicity")
+    parser.add_argument("--delta-weights", type=int, nargs=4,
+                        help="symbolic with --train-rules (C1-C3): training draw multiplicity per relation δ=0..3")
+    parser.add_argument("--uniform-after", type=int,
+                        help="symbolic with a skew option (C2): uniform training rules from this update on")
     parser.add_argument("--init-key", action="store_true",
                         help="core: initialize core.key_head from the --perception run's exported identity key; "
                              "perception (with --identity): load the key exported by the --init-perception run")
@@ -1841,6 +1866,12 @@ def main():
     if args.rule_repeats is not None and (args.train_rules is None or len(args.rule_repeats) != args.train_rules
                                           or min(args.rule_repeats) < 1):
         parser.error("--rule-repeats needs --train-rules and one positive count per ladder rule")
+    if args.delta_weights is not None and (args.train_rules is None or args.rule_repeats is not None
+                                           or min(args.delta_weights) < 1):
+        parser.error("--delta-weights needs --train-rules, excludes --rule-repeats and needs positive weights")
+    if args.uniform_after is not None and (args.delta_weights is None and args.rule_repeats is None
+                                           or args.uniform_after < 1):
+        parser.error("--uniform-after needs --delta-weights or --rule-repeats and a positive step")
     if args.train_rules is not None and (args.stage != "symbolic" or args.oracle_curriculum is not None):
         parser.error("--train-rules applies to the symbolic induction stage without --oracle-curriculum")
     if args.stage == "audit":
