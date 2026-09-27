@@ -202,6 +202,11 @@ speech timing and learned language grounding are not established by current code
    functional roles, not a requirement for three networks or perfectly disentangled
    tensors. Some reusable knowledge can live in weights; acquired concept codes and
    examples can live in memory. Their concrete representation remains open.
+   For remembered instances: a slowly changing identity part belongs to the
+   instance record; pose, expression, lighting and background are per-observation
+   state with their own versioned ownership. A learned (paired views, integrated
+   plan §19) versus a partly parametric (FLAME/SMPL-X, human-perception discussion)
+   identity split is an open comparison ([ideas](compact-instance-memory-ideas.md), 27 September).
 2. **Evidence to memory.** Declare association, update, contradiction, source
    correction and actual state-change behavior. Preserve previous evidence while
    revising estimates and invalidating derived state. Generated completions can be

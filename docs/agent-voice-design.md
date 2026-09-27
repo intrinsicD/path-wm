@@ -343,6 +343,10 @@ Proposed binding through the existing Entity/Component/Relation store:
   that representation is an embedding, conditioning sequence or small adapter
   remains to be selected and trained; interchangeability is only promised within
   a defined compatible producer interface, not between arbitrary speech models.
+  A compact speaker embedding (x-vector/ECAPA-style) is the voice analogue of a
+  compact instance code: shared prior in weights, per-profile code, aggregation
+  over recordings ([ideas](compact-instance-memory-ideas.md)). Not selected; a
+  pretrained speaker encoder would be an external dependency.
 - Resolve and prepare the active profile once, reuse it across utterances, and
   invalidate derived tensors when profile or producer versions change. Proposed
   switching rule: pin a profile revision at utterance start; apply a new selection

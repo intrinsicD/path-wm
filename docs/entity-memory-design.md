@@ -118,6 +118,25 @@ They are not interchangeable evidence. Capacity pressure must not force false en
 merges; reject/defer or evict under a declared policy. Bound tentative hypotheses,
 retrieved records and adjacency expansion as well as active tensor storage.
 
+Aggregating a new observation into an instance's recognition code (quality- or
+uncertainty-weighted, as in face-template averaging) is a commit of observed
+evidence creating a new component revision; each contribution stays attributable
+and removable. Replacing a code after contradiction is a revision that invalidates
+dependent state. Proposal only; no aggregation rule is selected
+([ideas](compact-instance-memory-ideas.md)).
+
+A recognition code (learned identity key or face-style embedding) is never the
+entity's key or hash: it varies between observations, confusable instances can
+fall within any threshold, and it is bound to one encoder version. The entity keeps
+its opaque stable ID; the code is a versioned component with provenance and model
+version. Similarity search (optionally an LSH-style index) only proposes candidates;
+unresolved matches stay open until further evidence. Stability comes from invariance
+training (the §19 paired-view key), a learned per-observation uncertainty
+(probabilistic embeddings) used to weight aggregation, and later fusion of several
+cues (face, body shape, voice, context, track continuity). Proposal, 27 September
+2026, agreed with Alex in discussion; not planned or implemented. A stored code
+without source observations cannot be recomputed after an encoder change.
+
 Training uses the same forward operations. Stored snapshots are detached: ordinary
 backpropagation trains their consumers, not the historical writer automatically.
 The first comparison can supervise association/retrieval scores using correspondence

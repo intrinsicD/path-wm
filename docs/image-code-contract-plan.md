@@ -230,6 +230,17 @@ After either edit/create, derive coarse features and slots from the resulting fi
 code with the same frozen modules. Do not mix edited fine features with stale
 coarse features or slots. Never publish generated code as observed evidence.
 
+**Remembered-instance output (proposal, 27 September 2026, not planned).** A stored
+instance code plus the explicit noise/sample ID form a two-part code (cf. Diffusion
+Autoencoders; [ideas](compact-instance-memory-ideas.md)). In debug mode, several
+samples at a fixed code show which details vary (supplied by the prior); stability
+across samples is a diagnostic, not proof of remembered evidence. Report identity
+fidelity, observed-detail/pixel fidelity and realism separately: pixel MSE remains
+the reconstruct-branch measure, and generated detail is never remembered evidence
+(perception–distortion; [World Labs review](worldlabs-review.md)). Identity checks
+use a frozen, evaluation-only verifier against real views and confusable
+distractors; synthetic instances with known identity need no external verifier.
+
 ### Model control and training
 
 The model supplies an explicit operation plus conditioning tokens representing its

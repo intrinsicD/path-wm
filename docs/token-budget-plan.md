@@ -192,7 +192,8 @@ the matched full-access arm. To inspect shapes in other recipes, use
 The current world state is already bounded. Expose/configure larger budgets only
 as controlled capacity experiments, without claiming 128 is inherently cheaper.
 Next design persistent detail ownership, capacity, eviction and explicit retrieval
-with fine-detail tasks. Local/invertible encoder processing must be tested separately
+with fine-detail tasks ([World Labs ideas](worldlabs-review.md): posed-frame
+KV retrieval, not adopted). Local/invertible encoder processing must be tested separately
 from the resampler. Delta updates and adaptive compute follow fixed-budget quality
 checks; they are not part of this first slice. PixelUnshuffle preserves values but
 does not reduce their count; subsequent channel compression is explicitly lossy.

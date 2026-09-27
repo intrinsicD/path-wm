@@ -43,6 +43,14 @@ ein vollständiger modaler Decoder ist keine allgemeine Vorbedingung. Funktional
 Voraussetzungen und zeitliche Trainingsreihenfolge werden getrennt. Die konkrete
 Methode und der erste Lernpfad bleiben ungewählt.
 
+27. September: Alex ergänzt ein Beispiel. Der Agent soll sich eine Instanz, etwa
+ein Gesicht, genau merken, ohne Bilder zu speichern, und auf Anfrage oder im
+Debug-Modus trotzdem ein photorealistisches Bild ausgeben. Vorgeschlagene, mit Alex
+noch zu bestätigende Lesart: „genau“ heißt identitätstreu, nicht pixeltreu; das
+Klassenwissen liegt als Prior in den Gewichten, die Instanz als kompakter, zur
+Laufzeit verfeinerter Code. Kein Mechanismus gewählt; Werkzeuge und Ideen in der
+[Ideensammlung](compact-instance-memory-ideas.md).
+
 ## Zu prüfende Aussage und ihr Umfang
 
 Nach einem initialen Training kann derselbe eingefrorene Agent aus neuen Erfahrungen
@@ -106,6 +114,10 @@ verglichen werden; Adapter allein sind kein Scheitern des Integrationsziels.
   eine Darstellung, in der die Rausch-/Rekonstruktionsaufgabe sinnvoll ist. Er entfernt
   keine logischen oder kausalen Voraussetzungen. Plausible latente Endpunkte können
   unerreichbar sein; Übergänge und tatsächliche Zielerreichung separat prüfen.
+  World Labs' Atlas/RTFM zeigen im großen Maßstab eine einzige Sequenzschnittstelle:
+  Aufgabe nur durch Anordnung, autoregressiv über Elemente, Diffusion/Flow innerhalb
+  eines Elements ([Sichtung](worldlabs-review.md)). Externer Anhaltspunkt, kein
+  kleinskaliger Nachweis und keine Übernahme.
 - **Begriffe und Einzelfälle:** Instanzen behalten eigene Identität und Historie;
   Konzepte beschreiben wiederverwendbare Gemeinsamkeiten, Beziehungen oder Regeln.
   Membership/Prototypen/Definitionen sind lernbare Hypothesen mit Belegen, keine

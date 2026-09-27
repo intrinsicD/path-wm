@@ -133,6 +133,8 @@ neuronale Erinnerung verwendet gradientenbasierte Speicherupdates. Auch wenn
 langsam gelernte Parameter unverändert bleiben, ist das ein anderer Vertrag als
 ein Test, bei dem sämtliche lernbaren Gewichte und verhaltensrelevanten Puffer
 eingefroren bleiben und ausschließlich expliziter Zustand geändert wird.
+Ebenso außerhalb dieses Vertrags liegen Verfahren, die pro Instanz Gewichte
+anpassen (Pivotal Tuning, DreamBooth, LoRA je Identität).
 
 **Optimieren eines Konzeptcodes ist eine weitere, getrennte Möglichkeit.**
 Ein Modell kann bei festen Gewichten einen veränderlichen latenten Code suchen,
@@ -141,6 +143,11 @@ auch Gradienten auf diesem Code. Solche Gradienten ändern den Code, nicht die
 gelernten Modellgewichte. Ein Verbot weiteren Gewichtstrainings schließt diese
 Möglichkeit daher nicht automatisch aus; ihre zusätzlichen Kosten und ihre
 Generalisierung müssen separat geprüft werden.
+Dasselbe gilt für Instanzcodes: DeepSDF-artige Auto-Decoder bestimmen den Code
+einer neuen Instanz per Gradientenabstieg bei eingefrorenem Decoder, als Alternative
+zur Vorhersage oder Aggregation per Encoder ([Ideensammlung](compact-instance-memory-ideas.md)).
+Die vorhandene P3D-Verfeinerung optimiert Pixel gegen den eingefrorenen Encoder und
+ist kein Beispiel dafür.
 
 Für die nächste abstrakte Diskussion ergeben sich drei miteinander kombinierbare
 Wege: Beispiele beziehungsweise Prototypen speichern; mit einem vortrainierten

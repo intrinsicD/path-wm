@@ -300,6 +300,10 @@ oder Verteilungen sein. Sie ausschließlich als neu benannte Tokens zu verstecke
 würde weder Genauigkeit noch Interpretierbarkeit garantieren. Harte Abruf-/Aktions-
 auswahl und diskrete Quantisierung brauchen passende Lernverfahren; ein gemeinsames
 Diagramm schafft keinen automatischen Gradientenpfad.
+Exakte Metadaten wie Pose, Kamera oder Zeit können zusätzlich als gelernte
+numerische Eingabe des Kerns dienen, nicht nur als Verwaltungsreferenz (vgl. Atlas
+in der [World-Labs-Sichtung](worldlabs-review.md)). Gemessene und erschlossene
+Werte bleiben unterscheidbar. Vorschlag, ungeprüft; kein neues Tokenlayout.
 
 **Vorgeschlagener Einstieg:** Ein vorhandener Pfad verbindet Wahrnehmung/Belief,
 Task-Tokens, Arbeitszustand, begrenzten Gedächtniskontext, Aktion/Folgezustand und

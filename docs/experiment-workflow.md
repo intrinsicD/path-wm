@@ -133,6 +133,16 @@ recipe, not import another recipe. Helpers and model files cannot import the
 historical package, old run manifests or reporting services. Dataset/weight paths
 are explicit inputs. Copied upstream code retains its source, revision and license.
 
+**Minimal external dependencies (Alex, 27 September 2026).** Add a package,
+pretrained model or external service only where the task absolutely requires it
+and no reasonable native path exists; prefer reimplementing useful architecture
+and training ideas in the library. Required dependencies stay those in
+`pyproject.toml`; anything else is an optional extra or an explicitly supplied
+recipe-level path, never an import-time requirement of `pathwm/`. External models
+may serve as labelled evaluation checkers, offline teachers or debug tools, with
+source, revision, license, resource cost and the reason no native option sufficed.
+A result produced through such a tool does not establish the native capability.
+
 ## Trustworthy runs and reports
 
 Keep source data/assets under `data/`; each new run owns `runs/<name>/`. Never

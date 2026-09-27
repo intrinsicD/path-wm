@@ -48,7 +48,9 @@ cannot establish a result for components it did not exercise. See the mandatory
 [actual-model testing rules](docs/experiment-workflow.md#test-the-actual-model).
 
 The product is a small Python library plus readable experiment recipes that Alex
-can operate himself. Preserve this boundary throughout implementation. A new
+can operate himself. Preserve this boundary throughout implementation. Keep external
+dependencies minimal; see the workflow's
+[Keep it understandable](docs/experiment-workflow.md#keep-it-understandable) rule. A new
 experiment normally edits a recipe; it does not create another trainer, CLI,
 config hierarchy or reporting pipeline. Reusable code never imports recipes or
 historical runs. See [models](docs/models.md) and [experiments](docs/experiments.md).

@@ -77,6 +77,7 @@ Task plans own current work; older decisions remain in the
 | Architecture walkthrough and Local/Global Context | [Walkthrough](architecture-walkthrough.md): module mapping, TaskPolicy extensions and learned control remain proposed. |
 | Decision and outcome verification | [Decision design](decision-design.md): distinguish declared completion from verified success; preserve scoped recall/calibration evidence. |
 | Actions and instruction semantics | [Action design](action-semantics-design.md): typed execution, uncertain inferred actions and outcome checks; general execution is not established. |
+| External ideas: World Labs RTFM/Atlas | [Review](worldlabs-review.md): keyed detail retrieval, pose-like metadata inputs, realism vs fidelity; [compact instance codes](compact-instance-memory-ideas.md) (Arc2Face etc.); nothing adopted. |
 | General latent processing and token roles | [Latent core](latent-core.md): shared multimodal processing and learning/readout contracts, without a new adopted layout. |
 | Speech, human perception and video understanding | [Speech plan](grounded-speech-plan.md); [learnable KG voice profiles](agent-voice-design.md); no speech runs. [Human perception](human-perception-discussion.md) and [video](video-understanding-test-map.md): integration/quality open. |
 | Demand-driven inference | [Neural Engine](neural-engine-inference.md): bounded residency, feature/state ownership and loading policy remain proposals. |

@@ -147,7 +147,7 @@ Begin with `λ_aux = 0`; this is a menu, not an instruction to activate every te
 
 After establishing a strong reconstruction baseline, compare masked pixel/HOG prediction and limited geometric equivariance individually. Keep full-view reconstruction available; masked prediction and faithful copying demand different behavior. Avoid color/position invariances when color and position matter. An EMA target learned from the same data may be a separate self-distillation experiment, clearly distinguished from “no pretrained teacher.”
 
-No pretrained LPIPS/VGG/DINO/CLIP loss belongs in this training track. Frozen external evaluators may be used at evaluation time with identical treatment across arms, labelled as such; include direct ground-truth metrics too.
+No pretrained LPIPS/VGG/DINO/CLIP loss belongs in this training track. Frozen external evaluators may be used at evaluation time with identical treatment across arms, labelled as such; include direct ground-truth metrics too. This includes identity verifiers (e.g. face recognizers): evaluation only, never a training loss in this track.
 
 ### B. Training-only pretrained teachers
 

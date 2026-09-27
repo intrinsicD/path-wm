@@ -183,6 +183,10 @@ same residual-transformer pattern with separate output weights. Initially use ou
 own encoder/decoder and existing weights. A pretrained generator/codec is an
 optional later comparison through the same state-conditioning boundary, not a
 replacement requirement for the agent.
+A small translator from a native instance code to an external face decoder
+(Arc2Face, Vec2Face) would be one such comparison: it tests whether the native code
+carries identity and can serve as a debug renderer. It is not the target design
+and adds no library dependency ([ideas](compact-instance-memory-ideas.md)).
 
 ### Concrete output path
 

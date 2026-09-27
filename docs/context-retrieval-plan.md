@@ -231,6 +231,10 @@ result into evidence for that capability. Goal-conditioned allocation, concept/
 instance induction, learned association, noisy correlated evidence, harder visual
 alignment, shared-depth quality/compute, audio dialogue and optional planning remain
 owned by the continuation handoff. The full integrated architecture is not complete.
+A perceptual detail cache (prepared encoder tokens/K/V retrieved by scene, place,
+time or instance keys; see [World Labs review](worldlabs-review.md)) is a different
+workload from lexical selection and is not planned. If planned, reuse this plan's
+version, staleness, budget and restart contracts as the template.
 
 ## Final verification
 
