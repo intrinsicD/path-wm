@@ -2061,3 +2061,17 @@ eine häufige Einstiegsregel vorhanden ist; Übergangsfamilien brauchen dafür �
 6k Updates. Grenzen: nur Trainingsregeln, je Familie getrennt trainiert, symbolischer
 Eingang, Entwicklungs-Screens. **Nächster Schritt mit Alex:** Mischlauf aller Familien
 auf L4, danach Transfer.
+
+### M1: Mischlauf aller fünf Familien auf L4 (vorab erklärt, 27.09.2026, von Alex freigegeben)
+
+**Frage:** Lernt ein gemeinsamer echter `LatentCore` alle fünf Familien zugleich?
+**Pool:** Vereinigung der fünf L4-Leitern (20 Regeln) über `--train-families category
+relation open close toggle`; Schiefe je Familie 7,1,1,1 (`--rule-repeats` mit 20 Werten,
+erste Regel jeder Familie ×7). Keine Familienkennung im Modellinput.
+**Unverändert gegenüber F2:** Evidenzleser, Outcome-BCE allein, Supports {4,8,16},
+30000 Updates, ≤150 min, ≤6 GiB, Seed1101; Kontrollarme wie bisher.
+**Auswertung:** uniforme Pool-Population über alle 20 Regeln mit 64 Episoden **je Familie**
+(320, N=128); ν je Familie. **Screen:** für **jede** Familie ν_voll ≥ 0,8, ν_voll−ν_leer ≥ 0,5,
+ν_voll−ν_permutiert ≥ 0,5; bestanden nur, wenn alle fünf bestehen. Zurückgehaltene
+Regeln aller Familien als Befund. Besteht M1 → Wiederholung mit Seed2202 (**M1-2202**),
+dann Stopp und Bericht; Transfer danach mit Alex. Verfehlt → Stopp, Diagnose je Familie.

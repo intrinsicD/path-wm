@@ -442,3 +442,29 @@ def test_train_family_option_trains_and_screens_that_family(monkeypatch, tmp_pat
                                       "--output", str(tmp_path / "x")])
     with pytest.raises(SystemExit):
         recipe.main()
+
+
+def test_mixed_family_pool_screens_every_family(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    families = ["category", "relation", "open", "close", "toggle"]
+    repeats = ["7", "1", "1", "1"] * 5
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-families", *families, "--train-rules", "4",
+                                      "--rule-repeats", *repeats, "--output", str(tmp_path / "M")])
+    recipe.main()
+    settings = json.loads((tmp_path / "M" / "run.json").read_text())["identity"]["settings"]
+    expected = [r.key() for f in families for r in rw.family_ladder(f, 4)]
+    assert settings["train_families"] == families and settings["train_rule_keys"] == expected
+    result = json.loads((tmp_path / "M" / "result.json").read_text())
+    screen = result["screen"]
+    assert set(screen["per_family"]) == set(families)
+    assert screen["passed"] == all(s["passed"] for s in screen["per_family"].values())
+    assert result["metrics"]["pool"]["episodes"] == 5 * recipe.SIZES["check"]["pool_episodes"]
+    for bad in (["--train-families", "relation", "--train-family", "open"],
+                ["--train-families", "relation", "relation"]):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-rules", "4", *bad,
+                                          "--output", str(tmp_path / "x")])
+        with pytest.raises(SystemExit):
+            recipe.main()
