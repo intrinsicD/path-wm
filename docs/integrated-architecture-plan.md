@@ -1872,3 +1872,20 @@ Einstellung. Kein Transfer auf ungesehene Regeln geprüft.
 **N9** = N8 mit 30000 Updates (Budget als einziger Faktor, steigender Trend).
 Besteht → **N10** = N9 mit Seed2202, dann Stopp. Verfehlt → Stopp. Danach volle
 Testsuite, Push und Bericht.
+
+**N9 Ergebnis (L16, 30000 Updates):** abgeschlossen (Exit0, 2406s, ≤3,43GiB, Bericht
+`structural_verified`). **Verfehlt:** ν voll 0,266, leer 0,003, permutiert 0,000,
+vertauscht −0,020; von 10k bis 30k konstant ≈0,266. Je Regel: alle vier δ=0-Regeln
+1,000, alle δ≠0-Regeln 0,000. Die (j,k)-Unterscheidung wird also aus Belegen gelernt
+(leer/permutiert ≈0), δ≠0 bleibt in einem zweiten Plateau – analog zum N5-Plateau vor
+dessen Sprung. Gemäß Vorab-Erklärung **Stopp dieser Nacht**; kein N10.
+
+**Stand für Alex (Nachtzusammenfassung):**
+- Erstmals lernt der echte `LatentCore` Regelinduktion aus Belegen (L4, zwei Seeds,
+  Evidenz- und Code-Leser), sobald eine schiefe Trainingsverteilung den symmetrischen
+  Sattel bricht. Uniforme Verteilung scheitert in allen geprüften Varianten, auch mit
+  30000 Updates.
+- L16 lernt die häufige Teilaufgabe (Rollenpaar), bleibt aber im nächsten Plateau
+  (seltene δ). Die Schiefe hilft stufenweise; die nächste Frage ist ein gezielter
+  Symmetriebruch je Stufe (Curriculum über Schiefe oder Regelzahl) – nicht gestartet.
+- Offene Grenzen: nur Trainingsregeln, symbolischer Eingang, Entwicklungs-Screens.
