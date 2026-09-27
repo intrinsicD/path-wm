@@ -2031,3 +2031,7 @@ Kurven ν voll (1k→6k): Kategorie 0,27/0,77/1,00/0,96/0,97/1,00; Toggle 0,01/0
 −0,73/−0,73/−0,38 – alle drei verfehlten Familien steigen am Ende noch. Open/Close
 haben den hohen Referenzfloor 0,9 (ν=0,8 ⇔ BA 0,98); negative ν heißen schlechter als
 die Kurzschlussstrategie. Gemäß Plan: Kategorie mit Seed2202 wiederholen (**F1-cat-2202**).
+**F1-cat-2202:** abgeschlossen (Exit0). **Besteht:** ν voll 1,000, leer −0,027, permutiert
+−0,016, vertauscht −0,270. Kategorie-Einstieg damit in zwei Seeds bestätigt.
+Nächster Schritt für Open/Close/Toggle: Entscheidung mit Alex (Vorschlag: gleiche
+Einstellung mit 30000 Updates, da alle drei Kurven am Ende noch steigen).
