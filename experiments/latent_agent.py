@@ -1114,7 +1114,7 @@ def train_core(args, s, *, symbolic=False):
             with torch.no_grad():  # fixed target scale from training frames (declared buffer)
                 warm = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 3), train_pool, rw.KIND_SPLIT["train"],
                                           episodes=max(2, s["episodes"]), support=s["support"], queries=s["queries"], p_empty=0.0)
-                tokens = ev.encode_episodes(perceive, warm, args.device)
+                tokens = encoded(warm) if symbolic else ev.encode_episodes(perceive, warm, args.device)
                 model.variance.copy_(torch.cat((tokens.support.m_post, tokens.query.m_post)).var(0).clamp_min(1e-4))
         while runner.step < args.updates and not stop(runner, args, started):
             training_mode(model)
@@ -1122,7 +1122,7 @@ def train_core(args, s, *, symbolic=False):
             batch = rw.sample_episodes(runner.sampler, train_pool if skewed else pool, rw.KIND_SPLIT["train"],
                                        episodes=s["episodes"],
                                        support=support_sizes, queries=s["queries"])
-            tokens = ev.encode_episodes(perceive, batch, args.device)
+            tokens = encoded(batch) if symbolic else ev.encode_episodes(perceive, batch, args.device)
             loss, metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
                                          auxiliary_weight=auxiliary, reader=reader)
             optimizer.zero_grad()
@@ -1136,10 +1136,10 @@ def train_core(args, s, *, symbolic=False):
             enforce_ceiling(args, runner)
             if runner.step % s["validate_every"] == 0 or runner.step == args.updates:
                 with evaluation_mode(model):
-                    tokens = ev.encode_episodes(perceive, validation, args.device)
+                    tokens = encoded(validation) if symbolic else ev.encode_episodes(perceive, validation, args.device)
                     v_loss, v_metrics = episode_loss(model.core, tokens, model.variance, key_weight=key_weight,
                                                      auxiliary_weight=auxiliary, reader=reader)
-                    m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
+                    m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader, tokens=encoded(validation))
                     if ladder:
                         controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors, tokens=encoded(pool_population),
                                                       seed=args.seed + 13, reader=reader)
@@ -1159,7 +1159,7 @@ def train_core(args, s, *, symbolic=False):
                 print(f"{settings['stage']}: saved step {runner.step}", flush=True)
         runner.save()
         with evaluation_mode(model):
-            m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader)
+            m = ev.episode_metrics(model.core, perceive, validation, args.device, floors, reader=reader, tokens=encoded(validation))
             controls = ev.control_metrics(model.core, perceive, pool_population, args.device, floors, tokens=encoded(pool_population),
                                           seed=args.seed + 13, reader=reader) if ladder else None
             small = ev.control_metrics(model.core, perceive, small_population, args.device, floors, tokens=encoded(small_population),

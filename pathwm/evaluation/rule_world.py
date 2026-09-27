@@ -200,8 +200,8 @@ def calibration(rows, bins=10):
     )
 
 
-def episode_metrics(core, perceive, batch, device, floors, loops=None, reader="code"):
-    tokens = encode_episodes(perceive, batch, device)
+def episode_metrics(core, perceive, batch, device, floors, loops=None, reader="code", tokens=None):
+    tokens = encode_episodes(perceive, batch, device) if tokens is None else tokens
     logit = episode_predictions(core, tokens, loops, reader)
     rows = []
     for i in range(len(batch.query)):

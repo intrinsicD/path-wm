@@ -515,3 +515,16 @@ def test_mixed_family_run_resumes_exactly(monkeypatch, tmp_path):
     b = torch.load(tmp_path / "straight" / "last.pt", weights_only=True)
     assert a["step"] == b["step"] == 4
     assert all(torch.equal(a["model"][k], b["model"][k]) for k in a["model"])
+
+
+def test_symbolic_stage_never_renders(monkeypatch, tmp_path):
+    """Symbolic tokens are bit-identical to the rendered path, so the symbolic stage skips rendering."""
+    import experiments.latent_agent as recipe
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("symbolic stage rendered scenes")
+
+    monkeypatch.setattr(ev, "encode_episodes", forbidden)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--output", str(tmp_path / "S")])
+    recipe.main()
