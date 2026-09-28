@@ -45,7 +45,7 @@ flowchart TB
     encode["Modality encoders → §2–3<br/>Processed features at several scales"]
     class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
-    class belief discussion_needs_discussion;
+    class belief discussion_discussed;
     memory["Local / Global Context + optional World State → §5/13<br/>Internal split to discuss · external entities/evidence<br/>Validated: Storage / causal reads / bounded lexical and native visual memory<br/>Discussion still pending"]
     class memory discussion_validated;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
