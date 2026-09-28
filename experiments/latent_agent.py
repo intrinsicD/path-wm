@@ -1038,7 +1038,7 @@ def ladder_screen(ladder, nu, family="relation"):
 
 def core_overrides(args):
     """Explicit E4 capacity overrides, recorded so that resume restores them (absent when unused)."""
-    names = ("core_width", "core_blocks", "core_loops")
+    names = ("core_width", "core_blocks", "core_loops", "episodes")
     return {n: getattr(args, n) for n in names if getattr(args, n, None) is not None}
 
 
@@ -1105,14 +1105,23 @@ def train_core(args, s, *, symbolic=False):
         repeats = [delta_weights[r.delta] for r in pool]
     # N5/C: skewed training draws by repeating pool rules; evaluation pools stay uniform.
     train_pool = tuple(r for r, k in zip(pool, repeats) for _ in range(k)) if repeats else pool
+    holdout = getattr(args, "holdout_ladder_rules", None)
+    held = tuple(pool[i] for i in holdout) if holdout else ()
+    if held:  # transfer probe: these ladder rules are never trained and form the held-out pool
+        train_pool = tuple(r for r in train_pool if r not in held)
+        pool = tuple(r for r in pool if r not in held)
     if ladder:  # §23 learnability ladder: only the training-rule pool changes
         settings.update(train_rules=ladder, train_rule_keys=[r.key() for r in pool],
                         pool_evaluation=dict(seed=args.seed + 11, episodes=pool_episodes, support=max(s["support"]),
                                              arms=list(ev.CONTROL_ARMS)),
                         screen=LADDER_SCREEN, train_family=family, rule_repeats=getattr(args, "rule_repeats", None),
+                        **(dict(holdout_ladder_rules=list(holdout), holdout_rule_keys=[r.key() for r in held])
+                           if held else {}),
                         delta_weights=delta_weights, uniform_after=uniform_after,
                         heldout_evaluation=dict(seed=args.seed + 23, episodes=pool_episodes,
-                                                support=max(s["support"]), rules=f"validation {'/'.join(families)} rules"))
+                                                support=max(s["support"]),
+                                                rules=("held-out ladder rules" if held
+                                                       else f"validation {'/'.join(families)} rules")))
         if mixed:
             settings.update(train_families=families)
     data = rw.manifest()
@@ -1125,7 +1134,7 @@ def train_core(args, s, *, symbolic=False):
     small_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 17), pool, rw.KIND_SPLIT["train"],
                                           episodes=pool_episodes, support=(SMALL_POOL_SUPPORT,),
                                           queries=s["queries"], p_empty=0.0) if ladder else None
-    heldout_rules = tuple(r for r in split["validation"] if r.family in families)
+    heldout_rules = held or tuple(r for r in split["validation"] if r.family in families)
     heldout_population = rw.sample_episodes(torch.Generator().manual_seed(args.seed + 23), heldout_rules,
                                             rw.KIND_SPLIT["validation"], episodes=pool_episodes,
                                             support=(max(s["support"]),), queries=s["queries"],
@@ -1804,6 +1813,9 @@ def main():
     parser.add_argument("--core-width", type=int, help="override the size profile's core width (E4 capacity axis)")
     parser.add_argument("--core-blocks", type=int, help="override the number of untied core blocks per inner round")
     parser.add_argument("--core-loops", type=int, help="override the number of inner rounds")
+    parser.add_argument("--episodes", type=int, help="override the training episodes per update (dilution test)")
+    parser.add_argument("--holdout-ladder-rules", type=int, nargs="+",
+                        help="symbolic single-family ladder: never train these ladder indices; they form the transfer pool")
     parser.add_argument("--train-families", nargs="+", choices=rw.FAMILIES,
                         help="symbolic with --train-rules (M1): one core on the union of these family ladders")
     parser.add_argument("--delta-weights", type=int, nargs=4,
@@ -1847,7 +1859,7 @@ def main():
         parser.error("--output required (a new directory)")
     s = SIZES[args.size]
     overrides = {k: v for k, v in (("core_width", args.core_width), ("core_blocks", args.core_blocks),
-                                   ("loops", args.core_loops)) if v is not None}
+                                   ("loops", args.core_loops), ("episodes", args.episodes)) if v is not None}
     if overrides:  # recorded through the run's `sizes` setting and restored on resume
         if min(overrides.values()) < 1 or overrides.get("core_width", s["heads"]) % s["heads"]:
             parser.error("core overrides must be positive and the width divisible by the head count")
@@ -1930,6 +1942,13 @@ def main():
                                           or min(args.rule_repeats) < 1):
         parser.error("--rule-repeats needs --train-rules and one positive count per ladder rule")
     # On resume, the recorded default train_family ("relation") is restored next to train_families.
+    if args.holdout_ladder_rules is not None and (
+            args.train_rules is None or args.train_families is not None
+            or len(set(args.holdout_ladder_rules)) != len(args.holdout_ladder_rules)
+            or not all(0 <= i < args.train_rules for i in args.holdout_ladder_rules)
+            or len(args.holdout_ladder_rules) >= args.train_rules):
+        parser.error("--holdout-ladder-rules needs a single-family --train-rules ladder, distinct valid indices "
+                     "and at least one trained rule")
     if args.train_families is not None and (args.train_family is not None and args.resume is None
                                             or args.train_rules is None
                                             or len(set(args.train_families)) != len(args.train_families)
