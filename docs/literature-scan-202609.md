@@ -54,3 +54,50 @@ VideoDeltaNet; 14B-Klasse, keine Zustandsdynamik im unseren Sinn), große Modell
 Limite 1B, Occamy, Isaac, UnifoLM, LLaDA image, Edge0, Bonsai 2 – 5,9 GB sind komprimierte Gewichte,
 kein Trainingsbudget). 3D/4D-Werkzeuge (World Sculpt, One Video One World, 4DAnyone, Block 3D,
 Orbit, UMR) erst als spätere Offline-Datenpipeline; VoiceMem/Audio8 TTS erst mit Sprache.
+
+## Nachtrag: Scholar-Inbox-Digest und Websuche 15.08.–28.09. (28. September 2026)
+
+Quellen: Scholar-Inbox-Digest 01.–28.09. (363 empfohlene Paper, fast alle 3D-Gaussian-Splatting/
+Geometrie; 31 thematisch gefiltert), Websuche nach Paper vom 15.08.–28.09. (34 auf arXiv geprüfte
+Einträge zu World Models, kleinen multimodalen Netzen, Gedächtnis, Denken in Schleifen,
+Schichttypen, Text-Diffusion/Neurosymbolik). @theAIsearch: kein neues Video seit dem 27.09. Bewertet
+haben unabhängig Fable 5.1 und Codex `gpt-6-astra` (xhigh), beide mit demselben öffentlichen Brief.
+Belege: `runs/reviews/literature_scan_20260928b/`. Das oben genannte Verzeichnis
+`runs/reviews/literature_scan_20260928/` des ersten Scans existiert nicht; dessen Belege fehlen.
+Alles unten sind Prüfvorschläge, keine übernommenen Entscheidungen.
+
+### Beide Reviewer übereinstimmend
+
+| Eintrag | Problem | Kleinster Check |
+| --- | --- | --- |
+| Readout Feedback (RoFB, 2608.24136) | Denkschleifen ohne Gewinn | eingefrorener Checkpoint, 1/2/4/8 Schleifen mit/ohne Rückführung der Zwischenvorhersage; Codex: erst prüfen, ob ein vorhandener Rückkanal reicht, sonst ist es kein trainingsfreier Test |
+| MixerLoop (2608.18230) | Schleifen, Effizienz | nur Attention wiederholen, FF einmal, bei gleichem Rechenaufwand; relativiert das Wiederholen des ganzen Blocks, widerlegt den geteilten Kern nicht |
+| GeoCo-SAVi (2609.06628, Code) | Form-/Größenerhalt der Slots | Farbe/Textur bei fester Geometrie variieren, Größen-/Positionsdrift messen, dann ein Alignment-Verlust |
+| LEON (2608.27259) | Vorhersage schlägt Kopie nicht | operatorbasierter Übergang gegen geteilten Kern, Kopie und konstante Geschwindigkeit bei eingefrorenem Encoder/Decoder |
+| Narcissus (2608.25657) | Regeltransfer | kleine Regelgrammatik + Verifier auf dem E4-Split als Obergrenze bzw. Absicherung per expliziten Hypothesen |
+| Spectral-Target JEPA (2609.04264) | Latents ohne Physik | lineare Probe auf Verschiebung/Geschwindigkeit; Fourier-Hilfskopf nur beim Training |
+| Displacement Geometry (Digest 2609.24209) | Encoder-Adaption, Konzepte | latente Differenzvektoren (nur Form bzw. nur Größe geändert) vor/nach Adaption bzw. Konsolidierung vergleichen |
+
+Nur Fable in der Spitzengruppe: RecurTrace (2609.03379; Loop-Memory-Attention, Ablation bei fester
+Schleifenzahl), „Better Slots, Better Worlds“ (2608.12078; Slot-Bindungsmetriken mit
+Vorhersagefehler korrelieren). Nur Codex: FuseReg (Digest; Decoder auf zufälligen Teilmengen von
+Encoderstufen eingrenzt, wo Detail verloren geht), MO-IKE/„Beyond Endpoint Scores“ (Korrektur bei
+eingefrorenen Gewichten auf Zuverlässigkeit, Generalisierung, Spezifität prüfen; Verläufe statt
+Endwerte).
+
+**Schwächt aktuelle Annahmen (keine widerlegt):** Kollapsfreie oder rekonstruierbare Latents
+tragen nicht automatisch Physik/Geometrie (Spectral-Target, GeoLAM); vortrainierte Features tragen
+die Robustheit objektzentrierter Weltmodelle (Better Slots) – Risiko für von Grund auf trainierte
+schlanke Encoder; Feintuning kann relationale Geometrie zerstören (Warnung für Offline-Konsolidierung).
+
+**Nur lesen:** ForeWAM, Gated Recurrent Transformers, T-LoopFormer, MemBodied, Info3R, SURE-Map,
+ShapeLex, Continual-WM-Benchmark. **Nicht relevant:** Roboter-WAMs/DiTs mit großen Backbones
+(SlotDiT, PointCast, Rolling-/DualWAM, SG-/StageWAM, DyMD, LeFlow), 3D-Rekonstruktion, große
+Diffusions-/Text-Diffusionsmodelle (RMDM, PlaidQ – zurückgezogen, IIF), MoE-/LLM-Skala-Arbeiten,
+VLM-Vortraining (Semantic Serialization, MMCS), EBM-AE (MNIST).
+
+**Lücken:** Im Fenster keine neuen, prüfbaren Arbeiten zu EBMs, Flow-LMs oder ICL-Theorie und kaum
+kleine multimodale Netze mit echt geteilter Repräsentation. Aus eigenem Wissen: TRM (2510.04871,
+von Codex geprüft), HRM, Huginn/Mixture-of-Recursions, Coconut, Titans, DINO-WM/V-JEPA 2,
+Energy-Based Transformers (Fable, ungeprüft). Exakte Attention unter unseren Masken/Halbpräzision
+bleibt lokal zu messen.
