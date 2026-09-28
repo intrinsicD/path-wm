@@ -159,36 +159,6 @@ def test_reference_refuses_changed_fixtures_profile_or_readout_contract():
             compare_understanding(a, b)
 
 
-def test_diagnostic_capture_is_observational_and_choice_scoring_uses_actual_decoder():
-    from experiments.modality_readout import Model
-    from pathwm.data.modality_readout import dataset, observations
-    from pathwm.evaluation.understanding import capture_stages, choice_scores
-    from pathwm.models.modalities import bytes_batch
-
-    model = Model("native").eval()
-    inputs = observations(dataset("train"), "audio", [0])
-    rng = torch.get_rng_state().clone()
-    expected = model.core(inputs)
-    after = torch.get_rng_state().clone()
-    torch.set_rng_state(rng)
-    tokens, stages = capture_stages(model.core, inputs)
-    assert torch.equal(tokens, expected) and torch.equal(torch.get_rng_state(), after)
-    assert set(stages) == {"encoder", "posterior", "working"}
-    assert all(not t.requires_grad for t in stages.values())
-    candidates = ["ja", "nein"]
-    actual = choice_scores(model.outputs, tokens, candidates)
-    for i, answer in enumerate(candidates):
-        target, valid = bytes_batch([answer])
-        logits = model.outputs("text", tokens, target[:, :-1])
-        expected_score = (
-            logits.log_softmax(-1)
-            .gather(-1, target[:, 1:, None])
-            .squeeze(-1)[valid[:, 1:]]
-            .mean()
-        )
-        torch.testing.assert_close(actual[i], expected_score)
-
-
 def test_comparison_reports_a_lost_gate_even_when_headline_accuracy_is_unchanged():
     from pathwm.evaluation.understanding import compare_understanding
 
@@ -215,32 +185,3 @@ def test_comparison_reports_a_lost_gate_even_when_headline_accuracy_is_unchanged
     assert row["lost_gates"] == ["no_evidence_gain"]
 
 
-def test_evaluation_keeps_caller_rng_weights_and_training_mode(tmp_path):
-    from pathlib import Path
-    from experiments.modality_readout import Model
-    from pathwm.data.understanding import UnderstandingData, synthetic_records
-    from pathwm.evaluation.understanding import evaluate_understanding
-    from pathwm.io import state_hash
-
-    data = UnderstandingData.__new__(UnderstandingData)
-    records, data.arrays, cases = synthetic_records("quick")
-    data.records = [r for r in records if r["case"] == "TXT.roles"]
-    data.cases = cases[:1]
-    data.identity = "unit-small-data"
-    data.manifest = dict(profile="unit", gaps=[], limits=["One-case software fixture."])
-    model = Model("native").train()
-    before = state_hash(model)
-    rng = torch.get_rng_state().clone()
-    result = evaluate_understanding(
-        model,
-        data,
-        tmp_path / "evaluation",
-        source={"scope": "unit"},
-        seed=12,
-        device="cpu",
-        recipe=Path(__file__),
-    )
-    assert torch.equal(torch.get_rng_state(), rng)
-    assert model.training and state_hash(model) == before
-    assert result["coverage"]["executed"] == 1
-    assert (tmp_path / "evaluation/report.html").is_file()

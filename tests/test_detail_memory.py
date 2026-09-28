@@ -45,18 +45,3 @@ def test_missing_codes_do_not_influence_output_and_requests_are_checked():
     with pytest.raises(ValueError): model.decode(z[:,:,:15],present,pose)
 
 
-def test_actual_codec_change_rejects_persisted_read_before_decoding():
-    from experiments.evidence_loop import session_modules
-    from pathwm.world_state.session import WorldSession
-    from pathwm.world_state.episodes import EpisodeClient
-    from pathwm.io import state_hash
-    from pathwm.models.detail_memory import decode_read
-    model=DetailCodec(width=16,hidden=32,variant="linear").eval()
-    version=state_hash(model); modules,contracts=session_modules(16,version)
-    client=EpisodeClient(WorldSession(**modules),representations=contracts)
-    client.create("create","tile",kind="instance")
-    read=client.load("tile",[f"part{i}" for i in range(4)])
-    decode_read(model,client,read,0,version=version)  # explicitly never observed -> prior
-    with torch.no_grad(): next(model.parameters()).add_(.01)
-    with pytest.raises(ValueError,match="Codec"):
-        decode_read(model,client,read,0,version=version)

@@ -3,25 +3,6 @@ import pytest
 import torch
 
 
-def config():
-    from tests.test_multimodal_training import settings
-
-    return dict(
-        settings(),
-        dataset="entities",
-        width=16,
-        history=3,
-        horizon=1,
-        train_windows=64,
-        validation_windows=32,
-        improve_every=0,
-        batch_size=8,
-        evaluate_every=1,
-        max_seconds=450.0,
-        seed=31,
-    )
-
-
 def test_entity_contract_oracle_pairs_and_split():
     from pathwm.data.entities import EntityEpisodes, entity_oracle
 
@@ -58,72 +39,6 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
     assert all(
         p.grad is None or torch.isfinite(p.grad).all() for p in model.parameters()
     )
-
-
-@pytest.mark.parametrize(
-    "association,reader,noise",
-    [
-        ("raw", "recurrent", 0),
-        ("raw", "matching", 0),
-        ("observed", "recurrent", 0),
-        ("observed", "shared", 0),
-        ("learned", "shared", 0),
-        ("learned", "shared", 0.2),
-    ],
-)
-def test_entity_resume_cache_and_final_only(
-    tmp_path, monkeypatch, association, reader, noise
-):
-    import experiments.multimodal as recipe
-    from tests.test_runs import equal_tree
-
-    configuration = dict(
-        config(),
-        entity_association=association,
-        entity_reader=reader,
-        entity_noise=noise,
-    )
-    if reader == "matching":
-        configuration.update(dataset="entity-matching", entity_reader="recurrent")
-    calls = []
-    predict = recipe.entity_predictions
-
-    def capture(model, data, settings, **kwargs):
-        calls.append(data.split)
-        return predict(model, data, settings, **kwargs)
-
-    monkeypatch.setattr(recipe, "entity_predictions", capture)
-    recipe.train(configuration, tmp_path / "resume", stop_after=1)
-    assert set(calls) == {"train"}
-    recipe.train(configuration, tmp_path / "resume", resume=True)
-    recipe.train(configuration, tmp_path / "full")
-    states = [
-        torch.load(tmp_path / n / "last.pt", weights_only=True)
-        for n in ("resume", "full")
-    ]
-    for state in states:
-        state["model"].pop("diagnostic_elapsed_seconds")
-    for key in (
-        "model",
-        "optimizer",
-        "sampler",
-        "torch",
-        "numpy",
-        "random",
-        "rows",
-        "step",
-    ):
-        equal_tree(states[0][key], states[1][key])
-    calls.clear()
-    recipe.train(configuration, tmp_path / "resume", resume=True)
-    assert not calls
-    result = json.loads((tmp_path / "resume/entity_results.json").read_text())
-    assert result["final_step"] == 2
-    assert (
-        "Known versus new entity matching"
-        if reader == "matching"
-        else "Two-object entity memory"
-    ) in (tmp_path / "resume/report.html").read_text()
 
 
 def test_entity_scores_oracle_and_abstention():

@@ -272,36 +272,6 @@ class ReplaceUpdater(nn.Module):
         return observation
 
 
-class TransitionPredictor(nn.Module):
-    """Action/time-conditioned latent forecast, separate from observed state writes."""
-
-    def __init__(self, state_width, action_width, *, network=None):
-        super().__init__()
-        self.state_width = state_width
-        self.network = (
-            network
-            if network is not None
-            else nn.Sequential(
-                nn.Linear(state_width + action_width + 1, state_width * 2),
-                nn.SiLU(),
-                nn.Linear(state_width * 2, state_width * 2),
-            )
-        )
-
-    def forward(self, state, action, dt):
-        dt = (
-            torch.as_tensor(dt, device=state.device, dtype=state.dtype)
-            .reshape(-1, 1)
-            .expand(len(state), 1)
-        )
-        if (dt < 0).any() or not torch.isfinite(dt).all():
-            raise ValueError("Forecast duration must be finite and nonnegative")
-        mean, raw_scale = self.network(
-            torch.cat((state, action, torch.log1p(dt)), -1)
-        ).chunk(2, -1)
-        return mean, F.softplus(raw_scale) + 1e-4
-
-
 @dataclass(frozen=True)
 class ContextTokens:
     values: torch.Tensor

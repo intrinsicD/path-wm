@@ -28,28 +28,3 @@ def test_complement_balance_and_simulator():
     }
 
 
-@pytest.mark.parametrize("preserve", [False, True])
-def test_varied_recipe_and_resume(tmp_path, monkeypatch, preserve):
-    import torch
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import train_entity_state
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    donor = tmp_path / "matcher.pt"
-    torch.save(
-        {
-            "model": {
-                "agent." + k: v for k, v in EntityMatchReader().state_dict().items()
-            }
-        },
-        donor,
-    )
-    output = tmp_path / "state"
-    train_entity_state(donor, output, varied=True, preserve=preserve)
-    raw = (output / "entity_state.json").read_bytes()
-    train_entity_state(donor, output, resume=True, varied=True, preserve=preserve)
-    assert (output / "entity_state.json").read_bytes() == raw

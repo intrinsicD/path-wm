@@ -26,31 +26,3 @@ def test_temporal_controls_and_order_targets():
         assert left["target"][0] != right["target"][0]
 
 
-@pytest.mark.parametrize("preserve", [False, True])
-def test_temporal_recipe_cache(tmp_path, monkeypatch, preserve):
-    import torch
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.models.entity_state import EntityStateCell
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import evaluate_entity_temporal
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    matcher = tmp_path / "matcher.pt"
-    cell = tmp_path / "cell.pt"
-    torch.save(
-        {
-            "model": {
-                "agent." + k: v for k, v in EntityMatchReader().state_dict().items()
-            }
-        },
-        matcher,
-    )
-    torch.save({"model": EntityStateCell(preserve_no_information=preserve).state_dict()}, cell)
-    output = tmp_path / "evaluation"
-    evaluate_entity_temporal(matcher, cell, output, idle=True)
-    raw = (output / "entity_temporal.json").read_bytes()
-    evaluate_entity_temporal(matcher, cell, output, resume=True, idle=True)
-    assert (output / "entity_temporal.json").read_bytes() == raw

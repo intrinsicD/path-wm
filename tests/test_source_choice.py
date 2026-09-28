@@ -21,35 +21,6 @@ def test_feedback_only_choice_and_permutation():
     assert policy.snapshot() == before
 
 
-def test_calibration_only_feedback_and_resume(tmp_path):
-    import json
-    import torch
-    from pathwm.models.entity_relations import RelationWriteGate
-    from experiments.multimodal import evaluate_entity_source_choice
-
-    donor = tmp_path / "gate.pt"
-    model = RelationWriteGate()
-    with torch.no_grad():
-        for p in model.parameters():
-            p.zero_()
-    torch.save({"model": model.state_dict()}, donor)
-    output = tmp_path / "choice"
-    evaluate_entity_source_choice(donor, output)
-    raw = (output / "entity_source_choice.json").read_bytes()
-    result = json.loads(raw)
-    for row in result["worlds"]:
-        assert all(x["index"] < 512 for x in row["feedback"])
-        assert row["choice"] is None
-        assert (
-            row["scores"]["learned"]
-            == row["scores"]["no_feedback"]
-            == row["scores"]["stop"]
-        )
-        assert row["values"]["counts"] == [256, 256]
-    evaluate_entity_source_choice(donor, output, resume=True)
-    assert (output / "entity_source_choice.json").read_bytes() == raw
-
-
 def test_window_forgets_without_reset():
     policy = SourceChoice(window=2)
     policy.observe(0, 1)
@@ -62,29 +33,6 @@ def test_window_forgets_without_reset():
     assert policy.snapshot()["history"] == [[-0.1, -0.1], []]
     with pytest.raises(ValueError):
         SourceChoice(window=0)
-
-
-def test_drift_feedback_timing_and_resume(tmp_path):
-    import json
-    import torch
-    from pathwm.models.entity_relations import RelationWriteGate
-    from experiments.multimodal import evaluate_entity_source_drift
-
-    donor = tmp_path / "gate.pt"
-    torch.save({"model": RelationWriteGate().state_dict()}, donor)
-    output = tmp_path / "drift"
-    evaluate_entity_source_drift(donor, output)
-    raw = (output / "entity_source_drift.json").read_bytes()
-    data = json.loads(raw)
-    for row in data["episodes"]:
-        for event in row["actions"]:
-            if row["policy"] in ("frozen", "no_feedback") or event["source"] is None:
-                assert event["feedback"] is None
-                assert event["before"] == event["after"]
-            else:
-                assert event["feedback"] is not None
-    evaluate_entity_source_drift(donor, output, resume=True)
-    assert (output / "entity_source_drift.json").read_bytes() == raw
 
 
 def test_triggered_forgetting_is_evidence_driven_and_source_local():
@@ -165,64 +113,6 @@ def test_uncertainty_unqualified_fallback_cannot_pass(monkeypatch):
     assert not result["passed"]
 
 
-def test_source_diagnosis_mixed_blocks_and_tampering(tmp_path):
-    from pathwm.evaluation.source_choice import diagnose_source_changes
-    import copy
-
-    policy = SourceChoice(change_block=4, change_z=2)
-    for _ in range(6):
-        policy.observe(0, 0.5)
-    initial = policy.snapshot()
-    actions = []
-    for i in range(6):
-        before = policy.snapshot()
-        policy.observe(0, 0.5)
-        actions.append(
-            dict(
-                index=512 + i,
-                source=0,
-                feedback=0.5,
-                before=before,
-                after=policy.snapshot(),
-            )
-        )
-    data = dict(
-        episodes=[
-            dict(
-                world=0,
-                swapped=True,
-                policy="uncertainty",
-                initial=initial,
-                actions=actions,
-            )
-        ]
-    )
-    rows = diagnose_source_changes(data)["sources"]
-    assert rows[0]["mixed_checks"] == 1
-    assert rows[0]["pure_checks"] == 1
-    assert rows[0]["category"] == "eligible_below_threshold"
-    assert rows[1]["category"] == "no_completed_block"
-    bad = copy.deepcopy(data)
-    bad["episodes"][0]["actions"][1]["after"]["resets"][0] += 1
-    with pytest.raises(ValueError, match="reset"):
-        diagnose_source_changes(bad)
-
-    import json
-    import torch
-    from pathwm.models.entity_relations import RelationWriteGate
-    from experiments.multimodal import diagnose_entity_sources
-
-    source = tmp_path / "source"
-    source.mkdir()
-    (source / "entity_source_drift.json").write_text(json.dumps(data))
-    torch.save({"model": RelationWriteGate().state_dict()}, source / "last.pt")
-    output = tmp_path / "diagnosis"
-    diagnose_entity_sources(source, output)
-    raw = (output / "entity_source_diagnosis.json").read_bytes()
-    diagnose_entity_sources(source, output, resume=True)
-    assert (output / "entity_source_diagnosis.json").read_bytes() == raw
-
-
 def test_coverage_exploration_counts_and_permutation():
     from pathwm.evaluation.source_choice import coverage_action
 
@@ -234,35 +124,3 @@ def test_coverage_exploration_counts_and_permutation():
     assert coverage_action([10, 2], False, 1, None, True) == 1
 
 
-def test_coverage_budget_and_resume(tmp_path):
-    import json
-    import torch
-    from pathwm.models.entity_relations import RelationWriteGate
-    from experiments.multimodal import evaluate_entity_source_coverage
-
-    donor = tmp_path / "gate.pt"
-    torch.save({"model": RelationWriteGate().state_dict()}, donor)
-    output = tmp_path / "coverage"
-    evaluate_entity_source_coverage(donor, output)
-    raw = (output / "entity_source_drift.json").read_bytes()
-    data = json.loads(raw)
-    for world in range(16):
-        for swapped in (False, True):
-            pair = [
-                r
-                for r in data["episodes"]
-                if r["world"] == world and r["swapped"] == swapped
-            ]
-            assert len(pair) == 2
-            masks = [[e["source"] is not None for e in r["actions"]] for r in pair]
-            assert masks[0] == masks[1] == data["environment"][world]["defer"][512:]
-            for row in pair:
-                for event in row["actions"]:
-                    assert (event["feedback"] is not None) == (
-                        event["source"] is not None
-                    )
-                    assert sum(event["lifetime_after"]) - sum(
-                        event["lifetime_before"]
-                    ) == int(event["source"] is not None)
-    evaluate_entity_source_coverage(donor, output, resume=True)
-    assert (output / "entity_source_drift.json").read_bytes() == raw

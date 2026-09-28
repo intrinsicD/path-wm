@@ -24,27 +24,6 @@ def test_shift_pairing_and_scores():
         assert c["thresholds"]["0.4"]["negative_recall"] == 0
 
 
-@pytest.mark.parametrize("reobserve", [False, True])
-def test_shift_recipe_resume(tmp_path, reobserve):
-    from experiments.multimodal import evaluate_entity_gate_shift
-
-    donor = tmp_path / "gate.pt"
-    torch.save({"model": RelationWriteGate().state_dict()}, donor)
-    output = tmp_path / "shift"
-    evaluate_entity_gate_shift(
-        donor, output, reobserve=reobserve, correlation=0.5 if reobserve else None
-    )
-    raw = (output / "entity_gate_shift.json").read_bytes()
-    evaluate_entity_gate_shift(
-        donor,
-        output,
-        resume=True,
-        reobserve=reobserve,
-        correlation=0.5 if reobserve else None,
-    )
-    assert (output / "entity_gate_shift.json").read_bytes() == raw
-
-
 def test_reobserve_duplicate_and_cost():
     from pathwm.evaluation.entity_gate import (
         gate_reobserve_examples,
@@ -97,13 +76,3 @@ def test_alternate_sources_share_first_observation():
             assert abs(s["utility"] - (s["accuracy"] - cost * s["reread_rate"])) < 1e-7
 
 
-def test_evidence_source_recipe_resume(tmp_path):
-    from experiments.multimodal import evaluate_entity_evidence_sources
-
-    donor = tmp_path / "gate.pt"
-    torch.save({"model": RelationWriteGate().state_dict()}, donor)
-    output = tmp_path / "sources"
-    evaluate_entity_evidence_sources(donor, output)
-    raw = (output / "entity_evidence_sources.json").read_bytes()
-    evaluate_entity_evidence_sources(donor, output, resume=True)
-    assert (output / "entity_evidence_sources.json").read_bytes() == raw

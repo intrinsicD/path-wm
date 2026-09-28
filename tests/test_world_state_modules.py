@@ -5,7 +5,6 @@ import pytest
 import torch
 from torch import nn
 
-from experiments.multimodal import build_model
 from pathwm.world_state.modules import (
     Candidate,
     CandidateEncoder,
@@ -14,27 +13,10 @@ from pathwm.world_state.modules import (
     ContextEncoder,
     RecurrentUpdater,
     ReplaceUpdater,
-    TransitionPredictor,
 )
 from pathwm.world_state.inspection import WorldTrace, inspect_store
-from pathwm.world_state.session import WorldSession
 from pathwm.world_state.store import WorldStore
 from pathwm.world_state.retrieval import Query, ExactRetriever
-
-
-def parts(updater=None):
-    agent = build_model(
-        width=16, state_model="belief", memory_recent=2, memory_block=2, memory_blocks=1
-    ).eval()
-    binder = AssociationBinder()
-    binder.scorer.eval()
-    updater = (updater if updater is not None else ReplaceUpdater(2)).eval()
-    context = ContextEncoder(
-        16,
-        {"state": nn.Linear(updater.state_width, 16)},
-        {"state": ("belief", "state-v1")},
-    ).eval()
-    return dict(agent=agent, binder=binder, updater=updater, context_encoder=context)
 
 
 def candidate(name="a", key=(1.0, 0.0), value=(0.2, 0.8), group=None):
@@ -48,28 +30,6 @@ def candidate(name="a", key=(1.0, 0.0), value=(0.2, 0.8), group=None):
         "v1",
         exclusive_group=group,
     )
-
-
-def test_differentiable_blocks_and_interchangeable_backbone():
-    encoder = CandidateEncoder(
-        4, 3, 2, backbone=nn.Sequential(nn.Linear(4, 4), nn.SiLU())
-    )
-    scorer = AssociationScorer(3, projection=nn.Linear(3, 3))
-    updater = RecurrentUpdater(2, 5)
-    predictor = TransitionPredictor(5, 2)
-    x = torch.randn(8, 4, requires_grad=True)
-    k, v = encoder(x)
-    scores = scorer(k[:4], k[4:])
-    state = updater(torch.zeros(8, 5), v, 1.0)
-    prediction, scale = predictor(state, torch.ones(8, 2), 1.0)
-    loss = (prediction - 1).square().mean() + scale.mean() + scores.square().mean()
-    loss.backward()
-    assert torch.isfinite(x.grad).all() and x.grad.abs().sum() > 0
-    for module in (encoder, scorer, updater, predictor):
-        assert all(
-            p.grad is not None and torch.isfinite(p.grad).all()
-            for p in module.parameters()
-        )
 
 
 def test_debug_hooks_preserve_outputs_rng_gradients_and_release_graphs(tmp_path):
@@ -97,116 +57,6 @@ def test_debug_hooks_preserve_outputs_rng_gradients_and_release_graphs(tmp_path)
     assert any(k.startswith("backward.") for k in trace)
     record = trace.export(tmp_path)
     assert json.loads((tmp_path / "world_trace.json").read_text()) == record
-
-
-def test_session_retry_restart_reasoner_and_failed_publication(tmp_path, monkeypatch):
-    torch.manual_seed(4)
-    modules = parts()
-    session = WorldSession(**modules)
-    trace = WorldTrace()
-    rng = torch.get_rng_state().clone()
-    result = session.observe(
-        "one", occurred_at=1, available_at=1, candidates=(candidate(),), trace=trace
-    )
-    assert torch.equal(rng, torch.get_rng_state())
-    owner = result["bindings"][0]["entity_id"]
-    assert owner is not None
-    original = session.snapshot()
-    assert (
-        session.observe("one", occurred_at=1, available_at=1, candidates=(candidate(),))
-        == result
-    )
-    assert torch.equal(session.state.tokens, original["state"]["tokens"])
-    with pytest.raises(ValueError, match="retry"):
-        session.observe(
-            "one",
-            occurred_at=1,
-            available_at=1,
-            candidates=(candidate(value=(1.0, 0.0)),),
-        )
-    session.save(tmp_path / "session.pt")
-    loaded = torch.load(tmp_path / "session.pt", weights_only=True)
-    restored = WorldSession.restore(loaded, **modules)
-    second = dict(
-        event_id="two",
-        occurred_at=2,
-        available_at=2,
-        candidates=(candidate(value=(0.9, 0.1)),),
-    )
-    assert session.observe(**second) == restored.observe(**second)
-    assert torch.equal(session.state.logits, restored.state.logits)
-    assert session.store.snapshot() == restored.store.snapshot()
-    start = session.state
-    context = ExactRetriever()(session.store, Query(entity_ids=(owner,)))
-    assert context.components
-    working, _, tokens = session.think(Query(entity_ids=(owner,)), trace=trace)
-    assert tokens.values.shape == (1, 1, 16) and tokens.component_ids
-    assert torch.equal(start.h, working.h) and torch.equal(start.logits, working.logits)
-    assert not torch.equal(start.tokens, working.tokens)
-    assert trace.records
-    before = session.snapshot()
-
-    def fail(*args, **kwargs):
-        raise OSError("disk write failed")
-
-    monkeypatch.setattr("pathwm.world_state.session.atomic_torch", fail)
-    with pytest.raises(OSError, match="disk"):
-        session.observe(
-            "three",
-            occurred_at=3,
-            available_at=3,
-            candidates=(candidate(),),
-            save_to=tmp_path / "fail.pt",
-        )
-    assert before["world"] == session.snapshot()["world"]
-    assert torch.equal(before["state"]["tokens"], session.state.tokens)
-    assert torch.equal(before["rng"], session.snapshot()["rng"])
-
-
-def test_unresolved_and_late_candidates_preserve_evidence():
-    modules = parts()
-    session = WorldSession(**modules)
-    first = session.observe(
-        "a", occurred_at=2, available_at=2, candidates=(candidate(),)
-    )
-    owner = first["bindings"][0]["entity_id"]
-    late = session.observe(
-        "late", occurred_at=1, available_at=3, candidates=(candidate(),)
-    )
-    assert late["bindings"][0]["status"] == "unresolved"
-    assert len(session.store.evidence()) == 2
-    assert session.store.latest(owner, "state").valid_from == 2
-    collided = session.observe(
-        "pair",
-        occurred_at=4,
-        available_at=4,
-        candidates=(candidate("one", group="frame"), candidate("two", group="frame")),
-    )
-    assert [b["status"] for b in collided["bindings"]] == ["matched", "unresolved"]
-    assert len(session.store.evidence()) == 4
-    assert len(session.store.entities()) == 1
-
-
-def test_neural_failure_does_not_publish_graph():
-    class Broken(ReplaceUpdater):
-        def forward(self, *args):
-            raise RuntimeError("broken updater")
-
-    session = WorldSession(**parts(Broken(2)))
-    before = session.snapshot()
-    with pytest.raises(RuntimeError, match="broken"):
-        session.observe("bad", occurred_at=1, available_at=1, candidates=(candidate(),))
-    assert session.store.snapshot() == before["world"]
-    assert torch.equal(session.state.tokens, before["state"]["tokens"])
-
-
-def test_model_mutation_rejected_and_context_dimensions_checked():
-    modules = parts()
-    session = WorldSession(**modules)
-    with torch.no_grad():
-        next(modules["context_encoder"].projections.parameters()).add_(1)
-    with pytest.raises(ValueError, match="model changed"):
-        session.snapshot()
 
 
 def test_optional_concept_control_feedback_and_selection_are_explicit():
@@ -256,69 +106,6 @@ def test_optional_concept_control_feedback_and_selection_are_explicit():
     assert gain.shape == (4,) and (gain >= 0.5).all() and (gain <= 1.5).all()
 
 
-def test_replay_after_reattribution_uses_retained_values():
-    from pathwm.world_state.session import rebuild_entity_state
-
-    model = parts()
-    session = WorldSession(**model)
-    result = session.observe(
-        "one",
-        occurred_at=1,
-        available_at=1,
-        candidates=(candidate(), candidate("b", key=(0.0, 1.0), value=(0.8, 0.2))),
-    )
-    a, b = [r["entity_id"] for r in result["bindings"]]
-    source = session.store.latest(a, "recognition")
-    tx = session.store.begin("fix", occurred_at=1, available_at=2, kind="correction")
-    tx.reassign(source.id, b)
-    session.store.commit(tx)
-    assert session.store.latest(a, "state") is None
-    tx = session.store.begin(
-        "rebuild", occurred_at=1, available_at=3, kind="correction"
-    )
-    result = rebuild_entity_state(tx, session.store, b, model["updater"])
-    session.store.commit(tx)
-    assert session.store.component(result).active
-    assert set(session.store.component(result).parents) == {
-        c.id for c in session.store.components(b, "recognition")
-    }
-    assert len(session.store.evidence()) == 2
-
-
-def test_context_projection_training_and_runtime_share_exact_values():
-    modules = parts()
-    session = WorldSession(**modules)
-    result = session.observe(
-        "one", occurred_at=1, available_at=1, candidates=(candidate(),)
-    )
-    owner = result["bindings"][0]["entity_id"]
-    record = session.store.latest(owner, "state")
-    context = ExactRetriever()(session.store, Query(entity_ids=(owner,)))
-    encoder = modules["context_encoder"]
-    value = record.tensor()[None].requires_grad_()
-    training = encoder.project_value("state", value, age=2)
-    runtime = encoder(context, now=3).values[:, 0]
-    assert torch.equal(training, runtime)
-    training.square().sum().backward()
-    assert value.grad.abs().sum() > 0
-
-
-def test_simultaneous_lateness_and_collision_is_diagnosable():
-    session = WorldSession(**parts())
-    session.observe("one", occurred_at=2, available_at=2, candidates=(candidate(),))
-    result = session.observe(
-        "late",
-        occurred_at=1,
-        available_at=3,
-        candidates=(candidate("a", group="f"), candidate("b", group="f")),
-    )
-    assert all(
-        r["status"] == "unresolved" and "replay" in r["reason"]
-        for r in result["bindings"]
-    )
-    assert len(session.store.evidence()) == 3 and len(session.store.entities()) == 1
-
-
 def test_relational_context_and_query_network_are_trainable():
     from dataclasses import replace
     from pathwm.world_state.modules import RelationEncoder, QueryGenerator
@@ -346,32 +133,6 @@ def test_relational_context_and_query_network_are_trainable():
     key.square().sum().backward()
     assert all(p.grad is not None for p in encoder.relation_encoder.parameters())
     assert all(p.grad is not None for p in query.parameters())
-
-
-def test_actual_image_encoder_packets_and_candidate_features_share_one_event():
-    from pathwm.models.modalities import Observation
-    from pathwm.models.belief_state import Packet
-
-    modules = parts()
-    agent = modules["agent"]
-    observation = Observation(torch.full((1, 1, 3, 16, 16), 0.4), torch.tensor([[1.0]]))
-    encoded = agent.encoders["image"](observation).as_tokens().values.mean(1)
-    encoder = CandidateEncoder(16, 4, 2).eval()
-    key, value = encoder(encoded)
-    c = Candidate("region-0", "camera", "image", key[0], value[0], "region", "v1")
-    session = WorldSession(**modules)
-    result = session.observe(
-        "image",
-        occurred_at=1,
-        available_at=2,
-        candidates=(c,),
-        packets=(Packet("camera", "image", observation),),
-    )
-    assert result["bindings"][0]["entity_id"] is not None
-    assert session.state.observation_count == 1 and session.state.evidence_valid.all()
-    assert len(session.store.evidence()) == 1
-    assert session.store.evidence()[0].occurred_at == 1
-    assert session.store.evidence()[0].available_at == 2
 
 
 def test_report_escapes_untrusted_labels_and_exposes_debug_sections(tmp_path):
@@ -446,41 +207,6 @@ def test_attention_diagnostic_probabilities_match_masked_reference():
         )
     assert torch.allclose(trace._tensors["attention"], reference, atol=1e-6)
     assert trace._tensors["attention"][..., 5:].count_nonzero() == 0
-
-
-def test_internal_transactions_keep_store_and_agent_clock_consistent(tmp_path):
-    modules = parts()
-    session = WorldSession(**modules)
-    first = session.observe(
-        "first",
-        occurred_at=1,
-        available_at=1,
-        candidates=(candidate(), candidate("b", key=(0.0, 1.0))),
-    )
-    a, b = [x["entity_id"] for x in first["bindings"]]
-    proof = session.store.evidence()[0].id
-    tx = session.store.begin("merge", occurred_at=2, available_at=3, kind="correction")
-    tx.merge(a, b, evidence=(proof,))
-    receipt = session.commit(tx, save_to=tmp_path / "combined.pt")
-    assert session.state.time.item() == 3 and session.state.event_id == "merge"
-    assert session.state.observation_count == 0
-    before = session.state
-    assert session.commit(tx) == receipt and torch.equal(
-        before.tokens, session.state.tokens
-    )
-    restored = WorldSession.restore(
-        torch.load(tmp_path / "combined.pt", weights_only=True), **modules
-    )
-    assert restored.store.snapshot() == session.store.snapshot()
-    _, context, _ = restored.think(Query(entity_ids=(a,)))
-    assert len(context.entities) == 2
-    bad = session.store.begin(
-        "bad-direct", occurred_at=4, available_at=4, kind="internal"
-    )
-    bad.create_entity("uncoordinated")
-    session.store.commit(bad)
-    with pytest.raises(ValueError, match="WorldSession.commit"):
-        session.think(Query())
 
 
 def test_inspection_handles_nested_multiscale_outputs_without_changing_them():

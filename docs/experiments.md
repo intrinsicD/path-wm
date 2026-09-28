@@ -1,4 +1,11 @@
 For the **indexed candidate-discovery feasibility screen**, run
+
+> **Retired architecture (29 September 2026).** Most of this page describes the belief agent,
+> thinker, latent core R1 and their recipes, which were removed from `main` (tag
+> `archive/pre-core-2026-09-29`). Current model and recipe: [shared-core plan](shared-core-plan.md),
+> `pathwm/models/core.py`, `experiments/core.py`. Sections on kept infrastructure
+> (data, encoders, image codes, VAEs, WorldStore) still apply.
+
 `.venv/bin/python -m experiments.scan_discovery --output runs/my_scan --seed 924301`.
 The [protocol and results](scan-discovery-plan.md) compare exact indexing, cache
 reset and scan diagnostics with measured validation/rebuild/restart costs. Two

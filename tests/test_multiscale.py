@@ -4,7 +4,6 @@ import copy
 import pytest
 import torch
 
-from experiments.multimodal import build_model, SyntheticEpisodes, observations
 from pathwm.models.modalities import Observation
 from pathwm.models.multiscale import (
     FeatureScale,
@@ -15,34 +14,11 @@ from pathwm.models.multiscale import (
     pool_scale,
 )
 
-
 def examples():
-    return observations(SyntheticEpisodes(count=2).batch([0, 1]), 1)
+    """Two fixed 32x32 RGB frames at t=1 (replaces the retired multimodal episodes)."""
+    images = torch.rand(2, 1, 3, 32, 32, generator=torch.Generator().manual_seed(0))
+    return {"image": Observation(images, torch.ones(2, 1))}
 
-
-def test_all_modalities_export_processed_scales_and_live_code_gradients():
-    model = build_model(width=16)
-    expected = {
-        "image": [16, 4, 1],
-        "video": [32, 4, 1],
-        "audio": [8, 4, 2],
-        "text": [12, 6, 3],
-    }
-    for name, observation in examples().items():
-        encoder = model.encoders[name]
-        code = torch.randn(2, model.feature_controller.code_width, requires_grad=True)
-        pyramid = encoder(observation, condition=code)
-        assert [scale.values.shape[1] for scale in pyramid.scales] == expected[name]
-        for scale in pyramid.scales:
-            assert scale.values.shape[-1] == 16
-            gradient = torch.autograd.grad(
-                scale.values.square().mean(), code, retain_graph=True
-            )[0]
-            assert gradient.abs().sum() > 0
-        combined = pyramid.as_tokens()
-        torch.testing.assert_close(
-            combined.values, torch.cat([s.values for s in pyramid.scales], 1)
-        )
 
 
 def test_scale_processing_precedes_every_consumer_and_gradients_only_go_up():
@@ -211,44 +187,6 @@ def test_masks_singletons_cross_attention_footprints_and_neutral_code_after_upda
             Observation(tokens, times, valid),
             condition=torch.full((2, 8), float("nan")),
         )
-
-
-def test_agent_control_uses_prior_state_user_override_and_cutoff_before_encoders():
-    model = build_model(width=16)
-    state = model.initial_state(2, time=1.0)
-    inputs = examples()
-    before = state.tokens.clone()
-    expected = model.propose_feature_code(state)
-    trace = {}
-    updated = model.observe(state, inputs, time=1.0, trace=trace)
-    torch.testing.assert_close(
-        trace["encode.feature_code"], expected.detach(), rtol=0, atol=0
-    )
-    torch.testing.assert_close(state.tokens, before, rtol=0, atol=0)
-    override = torch.zeros_like(expected)
-    neutral = model.observe(state, inputs, time=1.0, feature_code=override)
-    assert not torch.allclose(updated.tokens, neutral.tokens)
-    updated.tokens.square().mean().backward()
-    assert any(
-        p.grad is not None and p.grad.abs().sum() > 0
-        for p in model.feature_controller.parameters()
-    )
-    encoded = model.encode(state, inputs, time=2.0, feature_code=override)
-    assert all(
-        (s.times[s.valid] == 2).all() for p in encoded.values() for s in p.scales
-    )
-    called = []
-    handle = model.encoders["image"].register_forward_pre_hook(
-        lambda *args: called.append(True)
-    )
-    future = dict(
-        inputs,
-        text=replace(inputs["text"], times=torch.full_like(inputs["text"].times, 3.0)),
-    )
-    with pytest.raises(ValueError, match="future"):
-        model.observe(state, future, time=1.0)
-    handle.remove()
-    assert not called
 
 
 @pytest.mark.parametrize("fusion_depth", [0, 2])

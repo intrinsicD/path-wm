@@ -1,5 +1,11 @@
 # Models and tensor flow
 
+> **Retired architecture (29 September 2026).** Most of this page describes the belief agent,
+> thinker, latent core R1 and their recipes, which were removed from `main` (tag
+> `archive/pre-core-2026-09-29`). Current model and recipe: [shared-core plan](shared-core-plan.md),
+> `pathwm/models/core.py`, `experiments/core.py`. Sections on kept infrastructure
+> (data, encoders, image codes, VAEs, WorldStore) still apply.
+
 [Indexed discovery screen](scan-discovery-plan.md): the recipe combines existing
 WorldStore and WorkingContext with an exact descriptor index. Two populations pass
 without training; reset context does not change answers. Authoritative validation

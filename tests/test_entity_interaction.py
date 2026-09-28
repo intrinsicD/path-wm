@@ -91,32 +91,3 @@ def test_interaction_histories_and_runtime_agree():
         assert runtime["transactions"] and runtime["latent_agreement"]
 
 
-def test_interaction_recipe_resume(tmp_path, monkeypatch):
-    from pathwm.models.entity_state import EntityStateCell
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import train_entity_interaction
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    # Strong deterministic matcher weights keep both initial source records resolved.
-    matcher = EntityMatchReader()
-    with torch.no_grad():
-        matcher.matcher[0].weight.fill_(1)
-        matcher.matcher[0].bias.zero_()
-        matcher.matcher[2].weight.fill_(-1)
-        matcher.matcher[2].bias.fill_(10)
-    donor, base = tmp_path / "matcher.pt", tmp_path / "base.pt"
-    torch.save(
-        {"model": {"agent." + k: v for k, v in matcher.state_dict().items()}}, donor
-    )
-    torch.save(
-        {"model": EntityStateCell(preserve_no_information=True).state_dict()}, base
-    )
-    output = tmp_path / "run"
-    train_entity_interaction(donor, base, output)
-    raw = (output / "entity_interaction.json").read_bytes()
-    train_entity_interaction(donor, base, output, resume=True)
-    assert (output / "entity_interaction.json").read_bytes() == raw

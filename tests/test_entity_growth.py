@@ -30,30 +30,6 @@ def test_rejections_cannot_pass_as_success():
     assert all(s["transactions"] for s in results["scores"].values())
 
 
-def test_recipe_frozen_screen_and_cached_resume(tmp_path):
-    from experiments.multimodal import entity_growth
-    from pathwm.models.entities import EntityMatchReader
-    import json
-
-    donor = tmp_path / "donor.pt"
-    torch.save(
-        {
-            "model": {
-                "agent." + name: value
-                for name, value in EntityMatchReader().state_dict().items()
-            }
-        },
-        donor,
-    )
-    output = tmp_path / "screen"
-    entity_growth(donor, output)
-    raw = (output / "entity_growth.json").read_bytes()
-    entity_growth(donor, output, resume=True)
-    assert (output / "entity_growth.json").read_bytes() == raw
-    assert json.loads((output / "status.json").read_text())["result"] == "completed"
-    assert "Frozen growing entity memory" in (output / "report.html").read_text()
-
-
 def test_deferred_creation_does_not_shift_identity_ground_truth():
     families = growth_inputs(count=1)
     skipped = torch.tensor(families[0]["descriptors"][1])

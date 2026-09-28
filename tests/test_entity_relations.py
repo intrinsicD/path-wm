@@ -112,28 +112,3 @@ def test_cue_pairs_and_frozen_gradient_path():
         )
 
 
-def test_relation_recipe_resume(tmp_path, monkeypatch):
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import train_entity_relations
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    matcher = EntityMatchReader()
-    with torch.no_grad():
-        matcher.matcher[0].weight.fill_(1)
-        matcher.matcher[0].bias.zero_()
-        matcher.matcher[2].weight.fill_(-1)
-        matcher.matcher[2].bias.fill_(10)
-    donor, cell = tmp_path / "matcher.pt", tmp_path / "cell.pt"
-    torch.save(
-        {"model": {"agent." + k: v for k, v in matcher.state_dict().items()}}, donor
-    )
-    torch.save({"model": EntityInteractionCell().state_dict()}, cell)
-    output = tmp_path / "relations"
-    train_entity_relations(donor, cell, output)
-    raw = (output / "entity_relations.json").read_bytes()
-    train_entity_relations(donor, cell, output, resume=True)
-    assert (output / "entity_relations.json").read_bytes() == raw

@@ -178,19 +178,6 @@ def test_action_records_reject_malformed_coordinates_at_construction():
     rw.ActionRecord((-5.0, 90.0), (1.0, 1.0), (2.0, 2.0))  # finite off-screen: a charged miss
 
 
-def test_life_sampler_rejects_unsatisfiable_disjoint_queries(monkeypatch):
-    from pathwm.evaluation import rule_world as ev
-
-    original = rw.sample_scenes
-
-    def identical(generator, kinds, attrs=None):
-        return original(generator, kinds, attrs=torch.zeros(1, 4, 4, dtype=torch.long))
-
-    monkeypatch.setattr(rw, "sample_scenes", identical)
-    with pytest.raises(ValueError, match="disjoint"):
-        ev.sample_life(torch.Generator().manual_seed(1), "validation", n_support=128, queries=4, goals=0, distract=8, counter=8)
-
-
 # ---------------------------------------------------------------- texture nuisance (S1)
 
 

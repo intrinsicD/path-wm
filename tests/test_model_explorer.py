@@ -172,57 +172,6 @@ def test_strict_checkpoint_rejects_missing_keys_and_loads_all_values(tmp_path):
         load_explorer_weights(model, path)
 
 
-def test_complete_recipe_matches_uninstrumented_loss_and_every_gradient():
-    from experiments.multimodal import (
-        InstructionEpisodes,
-        LearningState,
-        build_model,
-        objective,
-    )
-
-    torch.manual_seed(42)
-    model = LearningState(build_model(8, 8, 16, state_model="belief"), 2)
-    batch = InstructionEpisodes(
-        count=2, image_size=8, audio_samples=16, history=1, horizon=1
-    ).batch([0, 1])
-    rng = torch.random.get_rng_state().clone()
-    loss = sum(objective(model, batch, history=1, horizon=1)[0].values())
-    loss.backward()
-    reference = {
-        name: p.grad.flatten().tolist() if p.grad is not None else None
-        for name, p in model.named_parameters()
-    }
-    torch.random.set_rng_state(rng)
-    result = capture(
-        model, lambda m: sum(objective(m, batch, history=1, horizon=1)[0].values())
-    )
-    assert result["metadata"]["loss"] == float(loss.detach())
-    assert set(result["parameters"]) == set(reference)
-    assert {
-        name: p["gradient"] for name, p in result["parameters"].items()
-    } == reference
-    assert not any(
-        p["gradient"] is not None
-        for name, p in result["parameters"].items()
-        if name.startswith("target.")
-    )
-
-
-def test_main_checkpoint_keeps_its_original_replay_population(tmp_path):
-    from experiments.multimodal import LearningState
-    from pathwm.evaluation.explorer import load_explorer_weights
-
-    trained = LearningState(nn.Linear(2, 3), 32)
-    path = tmp_path / "last.pt"
-    torch.save({"model": trained.state_dict()}, path)
-    inspection = LearningState(nn.Linear(2, 3), 2)
-    load_explorer_weights(inspection, path)
-    assert all(
-        torch.equal(v, trained.state_dict()[k])
-        for k, v in inspection.state_dict().items()
-    )
-
-
 def test_live_server_rebuilds_source_and_surfaces_failures(tmp_path):
     import socket
     import subprocess
@@ -292,71 +241,6 @@ def test_live_server_rebuilds_source_and_surfaces_failures(tmp_path):
         process.communicate(timeout=5)
 
 
-def test_world_system_keeps_full_records_and_observed_call_direction():
-    from pathwm.evaluation.explorer import inspect_world_runtime
-    from pathwm.world_state import WorldStore
-    from pathwm.world_state.retrieval import ExactRetriever, Query
-
-    store = WorldStore()
-    tx = store.begin("example", occurred_at=1, available_at=1)
-    left, right = tx.create_entity("left"), tx.create_entity("right")
-    proof = tx.add_evidence("fixture", "features")
-    values = torch.arange(20, dtype=torch.float32)
-    tx.put_component(
-        left, "state", values, space="test", model_version="1", evidence=(proof,)
-    )
-    relation = tx.relate(left, right, "near", evidence=(proof,))
-    store.commit(tx)
-    retriever = ExactRetriever()
-
-    def execute():
-        retriever(store, Query(entity_ids=(left,)))
-        return store.snapshot(), {"purpose": "test"}
-
-    result = inspect_world_runtime(nn.Linear(2, 2), execute)
-    assert result["store"]["entities"][0]["id"] == left
-    assert result["store"]["components"][0]["values"] == values.tolist()
-    assert result["store"]["entities"][1]["id"] == right
-    assert result["store"]["evidence"][0]["id"] == proof
-    link = result["store"]["relations"][0]
-    assert link["id"] == relation and link["source"]["ref"] == left
-    assert link["target"]["ref"] == right and link["evidence"] == [proof]
-    assert any(
-        e["source"] == "retrieval" and e["target"] == "store" for e in result["edges"]
-    )
-    assert all(e["kind"] == "call" for e in result["edges"])
-    assert {"Entity", "Component", "Relation", "Evidence", "Event"} <= set(
-        result["schemas"]
-    )
-    assert result["components"]["store"]["source"]["code"]
-
-
-def test_world_recipe_snapshot_remains_a_separate_actual_model():
-    from experiments.world_state import explorer_snapshot, FoundationModel
-
-    result = explorer_snapshot(seed=42)
-    data = result["neural"]
-    model = FoundationModel()
-    assert set(data["modules"]) == set(
-        dict(model.named_modules(remove_duplicate=False))
-    )
-    assert "target" not in data["modules"]
-    assert data["modules"]["agent"]["config"] != ""
-    assert result["store"]["entities"]
-    assert result["runtime"]["kind"] == "synthetic diagnostic session"
-    assert result["runtime"]["diagnostics"]["inspection_read"]["store_unchanged"]
-    calls = {(e["source"], e["target"]) for e in result["edges"]}
-    assert {
-        ("session", "retrieval"),
-        ("session", "context"),
-        ("session", "agent"),
-    } <= calls
-    assert (
-        data["metadata"]["recipe"]
-        == "experiments/world_state.py:FoundationModel + objective"
-    )
-
-
 def test_live_sources_include_world_state_recipe(tmp_path):
     from pathwm.evaluation.explorer import watched_sources
 
@@ -366,15 +250,3 @@ def test_live_sources_include_world_state_recipe(tmp_path):
     )
 
 
-def test_world_runtime_failure_removes_profiler():
-    import sys
-
-    from pathwm.evaluation.explorer import inspect_world_runtime
-
-    def fail():
-        raise RuntimeError("session failed")
-
-    before = sys.getprofile()
-    with pytest.raises(RuntimeError, match="session failed"):
-        inspect_world_runtime(nn.Linear(2, 2), fail)
-    assert sys.getprofile() is before

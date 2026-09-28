@@ -72,28 +72,3 @@ def test_three_record_sequence_preserves_other_states():
     assert torch.allclose(after[:, 2], cell.interact(before[:, 2], before[:, 1]))
 
 
-def test_source_recipe_and_resume(tmp_path, monkeypatch):
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import evaluate_entity_source
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    matcher = EntityMatchReader()
-    with torch.no_grad():
-        matcher.matcher[0].weight.fill_(1)
-        matcher.matcher[0].bias.zero_()
-        matcher.matcher[2].weight.fill_(-1)
-        matcher.matcher[2].bias.fill_(10)
-    donor, cell = tmp_path / "matcher.pt", tmp_path / "cell.pt"
-    torch.save(
-        {"model": {"agent." + k: v for k, v in matcher.state_dict().items()}}, donor
-    )
-    torch.save({"model": EntityInteractionCell().state_dict()}, cell)
-    output = tmp_path / "source"
-    evaluate_entity_source(donor, cell, output)
-    raw = (output / "entity_source.json").read_bytes()
-    evaluate_entity_source(donor, cell, output, resume=True)
-    assert (output / "entity_source.json").read_bytes() == raw

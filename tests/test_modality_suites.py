@@ -113,45 +113,6 @@ def test_suite_requires_each_draw_and_every_factor_and_separates_omission():
     assert by_id["VID.natural_motion"]["implementation"] == "not_implemented"
 
 
-def test_actual_evaluation_preserves_model_and_caller_rng_and_repeats():
-    from experiments.modality_readout import Core
-    from pathwm.data.modality_readout import dataset
-    from pathwm.evaluation.modality_suite import measure_factors
-    from pathwm.io import seed_everything, state_hash
-
-    seed_everything(92)
-    core = Core()
-    core.train()
-    populations = {}
-    for split in ("seen", "heldout", "intervention"):
-        d = dataset(split, 92)
-        for group in ("inputs", "complementary"):
-            from dataclasses import replace
-
-            d[group] = {
-                k: replace(
-                    v,
-                    values=v.values[:2],
-                    times=v.times[:2],
-                    valid=None if v.valid is None else v.valid[:2],
-                )
-                for k, v in d[group].items()
-            }
-        d["targets"] = {k: v[:2] for k, v in d["targets"].items()}
-        d["ids"] = d["ids"][:2]
-        populations[split] = d
-    before, rng = state_hash(core), torch.get_rng_state().clone()
-    a, arrays_a, seeds_a = measure_factors(core, populations, seed=92, device="cpu")
-    b, arrays_b, seeds_b = measure_factors(core, populations, seed=92, device="cpu")
-    assert a == b and seeds_a == seeds_b
-    assert len(seeds_a) == 48
-    assert core.training and state_hash(core) == before
-    assert torch.equal(torch.get_rng_state(), rng)
-    assert all(p.grad is None for p in core.parameters())
-    for k in arrays_a:
-        np.testing.assert_array_equal(arrays_a[k], arrays_b[k])
-
-
 def test_hints_separate_failed_actual_reader_from_accessible_stage():
     from pathwm.evaluation.modality_suite import diagnostic_hints
 

@@ -70,34 +70,3 @@ def test_failed_and_uncertain_updates_preserve_latents():
     assert store.memory.snapshot()["records"] == before["memory"]["records"]
 
 
-def test_paired_histories_and_recipe_resume(tmp_path, monkeypatch):
-    from pathwm.data.entity_state import state_episodes
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import train_entity_state
-    from pathwm.models.entities import EntityMatchReader
-
-    original = entity_growth.growth_inputs
-    families = original(seed=101, count=1)
-    data = state_episodes(Scorer(), families)
-    assert len({tuple(e["target"]) for e in data["manifest"]}) == 4
-    assert all(
-        e["descriptors"][-2:] == data["manifest"][0]["descriptors"][-2:]
-        for e in data["manifest"]
-    )
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed=seed, count=1)
-    )
-    donor = tmp_path / "donor.pt"
-    torch.save(
-        {
-            "model": {
-                "agent." + k: v for k, v in EntityMatchReader().state_dict().items()
-            }
-        },
-        donor,
-    )
-    output = tmp_path / "state"
-    train_entity_state(donor, output)
-    raw = (output / "entity_state.json").read_bytes()
-    train_entity_state(donor, output, resume=True)
-    assert (output / "entity_state.json").read_bytes() == raw

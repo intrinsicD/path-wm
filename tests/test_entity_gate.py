@@ -107,54 +107,6 @@ def test_gate_examples_and_frozen_credit():
     assert all(p.grad is None for m in (matcher, key) for p in m.parameters())
 
 
-@pytest.mark.parametrize("continuation", [False, True])
-def test_gate_recipe_resume(tmp_path, monkeypatch, continuation):
-    from pathwm.models.entities import EntityMatchReader
-    from pathwm.evaluation import entity_growth
-    from experiments.multimodal import train_entity_gate
-
-    original = entity_growth.growth_inputs
-    monkeypatch.setattr(
-        entity_growth, "growth_inputs", lambda seed, count: original(seed, 1)
-    )
-    matcher = EntityMatchReader()
-    with torch.no_grad():
-        matcher.matcher[0].weight.fill_(1)
-        matcher.matcher[0].bias.zero_()
-        matcher.matcher[2].weight.fill_(-1)
-        matcher.matcher[2].bias.fill_(10)
-    donor, cell, key = [tmp_path / name for name in ("matcher.pt", "cell.pt", "key.pt")]
-    torch.save(
-        {"model": {"agent." + k: v for k, v in matcher.state_dict().items()}}, donor
-    )
-    torch.save({"model": EntityInteractionCell().state_dict()}, cell)
-    from pathwm.models.entity_relations import RelationKey
-
-    torch.save({"model": RelationKey().state_dict()}, key)
-    # Use a key with dependable recognition for the transactional smoke.
-    model = RelationKey()
-    with torch.no_grad():
-        model.encoder.weight.zero_()
-        model.encoder.weight[:8].copy_(torch.eye(8))
-        model.encoder.bias.zero_()
-        model.decoder.weight.zero_()
-        model.decoder.weight[:, :8].copy_(torch.eye(8))
-        model.decoder.bias.zero_()
-    torch.save({"model": model.state_dict()}, key)
-    output = tmp_path / "gate"
-    kwargs = {}
-    if continuation:
-        gate_donor = tmp_path / "gate.pt"
-        torch.save({"model": RelationWriteGate().state_dict()}, gate_donor)
-        kwargs = dict(
-            gate_weights=gate_donor, augmented=True, replicate=1, retention=1.0
-        )
-    train_entity_gate(donor, cell, key, output, **kwargs)
-    raw = (output / "entity_gate.json").read_bytes()
-    train_entity_gate(donor, cell, key, output, resume=True, **kwargs)
-    assert (output / "entity_gate.json").read_bytes() == raw
-
-
 def test_augmented_pairs_preserve_supervision():
     from pathwm.evaluation.entity_gate import augmented_gate_examples
     from pathwm.evaluation.entity_growth import growth_inputs
@@ -167,21 +119,6 @@ def test_augmented_pairs_preserve_supervision():
         assert torch.equal(control[key], augmented[key])
     assert torch.equal(control["cue"][:12], augmented["cue"][:12])
     assert not torch.equal(control["cue"][12:], augmented["cue"][12:])
-
-
-def test_replication_seed_contract():
-    from experiments.multimodal import gate_replication_seeds
-
-    assert gate_replication_seeds(0) == (71, 0)
-    assert gate_replication_seeds(2) == (73, 200)
-    from pathwm.evaluation.entity_gate import gate_shift_examples
-
-    a = gate_shift_examples(921 + gate_replication_seeds(1)[1], 4)
-    b = gate_shift_examples(921 + gate_replication_seeds(2)[1], 4)
-    assert not torch.equal(a["active"], b["active"])
-    assert torch.equal(a["labels"], b["labels"])
-    with pytest.raises(ValueError):
-        gate_replication_seeds(-1)
 
 
 def test_retention_detaches_teacher_and_has_correct_direction():

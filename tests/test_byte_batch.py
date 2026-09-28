@@ -41,21 +41,3 @@ def test_byte_batch_rejects_empty_iterable():
         bytes_batch(iter(()))
 
 
-def test_task_metadata_roundtrip_and_gradients_match_original_byte_builder(monkeypatch):
-    import copy
-    from pathwm.models import tasks
-
-    torch.manual_seed(84)
-    new = tasks.MetadataEncoder(16)
-    old = copy.deepcopy(new)
-    records = [{"caller": "Älice", "task": ""}, {"caller": "B", "task": "read"}] * 4
-    output = new(records)
-    with monkeypatch.context() as patch:
-        patch.setattr(tasks, "bytes_batch", original_batch)
-        expected = old(records)
-    assert torch.equal(output, expected)
-    output.square().sum().backward()
-    expected.square().sum().backward()
-    assert all(
-        torch.equal(p.grad, q.grad) for p, q in zip(new.parameters(), old.parameters())
-    )
