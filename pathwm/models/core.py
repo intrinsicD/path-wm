@@ -151,6 +151,9 @@ class SharedCore(nn.Module):
         self.action_in = nn.Linear(c.action_width, d)
         self.action_flag = nn.Embedding(2, d)  # missing vs present action
         self.time_in = nn.Linear(2, d)
+        # A demonstrated transition (pre entity token, action, post entity token) for induce.
+        self.event_in = nn.Sequential(nn.Linear(2 * c.evidence_width + c.action_width, 2 * d), nn.GELU(),
+                                      nn.Linear(2 * d, d))
         self.norm = nn.LayerNorm(d)
         # predict heads
         self.prior_head = None if c.continuous_only else nn.Linear(d, code)
@@ -231,6 +234,25 @@ class SharedCore(nn.Module):
         logits = None if c.continuous_only else torch.zeros(batch, c.slots, c.groups, c.classes, device=device)
         return CoreState(h, logits, torch.zeros(batch, c.slots, device=device),
                          self.scene_init.expand(batch, -1, -1), self.work_init.expand(batch, -1, -1))
+
+    def bind(self, evidence, present):
+        """Initial state bound to perceived entities: slot i <- evidence token i [B,K,E], K <= S.
+
+        Remaining slots are absent. The posterior then comes from `observe`."""
+        c = self.config
+        b, k, _ = evidence.shape
+        if k > c.slots:
+            raise ValueError("More entities than slots")
+        h = torch.zeros(b, c.slots, c.width, device=evidence.device)
+        h[:, :k] = self.evidence_in(evidence)
+        presence = torch.full((b, c.slots), -8.0, device=evidence.device)
+        presence[:, :k] = torch.where(present, 8.0, -8.0)
+        logits = None if c.continuous_only else torch.zeros(b, c.slots, c.groups, c.classes, device=evidence.device)
+        return CoreState(h, logits, presence, self.scene_init.expand(b, -1, -1), self.work_init.expand(b, -1, -1))
+
+    def event(self, pre, action, post):
+        """Token [n,D] of one demonstrated transition for `induce`."""
+        return self.event_in(torch.cat((pre, action, post), -1))
 
     def work_valid(self, state):
         return state.work_revision == state.revision

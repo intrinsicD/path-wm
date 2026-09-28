@@ -214,3 +214,21 @@ def test_no_step_counter_input():
         one = core.think(state).state
         again = core.think(state).state
     assert torch.equal(one.work, again.work)  # same input, same output: no hidden counter
+
+
+def test_bind_places_entities_in_slot_order_and_marks_the_rest_absent():
+    core = make()
+    evidence = torch.randn(B, 7, E)
+    present = torch.ones(B, 7, dtype=torch.bool)
+    with torch.no_grad():
+        state = core.bind(evidence, present)
+    torch.testing.assert_close(state.h[:, :7], core.evidence_in(evidence))
+    assert (state.presence[:, :7] > 0).all() and (state.presence[:, 7] < 0).all()
+    with pytest.raises(ValueError):
+        core.bind(torch.randn(B, 9, E), torch.ones(B, 9, dtype=torch.bool))
+
+
+def test_event_token_shape():
+    core = make()
+    token = core.event(torch.randn(5, E), torch.randn(5, E), torch.randn(5, E))
+    assert token.shape == (5, core.config.width)

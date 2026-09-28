@@ -30,7 +30,7 @@ FAMILY_SCHEDULE = (
 )
 
 T_95 = {1: 6.314, 2: 2.920, 3: 2.353, 4: 2.132, 5: 2.015, 6: 1.943, 7: 1.895, 8: 1.860, 9: 1.833}
-TRANSITION_FAMILIES = ("open", "close", "toggle")
+from pathwm.evaluation.rules import TRANSITION_FAMILIES, calibration, nu_from_rows  # noqa: F401
 
 
 # ---------------------------------------------------------------- training tokens
@@ -153,51 +153,6 @@ def episode_predictions(core, tokens, loops=None, reader="code"):
     q = tokens.query
     logit, _ = core.apply(q.m_pre, q.a, q.b, z[q.episode], loops, None if valid is None else valid[q.episode])
     return logit
-
-
-def nu_from_rows(rows, floors):
-    """rows: dicts with family, group, truth, s, p. BA per group -> ν per family."""
-    groups = {}
-    for r in rows:
-        groups.setdefault((r["family"], r["group"]), []).append(r)
-    per_family, skipped = {}, 0
-    for (family, _), items in groups.items():
-        truth = torch.tensor([r["truth"] for r in items])
-        s = torch.tensor([r["s"] for r in items])
-        predicted = torch.tensor([int(r["p"] >= 0.5) for r in items])
-        if family in TRANSITION_FAMILIES:
-            truth, predicted = truth ^ s, predicted ^ s
-        ba = rw.balanced_accuracy(predicted, truth)
-        if math.isnan(ba):
-            skipped += 1
-            continue
-        floor = floors[family]["floor"]
-        per_family.setdefault(family, []).append((ba - floor) / (1 - floor))
-    result = {f: float(np.mean(v)) for f, v in per_family.items()}
-    # A group whose queries contain only one scored class has undefined BA. It is
-    # counted and makes the formal C2 screen incomplete; it is never a silent drop.
-    result["groups_without_both_classes"] = skipped
-    return result
-
-
-def calibration(rows, bins=10):
-    if not rows:
-        return {}
-    p = torch.tensor([r["p"] for r in rows])
-    y = torch.tensor([float(r["truth"]) for r in rows])
-    edges = torch.linspace(0, 1, bins + 1)
-    ece = 0.0
-    for i in range(bins):
-        mask = (p >= edges[i]) & ((p < edges[i + 1]) if i < bins - 1 else (p <= 1))
-        if mask.any():
-            ece += float(mask.float().mean() * (p[mask].mean() - y[mask].mean()).abs())
-    eps = 1e-6
-    return dict(
-        ece=ece,
-        brier=float((p - y).square().mean()),
-        nll=float(-(y * (p + eps).log() + (1 - y) * (1 - p + eps).log()).mean()),
-        count=len(rows),
-    )
 
 
 def episode_metrics(core, perceive, batch, device, floors, loops=None, reader="code", tokens=None):
