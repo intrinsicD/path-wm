@@ -356,3 +356,27 @@ Keine Quelle belegt diese Kombination.
 
 Implementierung ist damit noch nicht begonnen; sie folgt als eigener, mit Alex
 geplanter Abschnitt (zuerst Prüfung 1, Verträge).
+
+## Umsetzung E4-A: Kernform im bestehenden `LatentCore` (Plan, 28.09.2026)
+
+Alex: E4 jetzt planen und umsetzen, GPU-Läufe später selbst auf einer anderen Maschine.
+**Umfang:** nur die Kernform, nicht der vereinte Kern (Abschnitt B, eigener Plan).
+
+- `LatentCore(..., blocks=1)`: Liste unabhängiger `Block`-Instanzen; jede innere Runde
+  wendet die Blöcke nacheinander an (`for r in loops: for b in blocks`), in `induce`,
+  `apply` und dem Evidenzleser gleich. `blocks=1` ist bitgleich zum heutigen Verhalten
+  (Test); Checkpoint-Schlüssel `block.*` bleiben bei einem Block erhalten.
+- Rezeptprofile in `experiments/latent_agent.py`: `full` wird die E4-Kernform
+  (Kern Breite 128, 4 Köpfe, 2 Blöcke, 2 Runden; Wahrnehmung unverändert Slots 64,
+  Encoder 32); neues Profil `r1` = heutige Form (Breite 64, 1 Block) für Reproduktion
+  und als verkleinerte Vorprüfung; `check` bleibt klein. Für die symbolische Stufe
+  arbeiten `SymbolicSlots` in Kernbreite; die Pixelstufe erhält eine Projektion 64→128
+  vor dem Kern (neu, getestet; eingefrorene Wahrnehmung bleibt eingefroren).
+- Kontrollierte Vergleichsachsen als Optionen: `--core-width`, `--core-blocks`,
+  `--core-loops` (Kapazitätsregel: Breite {64,128,256}, Tiefe {1,2,4}, Runden {1,2,4,8}).
+- Tests (CPU): Parameterzahl 264.832 je Block bei Breite 128, 529.664 für zwei;
+  Blockreihenfolge und Rundenzahl; bitgleicher Ein-Block-Standard; Evidenzleser und
+  Kontrollarme mit zwei Blöcken; exaktes Fortsetzen; Speicher-Schätzung für 8 GB.
+- Übergabe an Alex: Skript mit Worktree-Einfrieren und den Wiederholungen der
+  entscheidenden §23-Läufe auf E4 (Einzelfamilien L4 ×2 Seeds, Mischlauf ×2 Seeds,
+  Diagnosen aus dem Review: 5×-Batch-Mischlauf, zurückgehaltenes δ). Kein GPU-Lauf durch Claude.

@@ -2184,3 +2184,10 @@ unter trainierten Regeln gelernt wurde. Zuverlässigkeitsaussagen brauchen ≈10
 auf (j,k,δ)=(0,1,0) ausgerichtet; LR konstant 3e-4, AdamW wd 0,01.
 **Vorschlag an Alex:** (1) CPU-Diagnosen; (2) 5×-Batch-Mischlauf mit 2 Seeds und
 Transfer-Test mit zurückgehaltenem δ; (3) Curriculum nur bei Bedarf.
+
+**Einordnung nach E4 (28.09.2026):** Alex hat in [core-design.md](core-design.md) E4
+angenommen (volle Konfiguration Breite 128, 2 Blöcke, 2 innere Runden; Breite 64 nur als
+verkleinerter Erstlauf). **Alle §23-Läufe (L*, N*, C*, F*, M*) liefen mit Breite 64 und
+einem gebundenen Block und sind damit verkleinerte Vorprüfungen; die Verifikation auf der
+vollen Konfiguration ist unvollständig**, bis die entscheidenden Läufe mit E4 wiederholt
+sind (Plan unten, Abschnitt E4-A).
