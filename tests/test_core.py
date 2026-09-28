@@ -62,9 +62,10 @@ def test_action_at_zero_duration_is_applied_once_and_rows_are_independent():
         action = torch.randn(B, E)
         present = torch.tensor([True, False, True])
         out = core.predict(state, action=action, action_present=present, dt=torch.zeros(B))
-    assert not torch.equal(out.h[0], state.h[0])
-    assert torch.equal(out.h[1], state.h[1])  # no action, no time: that row stays exact
-    assert not torch.equal(out.h[2], state.h[2])
+    # h_step starts at zero (predict begins as a copy of h), so the action shows in the code.
+    assert not torch.equal(out.logits[0], state.logits[0])
+    assert torch.equal(out.logits[1], state.logits[1]) and torch.equal(out.h[1], state.h[1])
+    assert not torch.equal(out.logits[2], state.logits[2])
 
 
 def test_missing_action_differs_from_zero_action():
@@ -74,7 +75,7 @@ def test_missing_action_differs_from_zero_action():
         dt = torch.ones(B)
         missing = core.predict(state, action=None, dt=dt)
         zero = core.predict(state, action=torch.zeros(B, E), dt=dt)
-    assert not torch.allclose(missing.h, zero.h)
+    assert not torch.allclose(missing.logits, zero.logits)
 
 
 def test_slot_permutation_equivariance():

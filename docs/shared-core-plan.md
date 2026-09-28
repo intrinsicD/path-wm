@@ -29,7 +29,7 @@ Code 4×16, K = 4) wiederholt.
 
 | # | Inhalt | Nachweis | Status |
 | --- | --- | --- | --- |
-| S1 | `pathwm/models/core.py`: Zustand, Kern mit fünf Operationen, Schreibrechte, Kontrolloptionen | CPU-Verträge (Prüfung 1) | in Arbeit |
+| S1 | `pathwm/models/core.py`: Zustand, Kern mit fünf Operationen, Schreibrechte, Kontrolloptionen | CPU-Verträge (Prüfung 1): 15 Tests, volle Konfiguration | erledigt 29.09. |
 | S2 | Rezept `experiments/core.py`, symbolische Stufe: `induce` aus Belegen, `predict`/`observe` über Druckereignisse, Verluste aus dem Kerndesign | kleiner echter Lauf, Bericht, Vergleich gegen Kopie (Lampe unverändert) und gegen die Kontrollen | offen |
 | S3 | Löschen der alten Module, Rezepte und Tests; `WorldSession` und `ConceptMemory` von `belief_state`/`latent_core` lösen | volle Testsuite grün, keine Importe alter Module | offen |
 | S4 | Wahrnehmung neu: Encoder + Slot Attention + Decoder im neuen Rezept, Qualifikation (Bindung, Attribute, Identität, zurückgehaltene Kombinationen), einfrieren | Bericht mit Qualifikationsschwellen, vorab festgelegt | offen |
