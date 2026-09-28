@@ -429,3 +429,8 @@ demselben Worktree. Auf einer Maschine mit `systemd-oomd` lange Läufe als Syste
 Schwelle auf dem zurückgehaltenen Pool, kein Gate. Ein bestandener Lauf gilt als
 Entwicklungsbefund; Zuverlässigkeitsaussagen brauchen ≈10 Seeds (Review 28.09.).
 Alle Befehlsvarianten wurden mit `--size check` auf der CPU auf gültige Argumente geprüft.
+**Läufe lokal gestartet (28.09.2026, Alex: GPU frei):** Smoke E4 gemischt, 500 Updates:
+4,05 GiB reserviert (3,29 belegt), 5,7 Updates/s. Warteschlange aus Worktree `1f74100` nach
+Informationswert: Transfer Relation → Einzelfamilien Relation/Kategorie → 5×-Batch-Mischlauf
+→ Mischlauf 60k → Transfer Toggle → Open/Close/Toggle 30k, je Seeds 1101/2202 (≈20–22 h).
+Ausgaben: `runs/latent_agent_r1/e4_reruns_20260928/`, Protokoll `queue.log`.
