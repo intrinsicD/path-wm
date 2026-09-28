@@ -118,3 +118,58 @@ def test_core_overrides_are_recorded_and_resume_exactly(monkeypatch, tmp_path):
     sizes = json.loads((tmp_path / "straight" / "run.json").read_text())["identity"]["settings"]["sizes"]
     assert (sizes["core_width"], sizes["core_blocks"], sizes["loops"]) == (24, 2, 3)
     assert a["model"]["core.more_blocks.0.cross.in_proj_weight"].shape == (72, 24)
+
+
+def test_episodes_override_sets_training_batch_size_and_resumes(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    sizes = []
+    original = rw.sample_episodes
+
+    def spy(*args, **kwargs):
+        sizes.append(kwargs.get("episodes"))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "sample_episodes", spy)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--episodes", "10",
+                                      "--output", str(tmp_path / "E")])
+    recipe.main()
+    assert sizes.count(10) >= 2  # both training updates
+    settings = json.loads((tmp_path / "E" / "run.json").read_text())["identity"]["settings"]
+    assert settings["episodes"] == 10 and settings["sizes"]["episodes"] == 10
+
+
+def test_holdout_ladder_rules_are_never_trained_and_form_the_transfer_pool(monkeypatch, tmp_path):
+    import json
+    import experiments.latent_agent as recipe
+
+    drawn = []
+    original = rw.sample_episodes
+
+    def spy(generator, rules, *args, **kwargs):
+        drawn.append(tuple(rules))
+        return original(generator, rules, *args, **kwargs)
+
+    monkeypatch.setattr(rw, "sample_episodes", spy)
+    ladder = rw.relation_ladder(4)
+    monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--size", "check", "--device", "cpu",
+                                      "--updates", "2", "--train-rules", "4", "--rule-repeats", "7", "1", "1", "1",
+                                      "--holdout-ladder-rules", "3", "--output", str(tmp_path / "H")])
+    recipe.main()
+    held = ladder[3]
+    trained = [p for p in drawn if held not in p]
+    assert (ladder[0],) * 7 + ladder[1:3] in trained  # skewed training pool without the held-out rule
+    assert (held,) in drawn  # the transfer population
+    settings = json.loads((tmp_path / "H" / "run.json").read_text())["identity"]["settings"]
+    assert settings["holdout_rule_keys"] == [held.key()]
+    assert settings["train_rule_keys"] == [r.key() for r in ladder[:3]]
+    result = json.loads((tmp_path / "H" / "result.json").read_text())
+    assert set(result["metrics"]["pool_heldout"]["nu_by_rule"]) <= {held.key()}
+    for bad in (["--holdout-ladder-rules", "4"], ["--holdout-ladder-rules", "0", "1", "2", "3"],
+                ["--train-families", "relation", "toggle", "--holdout-ladder-rules", "1"]):
+        monkeypatch.setattr(sys, "argv", ["latent_agent", "--stage", "symbolic", "--train-rules", "4", *bad,
+                                          "--output", str(tmp_path / "x")])
+        with pytest.raises(SystemExit):
+            recipe.main()
