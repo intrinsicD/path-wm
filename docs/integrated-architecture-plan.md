@@ -2202,3 +2202,27 @@ trainierten Regeln anhand der Belege, keine auf neues δ übertragbare Rechnung 
 Aufbau (4 Regeln, 3 trainiert). Ob mehr trainierte Regeln (größerer Pool) oder andere
 Lernsignale übertragbare Rechnung erzeugen, ist offen. F_relation_1101 (E4) besteht ebenfalls
 (ν voll 1,000, leer 0,016, permutiert −0,015).
+
+**E4-Wiederholungen abgeschlossen (28.09.2026, 11:40–22:38, Worktree `1f74100`, alle Exit0,
+Berichte `structural_verified`; Ausgaben `runs/latent_agent_r1/e4_reruns_20260928/`):**
+
+| Lauf | Seed 1101 | Seed 2202 |
+| --- | --- | --- |
+| Kategorie L4, 6k | besteht (ν 1,000) | besteht (1,000) |
+| Relation L4, 6k | besteht (1,000) | **verfehlt (0,625)** |
+| Open L4, 30k | besteht (0,974) | besteht (1,000) |
+| Close L4, 30k | besteht (1,000) | besteht (1,000) |
+| Toggle L4, 30k | besteht (1,000) | besteht (0,999) |
+| Transfer Relation (δ=3 nie trainiert) | trainiert besteht; δ=3 ν −0,287 | trainiert besteht; δ=3 −0,379 |
+| Transfer Toggle (δ=3 nie trainiert) | trainiert besteht (0,981); δ=3 −0,321 | trainiert besteht (1,000); δ=3 −0,199 |
+| Mischlauf 60k | **verfehlt**: nur Kategorie 1,00 (Relation 0,40, Toggle 0,22, Open −0,98, Close −0,94) | **verfehlt**: nur Kategorie (0,27/0,27/−0,81/−0,93) |
+| Mischlauf 5× Episoden, 12k | **verfehlt**: nur Kategorie 0,95 | **verfehlt**: nur Kategorie 1,00 |
+
+**Einordnung:** (1) Einzelfamilien-Befunde aus §23 auf der vollen Konfiguration bestätigt (9/10;
+Relation-Seed 2202 verzögert). (2) Kein Transfer auf ein nie trainiertes δ in Relation und Toggle
+(Auswahl unter trainierten Regeln), konsistent mit der Aufgabenvielfalt-Literatur
+([Scan](literature-scan-202609.md)). (3) Mischlauf auf E4 in allen vier Läufen nur Kategorie; der
+M2s-Erfolg (Breite 64, Seed 1101) wiederholt sich auf E4 nicht. Verdünnung allein erklärt es nicht
+(5×-Episoden-Läufe mit Einzeltrainings-Exposition verfehlen ebenso). Hypothesen (nicht getestet):
+Konkurrenz im geteilten Kern, Becken der früh gelernten Kategorie-Lösung. Nächste Schritte mit Alex:
+Mischlauf ohne Kategorie bzw. Kategorie zuletzt (Reihenfolge-Test), Vielfalts-Sweep für Transfer.
