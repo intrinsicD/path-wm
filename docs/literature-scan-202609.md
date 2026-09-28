@@ -81,7 +81,7 @@ Alles unten sind Prüfvorschläge, keine übernommenen Entscheidungen.
 Nur Fable in der Spitzengruppe: RecurTrace (2609.03379; Loop-Memory-Attention, Ablation bei fester
 Schleifenzahl), „Better Slots, Better Worlds“ (2608.12078; Slot-Bindungsmetriken mit
 Vorhersagefehler korrelieren). Nur Codex: FuseReg (Digest; Decoder auf zufälligen Teilmengen von
-Encoderstufen eingrenzt, wo Detail verloren geht), MO-IKE/„Beyond Endpoint Scores“ (Korrektur bei
+Encoderstufen zeigt, wo Detail verloren geht), MO-IKE/„Beyond Endpoint Scores“ (Korrektur bei
 eingefrorenen Gewichten auf Zuverlässigkeit, Generalisierung, Spezifität prüfen; Verläufe statt
 Endwerte).
 
