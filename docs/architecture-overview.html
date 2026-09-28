@@ -1,0 +1,511 @@
+<title>PATH-WM Architekturbild</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg:#f6f7f8; --surface:#ffffff; --panel:#eef1f4;
+  --ink:#1b2129; --ink-2:#4a5563; --ink-3:#7d8794; --rule:#d5dbe2;
+  --feat:#1d8a86; --state:#2f63b8; --state-2:#8fb0e3; --work:#c27a0e; --mem:#7446b0; --concept:#b83f6c;
+  --feat-soft:#d9efee; --state-soft:#dfe8f7; --work-soft:#f8ead3; --mem-soft:#ece3f7; --concept-soft:#f5dfe8;
+  --core-fill:#e8edf5; --accent:#2f63b8;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12161b; --surface:#1a2027; --panel:#202833;
+    --ink:#e6eaef; --ink-2:#aab4c0; --ink-3:#7c8794; --rule:#323c48;
+    --feat:#4cc2bc; --state:#6f9be6; --state-2:#3d5f96; --work:#e3a23f; --mem:#a883e0; --concept:#e07aa2;
+    --feat-soft:#173633; --state-soft:#1c2a42; --work-soft:#3a2c14; --mem-soft:#2b2240; --concept-soft:#3b1f2c;
+    --core-fill:#1f2a3a; --accent:#6f9be6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12161b; --surface:#1a2027; --panel:#202833;
+  --ink:#e6eaef; --ink-2:#aab4c0; --ink-3:#7c8794; --rule:#323c48;
+  --feat:#4cc2bc; --state:#6f9be6; --state-2:#3d5f96; --work:#e3a23f; --mem:#a883e0; --concept:#e07aa2;
+  --feat-soft:#173633; --state-soft:#1c2a42; --work-soft:#3a2c14; --mem-soft:#2b2240; --concept-soft:#3b1f2c;
+  --core-fill:#1f2a3a; --accent:#6f9be6;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:flex;flex-direction:column;gap:40px}
+header{display:flex;flex-direction:column;gap:10px}
+h1{font-size:30px;font-weight:600;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h2{font-size:20px;font-weight:600;margin:0;text-wrap:balance}
+h3{font-size:15px;font-weight:600;margin:0}
+p{margin:0;max-width:72ch}
+.lede{color:var(--ink-2);font-size:16px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+code,.mono{font-family:var(--mono);font-size:.9em}
+.status{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-block;border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:3px 11px;font-size:13px;color:var(--ink-2)}
+.pill b{color:var(--ink);font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;padding:12px 16px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;font-size:13px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:13px;height:13px;border-radius:3px;display:inline-block}
+.ln{width:26px;height:0;border-top:2px solid var(--ink-2);display:inline-block}
+.ln.d{border-top-style:dashed}.ln.o{border-top-style:dotted;border-color:var(--concept)}
+section{display:flex;flex-direction:column;gap:16px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:900px){.compare{grid-template-columns:1fr}}
+figure{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px}
+figure.hero{border-color:var(--accent)}
+.fighead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:4px;background:var(--panel);color:var(--ink-2)}
+.tag.goal{background:var(--state-soft);color:var(--state)}
+.scroll{overflow-x:auto}
+svg{display:block;width:100%;height:auto}
+.scroll svg.wide{min-width:760px}
+figcaption{font-size:13.5px;color:var(--ink-2);max-width:none}
+figcaption ul{margin:6px 0 0;padding-left:18px}
+.side{font-size:13.5px;color:var(--ink-2);border-top:1px solid var(--rule);padding-top:10px}
+.side ul{margin:4px 0 0;padding-left:18px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.note{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.note p{color:var(--ink-2)}
+footer{font-size:13px;color:var(--ink-3);border-top:1px solid var(--rule);padding-top:14px}
+a{color:var(--accent)}
+/* SVG vocabulary */
+.mod{fill:var(--surface);stroke:var(--ink-2);stroke-width:1.2}
+.ext{fill:var(--panel);stroke:var(--ink-3);stroke-width:1}
+.core{fill:var(--core-fill);stroke:var(--accent);stroke-width:2.4}
+.panel{fill:var(--panel);stroke:var(--rule);stroke-width:1}
+.memb{fill:var(--mem-soft);stroke:var(--mem);stroke-width:1.4}
+.band{fill:none;stroke:var(--rule);stroke-width:1.2}
+.band-off{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:6 5}
+.chip{fill:var(--surface);stroke:var(--rule);stroke-width:1}
+.chip-core{fill:var(--surface);stroke:var(--accent);stroke-width:1}
+.f-feat{fill:var(--feat)} .f-state{fill:var(--state)} .f-state2{fill:var(--state-2)} .f-work{fill:var(--work)} .f-mem{fill:var(--mem)} .f-concept{fill:var(--concept)}
+.s-state{fill:var(--state-soft);stroke:var(--state);stroke-width:1.2}
+.s-work{fill:var(--work-soft);stroke:var(--work);stroke-width:1.2}
+.s-concept{fill:var(--concept-soft);stroke:var(--concept);stroke-width:1.2}
+.s-none{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:4 3}
+.s-warn{fill:var(--surface);stroke:var(--ink-3);stroke-width:1.2}
+.t{fill:var(--ink);font-family:var(--sans);font-size:12.5px}
+.tb{fill:var(--ink);font-family:var(--sans);font-size:13.5px;font-weight:600}
+.ts{fill:var(--ink-2);font-family:var(--sans);font-size:11px}
+.tm{fill:var(--ink);font-family:var(--mono);font-size:12px;font-weight:500}
+.tms{fill:var(--ink-2);font-family:var(--mono);font-size:10.5px}
+.tc{fill:var(--concept);font-family:var(--mono);font-size:11px}
+.tmem{fill:var(--mem);font-family:var(--sans);font-size:11px}
+.tacc{fill:var(--accent);font-family:var(--sans);font-size:11px;font-weight:500}
+.a{fill:none;stroke:var(--ink-2);stroke-width:1.3}
+.a-d{fill:none;stroke:var(--ink-2);stroke-width:1.3;stroke-dasharray:5 4}
+.a-mem{fill:none;stroke:var(--mem);stroke-width:1.4}
+.a-acc{fill:none;stroke:var(--accent);stroke-width:1.4}
+.a-loss{fill:none;stroke:var(--concept);stroke-width:1.3;stroke-dasharray:2 3}
+.ah{fill:var(--ink-2)} .ahm{fill:var(--mem)} .aha{fill:var(--accent)}
+.brk{fill:none;stroke:var(--ink-3);stroke-width:1}
+@media (prefers-reduced-motion:no-preference){figure{transition:border-color .2s}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">PATH-WM · Architektur · Stand 28.09.2026</div>
+  <h1>Heute und Ziel auf einen Blick</h1>
+  <p class="lede">Links steht, was im allgemeinen Agenten heute läuft. Rechts steht der gemeinsame Kern, wie er am 28. September beschlossen wurde. Darunter folgen eine Lupe auf diesen Kern und der Lernablauf. Die Farben stehen für Datenarten, nicht für Module; sie bedeuten in allen Bildern dasselbe.</p>
+  <div class="status">
+    <span class="pill"><b>Heute</b> implementiert, Standardpfad <code>state_model="belief"</code></span>
+    <span class="pill"><b>Ziel</b> beschlossen (E1–E12), vereinter Kern noch nicht implementiert</span>
+    <span class="pill"><b>E4-A</b> Kernform 2 Blöcke · Breite 128 im <code>latent_agent</code>-Rezept umgesetzt</span>
+  </div>
+  <div class="legend" aria-label="Legende">
+    <span><i class="sw f-feat" style="background:var(--feat)"></i>Sinnesmerkmale (Encoder)</span>
+    <span><i class="sw" style="background:var(--state)"></i>Weltzustand · Slots · Szene</span>
+    <span><i class="sw" style="background:var(--work)"></i>Arbeitsbereich W (Denken)</span>
+    <span><i class="sw" style="background:var(--mem)"></i>Gedächtnis</span>
+    <span><i class="sw" style="background:var(--concept)"></i>Konzeptcodes Z · Lernsignale</span>
+    <span><i class="ln"></i>Laufzeitpfad</span>
+    <span><i class="ln d"></i>Zweig, Kopie oder offline</span>
+    <span><i class="ln o"></i>Verlust (nur Training)</span>
+  </div>
+</header>
+
+<section aria-labelledby="s1">
+  <h2 id="s1">Vom Nebeneinander zum einen Kern</h2>
+  <div class="compare">
+
+    <figure>
+      <div class="fighead"><h3>Heute</h3><span class="tag">implementiert</span></div>
+      <div class="scroll">
+      <svg viewBox="0 0 600 640" role="img" aria-label="Heutiger Pfad: Encoder, getrennte Vorhersage und Korrektur mit Code aus einem gemittelten Vektor, Weltauslese, Thinker mit acht Arbeitstokens, Dispatcher; Imagination geht an den Aufrufer zurück, nicht ins Denken.">
+        <defs>
+          <marker id="h1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          <marker id="h1m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahm"/></marker>
+        </defs>
+        <!-- observation -->
+        <rect x="150" y="10" width="240" height="34" rx="6" class="ext"/>
+        <text x="270" y="32" text-anchor="middle" class="t">Beobachtung · Bild, Audio, Text</text>
+        <line x1="270" y1="44" x2="270" y2="68" class="a" marker-end="url(#h1)"/>
+        <!-- encoder -->
+        <rect x="120" y="70" width="300" height="76" rx="6" class="mod"/>
+        <text x="270" y="89" text-anchor="middle" class="tb">Modalitäts-Encoder</text>
+        <rect x="195" y="97" width="150" height="7" rx="2" class="f-feat" opacity=".45"/>
+        <rect x="215" y="107" width="110" height="7" rx="2" class="f-feat" opacity=".7"/>
+        <rect x="235" y="117" width="70" height="7" rx="2" class="f-feat"/>
+        <text x="270" y="139" text-anchor="middle" class="ts">Feature-Pyramide, mehrere Skalen</text>
+        <!-- action chip -->
+        <rect x="40" y="150" width="112" height="24" rx="12" class="chip"/>
+        <text x="96" y="166" text-anchor="middle" class="ts">Aktion · Δt</text>
+        <line x1="96" y1="174" x2="96" y2="188" class="a" marker-end="url(#h1)"/>
+        <!-- dynamics / correction -->
+        <rect x="40" y="190" width="200" height="60" rx="6" class="mod"/>
+        <text x="140" y="214" text-anchor="middle" class="tb">BeliefDynamics</text>
+        <text x="140" y="233" text-anchor="middle" class="ts">Vorhersage → Prior</text>
+        <rect x="300" y="190" width="200" height="60" rx="6" class="mod"/>
+        <text x="400" y="214" text-anchor="middle" class="tb">BeliefCorrection</text>
+        <text x="400" y="233" text-anchor="middle" class="ts">Korrektur → Posterior</text>
+        <line x1="240" y1="220" x2="298" y2="220" class="a" marker-end="url(#h1)"/>
+        <text x="269" y="213" text-anchor="middle" class="ts">Prior</text>
+        <path d="M330,146 L370,188" class="a" marker-end="url(#h1)"/>
+        <text x="362" y="164" class="ts">Merkmale</text>
+        <!-- recurrence -->
+        <path d="M340,250 Q240,306 140,252" class="a" marker-end="url(#h1)"/>
+        <text x="240" y="300" text-anchor="middle" class="ts">Code wirkt im nächsten Prior</text>
+        <!-- readout strip -->
+        <text x="40" y="341" class="t">Weltauslese</text>
+        <g class="f-state">
+          <rect x="190" y="330" width="12" height="12" rx="2"/><rect x="205" y="330" width="12" height="12" rx="2"/><rect x="220" y="330" width="12" height="12" rx="2"/><rect x="235" y="330" width="12" height="12" rx="2"/>
+          <rect x="250" y="330" width="12" height="12" rx="2"/><rect x="265" y="330" width="12" height="12" rx="2"/><rect x="280" y="330" width="12" height="12" rx="2"/><rect x="295" y="330" width="12" height="12" rx="2"/>
+          <rect x="310" y="330" width="12" height="12" rx="2"/><rect x="325" y="330" width="12" height="12" rx="2"/><rect x="340" y="330" width="12" height="12" rx="2"/><rect x="355" y="330" width="12" height="12" rx="2"/>
+          <rect x="370" y="330" width="12" height="12" rx="2"/><rect x="385" y="330" width="12" height="12" rx="2"/><rect x="400" y="330" width="12" height="12" rx="2"/><rect x="415" y="330" width="12" height="12" rx="2"/>
+        </g>
+        <line x1="420" y1="250" x2="420" y2="326" class="a" marker-end="url(#h1)"/>
+        <text x="308" y="360" text-anchor="middle" class="ts">16 Tokens × 32 · Code 8×8 aus einem gemittelten Vektor</text>
+        <!-- memory -->
+        <rect x="462" y="286" width="128" height="78" rx="6" class="memb"/>
+        <text x="526" y="307" text-anchor="middle" class="tb">HybridMemory</text>
+        <text x="526" y="324" text-anchor="middle" class="tmem">kurz · komprimiert ·</text>
+        <text x="526" y="338" text-anchor="middle" class="tmem">konsolidiert · geschützt</text>
+        <text x="526" y="355" text-anchor="middle" class="ts">begrenzte Speicher</text>
+        <path d="M500,236 Q560,244 560,284" class="a-mem" marker-end="url(#h1m)"/>
+        <text x="506" y="226" class="tmem">schreibt Ereignis</text>
+        <path d="M486,286 L470,254" class="a-mem" marker-end="url(#h1m)"/>
+        <text x="488" y="272" class="tmem">liest</text>
+        <!-- thinker -->
+        <rect x="10" y="400" width="124" height="40" rx="6" class="chip"/>
+        <text x="72" y="416" text-anchor="middle" class="ts">Ziel · Fehlermonitor</text>
+        <text x="72" y="431" text-anchor="middle" class="ts">+ roher Schrittzähler</text>
+        <line x1="134" y1="420" x2="148" y2="420" class="a" marker-end="url(#h1)"/>
+        <line x1="270" y1="366" x2="270" y2="388" class="a" marker-end="url(#h1)"/>
+        <rect x="150" y="390" width="240" height="60" rx="6" class="mod"/>
+        <text x="270" y="414" text-anchor="middle" class="tb">Thinker · 1 Attend-Block</text>
+        <text x="270" y="433" text-anchor="middle" class="ts">k Runden, gleiche Gewichte</text>
+        <path d="M390,404 C432,396 432,446 390,440" class="a" marker-end="url(#h1)"/>
+        <text x="428" y="426" class="tm">×k</text>
+        <path d="M526,364 Q526,420 392,428" class="a-mem" marker-end="url(#h1m)"/>
+        <text x="470" y="410" class="tmem">liest</text>
+        <!-- workspace -->
+        <g class="f-work">
+          <rect x="222" y="466" width="10" height="10" rx="2"/><rect x="235" y="466" width="10" height="10" rx="2"/><rect x="248" y="466" width="10" height="10" rx="2"/><rect x="261" y="466" width="10" height="10" rx="2"/>
+          <rect x="274" y="466" width="10" height="10" rx="2"/><rect x="287" y="466" width="10" height="10" rx="2"/><rect x="300" y="466" width="10" height="10" rx="2"/><rect x="313" y="466" width="10" height="10" rx="2"/>
+        </g>
+        <line x1="270" y1="450" x2="270" y2="463" class="a" marker-end="url(#h1)"/>
+        <text x="270" y="494" text-anchor="middle" class="ts">nur diese 8 Arbeitstokens ändert das Denken</text>
+        <!-- dispatcher -->
+        <line x1="270" y1="500" x2="270" y2="518" class="a" marker-end="url(#h1)"/>
+        <rect x="100" y="520" width="340" height="40" rx="6" class="mod"/>
+        <text x="270" y="545" text-anchor="middle" class="t">Dispatcher: <tspan class="tms">think · recall · imagine · act · emit</tspan></text>
+        <line x1="200" y1="560" x2="200" y2="588" class="a" marker-end="url(#h1)"/>
+        <rect x="120" y="590" width="160" height="30" rx="6" class="mod"/>
+        <text x="200" y="610" text-anchor="middle" class="t">Decoder · Aktion</text>
+        <line x1="380" y1="560" x2="380" y2="588" class="a-d" marker-end="url(#h1)"/>
+        <rect x="300" y="590" width="200" height="30" rx="6" class="s-none"/>
+        <text x="400" y="610" text-anchor="middle" class="t">imagine-Zweig → Aufrufer</text>
+        <text x="510" y="610" class="ts">nicht zurück</text>
+        <text x="510" y="624" class="ts">ins Denken</text>
+      </svg>
+      </div>
+      <div class="side">
+        <b>Daneben, mit eigenem Tokenformat</b> (zusammen sieben Teilmodule):
+        <ul>
+          <li><code>LatentCore</code> (R1/E4): gebundener Block für Konzeptbildung <code>G</code> und Anwendung <code>T</code>, Konzeptcodes Z, 7 Slots; eigener Pfad im <code>latent_agent</code>-Rezept</li>
+          <li><code>LatentDynamics</code> (Gauß-Pfad), <code>Predictor</code> (Merkmalsgitter, GRU), <code>TransitionPredictor</code> (MLP)</li>
+        </ul>
+      </div>
+      <figcaption>Vorhersage, Korrektur und Denken sind getrennte Netze. Der kategoriale Code entsteht aus einem gemittelten Vektor, also ohne Objektstruktur. Der Thinker ändert nur acht Arbeitstokens und bekommt den Schrittzähler als Eingabe. Ein Imaginationszweig geht an den Aufrufer zurück und fließt nicht in eine weitere Denkrunde.</figcaption>
+    </figure>
+
+    <figure class="hero">
+      <div class="fighead"><h3>Ziel</h3><span class="tag goal">beschlossen · nicht implementiert</span></div>
+      <div class="scroll">
+      <svg viewBox="0 0 600 640" role="img" aria-label="Zielpfad: eingefrorener Multiskalen-Encoder, Zustand aus 8 Slots, Szene, Arbeitsbereich und Konzeptcodes, ein gebundener Kern für fünf Operationen mit getrennten Köpfen, Laufzeitgedächtnis mit Lese- und Schreibwegen, Imagination fließt als markierter Kontext zurück ins Denken.">
+        <defs>
+          <marker id="h2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          <marker id="h2m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahm"/></marker>
+          <marker id="h2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+        </defs>
+        <rect x="150" y="10" width="240" height="34" rx="6" class="ext"/>
+        <text x="270" y="32" text-anchor="middle" class="t">Beobachtung · Bild, Audio, Text</text>
+        <line x1="270" y1="44" x2="270" y2="68" class="a" marker-end="url(#h2)"/>
+        <!-- encoder -->
+        <rect x="120" y="70" width="300" height="76" rx="6" class="mod"/>
+        <text x="270" y="89" text-anchor="middle" class="tb">Multiskalen-Encoder ❄</text>
+        <rect x="195" y="97" width="150" height="7" rx="2" class="f-feat" opacity=".45"/>
+        <rect x="215" y="107" width="110" height="7" rx="2" class="f-feat" opacity=".7"/>
+        <rect x="235" y="117" width="70" height="7" rx="2" class="f-feat"/>
+        <text x="270" y="139" text-anchor="middle" class="ts">schlank · beim ersten Kerntraining eingefroren</text>
+        <line x1="270" y1="146" x2="270" y2="188" class="a" marker-end="url(#h2)"/>
+        <text x="278" y="172" class="ts">Exporte vor der Kompression</text>
+        <!-- state panel -->
+        <rect x="40" y="190" width="420" height="112" rx="8" class="panel"/>
+        <text x="56" y="213" class="t">Slots ×8</text>
+        <g class="f-state">
+          <rect x="140" y="201" width="16" height="16" rx="3" opacity="1"/><rect x="162" y="201" width="16" height="16" rx="3" opacity=".9"/><rect x="184" y="201" width="16" height="16" rx="3" opacity=".8"/><rect x="206" y="201" width="16" height="16" rx="3" opacity=".7"/>
+          <rect x="228" y="201" width="16" height="16" rx="3" opacity=".6"/><rect x="250" y="201" width="16" height="16" rx="3" opacity=".5"/><rect x="272" y="201" width="16" height="16" rx="3" opacity=".42"/><rect x="294" y="201" width="16" height="16" rx="3" opacity=".34"/>
+        </g>
+        <text x="322" y="207" class="ts">je h (kontinuierlich)</text>
+        <text x="322" y="220" class="ts">+ Code 4×16, Präsenz</text>
+        <text x="56" y="249" class="t">Szene ×4</text>
+        <g class="f-state2"><rect x="140" y="239" width="12" height="12" rx="2"/><rect x="155" y="239" width="12" height="12" rx="2"/><rect x="170" y="239" width="12" height="12" rx="2"/><rect x="185" y="239" width="12" height="12" rx="2"/></g>
+        <text x="220" y="249" class="t">W ×16</text>
+        <g class="f-work">
+          <rect x="262" y="240" width="9" height="10" rx="2"/><rect x="274" y="240" width="9" height="10" rx="2"/><rect x="286" y="240" width="9" height="10" rx="2"/><rect x="298" y="240" width="9" height="10" rx="2"/>
+          <rect x="310" y="240" width="9" height="10" rx="2"/><rect x="322" y="240" width="9" height="10" rx="2"/><rect x="334" y="240" width="9" height="10" rx="2"/><rect x="346" y="240" width="9" height="10" rx="2"/>
+          <rect x="358" y="240" width="9" height="10" rx="2"/><rect x="370" y="240" width="9" height="10" rx="2"/><rect x="382" y="240" width="9" height="10" rx="2"/><rect x="394" y="240" width="9" height="10" rx="2"/>
+          <rect x="406" y="240" width="9" height="10" rx="2"/><rect x="418" y="240" width="9" height="10" rx="2"/><rect x="430" y="240" width="9" height="10" rx="2"/><rect x="442" y="240" width="9" height="10" rx="2"/>
+        </g>
+        <text x="56" y="285" class="t">Konzepte Z</text>
+        <g class="f-concept"><rect x="140" y="275" width="12" height="12" rx="2"/><rect x="155" y="275" width="12" height="12" rx="2"/><rect x="170" y="275" width="12" height="12" rx="2"/><rect x="185" y="275" width="12" height="12" rx="2"/></g>
+        <text x="206" y="285" class="ts">K = 4 Tokens je Konzept, aus Belegen abgeleitet</text>
+        <!-- to core -->
+        <line x1="250" y1="302" x2="250" y2="330" class="a" marker-end="url(#h2)"/>
+        <text x="258" y="321" class="ts">Abfragen + Kontext</text>
+        <!-- inner loop -->
+        <path d="M380,332 C380,306 424,306 424,330" class="a-acc" marker-end="url(#h2a)"/>
+        <text x="432" y="316" class="tacc">×2 Runden</text>
+        <!-- core -->
+        <rect x="70" y="332" width="380" height="94" rx="8" class="core"/>
+        <text x="260" y="355" text-anchor="middle" class="tb">Ein gebundener Kern</text>
+        <text x="260" y="373" text-anchor="middle" class="ts">2 Blöcke · Breite 128 · 4 Köpfe · 529.664 Parameter</text>
+        <g>
+          <rect x="84" y="388" width="64" height="24" rx="12" class="chip-core"/><text x="116" y="404" text-anchor="middle" class="tms">observe</text>
+          <rect x="155" y="388" width="64" height="24" rx="12" class="chip-core"/><text x="187" y="404" text-anchor="middle" class="tms">predict</text>
+          <rect x="226" y="388" width="64" height="24" rx="12" class="chip-core"/><text x="258" y="404" text-anchor="middle" class="tms">think</text>
+          <rect x="297" y="388" width="64" height="24" rx="12" class="chip-core"/><text x="329" y="404" text-anchor="middle" class="tms">induce</text>
+          <rect x="368" y="388" width="64" height="24" rx="12" class="chip-core"/><text x="400" y="404" text-anchor="middle" class="tms">apply</text>
+        </g>
+        <!-- imagination loop -->
+        <path d="M70,412 C28,412 28,352 68,352" class="a-d" marker-end="url(#h2)"/>
+        <text x="8" y="446" class="ts">Imagination: predict auf</text>
+        <text x="8" y="460" class="ts">einer Kopie → markierter</text>
+        <text x="8" y="474" class="ts">Kontext für think</text>
+        <!-- memory -->
+        <rect x="486" y="200" width="108" height="118" rx="6" class="memb"/>
+        <text x="540" y="222" text-anchor="middle" class="tb">Laufzeit-</text>
+        <text x="540" y="238" text-anchor="middle" class="tb">gedächtnis</text>
+        <text x="540" y="258" text-anchor="middle" class="tmem">Konzepte +</text>
+        <text x="540" y="272" text-anchor="middle" class="tmem">Instanzen</text>
+        <text x="540" y="290" text-anchor="middle" class="ts">eine Sitzung,</text>
+        <text x="540" y="304" text-anchor="middle" class="ts">ein Speicher, eine Uhr</text>
+        <path d="M512,318 L450,360" class="a-mem" marker-end="url(#h2m)"/>
+        <text x="492" y="352" class="tmem">liest</text>
+        <path d="M450,404 C530,404 566,380 566,320" class="a-mem" marker-end="url(#h2m)"/>
+        <text x="594" y="430" text-anchor="end" class="tmem">schreibt nur Evidenz</text>
+        <text x="594" y="444" text-anchor="end" class="tmem">(observe) und Z (induce)</text>
+        <!-- heads -->
+        <line x1="116" y1="426" x2="116" y2="486" class="a" marker-end="url(#h2)"/>
+        <line x1="210" y1="426" x2="210" y2="486" class="a" marker-end="url(#h2)"/>
+        <line x1="304" y1="426" x2="304" y2="486" class="a" marker-end="url(#h2)"/>
+        <line x1="398" y1="426" x2="398" y2="486" class="a" marker-end="url(#h2)"/>
+        <text x="455" y="470" class="ts">getrennte Köpfe</text>
+        <rect x="70" y="488" width="92" height="40" rx="6" class="s-state"/>
+        <text x="116" y="505" text-anchor="middle" class="ts">Posterior</text><text x="116" y="519" text-anchor="middle" class="ts">je Slot</text>
+        <rect x="164" y="488" width="92" height="40" rx="6" class="s-state"/>
+        <text x="210" y="505" text-anchor="middle" class="ts">Prior je Slot</text><text x="210" y="519" text-anchor="middle" class="ts">+ Residual h</text>
+        <rect x="258" y="488" width="92" height="40" rx="6" class="s-work"/>
+        <text x="304" y="505" text-anchor="middle" class="ts">Aktion · Abruf</text><text x="304" y="519" text-anchor="middle" class="ts">· Abschluss</text>
+        <rect x="352" y="488" width="92" height="40" rx="6" class="s-concept"/>
+        <text x="398" y="505" text-anchor="middle" class="ts">Konzeptcode Z</text><text x="398" y="519" text-anchor="middle" class="ts">abgeleitet</text>
+        <!-- outputs -->
+        <line x1="163" y1="528" x2="200" y2="566" class="a" marker-end="url(#h2)"/>
+        <line x1="304" y1="528" x2="330" y2="566" class="a" marker-end="url(#h2)"/>
+        <rect x="120" y="568" width="150" height="30" rx="6" class="mod"/>
+        <text x="195" y="588" text-anchor="middle" class="t">schlanke Decoder</text>
+        <rect x="286" y="568" width="150" height="30" rx="6" class="mod"/>
+        <text x="361" y="588" text-anchor="middle" class="t">Aktion → Umgebung</text>
+        <text x="300" y="628" text-anchor="middle" class="tacc">Zur Laufzeit sind alle Gewichte eingefroren ❄. Gelernt wird nur im Gedächtnis.</text>
+      </svg>
+      </div>
+      <figcaption>Ein einziger Satz Gewichte rechnet alle fünf Operationen; ein Modus-Embedding und kleine getrennte Köpfe unterscheiden sie. Statt eines gemittelten Weltcodes gibt es acht Objekt-Slots, jeder mit kontinuierlichem Zustand und eigenem kategorialem Code. Imagination ist ein Denkschritt: Der Vorhersageoperator läuft auf einer Kopie, und das Ergebnis kommt markiert ins Denken zurück. Festschreiben kann nur eine Beobachtung.</figcaption>
+    </figure>
+
+  </div>
+</section>
+
+<section aria-labelledby="s2">
+  <h2 id="s2">Der Kern in der Lupe</h2>
+  <figure>
+    <div class="scroll">
+    <svg class="wide" viewBox="0 0 1010 330" role="img" aria-label="Lupe auf den Kern: zwei Blöcke aus Cross-Attention, Self-Attention und Feed-Forward, die in jeder Runde denselben festen Kontext neu lesen; rechts dieselben Gewichte ausgerollt für die fünf Operationen mit dem, was jede liest und schreibt.">
+      <defs>
+        <marker id="h3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+        <marker id="h3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="aha"/></marker>
+      </defs>
+      <!-- left: inside -->
+      <text x="20" y="26" class="tb">Innen: ein Kasten, zwei Blöcke, zwei Runden</text>
+      <rect x="20" y="40" width="310" height="270" rx="8" class="core"/>
+      <rect x="40" y="56" width="270" height="36" rx="6" class="chip"/>
+      <text x="175" y="72" text-anchor="middle" class="ts">fester Kontext: Encoder-Tokens · Gedächtnis ·</text>
+      <text x="175" y="85" text-anchor="middle" class="ts">Z · Aktion/Δt (je nach Operation)</text>
+      <line x1="100" y1="92" x2="100" y2="130" class="a" marker-end="url(#h3)"/>
+      <line x1="240" y1="92" x2="240" y2="130" class="a" marker-end="url(#h3)"/>
+      <text x="170" y="116" text-anchor="middle" class="ts">in jeder Runde neu gelesen</text>
+      <rect x="40" y="120" width="120" height="146" rx="6" class="mod"/>
+      <text x="100" y="138" text-anchor="middle" class="ts">Block 1</text>
+      <rect x="52" y="146" width="96" height="30" rx="4" class="chip"/><text x="100" y="165" text-anchor="middle" class="tms">Cross-Attn</text>
+      <rect x="52" y="184" width="96" height="30" rx="4" class="chip"/><text x="100" y="203" text-anchor="middle" class="tms">Self-Attn</text>
+      <rect x="52" y="222" width="96" height="30" rx="4" class="chip"/><text x="100" y="241" text-anchor="middle" class="tms">Feed-Forward</text>
+      <rect x="180" y="120" width="120" height="146" rx="6" class="mod"/>
+      <text x="240" y="138" text-anchor="middle" class="ts">Block 2</text>
+      <rect x="192" y="146" width="96" height="30" rx="4" class="chip"/><text x="240" y="165" text-anchor="middle" class="tms">Cross-Attn</text>
+      <rect x="192" y="184" width="96" height="30" rx="4" class="chip"/><text x="240" y="203" text-anchor="middle" class="tms">Self-Attn</text>
+      <rect x="192" y="222" width="96" height="30" rx="4" class="chip"/><text x="240" y="241" text-anchor="middle" class="tms">Feed-Forward</text>
+      <line x1="160" y1="193" x2="178" y2="193" class="a" marker-end="url(#h3)"/>
+      <path d="M240,266 C240,300 100,300 100,268" class="a-acc" marker-end="url(#h3a)"/>
+      <text x="170" y="302" text-anchor="middle" class="tacc">Runde 2, gleiche Gewichte</text>
+      <!-- connector -->
+      <line x1="330" y1="138" x2="376" y2="138" class="brk" stroke-dasharray="3 3"/>
+      <!-- right: unrolled operations -->
+      <text x="380" y="26" class="tb">Ausgerollt: dieselben Gewichte, fünf Operationen</text>
+      <path d="M380,44 L380,38 L996,38 L996,44" class="brk"/>
+      <g>
+        <text x="439" y="62" text-anchor="middle" class="tm">observe</text>
+        <text x="565" y="62" text-anchor="middle" class="tm">predict</text>
+        <text x="691" y="62" text-anchor="middle" class="tm">think</text>
+        <text x="817" y="62" text-anchor="middle" class="tm">induce</text>
+        <text x="943" y="62" text-anchor="middle" class="tm">apply</text>
+      </g>
+      <!-- reads -->
+      <g>
+        <rect x="380" y="74" width="118" height="38" rx="5" class="chip"/><text x="439" y="89" text-anchor="middle" class="ts">Encoder-Tokens,</text><text x="439" y="103" text-anchor="middle" class="ts">Gedächtnis, Aktion</text>
+        <rect x="506" y="74" width="118" height="38" rx="5" class="chip"/><text x="565" y="89" text-anchor="middle" class="ts">Slots, Szene,</text><text x="565" y="103" text-anchor="middle" class="ts">Aktion, Δt, Z</text>
+        <rect x="632" y="74" width="118" height="38" rx="5" class="chip"/><text x="691" y="89" text-anchor="middle" class="ts">Slots, Z, Gedächtnis,</text><text x="691" y="103" text-anchor="middle" class="ts">Ziel, Zweige</text>
+        <rect x="758" y="74" width="118" height="38" rx="5" class="chip"/><text x="817" y="89" text-anchor="middle" class="ts">gültige Belege</text><text x="817" y="103" text-anchor="middle" class="ts">(Konzept-Seeds)</text>
+        <rect x="884" y="74" width="118" height="38" rx="5" class="chip"/><text x="943" y="89" text-anchor="middle" class="ts">Slot-Abfragen,</text><text x="943" y="103" text-anchor="middle" class="ts">Z</text>
+      </g>
+      <g>
+        <line x1="439" y1="112" x2="439" y2="126" class="a" marker-end="url(#h3)"/>
+        <line x1="565" y1="112" x2="565" y2="126" class="a" marker-end="url(#h3)"/>
+        <line x1="691" y1="112" x2="691" y2="126" class="a" marker-end="url(#h3)"/>
+        <line x1="817" y1="112" x2="817" y2="126" class="a" marker-end="url(#h3)"/>
+        <line x1="943" y1="112" x2="943" y2="126" class="a" marker-end="url(#h3)"/>
+      </g>
+      <!-- identical core boxes -->
+      <g>
+        <rect x="390" y="128" width="98" height="34" rx="6" class="core"/><text x="439" y="150" text-anchor="middle" class="t">Kern</text>
+        <rect x="516" y="128" width="98" height="34" rx="6" class="core"/><text x="565" y="150" text-anchor="middle" class="t">Kern</text>
+        <rect x="642" y="128" width="98" height="34" rx="6" class="core"/><text x="691" y="150" text-anchor="middle" class="t">Kern</text>
+        <rect x="768" y="128" width="98" height="34" rx="6" class="core"/><text x="817" y="150" text-anchor="middle" class="t">Kern</text>
+        <rect x="894" y="128" width="98" height="34" rx="6" class="core"/><text x="943" y="150" text-anchor="middle" class="t">Kern</text>
+      </g>
+      <text x="380" y="182" class="ts">schreibt</text>
+      <g>
+        <line x1="439" y1="162" x2="439" y2="190" class="a" marker-end="url(#h3)"/>
+        <line x1="565" y1="162" x2="565" y2="190" class="a" marker-end="url(#h3)"/>
+        <line x1="691" y1="162" x2="691" y2="190" class="a" marker-end="url(#h3)"/>
+        <line x1="817" y1="162" x2="817" y2="190" class="a" marker-end="url(#h3)"/>
+        <line x1="943" y1="162" x2="943" y2="190" class="a" marker-end="url(#h3)"/>
+      </g>
+      <!-- writes -->
+      <g>
+        <rect x="380" y="192" width="118" height="34" rx="5" class="s-state"/><text x="439" y="213" text-anchor="middle" class="t">Posterior</text>
+        <rect x="506" y="192" width="118" height="34" rx="5" class="s-state" stroke-dasharray="5 3"/><text x="565" y="213" text-anchor="middle" class="t">Prior, erschlossen</text>
+        <rect x="632" y="192" width="118" height="34" rx="5" class="s-work"/><text x="691" y="213" text-anchor="middle" class="t">nur W + Vorschläge</text>
+        <rect x="758" y="192" width="118" height="34" rx="5" class="s-concept"/><text x="817" y="213" text-anchor="middle" class="t">Z, abgeleitet</text>
+        <rect x="884" y="192" width="118" height="34" rx="5" class="s-none"/><text x="943" y="213" text-anchor="middle" class="t">nichts Dauerhaftes</text>
+      </g>
+      <!-- notes -->
+      <g>
+        <text x="439" y="248" text-anchor="middle" class="ts">nur eine Beobachtung</text><text x="439" y="262" text-anchor="middle" class="ts">legt Evidenz fest</text>
+        <text x="565" y="248" text-anchor="middle" class="ts">bei Imagination nur</text><text x="565" y="262" text-anchor="middle" class="ts">auf dem Zweig</text>
+        <text x="691" y="248" text-anchor="middle" class="ts">Gedanken werden nie</text><text x="691" y="262" text-anchor="middle" class="ts">zu Beobachtungen</text>
+        <text x="817" y="248" text-anchor="middle" class="ts">aus Belegen jederzeit</text><text x="817" y="262" text-anchor="middle" class="ts">neu berechenbar</text>
+        <text x="943" y="248" text-anchor="middle" class="ts">Einordnung, Beziehung,</text><text x="943" y="262" text-anchor="middle" class="ts">hypothetischer Übergang</text>
+      </g>
+      <text x="380" y="292" class="ts">Unterschieden durch Modus-Embedding, kleine Eingangsprojektionen und getrennte Köpfe.</text><text x="380" y="308" class="ts">Kein Schrittzähler als Eingabe; der rekurrente Zustand trägt den Fortschritt.</text>
+    </svg>
+    </div>
+    <figcaption>Links steht, was in dem Kasten „Kern“ passiert: Zwei verschiedene Blöcke laufen nacheinander, dann dieselben zwei noch einmal. In jeder Runde lesen sie denselben unveränderlichen Kontext per Cross-Attention neu, so wie der heutige <code>LatentCore</code>-Block. Rechts steht derselbe Kasten fünfmal, einmal je Operation. Die untere Zeile ist die Schreibrechte-Tabelle aus dem Kerndesign; die Farbe zeigt, welche Datenart geschrieben wird.</figcaption>
+  </figure>
+</section>
+
+<section aria-labelledby="s3">
+  <h2 id="s3">Wie das Modell lernt: zur Laufzeit und offline</h2>
+  <figure>
+    <div class="scroll">
+    <svg class="wide" viewBox="0 0 1000 380" role="img" aria-label="Oben die Laufzeit mit eingefrorenen Gewichten: Vorhersage, Beobachtung, Überraschung je Slot, Stufen der Behandlung, Gedächtnis schreiben und hartnäckige Fehler protokollieren. Unten der Offline-Konsolidierungslauf: Belege und alte Daten, Training, Annahmeprüfung, neue Version, Gedächtnis gegen neue Version prüfen und einsetzen.">
+      <defs>
+        <marker id="h4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+        <marker id="h4m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahm"/></marker>
+      </defs>
+      <!-- runtime band -->
+      <rect x="10" y="10" width="980" height="165" rx="10" class="band"/>
+      <text x="26" y="34" class="tb">Laufzeit · Gewichte eingefroren ❄</text>
+      <rect x="26" y="62" width="130" height="52" rx="6" class="s-state" stroke-dasharray="5 3"/>
+      <text x="91" y="84" text-anchor="middle" class="t">Vorhersage</text><text x="91" y="101" text-anchor="middle" class="ts">Prior je Slot</text>
+      <line x1="156" y1="88" x2="184" y2="88" class="a" marker-end="url(#h4)"/>
+      <rect x="186" y="62" width="130" height="52" rx="6" class="s-state"/>
+      <text x="251" y="84" text-anchor="middle" class="t">Beobachtung</text><text x="251" y="101" text-anchor="middle" class="ts">Posterior je Slot</text>
+      <line x1="316" y1="88" x2="344" y2="88" class="a" marker-end="url(#h4)"/>
+      <rect x="346" y="62" width="140" height="52" rx="6" class="mod"/>
+      <text x="416" y="84" text-anchor="middle" class="t">Überraschung</text><text x="416" y="101" text-anchor="middle" class="ts">KL(Post ‖ Prior) je Slot</text>
+      <line x1="486" y1="88" x2="512" y2="88" class="a" marker-end="url(#h4)"/>
+      <rect x="514" y="46" width="196" height="26" rx="5" class="chip"/><text x="524" y="63" class="ts"><tspan font-weight="600">gering:</tspan> normal korrigieren</text>
+      <rect x="514" y="76" width="196" height="26" rx="5" class="chip"/><text x="524" y="93" class="ts"><tspan font-weight="600">mittel:</tspan> Slot unsicher, mehr Detail</text>
+      <rect x="514" y="106" width="196" height="26" rx="5" class="chip"/><text x="524" y="123" class="ts"><tspan font-weight="600">groß:</tspan> Ursachen der Reihe nach prüfen</text>
+      <text x="514" y="152" class="ts">Beobachtung, Zuordnung, Aktion, fehlende Evidenz</text>
+      <line x1="710" y1="88" x2="736" y2="88" class="a-mem" marker-end="url(#h4m)"/>
+      <rect x="738" y="62" width="112" height="52" rx="6" class="memb"/>
+      <text x="794" y="84" text-anchor="middle" class="t">Gedächtnis</text><text x="794" y="101" text-anchor="middle" class="tmem">schreiben/revidieren</text>
+      <line x1="850" y1="88" x2="870" y2="88" class="a" marker-end="url(#h4)"/>
+      <rect x="872" y="62" width="108" height="52" rx="6" class="mod"/>
+      <text x="926" y="84" text-anchor="middle" class="t">Protokoll</text><text x="926" y="101" text-anchor="middle" class="ts">hartnäckige Fehler</text>
+      <text x="872" y="134" class="ts">gleichgerichtet, über</text>
+      <text x="872" y="148" class="ts">unabhängige Instanzen</text>
+      <path d="M91,62 C91,20 251,20 251,58" class="a-d" marker-end="url(#h4)"/>
+      <text x="171" y="50" text-anchor="middle" class="ts">nächstes Ereignis</text>
+      <!-- offline band -->
+      <rect x="10" y="200" width="980" height="170" rx="10" class="band-off"/>
+      <text x="26" y="224" class="tb">Offline · Konsolidierungslauf, von Alex gestartet</text>
+      <line x1="926" y1="114" x2="926" y2="246" class="a-d" marker-end="url(#h4)"/>
+      <rect x="846" y="248" width="134" height="52" rx="6" class="mod"/>
+      <text x="913" y="270" text-anchor="middle" class="t">Belege mit Herkunft</text><text x="913" y="287" text-anchor="middle" class="ts">+ Wiederholung alter Daten</text>
+      <line x1="846" y1="274" x2="818" y2="274" class="a" marker-end="url(#h4)"/>
+      <rect x="668" y="248" width="148" height="52" rx="6" class="mod"/>
+      <text x="742" y="270" text-anchor="middle" class="t">Training</text><text x="742" y="287" text-anchor="middle" class="ts">Adapter oder ganzes Netz</text>
+      <line x1="668" y1="274" x2="640" y2="274" class="a" marker-end="url(#h4)"/>
+      <rect x="474" y="248" width="164" height="52" rx="6" class="mod"/>
+      <text x="556" y="270" text-anchor="middle" class="t">Annahme?</text><text x="556" y="287" text-anchor="middle" class="ts">besser auf Zurückgehaltenem</text>
+      <line x1="474" y1="274" x2="446" y2="274" class="a" marker-end="url(#h4)"/>
+      <rect x="306" y="248" width="138" height="52" rx="6" class="mod"/>
+      <text x="375" y="270" text-anchor="middle" class="t">neue Version</text><text x="375" y="287" text-anchor="middle" class="ts">Checkpoint + Hash</text>
+      <line x1="306" y1="274" x2="278" y2="274" class="a" marker-end="url(#h4)"/>
+      <rect x="126" y="248" width="150" height="52" rx="6" class="memb"/>
+      <text x="201" y="270" text-anchor="middle" class="t">Gedächtnis prüfen</text><text x="201" y="287" text-anchor="middle" class="tmem">gegen neue Version</text>
+      <path d="M126,274 L60,274 L60,118" class="a-d" marker-end="url(#h4)"/>
+      <text x="68" y="196" class="ts">einsetzen</text>
+      <text x="556" y="318" text-anchor="middle" class="ts">und nichts schlechter auf der unberührten Prüfsammlung</text>
+      <!-- losses -->
+      <line x1="742" y1="300" x2="742" y2="336" class="a-loss"/>
+      <text x="742" y="352" text-anchor="middle" class="tc">ℒ Prior mehrschrittig · ℒ Posterior · KL 1 / 0,1 · ℒ Aufgabe · episode_loss</text>
+    </svg>
+    </div>
+    <figcaption>Zur Laufzeit ändert eine Überraschung nie Gewichte. Sie löst Prüfungen aus und schreibt oder revidiert das Gedächtnis. Nur wenn derselbe Fehler trotz Gedächtniskorrektur über unabhängige Instanzen bestehen bleibt, wird er für einen Konsolidierungslauf protokolliert. Dieser Lauf ist ein gewöhnlicher Rezeptlauf. Er erzeugt eine neue, versionierte Modellversion, und das Gedächtnis wird gegen sie neu geprüft. Wird die neue Version zurückgerollt, werden Modell und zugehöriger Gedächtnisstand gemeinsam zurückgesetzt.</figcaption>
+  </figure>
+
+  <div class="notes">
+    <div class="note"><h3>Trainingsreihenfolge</h3><p>Zuerst Vorhersage und Korrektur bei eingefrorener Wahrnehmung, mit diskreten Ereignissen. Denken mit Simulation kommt dazu, sobald Prüfung 4 besteht: Die Vorhersage muss dafür die Kopierreferenz schlagen. Gemeinsames Training läuft als Kontrolle mit.</p></div>
+    <div class="note"><h3>Drei Arten von Wiederholung</h3><p>Innere Runden (×2, gleicher Kontext), äußere Denkzyklen (Abruf, Simulation oder Antwort) und physikalische Zeit (Δt) sind getrennte Größen. Mehr Denken rückt die Weltuhr nicht vor.</p></div>
+    <div class="note"><h3>Offene Punkte</h3><p>Prüfung 1 (Verträge) ist der nächste Schritt. Offen sind auch die Projektion 64→128 für die Pixelstufe, das freie Nat pro Ereignis oder pro Slot (E9) und die Annahmeschwellen je Lauf.</p></div>
+  </div>
+</section>
+
+<footer>
+  Quellen: <code>docs/core-design.md</code> (Entscheidungen E1–E12, Umsetzung E4-A) und Architektur-Atlas §1, §4–6, §14, §17 (<code>docs/architecture-atlas.md</code>), Repository-Stand <code>6881f65</code>. Die Bilder zeigen Aufbau und Datenfluss, keine belegte Fähigkeit. Welche Teile besprochen oder in welchem Umfang validiert sind, steht im Atlas und in <code>docs/architecture-discussion.md</code>. Die Darstellungsmuster stammen aus Architekturabbildungen im Scholar-Inbox-Digest (Read-Write-Relax, MixerLoop, RecurTrace, GAE, Info3R, PointCast).
+</footer>
+
+</div>
