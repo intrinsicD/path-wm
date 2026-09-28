@@ -5,6 +5,8 @@ Task plans own current work; older decisions remain in the
 
 ## Current priorities
 
+- **Shared core (active, 29 September):** [Plan](shared-core-plan.md) implements the decided [core design](core-design.md) and retires the old architecture (tag `archive/pre-core-2026-09-29`). Old models, recipes and tests are deleted once the new symbolic path runs (S3). Perception is retrained in the new path; first task is Rule World, symbolic then pixel. Controls: `tied=False`, `continuous_only`. `runs/latent_agent_r1/` is on another machine and not reachable; old numbers are cited unverified.
+
 - **Image-code work:** [Plan](image-code-contract-plan.md): replay/editing interfaces and exact resume pass; slow reconstruction passes512images. Fast fidelity/edit quality fail. P5 code feedback lowers feature error but worsens pixel MSE5.5–6.0% in two seeds; keep default0.990CPU tests pass. KV reuse saves9–23% producer time.
 
 - **Earlier decoder result:** [Pyramid access](native-pyramid-decoder-plan.md) gains1.09–1.71% MSE, missing20%; encoder frozen.
