@@ -380,3 +380,52 @@ Alex: E4 jetzt planen und umsetzen, GPU-Läufe später selbst auf einer anderen 
 - Übergabe an Alex: Skript mit Worktree-Einfrieren und den Wiederholungen der
   entscheidenden §23-Läufe auf E4 (Einzelfamilien L4 ×2 Seeds, Mischlauf ×2 Seeds,
   Diagnosen aus dem Review: 5×-Batch-Mischlauf, zurückgehaltenes δ). Kein GPU-Lauf durch Claude.
+
+### E4-A umgesetzt (28.09.2026) und Übergabe für Alex' GPU-Läufe
+
+**Umgesetzt (CPU-getestet, 1029+ Tests grün; kein GPU-Lauf durch Claude):**
+`LatentCore(blocks=…)` mit Runden über alle Blöcke (`rounds`), `blocks=1` bitgleich und mit
+unveränderten Checkpoint-Schlüsseln; Profile `full` = E4 (Kern 128, 2 Blöcke, 2 Runden,
+Blöcke 529.664 Parameter, gesamter Kern inkl. Köpfen 733.089) und `r1` = frühere Form;
+Optionen `--core-width/--core-blocks/--core-loops`, `--episodes`, `--holdout-ladder-rules`.
+Pixelstufe mit breiterem Kern wird mit Hinweis abgelehnt, bis die Projektion 64→128 geplant
+und gebaut ist (offen). CI1 (`core_information.py`) nutzt weiter die R1-Form.
+**Speicher (Schätzung, CPU-Verhältnis r1→E4 ≈2–2,7× auf M2s-Spitze 2,55 GiB):** ≈5–6,5 GiB
+auf der GPU, größter Posten ist die Pool-Auswertung. E10 verlangt 8 GB; daher unten
+`--max-reserved-gib 7.5` und ein kurzer Speichertest zuerst.
+
+**Ablauf auf der anderen Maschine** (Stand `main` ab Commit `5dfc912` oder neuer):
+
+```bash
+git pull
+C=$(git rev-parse --short HEAD); W=../path-wm-frozen/$C
+git worktree add --detach "$W" "$C" && cd "$W"
+PY=<pfad-zur-venv>/bin/python   # Umgebung wie in pyproject.toml
+OUT=<absoluter-pfad>/runs/latent_agent_r1/e4_reruns_$(date +%Y%m%d)
+B="--stage symbolic --size full --device cuda --auxiliary-weight 0 --reader evidence --support-sizes 4 8 16 --max-reserved-gib 7.5 --max-minutes 300"
+FAM="--train-families category relation open close toggle --train-rules 4 --rule-repeats 7 1 1 1 7 1 1 1 7 1 1 1 7 1 1 1 7 1 1 1"
+# 0 Speicher-/Tempotest (Ergebnis: result.json → resources.torch_max_reserved_gib, updates_per_second)
+$PY -m experiments.latent_agent $B $FAM --updates 500 --seed 1101 --output $OUT/smoke
+# 1 Einzelfamilien (je Seed 1101 und 2202)
+for s in 1101 2202; do
+  for f in relation category; do $PY -m experiments.latent_agent $B --train-family $f --train-rules 4 --rule-repeats 7 1 1 1 --updates 6000 --seed $s --output $OUT/F_${f}_$s; done
+  for f in open close toggle; do $PY -m experiments.latent_agent $B --train-family $f --train-rules 4 --rule-repeats 7 1 1 1 --updates 30000 --seed $s --output $OUT/F_${f}_$s; done
+done
+# 2 Mischlauf (Referenz M2s, Breite 64)
+for s in 1101 2202; do $PY -m experiments.latent_agent $B $FAM --updates 60000 --seed $s --output $OUT/M_$s; done
+# 3 Verdünnungstest: 5× Episoden je Update, gleiche Episoden je Familie wie Einzeltraining
+for s in 1101 2202; do $PY -m experiments.latent_agent $B $FAM --episodes 80 --updates 12000 --seed $s --output $OUT/M5x_$s; done
+# 4 Transfer: δ=3 nie trainiert (Relation und Toggle), Befund im pool_heldout
+for s in 1101 2202; do
+  $PY -m experiments.latent_agent $B --train-family relation --train-rules 4 --rule-repeats 7 1 1 1 --holdout-ladder-rules 3 --updates 6000 --seed $s --output $OUT/T_relation_$s
+  $PY -m experiments.latent_agent $B --train-family toggle --train-rules 4 --rule-repeats 7 1 1 1 --holdout-ladder-rules 3 --updates 30000 --seed $s --output $OUT/T_toggle_$s
+done
+```
+
+Fortsetzen nach Abbruch: `$PY -m experiments.latent_agent --stage symbolic --resume $OUT/<lauf>` aus
+demselben Worktree. Auf einer Maschine mit `systemd-oomd` lange Läufe als Systemdienst mit
+`User=` starten (siehe Workflow). **Vorab festgelegt:** Screens wie §23 (je Familie ν_voll ≥ 0,8,
+ν_voll−ν_leer ≥ 0,5, ν_voll−ν_permutiert ≥ 0,5); Transfer (4) ist ein Befund mit derselben
+Schwelle auf dem zurückgehaltenen Pool, kein Gate. Ein bestandener Lauf gilt als
+Entwicklungsbefund; Zuverlässigkeitsaussagen brauchen ≈10 Seeds (Review 28.09.).
+Alle Befehlsvarianten wurden mit `--size check` auf der CPU auf gültige Argumente geprüft.
