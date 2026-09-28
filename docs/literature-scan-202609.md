@@ -63,7 +63,8 @@ Einträge zu World Models, kleinen multimodalen Netzen, Gedächtnis, Denken in S
 Schichttypen, Text-Diffusion/Neurosymbolik). @theAIsearch: kein neues Video seit dem 27.09. Bewertet
 haben unabhängig Fable 5.1 und Codex `gpt-6-astra` (xhigh), beide mit demselben öffentlichen Brief.
 Belege: `runs/reviews/literature_scan_20260928b/`. Das oben genannte Verzeichnis
-`runs/reviews/literature_scan_20260928/` des ersten Scans existiert nicht; dessen Belege fehlen.
+`runs/reviews/literature_scan_20260928/` des ersten Scans liegt auf dem Heimrechner (Brief,
+Antworten, Aufrufbelege); `runs/` ist nicht versioniert und fehlt daher auf anderen Rechnern.
 Alles unten sind Prüfvorschläge, keine übernommenen Entscheidungen.
 
 ### Beide Reviewer übereinstimmend
