@@ -44,7 +44,10 @@ def key_head(width, key_width):
 
 
 class LatentCore(nn.Module):
-    def __init__(self, width=64, heads=4, loops=2, code_tokens=4, key_width=32):
+    """`blocks` untied blocks are applied in order in every inner round (E4: 2 blocks,
+    width 128; docs/core-design.md). `blocks=1` is the R1 form, bit-identical to before."""
+
+    def __init__(self, width=64, heads=4, loops=2, code_tokens=4, key_width=32, blocks=1):
         super().__init__()
         self.width, self.loops, self.code_tokens = width, loops, code_tokens
         self.block = Block(width, heads)  # the tied operator shared by G and T
@@ -61,6 +64,16 @@ class LatentCore(nn.Module):
         nn.init.zeros_(self.next.weight)  # m_hat starts as a copy of m_pre
         nn.init.zeros_(self.next.bias)
         self.key_head = key_head(width, key_width)
+        # Created last so extra blocks leave every existing initialisation unchanged.
+        self.more_blocks = nn.ModuleList(Block(width, heads) for _ in range(blocks - 1))
+
+    def rounds(self, x, context, context_valid=None, loops=None):
+        """Inner rounds: each re-reads the same context through every block in order."""
+        for _ in range(self.loops if loops is None else loops):
+            x = self.block(x, context, context_valid)
+            for block in self.more_blocks:
+                x = block(x, context, context_valid)
+        return x
 
     def evidence(self, m_pre, a, b, m_post):
         return self.evidence_mlp(torch.cat((m_pre, a, b, m_post), -1))
@@ -75,9 +88,7 @@ class LatentCore(nn.Module):
             (torch.ones(b, 1, dtype=torch.bool, device=valid.device), valid), 1
         )
         x = (self.seeds + self.types.weight[SEED]).expand(b, -1, -1)
-        for _ in range(self.loops if loops is None else loops):
-            x = self.block(x, context, context_valid)
-        return self.code_norm(x)
+        return self.code_norm(self.rounds(x, context, context_valid, loops))
 
     def apply(self, m, a, b, z, loops=None, context_valid=None):
         """Per-query [B,D] tokens and Z [B,K,D] -> (outcome logit [B], m_hat [B,D]).
@@ -93,8 +104,7 @@ class LatentCore(nn.Module):
             ),
             1,
         )
-        for _ in range(self.loops if loops is None else loops):
-            x = self.block(x, z, context_valid)
+        x = self.rounds(x, z, context_valid, loops)
         h = self.head_norm(x[:, 0])
         return self.outcome(h).squeeze(-1), m + self.next(h)
 

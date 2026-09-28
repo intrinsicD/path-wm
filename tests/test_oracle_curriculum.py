@@ -66,7 +66,7 @@ def built(size="check", seed=1101):
 
 
 def test_full_construction_reproduces_the_historical_initial_state():
-    model = built("full")
+    model = built("r1")  # the historical R1 form; "full" is the E4 core since 28 Sep 2026
     assert state_hash(model.perception) == HISTORICAL_INIT["perception"]
     assert state_hash(model.core) == HISTORICAL_INIT["core"]
     assert state_hash(model.oracle.codebook) == HISTORICAL_INIT["codebook"]

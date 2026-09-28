@@ -56,12 +56,21 @@ MONITOR_SEED, MONITOR_PAIRS = 3502, 64
 KEY_SCREEN = dict(positive_q01=0.93, negative_q99=0.60, within_q99=0.60)
 
 SIZES = dict(
-    full=dict(width=64, heads=4, slots=7, iterations=3, decoder_width=32, loops=2, code_tokens=4, key_width=32,
+    # full = E4 core form (docs/core-design.md): core width 128, 2 untied blocks, 2 inner rounds;
+    # perception unchanged (slots 64, encoder/decoder 32). r1 = the former form, now a downscaled run.
+    full=dict(width=64, core_width=128, core_blocks=2, heads=4, slots=7, iterations=3, decoder_width=32, loops=2,
+              code_tokens=4, key_width=32,
               perception_batch=32, episodes=16, support=(8, 16, 32, 64, 128), queries=32,
               validation_scenes=256, validation_episodes=48, pool_episodes=64, validate_every=250,
               life_supports=(8, 32, 128), lives_per_support=4, life_queries=64, life_goals=16,
               distract=32, counter=24),
-    check=dict(width=16, heads=2, slots=7, iterations=2, decoder_width=8, loops=2, code_tokens=2, key_width=8,
+    r1=dict(width=64, core_width=64, core_blocks=1, heads=4, slots=7, iterations=3, decoder_width=32, loops=2,
+              code_tokens=4, key_width=32,
+              perception_batch=32, episodes=16, support=(8, 16, 32, 64, 128), queries=32,
+              validation_scenes=256, validation_episodes=48, pool_episodes=64, validate_every=250,
+              life_supports=(8, 32, 128), lives_per_support=4, life_queries=64, life_goals=16,
+              distract=32, counter=24),
+    check=dict(width=16, core_width=16, core_blocks=1, heads=2, slots=7, iterations=2, decoder_width=8, loops=2, code_tokens=2, key_width=8,
                perception_batch=4, episodes=2, support=(4, 8), queries=4,
                validation_scenes=8, validation_episodes=4, pool_episodes=4, validate_every=2,
                life_supports=(8,), lives_per_support=1, life_queries=4, life_goals=4,
@@ -74,13 +83,18 @@ class RuleModel(nn.Module):
 
     def __init__(self, s, symbolic=False):
         super().__init__()
+        core = s.get("core_width", s["width"])
+        if not symbolic and core != s["width"]:
+            raise ValueError("Pixel perception (slot width %d) needs the planned 64->core projection before a "
+                             "core of width %d; use --size r1 until it exists" % (s["width"], core))
         self.perception = (
-            SymbolicSlots(s["width"])
+            SymbolicSlots(core)  # supplied symbols are embedded directly in core width
             if symbolic
             else SlotPerception(s["width"], s["slots"], s["iterations"], decoder_width=s["decoder_width"])
         )
-        self.core = LatentCore(s["width"], s["heads"], s["loops"], s["code_tokens"], s["key_width"])
-        self.register_buffer("variance", torch.ones(s["width"]))
+        self.core = LatentCore(core, s["heads"], s["loops"], s["code_tokens"], s["key_width"],
+                               blocks=s.get("core_blocks", 1))
+        self.register_buffer("variance", torch.ones(core))
 
 
 def resources(device):
@@ -1022,6 +1036,12 @@ def ladder_screen(ladder, nu, family="relation"):
     return dict(passed=all(criteria.values()), criteria=criteria, family=family, thresholds=LADDER_SCREEN, **{key: value})
 
 
+def core_overrides(args):
+    """Explicit E4 capacity overrides, recorded so that resume restores them (absent when unused)."""
+    names = ("core_width", "core_blocks", "core_loops")
+    return {n: getattr(args, n) for n in names if getattr(args, n, None) is not None}
+
+
 def train_core(args, s, *, symbolic=False):
     seed_everything(args.seed)
     model = RuleModel(s, symbolic=symbolic).to(args.device)
@@ -1051,6 +1071,7 @@ def train_core(args, s, *, symbolic=False):
     optimizer = torch.optim.AdamW(trainable, lr=args.lr, weight_decay=0.01)
     floors = rw.floors()
     settings = dict(stage="symbolic" if symbolic else "core", seed=args.seed, updates=args.updates, lr=args.lr,
+                    **core_overrides(args),
                     device=args.device, size=args.size, sizes=s, purpose="development", precision="fp32",
                     max_reserved_gib=args.max_reserved_gib,
                     perception=None if symbolic else str(args.perception),
@@ -1304,10 +1325,10 @@ class OracleCodes(nn.Module):
 
     def __init__(self, s, train_rules):
         super().__init__()
-        self.shape = (s["code_tokens"], s["width"])
+        self.shape = (s["code_tokens"], s.get("core_width", s["width"]))
         self.index = {r.key(): i for i, r in enumerate(train_rules)}
         self.relation = [i for i, r in enumerate(train_rules) if r.family == "relation"]
-        self.codebook = nn.Embedding(len(train_rules), s["code_tokens"] * s["width"])
+        self.codebook = nn.Embedding(len(train_rules), s["code_tokens"] * s.get("core_width", s["width"]))
         nn.init.normal_(self.codebook.weight, std=0.02)  # after the core: the historical RNG order
         self.relation_codebook = nn.Embedding.from_pretrained(self.codebook.weight[self.relation].detach().clone(),
                                                               freeze=False)
@@ -1486,6 +1507,7 @@ def train_oracle(args, s):
     workflow = ("WORKFLOW CHECK ONLY (tiny sizes; boundary gate exempt): software path, no learning claim. "
                 if args.size == "check" else "")
     settings = dict(stage="symbolic", oracle_curriculum=relation_updates, seed=args.seed, updates=args.updates,
+                    **core_overrides(args),
                     lr=args.lr, device=args.device, size=args.size, sizes=s, purpose="development", precision="fp32",
                     max_reserved_gib=args.max_reserved_gib, scope=workflow + ORACLE_SCOPE, boundary_gate=gate,
                     stages=[dict(name="relation", updates=[1, relation_updates], rules=len(relation)),
@@ -1779,6 +1801,9 @@ def main():
                         help="symbolic with --train-rules only (overnight N5): per-rule training draw multiplicity")
     parser.add_argument("--train-family", choices=rw.FAMILIES,
                         help="symbolic with --train-rules (F1): family of the ladder pool (default relation)")
+    parser.add_argument("--core-width", type=int, help="override the size profile's core width (E4 capacity axis)")
+    parser.add_argument("--core-blocks", type=int, help="override the number of untied core blocks per inner round")
+    parser.add_argument("--core-loops", type=int, help="override the number of inner rounds")
     parser.add_argument("--train-families", nargs="+", choices=rw.FAMILIES,
                         help="symbolic with --train-rules (M1): one core on the union of these family ladders")
     parser.add_argument("--delta-weights", type=int, nargs=4,
@@ -1821,6 +1846,12 @@ def main():
     if args.output is None and args.resume is None:
         parser.error("--output required (a new directory)")
     s = SIZES[args.size]
+    overrides = {k: v for k, v in (("core_width", args.core_width), ("core_blocks", args.core_blocks),
+                                   ("loops", args.core_loops)) if v is not None}
+    if overrides:  # recorded through the run's `sizes` setting and restored on resume
+        if min(overrides.values()) < 1 or overrides.get("core_width", s["heads"]) % s["heads"]:
+            parser.error("core overrides must be positive and the width divisible by the head count")
+        s = dict(s, **overrides)
     if (args.texture_randomization or args.init_perception) and args.stage != "perception":
         parser.error("--texture-randomization/--init-perception apply to the perception stage only")
     if not 0.0 <= args.texture_randomization <= 1.0:
