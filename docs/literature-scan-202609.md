@@ -101,3 +101,36 @@ kleine multimodale Netze mit echt geteilter Repräsentation. Aus eigenem Wissen:
 von Codex geprüft), HRM, Huginn/Mixture-of-Recursions, Coconut, Titans, DINO-WM/V-JEPA 2,
 Energy-Based Transformers (Fable, ungeprüft). Exakte Attention unter unseren Masken/Halbpräzision
 bleibt lokal zu messen.
+
+### Nachtrag 2: Contrastive World Models, Scholar-Inbox-Trending, August-Digest
+
+Auf Alex' Hinweis: [Contrastive World Models](https://arxiv.org/abs/2609.22175) (Li, 27.08.) fehlte
+im Digest, weil Alex' Scholar-Inbox-Profil es mit −59 bewertet; World-Model-Paper werden dort
+systematisch herausgefiltert. Trending (8 Einträge, aus von Alex gespeicherter Seite) und
+August-Digest 15.–31.08. (286 Paper; Fenster 15.–19.08. bei 100 gekappt) ergänzt. Gegenbefund:
+Ramakrishnan et al. 2023 ([2401.00057](https://arxiv.org/abs/2401.00057)): objektzentrierte
+kontrastive Weltmodelle zerfallen bei neuen Attributen/Kombinationen. Beide Reviewer erneut
+unabhängig; Belege im selben Verzeichnis (`*_followup.md`).
+
+**Contrastive World Models (beide):** hohe Priorität als Kontrolle/Diagnose für „Vorhersage schlägt
+Kopie nicht“, Übernahme nur bedingt. Pixelverluste werden von statischem Inhalt dominiert, so dass
+Kopieren fast optimal ist. Kein Ersatz des Decoders; zuerst:
+1. Vorhandenen Checkpoint gegen Kopie und konstante Geschwindigkeit getrennt auf bewegten/unbewegten
+   Bereichen, Positionen und Identität auswerten (Codex: auch kurze freie Rollouts).
+2. Erst dann zwei gleich initialisierte kurze Läufe: Pixelverlust gegen Pixelverlust plus kleinen
+   kontrastiven Zukunftsterm auf lokalen Encoder-Exporten.
+3. Auswertung mit zurückgehaltenen Farb-/Form-Kombinationen und Hintergrundwechsel (wegen des
+   Gegenbefunds); sinkender Kontrastivverlust allein ist kein Erfolg.
+Risiken bei 8 GB: wenige Negative bei kleinen Batches, fast identische Negative in statischen
+Szenen, Halbpräzision und Logit-Skalierung, Verlust von Form/Größe als „irrelevanter“ Information.
+
+**Weitere:** RigidBench (2608.15555): Bildähnlichkeit (SSIM) korreliert nicht mit
+Trajektorienfehler – Bewegung, Geometrie und Identität getrennt messen (Codex hohe Priorität,
+Fable Warnung). Read-Write-Relax (2608.21677): Attention auf wenige latente Tokens wirkt als
+Tiefpass; Fable schlägt einen Spektralvergleich des Vorhersagefehlers gegen die Kopie vor.
+Floorplan-Readout (2608.25608): Fusion statt Konditionierung zweier Ausgaben, Vorsicht bei
+Readout-Rückführung. WTF?!, übrige Trending-Einträge und restliche August-Kandidaten: nicht relevant.
+
+**Top-Liste danach:** Fable behält seine Reihenfolge und setzt Contrastive World Models neben
+Spectral-Target (Schritt 1 vor dem Fourier-Kopf). Codex: Narcissus, GeoCo-SAVi, RigidBench-Kontrollen,
+Contrastive World Models vorn; MixerLoop und MO-IKE vorläufig heraus. Keine zentrale Entscheidung widerlegt.
