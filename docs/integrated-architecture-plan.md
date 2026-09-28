@@ -2191,3 +2191,14 @@ verkleinerter Erstlauf). **Alle §23-Läufe (L*, N*, C*, F*, M*) liefen mit Brei
 einem gebundenen Block und sind damit verkleinerte Vorprüfungen; die Verifikation auf der
 vollen Konfiguration ist unvollständig**, bis die entscheidenden Läufe mit E4 wiederholt
 sind (Plan unten, Abschnitt E4-A).
+
+**E4-Transfer Relation (28.09.2026, volle Konfiguration, Worktree `1f74100`):** L4 mit Schiefe
+7,1,1,1, δ=3 nie trainiert (`--holdout-ladder-rules 3`), 6000 Updates, je ≈7 min, Berichte
+`structural_verified`. Trainierte drei Regeln: Screen **besteht** in beiden Seeds (ν voll
+1,000; leer 0,053/0,025; permutiert 0,112/0,229; vertauscht −0,326/−0,351). Zurückgehaltene
+Regel δ=3: ν voll **−0,287 / −0,379** (leer −0,319/−0,328, permutiert −0,235/−0,427):
+**kein Transfer**, Vorhersagen folgen einer trainierten Regel. Gelernt wurde Auswahl unter
+trainierten Regeln anhand der Belege, keine auf neues δ übertragbare Rechnung – für diesen
+Aufbau (4 Regeln, 3 trainiert). Ob mehr trainierte Regeln (größerer Pool) oder andere
+Lernsignale übertragbare Rechnung erzeugen, ist offen. F_relation_1101 (E4) besteht ebenfalls
+(ν voll 1,000, leer 0,016, permutiert −0,015).
