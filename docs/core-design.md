@@ -7,7 +7,7 @@ unabhängig Entwürfe erstellt; Claude hat sie zusammengeführt, beide haben die
 Zusammenführung geprüft. Die Entscheidungen am Ende gehören Alex. Auftrag,
 Entwurfszusammenfassungen und Reviewvermerke: `runs/reviews/core_design_20260928/`
 (die Volltexte liegen im Sitzungsprotokoll). Mit „Claude“ markierte Punkte sind
-Zusammenführungsentscheidungen, keine Übereinstimmung beider Entwürfe.
+Zusammenführungsentscheidungen oder eigene Vorschläge (E11), keine Übereinstimmung beider Entwürfe.
 
 ## Anforderungen (Alex)
 
@@ -211,6 +211,100 @@ dichtes Lernsignal für den Denkoperator durch geteilte Vorhersage. Kosten:
 Kopplungsrisiko (Verdünnung zwischen Aufgaben), mehr Aktivierungsspeicher durch
 entrollte Schleifen.
 
+## Überraschung und Korrektur (E11)
+
+Vorschlag Claude, von Alex am 28. September angenommen; nicht implementiert.
+Überraschung ist die Abweichung zwischen Vorhersage (Prior) und korrigiertem Zustand
+(Posterior) pro Slot, etwa KL(Posterior‖Prior) oder die negative Log-Likelihood der
+Beobachtung unter dem Prior (größer heißt überraschender); wie Likelihood einzelnen
+Slots zugerechnet wird, ist noch zu definieren. Sie wird gegen die übliche Streuung vergleichbarer Slots,
+Sichtbarkeit und Ereignisarten normiert. Überraschung ist ein Auslöser für
+Prüfungen, kein Urteil, dass Wissen oder Gewichte falsch sind.
+
+- **Grundregeln:** Evidenz geht vor und wird nach Verlässlichkeit gewichtet; eine
+  Vorhersage überschreibt nie Evidenz und bleibt als Erwartung nachvollziehbar.
+- **Übereinstimmung:** normale Korrektur und Festschreiben der Beobachtung; sie macht
+  darauf aufbauende Pläne nicht automatisch verlässlicher. Als Beleg für die Dynamik
+  zählt sie erst, wenn die Vorhersage in der Auswertung die Kopierreferenz schlägt; kontrafaktische Beobachtungen prüfen, dass
+  die Korrektur der Evidenz folgt und nicht der Vorhersage.
+- **Stufen:** gering → normale Korrektur; mittel → Slot als unsicher markieren, beim
+  nächsten Mal mehr Detail lesen; groß → Ursachen in fester Reihenfolge prüfen
+  (Verlässlichkeit der Beobachtung, Zuordnung/vertauschter Slot, wurde die eigene
+  Aktion ausgeführt, fehlende Evidenz; erst danach Verarbeitung) und als Ereignis mit Belegen vermerken.
+- **Wiederkehrend:** gleichgerichtete Fehler über mehrere **unabhängige** Instanzen
+  erzeugen einen Revisionskandidaten für Wissen (Konzept/Regel); wiederholte Lesungen
+  derselben Quelle zählen nicht als unabhängig. Erst spätere Bestätigung macht daraus
+  eine Revision; abhängige Vorhersagen und `W`-Inhalte werden invalidiert.
+- **Denken:** Widerspricht die Wirklichkeit einem imaginierten Zweig wesentlich (nicht
+  nur im Rahmen gewöhnlicher Streuung), werden Plan und
+  darauf beruhende Annahmen ungültig; der Agent plant neu.
+- **Laufzeit gegen Training:** Zur Laufzeit ändert eine Abweichung nie Gewichte; im
+  Training ist der KL-Term ein Lernsignal neben Beobachtungs- und Ergebnisverlusten.
+  Vorhandene Bausteine, noch nicht die vorgeschlagene Überraschung pro Slot:
+  `ErrorMonitor` (agent.py:132, skalarer Fehlerprädiktor über gemittelte Tokens) und
+  Ereignis-Markierung mit Detailbeschreibung (belief.py:537, hybrid_memory.py:337,
+  pro Ereignis, nicht pro Slot).
+
+## Lernwege: Gedächtnis zur Laufzeit, Konsolidierung offline (E12)
+
+Alex schlug am 28. September zunächst nullinitialisierte Residual-Adapter vor, die bei
+starken Revisionskandidaten zur Laufzeit trainiert, später ins Hauptnetz destilliert
+und zurückgesetzt werden. Fable (Kernargumente) und Codex (Bedingungen) rieten unabhängig voneinander davon ab,
+Adapter zum Haupt-Lernweg zur Laufzeit zu machen: Das Gedächtnis kann ein Beispiel
+sofort behalten und pro Eintrag zurückziehen, nützliche Verallgemeinerung ist damit
+nicht garantiert; Gewichtsänderungen brauchen unabhängig geprüfte Belege, und gezieltes
+Zurücknehmen einzelner Beispiele ist im Allgemeinen schwerer und nicht garantiert;
+jede Aktivierung eines Adapters ist eine neue Modellversion. Gespeicherte Komponenten
+tragen ihre Modellversion (pathwm/world_state/store.py:98–125), eine automatische
+Verträglichkeitsprüfung oder Invalidierung gibt es dort noch nicht; K/V-Caches siehe
+oben „Unsicherheit und Zuständigkeit“. Von Alex angenommener Ablauf:
+
+```
+beobachten → Überraschung → Gedächtnis schreiben/revidieren
+          → hartnäckige Fehler protokollieren
+          → offline Konsolidierung: Training auf protokollierten Belegen + Wiederholung alter Daten
+          → neue Modellversion (Checkpoint mit Hash) → Gedächtnis gegen neue Version prüfen → einsetzen
+```
+
+- **Zur Laufzeit lernt nur Gedächtnis/Zustand.** Gewichte ändern sich nur in einem
+  Konsolidierungslauf, einem gewöhnlichen, von Alex gestarteten Rezeptlauf.
+- **Auslöser:** Die Gedächtniskorrektur wurde angewendet, und trotzdem bleibt ein
+  gleichgerichteter Fehler über mehrere unabhängige Instanzen; die Prüfung aus E11
+  schließt Beobachtung, Zuordnung, Aktion und fehlende Evidenz als Ursache aus.
+- **Bedingungen:** Belege mit Herkunft; zurückgehaltene Episoden vor dem Training
+  festgelegt; Wiederholung alter Daten; vorab festgelegtes Annahmekriterium (Verbesserung auf
+  zurückgehaltenen Fällen **und** keine Verschlechterung auf der unberührten
+  Prüfsammlung); neue Version mit Hash; gespeicherte Latente werden gegen die neue
+  Version geprüft oder aus Belegen neu kodiert, Caches invalidiert; Zurückrollen stellt
+  Modell **und** zugehörigen Gedächtnis-/Latentstand wieder her oder kodiert aus
+  Belegen neu; Basis-Checkpoint und fehlgeschlagene Läufe bleiben erhalten.
+- **Adapter oder ganzes Netz** ist eine Wahl innerhalb des Konsolidierungslaufs,
+  entschieden nach Vergessen und Kosten. Nullinitialisiert heißt: ein Faktor zufällig,
+  der andere null, damit das Residual null ist und trotzdem lernen kann.
+- **Spätere Option (nicht geplant):** ein zur Laufzeit aktivierter Adapter bei einem
+  nachgewiesenen Verarbeitungsfehler; er braucht eine neue Entscheidung von Alex und
+  einen eigenen Auswertungsvertrag (Dringlichkeit allein ist keine Ausnahme von E12),
+  mit Schattentraining, atomarer Aktivierung und Zurückrollen.
+- **Kleinster entscheidender Test (Vorschlag, nicht gelaufen):** in
+  `experiments/latent_agent.py` den Kern mit einer eingebauten systematischen
+  Verwechslung oder ohne eine Regelfamilie trainieren; zuerst zeigen, dass
+  Gedächtniskorrektur den Fehler nicht behebt (eine fehlende Familie muss das
+  Gedächtnis nicht überfordern; ein eingebauter Fehler belegt nur diesen Umfang).
+  Hauptarm: Adapter mit Wiederholung; Vergleiche mit **gleicher** Wiederholung: ganzes
+  Netz, nur Gedächtnis mit gleich vielen zusätzlichen Belegen; Adapter ohne Wiederholung
+  als getrennte Ablation (Vergessen). Setzt einen vereinbarten Implementierungsabschnitt
+  voraus; eine verkleinerte Vorprüfung müsste auf der vollen Konfiguration wiederholt
+  werden.
+
+Quellen (von Fable genannt; Rahmung als komplementäre Lernsysteme von Claude:
+McClelland, McNaughton & O'Reilly 1995; Kumaran, Hassabis & McClelland 2016), jeweils
+nur für die dort untersuchten Methoden und Aufgaben: sequentielles Editieren
+verschlechterte die getesteten Modelle ([Gupta et al. 2024](https://arxiv.org/abs/2401.07453));
+Kontext schlägt parametrische Editoren auf RippleEdits
+([Cohen et al. 2023](https://arxiv.org/abs/2307.12976)); GRACE nutzt ein Codebuch
+([Hartvigsen et al. 2023](https://arxiv.org/abs/2211.11031)); LoRA vergaß in den Tests weniger
+als volles Feintuning, nicht nichts ([Biderman et al. 2024](https://arxiv.org/abs/2405.09673)).
+
 ## Quellen (von Fable/Codex genannt)
 
 Universal Transformers ([1807.03819](https://arxiv.org/abs/1807.03819)); Slot Attention
@@ -235,6 +329,8 @@ Keine Quelle belegt diese Kombination.
 | E8 | Simulations-Zielkonfiguration 4 Zweige × Horizont 4 (Einstieg 1×2)? | ja |
 | E9 | Freies Nat pro Ereignis (wie heute) oder pro Slot? | pro Ereignis, pro Slot als Vergleich |
 | E10 | Welche VRAM-/Latenzgrenze und welche Annahmeschwellen gelten? | offen, von Alex festzulegen |
+| E11 | Überraschung stufenweise behandeln, Ursachen prüfen, Revisionskandidaten nur aus unabhängigen Fehlern? | ja (angenommen) |
+| E12 | Zur Laufzeit lernt nur Gedächtnis; Gewichte nur in Offline-Konsolidierung; Laufzeit-Adapter spätere Option? | ja (angenommen) |
 
 ### Entscheidung Alex, 28. September 2026
 
@@ -253,6 +349,10 @@ Keine Quelle belegt diese Kombination.
 - **Nicht ausdrücklich entschieden:** E8 (Simulationsziel 4×4) und E9 (freies Nat pro
   Ereignis) gelten als Arbeitsannahme gemäß Empfehlung; Annahmeschwellen werden vor
   jedem Lauf mit Alex festgelegt.
+
+- **E11 und E12 angenommen** (später am 28. September): stufenweise Behandlung von
+  Überraschung; Gedächtnis als einziger Lernweg zur Laufzeit, Gewichtsänderung nur in
+  versionierter Offline-Konsolidierung; Laufzeit-Adapter bleibt spätere Option.
 
 Implementierung ist damit noch nicht begonnen; sie folgt als eigener, mit Alex
 geplanter Abschnitt (zuerst Prüfung 1, Verträge).

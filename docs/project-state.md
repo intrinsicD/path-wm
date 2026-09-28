@@ -56,7 +56,9 @@ Task plans own current work; older decisions remain in the
 - **Internal core design:** [core design](core-design.md) decided 28 September with
   Alex, Claude, Fable and Codex: one shared tied core for thinking and prediction,
   object slots, width 128 with two blocks, prediction first, 8 GB local limit.
-  Not implemented; next is a planned contract slice.
+  Surprise handling (E11) and learning paths (E12: memory at runtime, weights only in
+  offline versioned consolidation) also decided. Not implemented; next is a planned
+  contract slice.
 
 ## Current evidence and limits
 

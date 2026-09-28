@@ -51,6 +51,17 @@ Klassenwissen liegt als Prior in den Gewichten, die Instanz als kompakter, zur
 Laufzeit verfeinerter Code. Kein Mechanismus gewählt; Werkzeuge und Ideen in der
 [Ideensammlung](compact-instance-memory-ideas.md).
 
+28. September: Alex ergänzt einen zweiten Zeitmaßstab. Zur Laufzeit ändern sich
+Gewichte weiterhin nicht; der Nachweis mit eingefrorenem Agenten bleibt unverändert.
+Zusätzlich dürfen **Offline-Konsolidierungsläufe** aus protokollierten Belegen Gewichte
+ändern, wenn Gedächtniskorrekturen einen hartnäckigen Verarbeitungsfehler nicht
+beheben. Ein Lauf erzeugt eine Kandidatenversion (Checkpoint mit Hash); sie wird nur
+eingesetzt, wenn sie vorab festgelegte Prüfungen auf zurückgehaltenen Fällen und zum
+Erhalt alter Fähigkeiten besteht und das Gedächtnis gegen sie neu geprüft wurde.
+Fehlgeschlagene Läufe bleiben erhalten. Ein Erfolg durch
+Konsolidierung belegt nicht die Lernfähigkeit des eingefrorenen Agenten; beides wird
+getrennt nachgewiesen. Einzelheiten: [Kernentwurf](core-design.md) (E11, E12).
+
 ## Zu prüfende Aussage und ihr Umfang
 
 Nach einem initialen Training kann derselbe eingefrorene Agent aus neuen Erfahrungen
