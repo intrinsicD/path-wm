@@ -8,7 +8,8 @@ from experiments import core as recipe
 from pathwm.evaluation.rules import TRANSITION_FAMILIES
 
 
-@pytest.mark.parametrize("family,flags", [("relation", []), ("toggle", ["--untied"]), ("relation", ["--continuous-only"])])
+@pytest.mark.parametrize("family,flags", [("relation", []), ("toggle", ["--untied"]), ("relation", ["--continuous-only"]),
+                                          ("relation", ["--reader", "evidence", "--swap-weight", "1", "--rule-repeats", "7", "1", "1", "1"])])
 def test_symbolic_recipe_runs_and_writes_a_report(tmp_path, family, flags):
     out = tmp_path / "run"
     result = recipe.main(["--output", str(out), "--size", "check", "--device", "cpu", "--family", family,

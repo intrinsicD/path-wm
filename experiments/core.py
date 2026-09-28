@@ -69,13 +69,16 @@ def observe_frame(core, tokens, prior=None):
     return core.observe(prior, tokens, valid)
 
 
-def rule_codes(model, batch, device, control="full"):
-    """Z [E,K,D] from each episode's support events; controls replace the support."""
+def rule_codes(model, batch, device, control="full", reader="code"):
+    """What `predict` reads per episode: (Z [E,K,D], None) from `induce`, or with
+    reader="evidence" the uncompressed support events (tokens [E,N,D], valid [E,N]).
+    Controls replace the support: empty, or swapped with the neighbouring episode's."""
     core, e = model.core, len(batch.rules)
     s = batch.support
     if control == "empty" or len(s) == 0:
-        return core.induce(torch.zeros(e, 1, core.config.width, device=device),
-                           torch.zeros(e, 1, dtype=torch.bool, device=device))
+        none = torch.zeros(e, 1, core.config.width, device=device)
+        invalid = torch.zeros(e, 1, dtype=torch.bool, device=device)
+        return (core.induce(none, invalid), None) if reader == "code" else (none, invalid)
     _, pre, post, action, i, m = events(model, batch.scenes, s, device)
     tokens = core.event(pre[i, m], action, post[i, m])
     episode = s.episode.to(device)
@@ -86,17 +89,25 @@ def rule_codes(model, batch, device, control="full"):
     order = torch.argsort(episode, stable=True)
     padded[episode[order], rank] = tokens[order]
     valid[episode[order], rank] = True
-    z = core.induce(padded, valid)
-    return z.roll(1, 0) if control == "swapped" else z
+    z, zv = (core.induce(padded, valid), None) if reader == "code" else (padded, valid)
+    if control == "swapped":
+        z, zv = z.roll(1, 0), None if zv is None else zv.roll(1, 0)
+    return z, zv
 
 
-def press(model, batch, t, z, device):
-    """Observe the pre frame, predict the press with Z, observe the post frame."""
+def pick(context, episode):
+    z, zv = context
+    return z[episode], None if zv is None else zv[episode]
+
+
+def press(model, batch, t, context, device):
+    """Observe the pre frame, predict the press reading the rule context, observe the post frame."""
     core = model.core
     scn, pre, post, action, i, m = events(model, batch.scenes, t, device)
     before = observe_frame(core, pre)
     ones = torch.ones(len(t), device=device)
-    prior = core.predict(before, action, dt=ones, z=z[t.episode.to(device)])
+    z, zv = pick(context, t.episode.to(device))
+    prior = core.predict(before, action, dt=ones, z=z, z_valid=zv)
     after = observe_frame(core, post, prior)
     return dict(scn=scn, before=before, prior=prior, after=after, i=i, m=m, t=t)
 
@@ -105,9 +116,9 @@ def lamp_logits(model, state):
     return model.decoder(model.core.tokens(state)[:, 1:3])["lamp"]  # [n,2 machines,2]
 
 
-def losses(model, batch, device):
+def losses(model, batch, device, args):
     core, dec = model.core, model.decoder
-    z = rule_codes(model, batch, device)
+    z = rule_codes(model, batch, device, reader=args.reader)
     q = press(model, batch, batch.query, z, device)
     scn, t = q["scn"], q["t"]
     tok = lambda s: core.tokens(s)[:, :7]
@@ -123,11 +134,25 @@ def losses(model, batch, device):
     _, pre0, _, a0, _, _ = events(model, batch.scenes, s0, device)
     _, _, _, a1, i1, m1 = events(model, batch.scenes, s1, device)
     ones = torch.ones(len(s0), device=device)
-    p1 = core.predict(observe_frame(core, pre0), a0, dt=ones, z=z[s0.episode.to(device)])
-    p2 = core.predict(p1, a1, dt=ones, z=z[s1.episode.to(device)])
+    z0, zv0 = pick(z, s0.episode.to(device))
+    z1, zv1 = pick(z, s1.episode.to(device))
+    p1 = core.predict(observe_frame(core, pre0), a0, dt=ones, z=z0, z_valid=zv0)
+    p2 = core.predict(p1, a1, dt=ones, z=z1, z_valid=zv1)
     chain = F.cross_entropy(lamp_logits(model, p2).reshape(-1, 2), s1.post.to(device).reshape(-1))
     total = recon + predicted + chain + DYN * dyn + REP * rep
     parts = dict(recon=recon, predicted=predicted, chain=chain, kl_dyn=dyn, kl_rep=rep)
+    if args.swap_weight:
+        # Swap term against "predict ignores Z": the episode's own rule context must
+        # explain the target lamp better than the neighbouring episode's context.
+        i, m = q["i"], q["m"]
+        target = t.outcome.to(device)
+        own = F.cross_entropy(lamp_logits(model, q["prior"])[i, m - 1], target, reduction="none")
+        zs, zvs = z[0].roll(1, 0), None if z[1] is None else z[1].roll(1, 0)
+        swapped_q = press(model, batch, batch.query, (zs, zvs), device)
+        other = F.cross_entropy(lamp_logits(model, swapped_q["prior"])[i, m - 1], target, reduction="none")
+        swap = F.softplus(own - other).mean()
+        total = total + args.swap_weight * swap
+        parts["swap"] = swap
     return total, {k: float(v.detach()) for k, v in parts.items()}
 
 
@@ -135,12 +160,12 @@ def losses(model, batch, device):
 
 
 @torch.no_grad()
-def evaluate(model, batch, device, floors):
+def evaluate(model, batch, device, floors, reader="code"):
     """ν of the prior's target-lamp prediction per control, plus copy and posterior readout."""
     model.eval()
     out = {}
     for control in ("full", "empty", "swapped"):
-        q = press(model, batch, batch.query, rule_codes(model, batch, device, control), device)
+        q = press(model, batch, batch.query, rule_codes(model, batch, device, control, reader), device)
         t, i, m = q["t"], q["i"], q["m"]
         p = lamp_logits(model, q["prior"]).softmax(-1)[i, m - 1, 1].cpu()
         truth, s = t.outcome, t.pre[torch.arange(len(t)), t.machine]
@@ -172,6 +197,10 @@ def pools(args):
     family = args.family
     train = rw.family_ladder(family, args.rules) if args.rules else tuple(
         r for r in rw.split_rules()["train"] if r.family == family)
+    if args.rule_repeats:  # sampling weights per training rule, e.g. 7 1 1 1 (frequent entry rule)
+        if len(args.rule_repeats) != len(train):
+            raise ValueError("--rule-repeats needs one count per training rule")
+        train = tuple(r for r, n in zip(train, args.rule_repeats) for _ in range(n))
     heldout = tuple(r for r in rw.split_rules()["validation"] if r.family == family)
     return train, heldout
 
@@ -211,7 +240,7 @@ def train(args):
     started = time.monotonic()
     while runner.step < args.updates and (time.monotonic() - started) < 60 * args.max_minutes:
         batch = sample(runner.sampler, train_rules, kinds["train"], args, args.episodes)
-        loss, parts = losses(model, batch, device)
+        loss, parts = losses(model, batch, device, args)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         norm = float(nn.utils.clip_grad_norm_(model.parameters(), 1.0))
@@ -227,10 +256,10 @@ def train(args):
     params = sum(p.numel() for p in model.core.blocks.parameters())
     result = dict(step=runner.step, complete=complete, core_block_parameters=params,
                   total_parameters=sum(p.numel() for p in model.parameters()),
-                  train_rules=evaluate(model, sample(g, train_rules, kinds["train"], args, args.eval_episodes), device, floors))
+                  train_rules=evaluate(model, sample(g, sorted(set(train_rules), key=lambda r: r.key()), kinds["train"], args, args.eval_episodes), device, floors, args.reader))
     if heldout_rules:
         result["heldout_rules"] = evaluate(model, sample(g, heldout_rules, kinds["validation"], args, args.eval_episodes),
-                                           device, floors)
+                                           device, floors, args.reader)
     for pool in ("train_rules", "heldout_rules"):
         if pool in result:
             runner.log(dict(step=runner.step, split=f"evaluation_{pool}", **{f"{pool}/{k}_nu": mean_nu(v) for k, v in result[pool].items()
@@ -254,6 +283,10 @@ def main(argv=None):
     parser.add_argument("--support", type=int, nargs="+", default=[4, 8, 16])
     parser.add_argument("--eval-episodes", type=int, default=96)
     parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--rule-repeats", type=int, nargs="+", default=None)
+    parser.add_argument("--reader", choices=("code", "evidence"), default="code",
+                        help="predict reads the induced Z or the uncompressed support events")
+    parser.add_argument("--swap-weight", type=float, default=0.0)
     parser.add_argument("--untied", action="store_true", help="control: one block stack per operation (E2)")
     parser.add_argument("--continuous-only", action="store_true", help="control: no categorical code (E3)")
     parser.add_argument("--seed", type=int, default=1101)
