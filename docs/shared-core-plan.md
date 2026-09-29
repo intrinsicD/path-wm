@@ -216,3 +216,24 @@ Attributkombinationen.
   geändert“. Verdeckung, Kreuzung und ungesehene Dauern brauchen eine andere Aufgabe
   und bleiben offen.
 - Schwellen und Budget werden vor dem Lauf festgelegt, sobald S4 qualifiziert ist.
+
+### S5: Umbau und Empfindlichkeitsbefund (29.09.)
+
+Umgesetzt: `--stage pixel --perception <S4-Checkpoint>`; symbolische und Pixelstufe
+teilen Ereignisse (`Events`), Verluste und Auswertung. Jede Szene wird je
+Lampenkonfiguration einmal gerendert und wahrgenommen. Die Wahrnehmung bleibt
+eingefroren (Test: Gewichte unverändert, nicht trainierbar, Hash im Lauf). Neue
+Auswertung: Lampengenauigkeit des Priors getrennt nach geänderten und unveränderten
+Maschinen sowie für die 2-Schritt-Kette gegen Kopie. Pixel-Smoke (200 Updates):
+≈ 3 Updates/s inklusive Rendern, 3,5 GiB reserviert.
+
+**Empfindlichkeit:** Der symbolische Regressionslauf (gebunden, Seed 1101, sonst wie
+S2) erreicht nach dem Umbau ν 0,211 statt 0,804. Die ersten Updates stimmen exakt mit
+der alten Fassung überein, und die neue Fassung ist mit sich selbst bitgleich
+reproduzierbar. Ab Update ≈ 100 weichen die Verluste in der fünften Stelle ab (andere
+Rechenreihenfolge bei der Indizierung der Maschinen-Slots auf der GPU), danach laufen
+die Verläufe auseinander. **Folgerung:** Der in S2 bestandene Seed 1101 war ein
+günstiger Verlauf, kein stabiles Ergebnis. Der S2-Vergleich zeigt damit nur, dass der
+Evidenz-Leser grundsätzlich erreichbar ist; Aussagen zu gebunden gegen ungebunden
+brauchen deutlich mehr Seeds. Läufe: `runs/core/s5_regression_symbolic_1101/`,
+`runs/core/det_check_{a,b}/`.
