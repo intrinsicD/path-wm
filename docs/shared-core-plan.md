@@ -111,3 +111,21 @@ Altcode entfernt; der Multiskalen-Test erhält eigene Beispielbilder. Ergebnis: 
 Suite grün, kein Code importiert gelöschte Module. Die Pyramiden-Decoder-Tests
 brauchten einen Checkpoint, der nur auf der anderen Maschine liegt; sie gehören zur
 alten R1-Wahrnehmung und entstehen in S4 neu.
+
+## S2: vorab festgelegter Vergleich (festgelegt 29.09. vor dem Start, von Alex bestätigt)
+
+**Frage:** Nutzt der neue Kern auf der symbolischen Stufe den Regelkontext, und ändert
+sich das mit den Kontrollen aus E2 (ungebunden) und E3 (rein kontinuierlich)?
+
+- **Konfiguration** (aus den Entwicklungsläufen gewählt, das ist offen gelegt): volle
+  Größe, L4-Relation, Einstiegsregel 7-1-1-1, `--reader evidence`, `--swap-weight 0`,
+  6000 Updates, 16 Episoden je Update, Auswertung auf 96 frischen Episoden (Seed + 7).
+- **Arme:** gebunden (Standard), `--untied`, `--continuous-only`; Seeds 1101 und 2202.
+  Sechs Läufe unter `runs/core/s2_compare/`.
+- **Schwellen je Lauf (wie §23):** ν_voll ≥ 0,8; ν_voll − ν_leer ≥ 0,5;
+  ν_voll − ν_getauscht ≥ 0,5, jeweils auf den Trainingsregeln. Ein Arm besteht, wenn
+  beide Seeds bestehen.
+- **Transfer** auf zurückgehaltene Validierungsregeln wird berichtet, ist aber kein Gate.
+- **Aussageumfang:** Entwicklungsbefund mit 2 Seeds; Zuverlässigkeit bräuchte ≈10 Seeds.
+  Ein Unterschied zwischen Armen gilt nur als Hinweis, nicht als Nachweis für oder
+  gegen das Teilen der Gewichte.
