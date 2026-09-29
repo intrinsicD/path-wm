@@ -59,3 +59,24 @@ def test_perception_stage_runs_qualifies_and_saves_a_loadable_component(tmp_path
     module = SlotPerception(size["width"], 7, size["iterations"], decoder_width=size["decoder_width"])
     load_component(module, out / "last.pt", "perception")
     assert module(torch.zeros(1, 3, 64, 64)).slots.shape == (1, 7, size["width"])
+
+
+def test_pixel_stage_reads_frozen_perception(tmp_path):
+    import torch
+    perception = tmp_path / "perception"
+    recipe.main(["--stage", "perception", "--output", str(perception), "--size", "check", "--device", "cpu",
+                 "--updates", "1", "--batch", "2", "--qualify-scenes", "2"])
+    out = tmp_path / "pixel"
+    result = recipe.main(["--stage", "pixel", "--perception", str(perception / "last.pt"), "--output", str(out),
+                          "--size", "check", "--device", "cpu", "--updates", "2", "--episodes", "2", "--queries", "4",
+                          "--support", "2", "--eval-episodes", "2", "--reader", "evidence"])
+    assert result["complete"]
+    for key in ("prior_lamp_changed", "prior_lamp_unchanged", "chain_lamp_accuracy", "chain_copy_accuracy"):
+        assert key in result["train_rules"]
+    saved = torch.load(out / "last.pt", weights_only=True)["model"]
+    first = torch.load(perception / "last.pt", weights_only=True)["model"]
+    for k, v in first.items():  # the perception stayed frozen
+        assert torch.equal(saved[k], v)
+    run = __import__("json").loads((out / "run.json").read_text())
+    assert run["identity"]["data"]["perception_sha256"]
+    assert not any(n.startswith("perception.") for n in run["identity"]["trainable"])
