@@ -11,7 +11,11 @@ Evaluation: ν on the prior's target-lamp prediction for fresh training-rule epi
 and for held-out validation rules, against copy (lamp unchanged) and against the
 empty-support and swapped-support controls.
 
+Stage `perception` (S4) trains slot perception from scratch on rendered frames of
+training machine kinds and qualifies it on frames of validation kinds (never seen).
+
   python -m experiments.core --output runs/core/relation_l4 --family relation --rules 4
+  python -m experiments.core --stage perception --output runs/core/perception
   python -m experiments.core --resume runs/core/relation_l4
 """
 
@@ -26,16 +30,29 @@ from torch.nn import functional as F
 
 from pathwm.data import rule_world as rw
 from pathwm.evaluation.report import write_report
+from pathwm.evaluation.perception import THRESHOLDS as PERCEPTION_THRESHOLDS, perception_metrics, qualification
 from pathwm.evaluation.rules import nu_from_rows
 from pathwm.io import Run, atomic_json, resume_arguments, seed_everything
 from pathwm.models.core import CoreConfig, SharedCore
+from pathwm.models.slots import SlotPerception, perception_loss
 from pathwm.models.symbolic import SymbolicDecoder, SymbolicEncoder, readout_loss, targets
 
 # full = the decided configuration (E4); check = declared downscale for CPU tests only.
 SIZES = dict(full=dict(width=128, heads=4, blocks=2, rounds=2),
              check=dict(width=32, heads=4, blocks=2, rounds=1))
+# Perception (S4): slot width 64, decoder width 32, 7 slots (one per scene entity).
+PERCEPTION_SIZES = dict(full=dict(width=64, iterations=3, decoder_width=32),
+                        check=dict(width=16, iterations=1, decoder_width=8))
 FREE_NATS, DYN, REP = 1.0, 1.0, 0.1
 RUN_CONTROL = ("max_minutes", "log_every", "save_every")  # pacing only; not part of the run identity
+
+
+class PerceptionModel(nn.Module):
+    """Container so checkpoints hold `perception.*` (loaded later with load_component)."""
+
+    def __init__(self, size):
+        super().__init__()
+        self.perception = SlotPerception(size["width"], 7, size["iterations"], decoder_width=size["decoder_width"])
 
 
 class SymbolicModel(nn.Module):
@@ -222,6 +239,52 @@ def finish(runner, result, complete):
     runner.status(status, "completed")
 
 
+def train_perception(args):
+    """S4: train slot perception from scratch; qualify on validation kinds."""
+    seed_everything(args.seed)
+    device = torch.device(args.device)
+    model = PerceptionModel(PERCEPTION_SIZES[args.size]).to(device)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.perception_lr, weight_decay=0.01)
+    settings = {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(args).items()
+                if k in ("stage", "size", "seed", "device", "updates", "batch", "perception_lr", "qualify_scenes")}
+    data = dict(generator="rule_world", manifest=rw.manifest(), train_kinds=list(rw.KIND_SPLIT["train"]),
+                qualification_kinds=list(rw.KIND_SPLIT["validation"]), thresholds=PERCEPTION_THRESHOLDS)
+    runner = Run(args.output, settings=settings, data=data, recipe=__file__, model=model,
+                 optimizer=optimizer, device=device, resume=args.resume is not None)
+    started = time.monotonic()
+    while runner.step < args.updates and (time.monotonic() - started) < 60 * args.max_minutes:
+        scenes, lamps, rgb, entity = rw.sample_frames(runner.sampler, rw.KIND_SPLIT["train"], args.batch)
+        percept = model.perception(rgb.to(device))
+        loss, metrics = perception_loss(percept, rgb.to(device), entity.to(device), scenes.attrs, lamps)
+        optimizer.zero_grad(set_to_none=True)
+        loss.backward()
+        norm = float(nn.utils.clip_grad_norm_(model.parameters(), 1.0))
+        optimizer.step()
+        runner.step += 1
+        if runner.step % args.log_every == 0 or runner.step == args.updates:
+            runner.log(dict(step=runner.step, split="train", grad_norm=norm, **metrics))
+        if runner.step % args.save_every == 0:
+            runner.save()
+    runner.save()
+    complete = runner.step >= args.updates
+    model.eval()
+    result = dict(step=runner.step, complete=complete,
+                  parameters=sum(p.numel() for p in model.parameters()))
+    for name, kinds, seed in (("train_kinds", rw.KIND_SPLIT["train"], 11),
+                              ("validation_kinds", rw.KIND_SPLIT["validation"], 13)):
+        g = torch.Generator().manual_seed(args.seed + seed)
+        metrics = perception_metrics(model.perception, g, kinds, args.qualify_scenes, device)
+        result[name] = dict(metrics=metrics, qualification=qualification(metrics))
+        runner.log(dict(step=runner.step, split=f"evaluation_{name}",
+                        **{k: v for k, v in metrics.items() if isinstance(v, float)},
+                        attribute_min=min(metrics["attribute_accuracy"])))
+    result["qualified"] = result["validation_kinds"]["qualification"]["passed"]
+    if device.type == "cuda":
+        result["torch_max_reserved_gib"] = torch.cuda.max_memory_reserved(device) / 2**30
+    finish(runner, result, complete)
+    return result
+
+
 def train(args):
     seed_everything(args.seed)
     device = torch.device(args.device)
@@ -274,7 +337,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--stage", choices=("symbolic", "perception"), default="symbolic")
     parser.add_argument("--size", choices=tuple(SIZES), default="full")
+    parser.add_argument("--batch", type=int, default=32, help="perception stage: frames per update")
+    parser.add_argument("--perception-lr", type=float, default=4e-4)
+    parser.add_argument("--qualify-scenes", type=int, default=1024)
     parser.add_argument("--family", choices=rw.FAMILIES, default="relation")
     parser.add_argument("--rules", type=int, default=4, help="ladder size; 0 = every training rule of the family")
     parser.add_argument("--updates", type=int, default=6000)
@@ -300,7 +367,7 @@ def main(argv=None):
         args.output = args.resume
     if args.output is None:
         parser.error("--output is required")
-    return train(args)
+    return train_perception(args) if args.stage == "perception" else train(args)
 
 
 if __name__ == "__main__":

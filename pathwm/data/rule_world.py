@@ -735,6 +735,18 @@ def balanced_accuracy(predicted, target):
     return float((tpr + tnr) / 2)
 
 
+def sample_frames(generator, kinds, count):
+    """Random scenes of machine kinds from `kinds`, random lamps, rendered.
+
+    Returns scenes, lamps [B,2], rgb [B,3,64,64] and the entity map [B,64,64]
+    (the entity map is a training label, never an agent input)."""
+    kinds = torch.as_tensor(kinds)
+    scenes = sample_scenes(generator, kinds[torch.randint(len(kinds), (count, 2), generator=generator)])
+    lamps = torch.randint(2, (count, 2), generator=generator)
+    rgb, entity = render(scenes, lamps)
+    return scenes, lamps, rgb, entity
+
+
 # ------------------------------------------------------------------ training episodes
 
 

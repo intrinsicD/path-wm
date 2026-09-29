@@ -41,3 +41,21 @@ def test_copy_baseline_has_zero_nu_on_transition_families(tmp_path):
                           "--support", "2", "--eval-episodes", "8"])
     for family, nu in result["train_rules"]["copy"]["nu"].items():
         assert family in TRANSITION_FAMILIES and nu <= 0.0 + 1e-9
+
+
+def test_perception_stage_runs_qualifies_and_saves_a_loadable_component(tmp_path):
+    import torch
+    from pathwm.io import load_component
+    from pathwm.models.slots import SlotPerception
+
+    out = tmp_path / "perception"
+    result = recipe.main(["--stage", "perception", "--output", str(out), "--size", "check", "--device", "cpu",
+                          "--updates", "2", "--batch", "2", "--qualify-scenes", "4", "--log-every", "1"])
+    assert result["complete"] and set(result) >= {"train_kinds", "validation_kinds", "qualified"}
+    gates = result["validation_kinds"]["qualification"]
+    assert set(gates) == {"attribute", "lamp", "machine_pointer", "object_pointer", "passed"}
+    assert (out / "report.html").exists()
+    size = recipe.PERCEPTION_SIZES["check"]
+    module = SlotPerception(size["width"], 7, size["iterations"], decoder_width=size["decoder_width"])
+    load_component(module, out / "last.pt", "perception")
+    assert module(torch.zeros(1, 3, 64, 64)).slots.shape == (1, 7, size["width"])
