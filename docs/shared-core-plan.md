@@ -129,3 +129,43 @@ sich das mit den Kontrollen aus E2 (ungebunden) und E3 (rein kontinuierlich)?
 - **Aussageumfang:** Entwicklungsbefund mit 2 Seeds; Zuverlässigkeit bräuchte ≈10 Seeds.
   Ein Unterschied zwischen Armen gilt nur als Hinweis, nicht als Nachweis für oder
   gegen das Teilen der Gewichte.
+
+### Ergebnis des festgelegten S2-Vergleichs (29.09.)
+
+Alle sechs Läufe vollständig, Berichte geschrieben, reserviert ≤ 1,61 GiB.
+
+| Arm | Seed 1101: ν voll / leer / getauscht | Seed 2202 | besteht |
+| --- | --- | --- | --- |
+| gebunden | 0,804 / −0,014 / −0,071 | 0,537 / −0,016 / 0,059 | nein (1/2) |
+| `--untied` | 0,158 / 0,008 / −0,020 | 0,219 / −0,017 / 0,054 | nein (0/2) |
+| `--continuous-only` | 0,009 (= Kopie) | −0,012 (= Kopie) | nein (0/2) |
+
+Zurückgehaltene Regeln: ν ≤ 0,04 in allen Läufen. **Kein Arm besteht.** Reihenfolge
+gebunden > ungebunden > rein kontinuierlich; mit zwei Seeds nur ein Hinweis. Der rein
+kontinuierliche Arm bleibt exakt bei der Kopie; das kann an der Lernmechanik liegen
+(`h_step` startet bei null und das Ziel der Posterior-Korrektur ist ohne Code schwach)
+und ist kein Urteil über kontinuierliche Zustände. Relation L4 mit Seed 2202 verfehlte
+auch im alten E4 (0,625, Heimrechner-Beleg). Offen: Z-Engpass, Seed-Abhängigkeit,
+Transfer (Aufgabenvielfalt).
+
+## S4: Wahrnehmung neu trainieren (Plan, Schwellen zur Bestätigung durch Alex)
+
+**Aufbau:** `SlotPerception` aus `pathwm/models/slots.py` (Multiskalen-Encoder Breite 32,
+Slot Attention Breite 64, Broadcast-Decoder), von Grund auf trainiert als Stufe
+`--stage perception` in `experiments/core.py`. Verlust `perception_loss`: RGB-
+Rekonstruktion plus Masken-, Rollen-, Attribut- und Lampenlabels, die nur als
+Trainingssignal dienen, nie als Agenteneingabe. 8 Slots wie im Kern (7 Entitäten plus
+ein freier Slot), sofern `match_slots` das trägt; sonst 7 mit einem abwesenden Kernslot.
+
+**Qualifikation** auf frischen Szenen mit **Validierungs-Maschinentypen** (im Training
+nie gesehene Texturen), neue Metrikfunktion `pathwm/evaluation/perception.py`
+(Nachbau der alten C1-Messung): Attributgenauigkeit je Attribut, Lampengenauigkeit,
+Zeiger auf Maschine und Objekt (der an der Szenenkoordinate gewinnende Slot gehört
+zur richtigen Entität), Maschinenerkennung, Rekonstruktionsfehler.
+
+**Vorgeschlagene Schwellen (alte C1-Werte):** Attribut ≥ 0,95 je Attribut, Lampe ≥ 0,99,
+Maschinenzeiger ≥ 0,99, Objektzeiger ≥ 0,97; zwei Seeds. Nach Bestehen wird die
+Wahrnehmung eingefroren (Hash im Lauf festgehalten) und in S5 verwendet.
+
+**Offen für später** (Literaturscan, Gegenbefund Ramakrishnan et al. 2023): Qualifikation
+zusätzlich auf zurückgehaltenen Attributkombinationen; braucht eine Option im Generator.
