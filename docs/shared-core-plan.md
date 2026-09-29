@@ -32,7 +32,7 @@ Code 4×16, K = 4) wiederholt.
 | S1 | `pathwm/models/core.py`: Zustand, Kern mit fünf Operationen, Schreibrechte, Kontrolloptionen | CPU-Verträge (Prüfung 1): 15 Tests, volle Konfiguration | erledigt 29.09. |
 | S2 | Rezept `experiments/core.py`, symbolische Stufe: `induce` aus Belegen, `predict`/`observe` über Druckereignisse, Verluste aus dem Kerndesign | kleiner echter Lauf, Bericht, Vergleich gegen Kopie (Lampe unverändert) und gegen die Kontrollen | Rezept läuft; Entwicklungsläufe unten; vorab festgelegter Vergleich offen |
 | S3 | Löschen der alten Module, Rezepte und Tests; `WorldSession` und `ConceptMemory` von `belief_state`/`latent_core` lösen | volle Testsuite grün, keine Importe alter Module | erledigt 29.09. (siehe unten) |
-| S4 | Wahrnehmung neu: Encoder + Slot Attention + Decoder im neuen Rezept, Qualifikation (Bindung, Attribute, Identität, zurückgehaltene Kombinationen), einfrieren | Bericht mit Qualifikationsschwellen, vorab festgelegt | offen |
+| S4 | Wahrnehmung neu: Encoder + Slot Attention + Decoder im neuen Rezept, Qualifikation (Bindung, Attribute, Identität, zurückgehaltene Kombinationen), einfrieren | Bericht mit Qualifikationsschwellen, vorab festgelegt | erledigt 29.09.: beide Seeds qualifiziert, Seed 1101 eingefroren |
 | S5 | Pixelstufe: Vorhersage/Korrektur auf eingefrorener Wahrnehmung (Prüfung 4) | gegen Kopie und konstante Geschwindigkeit, getrennt nach bewegten/unbewegten Slots | offen |
 | S6 | `think` mit Imagination, `apply`; L4-Familien, Kontrollen `tied=False`, `continuous_only` (Prüfungen 5, 6) | vorab festgelegte Schwellen wie §23 | offen |
 | S7 | Überraschung je Slot (E11), Laufzeitgedächtnis, Revision/Invalidierung | Lebenslauf mit eingefrorenen Gewichten | offen |
@@ -183,3 +183,36 @@ Umsetzung: `--stage perception` in `experiments/core.py`, Metriken in
   bevor S5 darauf aufbaut.
 - Eingefroren für S5 wird Seed 1101, falls er besteht, sonst 2202. Besteht keiner,
   ist S4 nicht erfüllt, und die Ursache wird untersucht, bevor S5 beginnt.
+
+### S4: Ergebnis (29.09.)
+
+Beide Läufe vollständig (40.000 Updates, Berichte geschrieben, 1,74 GiB reserviert) und
+**qualifiziert** auf 1024 Szenen mit nie gesehenen Maschinentypen:
+
+| Seed | Attribute (min) | Lampe | Maschinenzeiger | Objektzeiger | Maschinen erkannt | MSE |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1101 | 0,999 | 0,991 | 1,000 | 1,000 | 1,000 | 0,0089 |
+| 2202 | 0,981 | 0,999 | 1,000 | 0,992 | 1,000 | 0,0102 |
+
+Für S5 eingefroren: `runs/core/s4_perception_1101/last.pt` (Komponente `perception`).
+Die Lampengenauigkeit von Seed 1101 liegt knapp über der Schwelle; sie begrenzt, wie gut
+der Kern auf Pixeln Lampen beobachten kann. Nicht geprüft: zurückgehaltene
+Attributkombinationen.
+
+## S5: Pixelstufe (Plan)
+
+- **Wahrnehmung:** eingefrorene S4-Wahrnehmung (Hash im Lauf festgehalten, keine
+  Gradienten, `eval`). Evidenz für `observe` sind die 7 Slot-Tokens (Breite 64),
+  `bind` bindet sie an 7 der 8 Kernslots; der achte bleibt abwesend.
+- **Aktionen:** Der Druck ist über Bildkoordinaten gegeben (Maschine, Objekt a, b).
+  Der Kern bekommt die Slot-Tokens, die an diesen Koordinaten im **Ausgangsbild der
+  Ereigniskette** gewinnen (`pointer`). Beim zweiten Druck einer Kette verrät die
+  Aktion so nichts über das nicht beobachtete Zwischenergebnis.
+- **Verluste** wie S2; Ausleseziele (Rolle, Lampe, Attribute) sind Trainingslabels der
+  entsprechenden Entität, zugeordnet über `match_slots`.
+- **Prüfung 4:** ν gegen Kopie und die Belegkontrollen wie S2, dazu Lampengenauigkeit
+  getrennt nach geänderten und unveränderten Maschinen, 1-Schritt und 2-Schritt-Kette.
+  In Rule World bewegen sich Objekte nicht; „bewegt“ heißt hier „Lampe hat sich
+  geändert“. Verdeckung, Kreuzung und ungesehene Dauern brauchen eine andere Aufgabe
+  und bleiben offen.
+- Schwellen und Budget werden vor dem Lauf festgelegt, sobald S4 qualifiziert ist.
