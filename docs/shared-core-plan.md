@@ -169,3 +169,17 @@ Wahrnehmung eingefroren (Hash im Lauf festgehalten) und in S5 verwendet.
 
 **Offen für später** (Literaturscan, Gegenbefund Ramakrishnan et al. 2023): Qualifikation
 zusätzlich auf zurückgehaltenen Attributkombinationen; braucht eine Option im Generator.
+
+### S4: festgelegter Lauf (29.09., vor dem Start)
+
+Umsetzung: `--stage perception` in `experiments/core.py`, Metriken in
+`pathwm/evaluation/perception.py`, Bilder aus `rw.sample_frames`. Entwicklungs-Smoke
+(300 Updates): ≈ 30 Updates/s, 1,74 GiB reserviert; noch nicht qualifiziert (erwartet).
+
+- 40.000 Updates, 32 Bilder je Update, Lernrate 4e-4, volle Größe; Seeds 1101 und 2202.
+- Qualifikation auf 1024 frischen Szenen mit Validierungs-Maschinentypen; Schwellen
+  wie oben (Attribut ≥ 0,95 je Attribut, Lampe ≥ 0,99, Maschinenzeiger ≥ 0,99,
+  Objektzeiger ≥ 0,97). Die Schwellen sind die alten C1-Werte; Alex kann sie ändern,
+  bevor S5 darauf aufbaut.
+- Eingefroren für S5 wird Seed 1101, falls er besteht, sonst 2202. Besteht keiner,
+  ist S4 nicht erfüllt, und die Ursache wird untersucht, bevor S5 beginnt.
